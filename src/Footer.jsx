@@ -15,9 +15,9 @@ export default function Footer() {
                     <hr />
                     <br />
                     <h1>Contact Us!</h1>
-                    <p><i class="fa-solid fa-phone" style={{ fontSize: "15px" }}></i> (047) 232 4897</p>
-                    <p><i class="fa-solid fa-envelope" style={{ fontSize: "15px" }}></i> Kolehiyongsubic01@gmail.com</p>
-                    <p><i class="fa-solid fa-location-dot" style={{ fontSize: "15px" }}></i>    6GJ+WPX, Burgos St, Baraca, Subic, 2209 Zambales</p>
+                    <p><i className="fa-solid fa-phone" style={{ fontSize: "15px" }}></i> (047) 232 4897</p>
+                    <p><i className="fa-solid fa-envelope" style={{ fontSize: "15px" }}></i> Kolehiyongsubic01@gmail.com</p>
+                    <p><i className="fa-solid fa-location-dot" style={{ fontSize: "15px" }}></i>    6GJ+WPX, Burgos St, Baraca, Subic, 2209 Zambales</p>
                     <br />
                     <hr />
                     <br />
@@ -31,7 +31,7 @@ export default function Footer() {
                 <div className="footer-section resources">
                     <div className="student-resources">
                         <h1>Student Resources</h1>
-                        <p style={{color:"grey"}}>  KNSLamp</p>
+                        <p style={{ color: "grey" }}>  KNSLamp</p>
                         <Link to="Login" style={{ textDecoration: "None" }}>
                             <a
                                 style={{
@@ -90,7 +90,7 @@ export default function Footer() {
                                     onMouseEnter={(e) => e.target.style.color = "orange"}
                                     onMouseLeave={(e) => e.target.style.color = "white"}
                                 >
-                                    Register    
+                                    Register
                                 </p>
                             </a>
                         </Link>
@@ -101,19 +101,19 @@ export default function Footer() {
                     <br />
                     <div className="faculty-resources">
                         <h1>Faculty Resources</h1>
-                        <p style={{color:"grey"}}>KNS Lamp</p>
-                        <p style={{color:"grey"}}>KNS Health Check</p>
-                        <p style={{color:"grey"}}>KNS Registrar</p>
-                        <p style={{color:"grey"}}>KNS Teachers Portal</p>
-                        <p style={{color:"grey"}}>KNS Deans Portal</p>
+                        <p style={{ color: "grey" }}>KNS Lamp</p>
+                        <p style={{ color: "grey" }}>KNS Health Check</p>
+                        <p style={{ color: "grey" }}>KNS Registrar</p>
+                        <p style={{ color: "grey" }}>KNS Teachers Portal</p>
+                        <p style={{ color: "grey" }}>KNS Deans Portal</p>
                     </div>
                 </div>
                 <div className="footer-section social">
                     <h1>Connect With Us!</h1>
                     <div className="social-icons">
-                        <button className="social-btn"><i class="fa-brands fa-square-facebook" style={{ fontSize: "15px" }}></i> Facebook</button>
-                        <button className="social-btn"><i class="fa-brands fa-square-x-twitter" style={{ fontSize: "15px" }}></i> Twitter</button>
-                        <button className="social-btn"><i class="fa-brands fa-youtube" style={{ fontSize: "15px" }}></i> YouTube</button>
+                        <button className="social-btn"><i className="fa-brands fa-square-facebook" style={{ fontSize: "15px" }}></i> Facebook</button>
+                        <button className="social-btn"><i className="fa-brands fa-square-x-twitter" style={{ fontSize: "15px" }}></i> Twitter</button>
+                        <button className="social-btn"><i className="fa-brands fa-youtube" style={{ fontSize: "15px" }}></i> YouTube</button>
                     </div>
                     <br />
                     <br />
@@ -124,7 +124,7 @@ export default function Footer() {
                 </div>
             </div>
             <div className="footer-bottom">
-                <p>Copyright © 2025 <span className="" style={{color:"#00ff00", fontWeight:"bold"}}>Kolehiyo Ng Subic</span>. All rights reserved.</p>
+                <p>Copyright © 2025 <span className="" style={{ color: "#00ff00", fontWeight: "bold" }}>Kolehiyo Ng Subic</span>. All rights reserved.</p>
             </div>
         </div>
     );

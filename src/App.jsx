@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Body from './Body'
 import Home from './Home'
 import Signup from './Signup'
@@ -28,6 +28,7 @@ const router = createBrowserRouter(
     </Route>
   )
 )
+
 export default function App() {
 
   return (
