@@ -10,6 +10,7 @@ import Adminlogin from './Admin/Adminlogin'
 import Notice from './student/Notice'
 import AdminDashboard from './Admin/Admindashboard'
 
+// hello jayvee
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -19,7 +20,7 @@ const router = createBrowserRouter(
       <Route path="Home" element={<Home />} />
       <Route path="Signup" element={<Signup />} />
       <Route path="Signup/Create" element={<Create />} />
-      <Route path="Login" element={<Login />} />  
+      <Route path="Login" element={<Login />} />
       <Route path="Adminlogin" element={<Adminlogin />} />
       <Route path="Login/Notice" element={<Notice />} />
       <Route path="AdminDashboard" element={<AdminDashboard />} />
