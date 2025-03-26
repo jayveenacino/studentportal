@@ -10,8 +10,6 @@ import Adminlogin from './Admin/Adminlogin'
 import Notice from './student/Notice'
 import AdminDashboard from './Admin/Admindashboard'
 
-// hello jayvee
-
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Root />}>
