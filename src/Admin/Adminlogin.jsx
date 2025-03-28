@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAdmin from './useAdmin';
+import './Admincss/admin.css';
 
 export default function Login() {
     const { admin, setAdmin } = useAdmin()
@@ -17,7 +18,7 @@ export default function Login() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        if (email === "adminknsat@gmail.com" && password === "TITE") {
+        if (email === "admin@gmail.com" && password === "admin") {
             setAdmin({ email })
             localStorage.setItem("Admin", JSON.stringify({ email }))
         }

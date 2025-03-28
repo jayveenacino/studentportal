@@ -1,0 +1,46 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+.adcontainer {
+    display: flex;
+    min-height: 100vh;
+}
+
+.adnav {
+    display: flex;
+    align-items: center;
+    background-color: #333;
+    padding: 15px 20px;
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 60px;
+    z-index: 1000;
+}
+
+.adnav-text {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.adnav h1 {
+    font-size: 18px;
+    color: #4CAF50;
+}
+
+.adnav p {
+    font-size: 12px;
+    margin-top: -5px;
+}
+
+.menu-icon {
+    font-size: 18px;
+    cursor: pointer;
+    position: absolute;
+    right: 75%;
+}
+

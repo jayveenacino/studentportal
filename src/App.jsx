@@ -10,7 +10,7 @@ import Adminlogin from './Admin/Adminlogin'
 import Notice from './student/Notice'
 import AdminDashboard from './Admin/Admindashboard'
 
-// HELLO GUYSSS
+// HELLO GUYSSS okay na hahaha HAHAH hayup HAHAH
 
 const router = createBrowserRouter(
   createRoutesFromElements(
