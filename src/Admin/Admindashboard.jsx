@@ -15,6 +15,12 @@ export default function Admindashboard() {
                     </div>
                     <i className="fa-solid fa-bars menu-icon"></i>
                 </div>
+                <div className="adsidebar" style={{display:"flex", flexDirection:"column"}}>
+                    <a href="">Dashboard</a>
+                    <a href="">Student</a>
+                    <a href="">Enrollies</a>
+
+                </div>
             </div>
         </div>
     );
