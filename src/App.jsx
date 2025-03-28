@@ -10,20 +10,19 @@ import Adminlogin from './Admin/Adminlogin'
 import Notice from './student/Notice'
 import AdminDashboard from './Admin/Admindashboard'
 
-// HELLO GUYSSS okay na hahaha HAHAH hayup HAHAH
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route element={<Root />}>
       <Route index element={<Body />} />
-      <Route path="Signup" element={<Signup />} />
-      <Route path="Home" element={<Home />} />
-      <Route path="Signup" element={<Signup />} />
-      <Route path="Signup/Create" element={<Create />} />
-      <Route path="Login" element={<Login />} />
-      <Route path="Adminlogin" element={<Adminlogin />} />
-      <Route path="Login/Notice" element={<Notice />} />
-      <Route path="AdminDashboard" element={<AdminDashboard />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="home" element={<Home />} />
+      <Route path="signup" element={<Signup />} />
+      <Route path="Ssgnup/create" element={<Create />} />
+      <Route path="login" element={<Login />} />
+      <Route path="adminlogin" element={<Adminlogin />} />
+      <Route path="login/notice" element={<Notice />} />
+      <Route path="adminDashboard" element={<AdminDashboard />} />
       <Route path="*" element={<Navigate to="/" />} />
     </Route>
   )
