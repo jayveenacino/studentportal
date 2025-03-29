@@ -6,6 +6,7 @@ function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
     const [activeSection, setActiveSection] = useState("dashboard");
     const navigate = useNavigate();
+    const [createad, setCreatead] = useState(false);
 
     const handleLogout = (event) => {
         event.preventDefault();
@@ -120,7 +121,7 @@ function Dashboard() {
                         <div>
                             <div className="label-container">
                                 <h2>List of Users </h2>
-                                <button><i class="fa-solid fa-plus"></i> Add New</button>
+                                <button onClick={() => setCreatead(true)}><i class="fa-solid fa-plus"></i> Add New</button>
                             </div>
 
                             <hr />
@@ -130,6 +131,38 @@ function Dashboard() {
                             </div>
                         </div>
                     )}
+                    {createad &&
+                        <div className="reset">
+                            <div className="resetbg" style={{ position: "relative", padding: "20px" }}>
+                                <h1 style={{ display: "inline-block", margin: 0 }}>
+                                    <i className="fa-solid fa-user"></i> Create New User
+                                </h1>
+                                <a href="" style={{ position: "absolute", top: "10px", right: "10px" }}>
+                                    <i
+                                        onClick={() => setReset(false)}
+                                        style={{ fontSize: "20px", color: "black", cursor: "pointer" }}
+                                        className="fa-solid fa-xmark">
+                                    </i>
+                                </a>
+                                <hr />
+                                <div className="grid-container">
+                                    <input type="text" name="firstname" placeholder="Username*" className="input-field short-width" />
+                                    <select className="input-field short-width">
+                                        <option value="" disabled selected hidden>Role</option>
+                                        <option value="">Admin</option>
+                                        <option value="Sr">Registrar</option>
+                                    </select>
+                                </div>
+                                <div className="grid-container">
+                                    <input type="password" name="password" placeholder="Desired Password*" className="input-field" />
+                                    <input type="password" name="confirmPassword" placeholder="Confirm Password*" className="input-field" />
+                                </div>
+                                <div className="button-container">
+                                    <button className="back-btn" style={{ display: "block", margin: "0 auto" }}>Create</button>
+                                </div>
+                            </div>
+                        </div>
+                    }
                 </div>
             </div>
         </div>
