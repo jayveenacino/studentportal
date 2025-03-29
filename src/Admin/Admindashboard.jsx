@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './Admincss/admin.css';
+import { Link } from 'react-router-dom';
 
 export default function Admindashboard() {
 
@@ -15,11 +16,13 @@ export default function Admindashboard() {
                     </div>
                     <i className="fa-solid fa-bars menu-icon"></i>
                 </div>
-                <div className="adsidebar" style={{display:"flex", flexDirection:"column"}}>
-                    <a href="">Dashboard</a>
-                    <a href="">Student</a>
-                    <a href="">Enrollies</a>
-
+                <div className='adsidebar' style={{ display: "flex", flexDirection: "column" }}>
+                    <a href="#">asdasda</a>
+                    <a href="#">asdasda</a>
+                    <a href="#">asdasda</a>
+                    <a href="#">asdasda</a>
+                    <a href="#">asdasda</a>
+                    <a href="#">asdasda</a>
                 </div>
             </div>
         </div>
