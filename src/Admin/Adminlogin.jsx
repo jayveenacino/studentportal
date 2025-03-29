@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAdmin from './useAdmin';
+import Swal from 'sweetalert2';
 import './Admincss/admin.css';
 
 export default function Login() {
@@ -17,12 +18,34 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
+    
         if (email === "admin@gmail.com" && password === "admin") {
-            setAdmin({ email })
-            localStorage.setItem("Admin", JSON.stringify({ email }))
+            setAdmin({ email });
+            localStorage.setItem("Admin", JSON.stringify({ email }));
+    
+            Swal.fire({
+                icon: 'success',
+                title: 'Login Successful',
+                text: 'Welcome to the Admin Dashboard!',
+                timer: 2000, // Alert disappears after 2 seconds
+                showConfirmButton: false
+            }).then(() => {
+                setTimeout(() => {
+                    navigate('/AdminDashboard');
+                }, 5000); // 5-second delay before navigating
+            });
+    
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: 'Incorrect email or password',
+            });
         }
-    }
+    };
+    
+    
+    
 
 
     return (

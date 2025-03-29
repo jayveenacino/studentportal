@@ -12,9 +12,61 @@
     position: fixed;
     top: 0;
     width: 100%;
-    height: 60px;
+    height: 40px;
     z-index: 1000;
 }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-left: auto;
+    padding-right: 50px;
+}
+
+.dropbtn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.arrow {
+    font-size: 8px;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    right: 20px;
+    top: 100%;
+    background-color: white;
+    min-width: 200px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+    z-index: 100;
+}
+
+.dropdown-content a {
+    display: block;
+    padding: 12px;
+    text-decoration: none;
+    color: black;
+    transition: background 0.3s;
+    font-size: 12px;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
 
 .adnav-text {
     flex-grow: 1;
@@ -27,14 +79,212 @@
 }
 
 .adnav p {
-    font-size: 12px;
+    font-size: 9.2px;
     margin-top: -5px;
 }
 
 .menu-icon {
-    font-size: 18px;
+    font-size: 19px;
     cursor: pointer;
     position: absolute;
-    right: 75%;
+    right: 80%;
+}
+
+.adside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    height: 100vh;
+    background-color: #d1d0d0;
+    width: 195px;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    padding: 20px;
+    transform: translateX(-250px);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+}
+
+.adside ul {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.adside a {
+    font-size: 15px;
+
+}
+
+.adside i {
+    text-align: center;
+}
+
+.adside ul li {
+    width: 100%;
+}
+
+.adside ul li a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    text-decoration: none;
+    color: rgb(85, 83, 83);
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.adside ul li a i {
+    margin-right: 10px;
+}
+
+.adside ul li a:hover {
+    color: white;
+    background-color: rgb(12, 104, 20);
+    width: calc(100% + 40px);
+    margin-left: -20px;
+}
+
+.adside.show {
+    transform: translateX(0);
+}
+
+
+.adside.show {
+    transform: translateX(0);
+}
+
+.admain {
+    position: relative;
+    top: 60px;
+    flex: 1;
+    padding: 40px;
+    margin-left: 0;
+    width: 100%;
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+}
+
+.adside.show+.admain {
+    margin-left: 220px;
+    width: calc(100% - 220px);
+}
+
+@media (max-width: 768px) {
+    .adnav {
+        height: 50px;
+        padding: 10px;
+    }
+
+    .adside {
+        width: 180px;
+        padding: 10px;
+        transform: translateX(-250px);
+        top: 70px;
+        height: calc(100vh - 50px);
+    }
+
+    .adside.show {
+        transform: translateX(0);
+    }
+
+    .adside.show + .admain {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .menu-icon {
+        right: 40px;
+        font-size: 20px;
+    }
+
+    .admain {
+        padding: 15px;
+        top: 70px;
+    }
+}
+
+.ensearch {
+    transform: translateY(15%);
+}
+
+.enrolsearch {
+    height: 25px;
+    border-radius: 5px;
+    text-align: center;
+    border: 1px solid #333; 
+}
+
+.enrolgrid {
+    width: 100%;
+    margin-top: 20px;
+    overflow-x: auto;
+}
+
+.enrolgrid table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    table-layout: fixed;
+}
+
+.enrolgrid th, .enrolgrid td {
+    width: 160px;
+    padding: 10px;
+    text-align: center;
+    vertical-align: middle;
+    table-layout: fixed;
+    border: 1px solid #ddd;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.enrolgrid th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+.enrolgrid tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.enrolgrid tr:hover {
+    background-color: #f1f1f1;
+}
+
+.label-container {
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+}
+
+button {
+    margin-left: 10px;
+    height: 30px;     
+    width: 100px;     
+    border: 1px solid #333; 
+    background: rgb(223, 223, 223); 
+    color: #333;        
+    font-size: 10px; 
+    padding: 0;        
+    cursor: pointer;  
+    border-radius: 4px; 
+    outline: none;    
+}
+
+button:hover {
+    color: #ffffff;
+    background-color: #4CAF50;
 }
 
