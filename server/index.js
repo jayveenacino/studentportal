@@ -17,7 +17,7 @@ app.post('/register', async (req, res) => {
         const student = await StudentModel.create(req.body);
         res.status(201).json({ message: "Account created successfully", student });
     } catch (err) {
-        res.status(500).json({ message: "Error creating account", error: err });
+        res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
 

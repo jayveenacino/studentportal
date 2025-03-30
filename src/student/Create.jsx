@@ -56,24 +56,24 @@ export default function Create() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage(""); 
-        setLoading(true); 
+        setMessage("");
+        setLoading(true);
 
         try {
-            axios.post("http://localhost:2025/register", formData);
-
-
-            if (response.status === 201) {
-                setMessage("Account created successfully! Redirecting...");
-                setTimeout(() => navigate("/login"), 2000);
-            } else {
-                setMessage("An error occurred. Please try again.");
-            }
+            axios.post("http://localhost:2025/register", formData)
+                .then(response => {
+                    if (response.status === 201) {
+                        setMessage("Account created successfully! Redirecting...");
+                        setTimeout(() => navigate("/login"), 2000);
+                    } else {
+                        setMessage("An error occurred. Please try again.");
+                    }
+                })
         } catch (error) {
             setMessage(error.response?.data?.message || "Failed to create an account.");
         }
 
-        setLoading(false); 
+        setLoading(false);
     };
 
     return (
