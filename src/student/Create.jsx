@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./student css/create.css";
+import Swal from "sweetalert2";
 
 export default function Create() {
     const navigate = useNavigate();
@@ -18,8 +19,8 @@ export default function Create() {
         confirmPassword: "",
     });
 
-    const [message, setMessage] = useState(""); // Success/Error message state
-    const [loading, setLoading] = useState(false); // Loading state for submit button
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -56,21 +57,40 @@ export default function Create() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setMessage("");
         setLoading(true);
 
         try {
-            axios.post("http://localhost:2025/register", formData)
-                .then(response => {
-                    if (response.status === 201) {
-                        setMessage("Account created successfully! Redirecting...");
-                        setTimeout(() => navigate("/login"), 2000);
-                    } else {
-                        setMessage("An error occurred. Please try again.");
-                    }
-                })
+            const response = await axios.post("http://localhost:2025/register", formData);
+
+            if (response.status === 201) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Account Created!",
+                    text: "Your account has been successfully created. Redirecting...",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+
+                setTimeout(() => navigate("/signup"), 2000);
+            }
         } catch (error) {
-            setMessage(error.response?.data?.message || "Failed to create an account.");
+            const errorMessage = error.response?.data?.message || "Failed to create an account.";
+
+            if (errorMessage.includes("already registered")) {
+                Swal.fire({
+                    icon: "warning",
+                    title: "Email Already Registered",
+                    text: "The email address is already in use. Try another one.",
+                    confirmButtonColor: "#ff9800"
+                });
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Registration Failed",
+                    text: errorMessage,
+                    confirmButtonColor: "#d33"
+                });
+            }
         }
 
         setLoading(false);
@@ -112,7 +132,8 @@ export default function Create() {
                 <div className="rightcontainer">
                     <h2>Create An Account</h2>
                     <hr />
-                    {message && <p className="message">{message}</p>} {/* Display success/error message */}
+                    {message && <p className="message">{message}</p>}
+                    {/* Display success/error message */}
 
                     <form onSubmit={handleSubmit}>
                         <div className="grid-container">
