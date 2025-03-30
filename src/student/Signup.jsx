@@ -75,8 +75,7 @@ const Signup = () => {
         }
 
     }
-
-
+    
     return (
         <div className="container">
             {/* Left Section - Login */}
