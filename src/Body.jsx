@@ -20,7 +20,7 @@ export default function Body({ setPage }) {
         <p className="steps">STEP 1. CREATE ONLINE PORTAL ACCOUNT</p>
         <p>
           - Go to Kolehiyo Ng Subic Admission Portal Login page
-          <Link to="Signup" target='_blank'>
+          <Link to="signup" target='_blank'>
             (Create Account)
           </Link>
 

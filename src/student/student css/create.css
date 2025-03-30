@@ -88,6 +88,13 @@ h2 {
   margin-bottom:10px;
 }
 
+.grid-container1 {
+  display: flex;
+  flex-wrap: wrap ;
+  gap: 10px;
+  margin-bottom:10px;
+}
+
 .input-field {
   flex: 1;
   padding: 10px;
@@ -95,6 +102,12 @@ h2 {
   border-radius: 5px;
 }
 
+.input-field1 {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
 .privacy-text {
   font-size: 12px;
   color: #555;
@@ -107,7 +120,11 @@ h2 {
 }
 
 .short-width {
-  width: 120px; /* Adjust as needed */
+  width: 120px; 
+}
+
+.short-width1 {
+  width: 120px; 
 }
 
 .button-container {
@@ -116,10 +133,16 @@ h2 {
   margin-top: 20px;
 }
 
+.button-container1 {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
 .enabled-btn {
   background-color: blue;
   color: white;
-  border: 2px solid blue; /* Ensures it has a visible border */
+  border: 2px solid blue;
   padding: 10px 15px;
   cursor: pointer;
   border-radius: 5px;
@@ -151,6 +174,18 @@ h2 {
   background-color: lightgray;
 }
 
+.back-btn1 {
+  background-color: white;
+  color: black;
+  border: 1px solid black;
+  padding: 10px 15px;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.back-btn1:hover {
+  background-color: lightgray;
+}
 
 .disabled-btn {
   background: #ccc;
@@ -179,7 +214,6 @@ h2 {
   font-family: Arial, sans-serif;
 }
 
-/* Responsive adjustments */
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;
@@ -217,4 +251,31 @@ h2 {
   .admission-text {
     font-size: 10px;
   }
+}
+
+.custom-popup {
+  text-align: center; 
+}
+
+.custom-title {
+  font-size: 24px;  
+}
+
+.custom-content {
+  margin-bottom: 20px; 
+}
+
+.custom-confirm-button, .custom-cancel-button {
+  height: 50px;
+  font-size: 16px; 
+  width: 150px; 
+  margin: 0 10px;  
+}
+
+.custom-confirm-button {
+  background-color: #d33; 
+}
+
+.custom-cancel-button {
+  background-color: #3085d6; 
 }

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "./styles/create.css";
+import './student css/create.css';
 
 export default function Create() {
     const navigate = useNavigate();

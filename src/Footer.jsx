@@ -32,7 +32,7 @@ export default function Footer() {
                     <div className="student-resources">
                         <h1>Student Resources</h1>
                         <p style={{ color: "grey" }}>  KNSLamp</p>
-                        <Link to="Login" style={{ textDecoration: "None" }}>
+                        <Link to="login" style={{ textDecoration: "None" }}>
                             <a
                                 style={{
                                     fontSize: "16px",
@@ -52,7 +52,7 @@ export default function Footer() {
                                 </p>
                             </a>
                         </Link>
-                        <Link to="Signup" style={{ textDecoration: "None" }}>
+                        <Link to="signup" style={{ textDecoration: "None" }}>
                             <a
                                 style={{
                                     fontSize: "16px",

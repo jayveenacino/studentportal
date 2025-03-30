@@ -16,7 +16,7 @@ function Dashboard() {
         sessionStorage.clear();
 
         setTimeout(() => {
-            window.location.replace("/Adminlogin");
+            window.location.replace("/adminlogin");
         }, 500);
     };
 
@@ -30,14 +30,24 @@ function Dashboard() {
             showCancelButton: true,
             confirmButtonColor: "#d33",
             cancelButtonColor: "#3085d6",
-            confirmButtonText: "Yes",
-            cancelButtonText: "No",
+            confirmButtonText: "Yes, Logout",
+            cancelButtonText: "No, Stay",
+            width: '500px',
+            customClass: {
+                popup: 'custom-popup', 
+                title: 'custom-title',  
+                content: 'custom-content', 
+                confirmButton: 'custom-confirm-button', 
+                cancelButton: 'custom-cancel-button'
+            },
         }).then((result) => {
             if (result.isConfirmed) {
                 handleLogout(event);
             }
         });
     };
+
+
 
     return (
         <div className="body">
@@ -119,9 +129,9 @@ function Dashboard() {
 
                     {activeSection === "user" && (
                         <div>
-                            <div className="label-container">
+                            <div className="label-container1">
                                 <h2>List of Users </h2>
-                                <button onClick={() => setCreatead(true)}><i class="fa-solid fa-plus"></i> Add New</button>
+                                <button className="back-btn1" onClick={() => setCreatead(true)}><i class="fa-solid fa-plus"></i> Add New</button>
                             </div>
 
                             <hr />
@@ -145,20 +155,20 @@ function Dashboard() {
                                     </i>
                                 </a>
                                 <hr />
-                                <div className="grid-container">
-                                    <input type="text" name="firstname" placeholder="Username*" className="input-field short-width" />
-                                    <select className="input-field short-width">
+                                <div className="grid-container1">
+                                    <input type="text" name="firstname" placeholder="Username*" className="input-field short-width1" />
+                                    <select className="input-field short-width1">
                                         <option value="" disabled selected hidden>Role</option>
                                         <option value="">Admin</option>
                                         <option value="Sr">Registrar</option>
                                     </select>
                                 </div>
-                                <div className="grid-container">
-                                    <input type="password" name="password" placeholder="Desired Password*" className="input-field" />
-                                    <input type="password" name="confirmPassword" placeholder="Confirm Password*" className="input-field" />
+                                <div className="grid-container1">
+                                    <input type="password" name="password" placeholder="Desired Password*" className="input-field1" />
+                                    <input type="password" name="confirmPassword" placeholder="Confirm Password*" className="input-field1" />
                                 </div>
-                                <div className="button-container">
-                                    <button className="back-btn" style={{ display: "block", margin: "0 auto" }}>Create</button>
+                                <div className="button-container1">
+                                    <button className="back-btn1" style={{ display: "block", margin: "0 auto" }}>Create</button>
                                 </div>
                             </div>
                         </div>

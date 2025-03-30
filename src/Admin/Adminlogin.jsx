@@ -13,7 +13,7 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (admin.email) navigate('/AdminDashboard')
+        if (admin.email) navigate('/admindashboard')
     }, [admin])
 
     const handleSubmit = (e) => {
@@ -27,12 +27,12 @@ export default function Login() {
                 icon: 'success',
                 title: 'Login Successful',
                 text: 'Welcome to the Admin Dashboard!',
-                timer: 2000, // Alert disappears after 2 seconds
+                timer: 2000, 
                 showConfirmButton: false
             }).then(() => {
                 setTimeout(() => {
-                    navigate('/AdminDashboard');
-                }, 5000); // 5-second delay before navigating
+                    navigate('/admindashboard');
+                }, 5000); 
             });
     
         } else {

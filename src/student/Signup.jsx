@@ -77,7 +77,7 @@ const Signup = () => {
                         </div>
                         <div className="button-group">
                             <button className="login-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Login</button>
-                            <Link to="Create"> <button className="signup-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Sign Up</button></Link>
+                            <Link to="create"> <button className="signup-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Sign Up</button></Link>
                         </div>
                         <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>Forgot Password?</p>
                     </form>

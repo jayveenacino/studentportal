@@ -9,12 +9,13 @@ export default function Root() {
 
     return (
         <>
-            {(location.pathname !== "/Signup" && location.pathname !== "/Signup/Create" && location.pathname !== "/Login" && location.pathname !== "/Adminlogin" && location.pathname !== "/Login/Notice" && location.pathname !== "/AdminDashboard") &&
+        
+            {(location.pathname !== "/signup" && location.pathname !== "/signup/create" && location.pathname !== "/login" && location.pathname !== "/adminlogin" && location.pathname !== "/login/notice" && location.pathname !== "/admindashboard") &&
                 <Nav />
             }
 
             <Outlet />
-            {(location.pathname !== "/Signup" && location.pathname !== "/Signup/Create" && location.pathname !== "/Login" && location.pathname !== "/Adminlogin" && location.pathname !== "/Adminlogin" && location.pathname !== "/Login/Notice" && location.pathname !== "/AdminDashboard") &&
+            {(location.pathname !== "/signup" && location.pathname !== "/signup/create" && location.pathname !== "/login" && location.pathname !== "/adminlogin" && location.pathname !== "/login/notice" && location.pathname !== "/admindashboard") &&
                 <Footer />
             }
 
