@@ -3,11 +3,12 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [newShowPassword, setNewShowPassword] = useState(false);
-
+    const navigate =useNavigate()
 
     const [reset, setReset] = useState(false);
 
@@ -61,7 +62,7 @@ const Signup = () => {
                     timer: 2000
                 });
 
-                // setTimeout(() => navigate("/signup"), 2000);
+                setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.error
