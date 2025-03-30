@@ -9,7 +9,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -18,23 +18,21 @@ export default function Login() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-    
+
         if (email === "admin@gmail.com" && password === "admin") {
             setAdmin({ email });
             localStorage.setItem("Admin", JSON.stringify({ email }));
-    
+
             Swal.fire({
                 icon: 'success',
                 title: 'Login Successful',
                 text: 'Welcome to the Admin Dashboard!',
-                timer: 2000, 
+                timer: 2000,
                 showConfirmButton: false
-            }).then(() => {
-                setTimeout(() => {
-                    navigate('/admindashboard');
-                }, 5000); 
             });
-    
+
+            setTimeout(() => navigate('/admindashboard'), 5000);
+            
         } else {
             Swal.fire({
                 icon: 'error',
@@ -43,9 +41,9 @@ export default function Login() {
             });
         }
     };
-    
-    
-    
+
+
+
 
 
     return (

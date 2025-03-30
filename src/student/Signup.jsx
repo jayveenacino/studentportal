@@ -91,7 +91,7 @@ const Signup = () => {
                     <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal </p>
                     <hr />
                     <form onSubmit={handleSubmit}>
-                        <input onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))} value={loginForm.email} type="text" placeholder="Username" className="input" required />
+                        <input onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))} value={loginForm.email} type="text" placeholder="Email" className="input" required />
                         <div style={{ position: "relative", width: "100%" }}>
                             <input
                                 value={loginForm.password}
