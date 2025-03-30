@@ -9,19 +9,22 @@ export default function Preregister() {
     const navigate = useNavigate();
     const [createad, setCreatead] = useState(false);
     const [enrollees, setEnrollees] = useState([]);
-    const [user, setUser] = useState({ firstname: "", middlename: "", lastname: "" });
+    const [students, setStudents] = useState({ firstname: "", middlename: "", lastname: "" });
 
     useEffect(() => {
-        axios.get("http://localhost:30001/students")
+        axios.get("http://localhost:2025/students") 
             .then(response => {
                 console.log("Fetched user data:", response.data);
                 if (Array.isArray(response.data) && response.data.length > 0) {
-                    setUser(response.data[0]); 
+                    setStudents(response.data[0]);
                 } else {
                     console.error("User data is empty or not in expected format");
                 }
             })
-            .catch(error => console.error("Error fetching user:", error));
+            .catch(error => {
+                console.error("Error fetching students:", error);
+                Swal.fire("Error", "Failed to fetch student data. Please try again later.", "error"); 
+            });
     }, []);
 
     const handleLogout = (event) => {
@@ -62,7 +65,7 @@ export default function Preregister() {
                     <div className="dropdown">
                         <button className="dropbtn">
                             <i className="fa-solid fa-user" style={{ fontSize: "12px" }}></i>
-                            {user.firstname || "User"} {user.middlename || ""} {user.lastname || ""} <span className="arrow">▼</span>
+                            {students?.firstname || ""} {students?.middlename || ""} {students?.lastname || ""} <span className="arrow">▼</span> {/* ✅ Fixed Undefined Student Data */}
                         </button>
                         <div className="dropdown-content">
                             <a href="#"><i className="fa-solid fa-user"></i> Profile</a>
