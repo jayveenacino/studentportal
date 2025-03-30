@@ -40,29 +40,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.get("/students", async (req, res) => {
-    try {
-        const students = await StudentModel.find({}, "firstname middlename lastname");
-        res.json(students);
-    } catch (error) {
-        console.error("Database error:", error);
-        res.status(500).json({ error: "Internal Server Error" });
-    }
-});
-
-
-const fetchStudents = async () => {
-    try {
-        const response = await axios.get("http://localhost:2025/students");
-        console.log("Fetched Students:", response.data);
-    } catch (error) {
-        console.error("Error fetching students:", error.message);
-    }
-};
-
-
-setInterval(fetchStudents, 5000);
-
 app.listen(2025, () => {
     console.log("Server is running on port 2025");
 });

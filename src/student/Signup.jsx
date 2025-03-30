@@ -4,11 +4,13 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
+import useAdmin from "../Admin/useAdmin";
 
 const Signup = () => {
+    const { setUser } = useAdmin()
     const [showPassword, setShowPassword] = useState(false);
     const [newShowPassword, setNewShowPassword] = useState(false);
-    const navigate =useNavigate()
+    const navigate = useNavigate()
 
     const [reset, setReset] = useState(false);
 
@@ -62,6 +64,9 @@ const Signup = () => {
                     timer: 2000
                 });
 
+                setUser(response.data.student)
+                localStorage.setItem("student", JSON.stringify(response.data.student))
+
                 setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
@@ -76,7 +81,7 @@ const Signup = () => {
         }
 
     }
-    
+
     return (
         <div className="container">
             {/* Left Section - Login */}

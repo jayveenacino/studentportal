@@ -2,35 +2,22 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import useAdmin from "../Admin/useAdmin";
 
 export default function Preregister() {
+    const { user, setUser } = useAdmin()
     const [sidebarVisible, setSidebarVisible] = useState(true);
     const [activeSection, setActiveSection] = useState("dashboard");
     const navigate = useNavigate();
     const [createad, setCreatead] = useState(false);
     const [enrollees, setEnrollees] = useState([]);
-    const [students, setStudents] = useState({ firstname: "", middlename: "", lastname: "" });
-
-    useEffect(() => {
-        axios.get("http://localhost:2025/students") 
-            .then(response => {
-                console.log("Fetched user data:", response.data);
-                if (Array.isArray(response.data) && response.data.length > 0) {
-                    setStudents(response.data[0]);
-                } else {
-                    console.error("User data is empty or not in expected format");
-                }
-            })
-            .catch(error => {
-                console.error("Error fetching students:", error);
-                Swal.fire("Error", "Failed to fetch student data. Please try again later.", "error"); 
-            });
-    }, []);
+    const [student, setStudent] = useState(user);
 
     const handleLogout = (event) => {
         event.preventDefault();
         localStorage.clear();
         sessionStorage.clear();
+        setUser({});
         setTimeout(() => window.location.replace("/signup"), 500);
     };
 
@@ -65,7 +52,7 @@ export default function Preregister() {
                     <div className="dropdown">
                         <button className="dropbtn">
                             <i className="fa-solid fa-user" style={{ fontSize: "12px" }}></i>
-                            {students?.firstname || ""} {students?.middlename || ""} {students?.lastname || ""} <span className="arrow">▼</span> {/* ✅ Fixed Undefined Student Data */}
+                            {student?.firstname || ""} {student?.middlename || ""} {student?.lastname || ""} <span className="arrow">▼</span>
                         </button>
                         <div className="dropdown-content">
                             <a href="#"><i className="fa-solid fa-user"></i> Profile</a>
