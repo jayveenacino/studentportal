@@ -3,8 +3,11 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./student css/create.css";
 import Swal from "sweetalert2";
+import useAdmin from "../Admin/useAdmin";
 
 export default function Create() {
+    const { setUser } = useAdmin()
+
     const navigate = useNavigate();
     const [formData, setFormData] = useState({
         firstname: "",
@@ -70,6 +73,9 @@ export default function Create() {
                     showConfirmButton: false,
                     timer: 2000
                 });
+
+                setUser(response.data.student)
+                localStorage.setItem("student", JSON.stringify(response.data.student))
 
                 setTimeout(() => navigate("/preregister"), 2000);
             }
