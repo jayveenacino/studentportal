@@ -1,6 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 const Signup = () => {
     const [showPassword, setShowPassword] = useState(false);
@@ -8,6 +10,11 @@ const Signup = () => {
 
 
     const [reset, setReset] = useState(false);
+
+    const [loginForm, setLoginForm] = useState({
+        email: "",
+        password: "",
+    })
 
     const [formData, setFormData] = useState({
         birthdate: "",
@@ -38,6 +45,38 @@ const Signup = () => {
             setFormData({ ...formData, [name]: value });
         }
     };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        try {
+            const response = await axios.post("http://localhost:2025/login", loginForm)
+
+            if (response.status === 201) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Logged In!",
+                    text: "You successfully Logged In. Redirecting...",
+                    showConfirmButton: false,
+                    timer: 2000
+                });
+
+                // setTimeout(() => navigate("/signup"), 2000);
+            }
+        } catch (error) {
+            const errorMessage = error.response?.data?.error
+
+            Swal.fire({
+                icon: "error",
+                title: "Registration Failed",
+                text: errorMessage,
+                confirmButtonColor: "#d33"
+            });
+        }
+
+    }
+
+
     return (
         <div className="container">
             {/* Left Section - Login */}
@@ -51,10 +90,12 @@ const Signup = () => {
                     <p className="subtitle" style={{ fontSize: "10px" }}>Office of the Student Welfare and Services</p>
                     <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal </p>
                     <hr />
-                    <form action="">
-                        <input type="text" placeholder="Username" className="input" required />
+                    <form onSubmit={handleSubmit}>
+                        <input onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))} value={loginForm.email} type="text" placeholder="Username" className="input" required />
                         <div style={{ position: "relative", width: "100%" }}>
                             <input
+                                value={loginForm.password}
+                                onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
                                 className="input"

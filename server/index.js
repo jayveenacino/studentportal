@@ -14,14 +14,29 @@ mongoose.connect("mongodb://127.0.0.1:27017/student", {
 
 app.post('/register', async (req, res) => {
     try {
-        let studentNumber = await StudentModel.countDocuments() + 1;
-        studentNumber = studentNumber.toString().padStart(6, '0');
+        const studentNumber = Math.random() * 1000000;
 
 
         const student = await StudentModel.create({ ...req.body, studentNumber });
         res.status(201).json({ message: "Account created successfully", student });
     } catch (err) {
         res.status(500).json({ message: "Error creating account", error: err.message });
+    }
+});
+
+app.post('/login', async (req, res) => {
+    const { email, password } = req.body;
+
+    try {
+        const student = await StudentModel.findOne({ email, password });
+
+        if (!student) {
+            throw new Error("Invalid email or password");
+        }
+
+        res.status(201).json({ message: "Account successfully logged in", student });
+    } catch (err) {
+        res.status(500).json({ message: "Error logging in", error: err.message });
     }
 });
 
