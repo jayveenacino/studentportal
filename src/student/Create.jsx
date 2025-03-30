@@ -71,7 +71,7 @@ export default function Create() {
                     timer: 2000
                 });
 
-                setTimeout(() => navigate("/signup"), 2000);
+                setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to create an account.";
