@@ -72,23 +72,23 @@ export default function Preregister() {
 
     const [image, setImage] = useState(null);
     const [base64Image, setBase64Image] = useState(null);
-    const studentId = localStorage.getItem('studentId'); // Assuming student ID is saved in localStorage after login
 
-    // Handle the image change (file input)
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (file) {
             const reader = new FileReader();
-            reader.readAsDataURL(file);
             reader.onload = () => {
-                setImage(reader.result); // Show preview
-                setBase64Image(reader.result.split(",")[1]); // Extract Base64 (removing 'data:image/...;base64,')
+                const result = reader.result;
+                setImage(result);
+                const base64 = result.split(",")[1];
+                setBase64Image(base64);
             };
+            reader.readAsDataURL(file);
         }
     };
 
-    // Handle the upload action
     const handleUpload = async () => {
+        const email = localStorage.getItem('email');  // Assuming email is saved in localStorage after login
         if (!base64Image || !email) {
             alert("Please select an image and ensure you are logged in.");
             return;
@@ -96,18 +96,15 @@ export default function Preregister() {
 
         try {
             const response = await axios.post("http://localhost:2025/upload", {
-                emial, // Send student ID to match the image to the right user
-                image: base64Image, // Base64 image data
+                email,
+                image: base64Image,
             });
-
-            alert(response.data.message); // Show success message
+            alert(response.data.message);  // Show success message
         } catch (error) {
             console.error("Upload error:", error);
             alert(error.response?.data?.message || "Failed to upload image.");
         }
     };
-
-
 
     return (
         <div className="body">
@@ -304,29 +301,42 @@ export default function Preregister() {
                                             <div className="preforgot">
                                                 <div className="forgotbg">
                                                     <h2 style={{ color: "#303030" }}>Upload your 2x2 Picture</h2>
-                                                    <p style={{ color: "red", fontSize: "12px" }}>Upload your 2x2 picture with WHITE background. For seemless uploading, it recommended that the filesize should be 2MB (2048KB) or less. Valid format are .png, .jpg/jpeg.</p>
+                                                    <p style={{ color: "red", fontSize: "12px" }}>
+                                                        Upload your 2x2 picture with WHITE background. For seamless uploading, it is recommended that the file size should be 2MB (2048KB) or less. Valid formats are .png, .jpg/jpeg.
+                                                    </p>
                                                     <hr />
-                                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
-                                                        {/* Image File Input */}
+                                                    <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
                                                         <input type="file" accept="image/*" onChange={handleImageChange} />
-
-                                                        {/* Image Preview */}
                                                         {image && (
                                                             <div style={{
-                                                                width: "150px", height: "150px", border: "2px solid #ddd", borderRadius: "8px",
-                                                                overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center"
+                                                                width: '150px',
+                                                                height: '150px',
+                                                                border: '2px solid #ddd',
+                                                                borderRadius: '8px',
+                                                                overflow: 'hidden',
+                                                                display: 'flex',
+                                                                alignItems: 'center',
+                                                                justifyContent: 'center'
                                                             }}>
-                                                                <img src={image} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                                <img src={image} alt="Preview" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                                                             </div>
                                                         )}
-
-                                                        {/* Upload Button */}
-                                                        <button onClick={handleUpload}>Upload Image</button>
                                                     </div>
 
-                                                    <div className="button-container">
+                                                    <div className="button-container" style={{ marginTop: '20px' }}>
                                                         <button style={{ border: "none" }} onClick={() => setProfilepfp(false)}>Cancel</button>
-                                                        <button onClick={handleUpload} style={{ border: "1px solid #006666", background: "#006666", color: "white" }}>Upload</button>
+                                                        <button
+                                                            onClick={handleUpload}
+                                                            style={{
+                                                                border: "1px solid #006666",
+                                                                background: "#006666",
+                                                                color: "white",
+                                                                padding: '10px 20px',
+                                                                cursor: 'pointer'
+                                                            }}
+                                                        >
+                                                            Upload
+                                                        </button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -339,7 +349,7 @@ export default function Preregister() {
                                                     <th style={{ width: '50%', background: "grey" }}></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody> 
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Registration Number</strong></td>
                                                     <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
@@ -372,6 +382,7 @@ export default function Preregister() {
                                             <span className="step-icon">{fillsection === "data" ? <i className="fa-solid fa-lock"></i> : "1"}</span>
                                             <h2 style={{ fontSize: "12px" }}>DATA PRIVACY STATEMENT</h2>
                                         </div>
+                                        
                                         {fillsection === "data" && (
                                             <div style={{ border: "none", background: "none", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
                                                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
@@ -486,8 +497,8 @@ export default function Preregister() {
                                                     <div className="persofom-group ext" style={{ width: "14%" }}>
                                                         <label>Sexual Orientation*</label>
                                                         <select className="persofom-input">
-                                                            <option></option>
-                                                            <option>Decline to Answer</option>
+                                                            <option value="" disabled hidden>Select One</option>
+                                                                <option>Decline to Answer</option>
                                                             <option>Straight</option>
                                                             <option>Lesbian</option>
                                                             <option>Gay</option>
@@ -500,7 +511,7 @@ export default function Preregister() {
                                                     <div className="persofom-group ext" style={{ width: "14%" }}>
                                                         <label>Gender Identity*</label>
                                                         <select className="persofom-input">
-                                                            <option></option>
+                                                            <option value="" disabled hidden>Select One</option>
                                                             <option>Male/Man</option>
                                                             <option>Female/Woman</option>
                                                             <option>Transmale/Transman</option>
@@ -513,6 +524,7 @@ export default function Preregister() {
                                                     <div className="persofom-group ext" style={{ width: "14%" }}>
                                                         <label>Citizenship*</label>
                                                         <select className="persofom-input">
+                                                            <option value="" disabled hidden>Select Citizenship</option>
                                                             <option>Filipino</option>
                                                             <option>American</option>
                                                             <option>Chinese</option>
@@ -535,6 +547,7 @@ export default function Preregister() {
                                                     <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
                                                         <label>Region*</label>
                                                         <select className="persofom-input">
+                                                            <option value="" disabled hidden>Select Region</option>
                                                             <option>REGION I (Ilocos Region)</option>
                                                             <option>REGION II (Cagayan Valley)</option>
                                                             <option>REGION III (Central Luzon)</option>

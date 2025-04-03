@@ -15,7 +15,22 @@ mongoose.connect("mongodb://127.0.0.1:27017/student", {
 
 app.post('/register', async (req, res) => {
     try {
-        const studentNumber = Math.random() * 1000000;
+        const currentYear = new Date().getFullYear();
+        const yearPrefix = currentYear.toString().slice(-2);
+
+        const lastStudent = await StudentModel.findOne().sort({ studentNumber: -1 });
+        let lastNumber = 0;
+
+        if (lastStudent) {
+            const lastStudentNumber = lastStudent.studentNumber;
+            const lastNumberString = lastStudentNumber.split('-')[1];
+            lastNumber = parseInt(lastNumberString, 10) || 0;
+        }
+
+        const nextNumber = lastNumber + 1;
+        const formattedNumber = nextNumber.toString().padStart(4, '0');
+
+        const studentNumber = `${yearPrefix}-${formattedNumber}`;
 
         const student = await StudentModel.create({ ...req.body, studentNumber });
         res.status(201).json({ message: "Account created successfully", student });
@@ -23,6 +38,7 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
