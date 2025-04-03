@@ -68,43 +68,59 @@ export default function Preregister() {
         });
     };
 
-    //IMAGE CONST
 
+    // IMAGE UPLOAD STATE
     const [image, setImage] = useState(null);
     const [base64Image, setBase64Image] = useState(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = () => {
-                const result = reader.result;
-                setImage(result);
-                const base64 = result.split(",")[1];
-                setBase64Image(base64);
-            };
-            reader.readAsDataURL(file);
-        }
-    };
-
-    const handleUpload = async () => {
-        const email = localStorage.getItem('email');  // Assuming email is saved in localStorage after login
-        if (!base64Image || !email) {
-            alert("Please select an image and ensure you are logged in.");
+        if (!file) {
+            alert("No file selected!");
             return;
         }
+    
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            console.log("Base64 Image:", reader.result); // Debugging output
+            setBase64Image(reader.result); // Store the Base64 string
+        };
+        reader.readAsDataURL(file);  // Convert image to base64 format
+    };
+    
+    
 
+    const handleUpload = async () => {
+        const email = localStorage.getItem("email");
+        console.log("Retrieved Email:", email); // Log to verify the email
+    
+        if (!base64Image) {
+            alert("Image is missing! Please select an image.");
+            return;
+        }
+    
+        if (!email) {
+            alert("Email is missing! Please log in.");
+            return;
+        }
+    
         try {
-            const response = await axios.post("http://localhost:2025/upload", {
-                email,
-                image: base64Image,
+            const response = await axios.post("http://localhost:2025/students", {
+                email, // Send email
+                image: base64Image, // Send the base64 image string
             });
-            alert(response.data.message);  // Show success message
+    
+            // Show the success message
+            alert(response.data.message);
         } catch (error) {
             console.error("Upload error:", error);
             alert(error.response?.data?.message || "Failed to upload image.");
         }
     };
+    
+
+    
+
 
     return (
         <div className="body">
@@ -349,7 +365,7 @@ export default function Preregister() {
                                                     <th style={{ width: '50%', background: "grey" }}></th>
                                                 </tr>
                                             </thead>
-                                            <tbody> 
+                                            <tbody>
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Registration Number</strong></td>
                                                     <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
@@ -382,7 +398,7 @@ export default function Preregister() {
                                             <span className="step-icon">{fillsection === "data" ? <i className="fa-solid fa-lock"></i> : "1"}</span>
                                             <h2 style={{ fontSize: "12px" }}>DATA PRIVACY STATEMENT</h2>
                                         </div>
-                                        
+
                                         {fillsection === "data" && (
                                             <div style={{ border: "none", background: "none", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
                                                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
@@ -498,7 +514,7 @@ export default function Preregister() {
                                                         <label>Sexual Orientation*</label>
                                                         <select className="persofom-input">
                                                             <option value="" disabled hidden>Select One</option>
-                                                                <option>Decline to Answer</option>
+                                                            <option>Decline to Answer</option>
                                                             <option>Straight</option>
                                                             <option>Lesbian</option>
                                                             <option>Gay</option>

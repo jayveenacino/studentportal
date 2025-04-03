@@ -12,7 +12,7 @@
         password: { type: String, required: true },
         conpassword: String,
         studentNumber: String,
-        image: String
+        image: { type: String }, 
     });
 
     const StudentModel = mongoose.model("students", StudentSchema);
