@@ -305,7 +305,7 @@ export default function Preregister() {
                                                     </p>
                                                     <hr />
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
-                                                        <input type="file" accept="jpg, jpeg, png" onChange={handleImageChange} />
+                                                        <input type="file" accept="image/*" onChange={handleImageChange} />
                                                         {image && (
                                                             <div style={{
                                                                 width: '150px',
