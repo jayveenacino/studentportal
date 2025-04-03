@@ -28,14 +28,6 @@ export default function Preregister() {
         }, 1500);
     }, [])
 
-    //USERLOGIN
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (!user && storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, [user, setUser]);
 
     //LOGOUT LOCATION
 
@@ -71,7 +63,6 @@ export default function Preregister() {
 
     // IMAGE UPLOAD STATE
     const [image, setImage] = useState(null);
-    const [base64Image, setBase64Image] = useState(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -79,47 +70,39 @@ export default function Preregister() {
             alert("No file selected!");
             return;
         }
-    
-        const reader = new FileReader();
+
+        const reader = new FileReader()
         reader.onloadend = () => {
-            console.log("Base64 Image:", reader.result); // Debugging output
-            setBase64Image(reader.result); // Store the Base64 string
+            setImage(reader.result)
         };
-        reader.readAsDataURL(file);  // Convert image to base64 format
+        reader.readAsDataURL(file)
     };
-    
-    
 
     const handleUpload = async () => {
-        const email = localStorage.getItem("email");
-        console.log("Retrieved Email:", email); // Log to verify the email
-    
-        if (!base64Image) {
+        if (!image) {
             alert("Image is missing! Please select an image.");
             return;
         }
-    
-        if (!email) {
+
+        if (!user.email) {
             alert("Email is missing! Please log in.");
             return;
         }
-    
+
         try {
-            const response = await axios.post("http://localhost:2025/students", {
-                email, // Send email
-                image: base64Image, // Send the base64 image string
+            const response = await axios.post("http://localhost:2025/upload", {
+                email: user.email,
+                image
             });
-    
-            // Show the success message
-            alert(response.data.message);
+
+            setUser(prev => ({ ...prev, image: response.data.student.image }));
+            setProfilepfp(false)
         } catch (error) {
             console.error("Upload error:", error);
             alert(error.response?.data?.message || "Failed to upload image.");
         }
     };
-    
 
-    
 
 
     return (
@@ -309,7 +292,7 @@ export default function Preregister() {
                                 <div className="preprofile">
                                     <div className="preprofiledetails">
                                         <div className="profile-image">
-                                            <img onClick={() => setProfilepfp(true)} src="/img/prof.jpg" alt="Profile" />
+                                            <img onClick={() => setProfilepfp(true)} src={user.image || "/img/prof.jpg"} alt="Profile" />
                                             <p className="change-text">Click/tap to change image</p>
                                         </div>
 
@@ -368,7 +351,7 @@ export default function Preregister() {
                                             <tbody>
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Registration Number</strong></td>
-                                                    <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
+                                                    <td style={{ fontSize: "13px" }}>{user?.studentNumber || ""}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Fullname</strong></td>
