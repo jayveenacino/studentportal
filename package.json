@@ -11,8 +11,11 @@
   },
   "dependencies": {
     "axios": "^1.8.4",
+    "cropperjs": "^2.0.0",
+    "lucide": "^0.486.0",
     "lucide-react": "^0.483.0",
     "react": "^19.0.0",
+    "react-cropper": "^2.3.3",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.3.0",
     "sweetalert2": "^11.17.2"

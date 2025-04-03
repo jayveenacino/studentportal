@@ -38,6 +38,44 @@
     font-size: 8px;
 }
 
+
+.admissionsum {
+    width: 46%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin-right: 20px;
+}
+
+.addatails {
+    width: 45%;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.addatails h2 {
+    color: #303030;
+    text-align: left;
+}
+
+.addatails p {
+    color: #303030;
+    padding-top: 10px;
+    font-size: 14px;
+    text-align: left;
+}
+
+
+.admissionsum h2 {
+    font-size: 15px;
+    color: #303030;
+}
+
+
 .dropdown-content {
     display: none;
     position: absolute;
@@ -66,7 +104,6 @@
 .dropdown:hover .dropdown-content {
     display: block;
 }
-
 
 .adnav-text {
     flex-grow: 1;
@@ -107,6 +144,7 @@
     z-index: 999;
 }
 
+
 .adside ul {
     display: flex;
     flex-direction: column;
@@ -144,6 +182,7 @@
     background-color: transparent;
     transition: all 0.3s ease;
 }
+
 
 .adside ul li a i {
     margin-right: 10px;
@@ -198,7 +237,7 @@
         transform: translateX(0);
     }
 
-    .adside.show + .admain {
+    .adside.show+.admain {
         margin-left: 0;
         width: 100%;
     }
@@ -222,7 +261,7 @@
     height: 25px;
     border-radius: 5px;
     text-align: center;
-    border: 1px solid #333; 
+    border: 1px solid #333;
 }
 
 .enrolgrid {
@@ -263,24 +302,24 @@
     background-color: #f1f1f1;
 }
 
-.label-container1{
+.label-container1 {
     display: flex;
-    align-items: center; 
-    justify-content: space-between; 
+    align-items: center;
+    justify-content: space-between;
 }
 
-.back-btn1{
+.back-btn1 {
     margin-left: 10px;
-    height: 30px;     
-    width: 100px;     
-    border: 1px solid #333; 
-    background: rgb(223, 223, 223); 
-    color: #333;        
-    font-size: 10px; 
-    padding: 0;        
-    cursor: pointer;  
-    border-radius: 4px; 
-    outline: none;    
+    height: 30px;
+    width: 100px;
+    border: 1px solid #333;
+    background: rgb(223, 223, 223);
+    color: #333;
+    font-size: 10px;
+    padding: 0;
+    cursor: pointer;
+    border-radius: 4px;
+    outline: none;
 }
 
 .back-btn1:hover {
@@ -288,3 +327,528 @@
     background-color: #4CAF50;
 }
 
+.loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-content img {
+    width: 80px;
+}
+
+.loading-content p {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+
+/* STUDENT PREREGISTER PANEL */
+
+.prenav {
+    display: flex;
+    align-items: center;
+    background-color: #003333;
+    padding: 15px 20px;
+    color: white;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    height: 40px;
+    z-index: 1000;
+}
+
+.premainad {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 20px;
+    align-items: flex-start;
+}
+
+.prenav-text {
+    flex-grow: 1;
+    margin-left: 10px;
+}
+
+.prenav h1 {
+    font-size: 18px;
+    color: #4CAF50;
+}
+
+.prenav p {
+    font-size: 9.2px;
+    margin-top: -5px;
+}
+
+.preside {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: top;
+    height: 100vh;
+    background-color: #d1d0d0;
+    width: 195px;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    padding: 20px;
+    transform: translateX(-250px);
+    transition: transform 0.3s ease-in-out;
+    z-index: 999;
+}
+
+
+.preside ul {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    align-items: flex-start;
+    width: 100%;
+}
+
+.preside a {
+    font-size: 15px;
+
+}
+
+.preside i {
+    text-align: center;
+}
+
+.preside ul li {
+    width: 100%;
+}
+
+.preside ul li a {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+    text-align: left;
+    text-decoration: none;
+    color: rgb(85, 83, 83);
+    border-radius: 5px;
+    box-sizing: border-box;
+    background-color: transparent;
+    transition: all 0.3s ease;
+}
+
+.prenavtab {
+    margin-top: 70px;
+}
+
+.preside ul li a i {
+    margin-right: 10px;
+}
+
+.preside ul li a:hover {
+    color: white;
+    background-color: #006666;
+    width: calc(100% + 40px);
+    margin-left: -20px;
+}
+
+.preside.show {
+    transform: translateX(0);
+}
+
+
+.preside.show {
+    transform: translateX(0);
+}
+
+.premain {
+    transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    width: calc(100% - 230px);
+    margin-left: 230px;
+}
+
+.premain.expanded {
+    width: 100%;
+    margin-left: 0;
+}
+
+.premaintab {
+    position: relative;
+    background: linear-gradient(to right, #004d4d, #008080);
+    color: white;
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 110px;
+    overflow: hidden;
+}
+
+.premaintab img {
+    position: absolute;
+    bottom: -45px;
+    right: 40px;
+    width: 190px;
+    height: 190px;
+    opacity: 0.6;
+    object-fit: cover;
+}
+
+.predashtab {
+    width: 90%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15px auto;
+
+}
+
+
+.predash {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-direction: column;
+
+}
+
+.predashtab h2 {
+    font-size: 15px;
+    color: #303030;
+}
+
+.status-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgb(236, 236, 236);
+}
+
+.status-table th,
+.status-table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+.status-table th {
+    font-weight: bold;
+    text-align: center;
+}
+
+.preprofiledetails {
+    width: 90%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15px auto;
+}
+
+.preprofile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.preprofiledetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
+
+.profile-image {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 20px;
+}
+
+.profile-image img {
+    width: 140px;
+    height: 140px;
+    border-radius: 2%;
+    border: 1px solid #ccc;
+}
+
+.change-text {
+    color: red;
+    font-size: 12px;
+    margin-top: 5px;
+    text-align: center;
+}
+
+.preforgot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.preforgot .forgotbg {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px 25px;
+    width: 100%;
+    max-width: 400px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    box-sizing: border-box;
+}
+
+.preforgot .forgotbg h2 {
+    font-size: 20px;
+    color: #222;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+.preforgot .forgotbg p {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.preforgot .forgotbg input[type="password"] {
+    width: 100%;
+    padding: 12px 15px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+    outline: none;
+    transition: border 0.2s ease;
+}
+
+.preforgot .forgotbg input[type="password"]:focus {
+    border-color: rgb(25, 105, 105);
+}
+
+.preforgot .forgotbg button {
+    background: none;
+    font-size: 16px;
+    color: #333;
+    cursor: pointer;
+    padding: 10px 15px;
+    transition: background 0.3s, color 0.3s;
+    border-radius: 6px;
+}
+
+.preforgot .forgotbg button:hover {
+    background: #006666;
+    color: #ffffff;
+    padding: 10px 15px;
+}
+
+.fulldetails {
+    position: relative;
+    padding-left: 20px;
+    border-left: 3px solid #ccc;
+}
+
+.datafill {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.fillhead {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: bold;
+    width: 95.8%;
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    margin-right: 20px;
+}
+
+.step-icon {
+    width: 20px;
+    height: 20px;
+    background-color: #ccc;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: background 0.3s ease, color 0.3s ease;
+}
+
+.datafill.active .step-icon {
+    background: #006666;
+    color: white;
+}
+
+
+.datafill {
+    margin: 0;
+    padding: 0;
+    width: 98%;
+}
+
+.fillhead.active {
+    background: #eeeeee;
+    color: #363636;
+    font-weight: bold;
+    border: 1px solid #eeeeee;
+}
+
+.fillhead:hover {
+    background-color: #eeeeee;
+    color: rgb(56, 56, 56);
+}
+
+.fillfield {
+    width: 96%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.unibtn {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 10px;
+}
+
+.unibtn button {
+    border: 1px solid #006666;
+    background: #006666;
+    color: white;
+    height: 30px;
+    padding: 5px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.persofom-container {
+    width: 96%;
+    max-width: 1200px;
+    margin: auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.persofom-description {
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+}
+
+.persofom-divider {
+    border: 1px solid darkgrey;
+}
+
+.persofom-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 100%;
+}
+
+.smalltitle {
+    margin-top: -5px;
+    text-align: left;
+    width: 100%; 
+}
+
+/* Email and Phone Number on the same line */
+.email-phone-container {
+    display: flex;
+    width: 50%;
+    gap: 20px; 
+}
+
+.email-phone-container .persofom-group {
+    flex: 1 1 48%; 
+}
+
+/* First Name, Middle Name, Last Name, and Extension on the same line */
+.name-container {
+    display: flex;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.name-container .persofom-group.name {
+    flex: 1 1 20%; 
+    margin-right: 15px;
+}
+
+.name-container .persofom-group.ext {
+    flex: 1 1 7%;
+    margin-right: 0; 
+
+}
+
+/* Container for the name fields and lock icon */
+.persofom-input-container {
+    position: relative;
+    width: 100%;
+}
+
+/* Style for the lock icon */
+.lock-icon {
+    position: absolute;
+    right: -5px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #ccc;
+    font-size: 16px;
+}
+
+/* Styles for labels */
+.persofom-group label {
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #333;
+}
+
+/* Styles for inputs */
+.persofom-input {
+    padding: 7px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 100%;
+}
+
+.persofom-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+
+.persofom-button:hover {
+    background: #0056b3;
+}

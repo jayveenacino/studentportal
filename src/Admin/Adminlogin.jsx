@@ -9,7 +9,6 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -32,7 +31,7 @@ export default function Login() {
             });
 
             setTimeout(() => navigate('/admindashboard'), 5000);
-            
+
         } else {
             Swal.fire({
                 icon: 'error',
@@ -41,10 +40,6 @@ export default function Login() {
             });
         }
     };
-
-
-
-
 
     return (
         <div>
@@ -99,9 +94,11 @@ export default function Login() {
                     </div>
                 </div>
             </div>
+        
             <div style={{ textAlign: "center", fontSize: "12px", padding: "10px", background: "#111", color: "#fff", position: "fixed", bottom: 0, width: "100%" }}>
                 © 2025 Kolehiyo Ng Subic. Management Information Systems Unit.
             </div>
+            
         </div>
     )
 }
