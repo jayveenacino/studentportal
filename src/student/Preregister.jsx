@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import useAdmin from "../Admin/useAdmin";
+import axios from "axios";
 
 export default function Preregister() {
     const { user, setUser } = useAdmin()
@@ -68,6 +69,44 @@ export default function Preregister() {
     };
 
     //IMAGE CONST
+
+    const [image, setImage] = useState(null);
+    const [base64Image, setBase64Image] = useState(null);
+    const studentId = localStorage.getItem('studentId'); // Assuming student ID is saved in localStorage after login
+
+    // Handle the image change (file input)
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                setImage(reader.result); // Show preview
+                setBase64Image(reader.result.split(",")[1]); // Extract Base64 (removing 'data:image/...;base64,')
+            };
+        }
+    };
+
+    // Handle the upload action
+    const handleUpload = async () => {
+        if (!base64Image || !email) {
+            alert("Please select an image and ensure you are logged in.");
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://localhost:2025/upload", {
+                emial, // Send student ID to match the image to the right user
+                image: base64Image, // Base64 image data
+            });
+
+            alert(response.data.message); // Show success message
+        } catch (error) {
+            console.error("Upload error:", error);
+            alert(error.response?.data?.message || "Failed to upload image.");
+        }
+    };
+
 
 
     return (
@@ -267,12 +306,27 @@ export default function Preregister() {
                                                     <h2 style={{ color: "#303030" }}>Upload your 2x2 Picture</h2>
                                                     <p style={{ color: "red", fontSize: "12px" }}>Upload your 2x2 picture with WHITE background. For seemless uploading, it recommended that the filesize should be 2MB (2048KB) or less. Valid format are .png, .jpg/jpeg.</p>
                                                     <hr />
-                                                    <div className="Uploadimage">
+                                                    <div style={{ display: "flex", flexDirection: "column", gap: "10px", alignItems: "center" }}>
+                                                        {/* Image File Input */}
+                                                        <input type="file" accept="image/*" onChange={handleImageChange} />
 
+                                                        {/* Image Preview */}
+                                                        {image && (
+                                                            <div style={{
+                                                                width: "150px", height: "150px", border: "2px solid #ddd", borderRadius: "8px",
+                                                                overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center"
+                                                            }}>
+                                                                <img src={image} alt="Preview" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                                                            </div>
+                                                        )}
+
+                                                        {/* Upload Button */}
+                                                        <button onClick={handleUpload}>Upload Image</button>
                                                     </div>
+
                                                     <div className="button-container">
                                                         <button style={{ border: "none" }} onClick={() => setProfilepfp(false)}>Cancel</button>
-                                                        <button style={{ border: "1px solid #006666", background: "#006666", color: "white" }}>Upload</button>
+                                                        <button onClick={handleUpload} style={{ border: "1px solid #006666", background: "#006666", color: "white" }}>Upload</button>
                                                     </div>
                                                 </div>
                                             </div>
@@ -545,7 +599,7 @@ export default function Preregister() {
                                                                 className="persofom-input"
                                                                 placeholder="Describe your disability here..."
                                                                 disabled={isDisabled}
-                                                                style={{ width: "100%", minHeight: "50px", resize: "vertical" ,fontSize: "11px" }}
+                                                                style={{ width: "100%", minHeight: "50px", resize: "vertical", fontSize: "11px" }}
                                                             />
                                                         </div>
                                                     </div>

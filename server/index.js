@@ -6,6 +6,7 @@ const StudentModel = require("./models/Student");
 const app = express();
 app.use(express.json());
 app.use(cors());
+app.use(express.json({ limit: "10mb" }));
 
 mongoose.connect("mongodb://127.0.0.1:27017/student", {
     useNewUrlParser: true,
@@ -58,6 +59,32 @@ const fetchStudents = async () => {
         console.error("Error fetching students:", error.message);
     }
 };
+
+
+app.post('/upload', async (req, res) => {
+    try {
+        const { email, image } = req.body; // Get email and base64 image
+
+        if (!email || !image) {
+            return res.status(400).json({ message: "Email and image are required" });
+        }
+
+        const student = await StudentModel.findOneAndUpdate(
+            { email },
+            { image },
+            { new: true }
+        );
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json({ message: "Image uploaded successfully!", student });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
 
 
 setInterval(fetchStudents, 5000);
