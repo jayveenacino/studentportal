@@ -164,21 +164,27 @@ export default function Preregister() {
 
     // Fetch regions data from the PSGC API
     useEffect(() => {
-        axios.get('https://psgc.rootscratch.com/region')
-            .then((response) => {
-                console.log("Fetched Regions:", response.data);
-                setRegionsData(response.data);
-            })
-            .catch((error) => {
+        const fetchRegions = async () => {
+            try {
+                const response = await axios.get('https://psgc.rootscratch.com/region');
+                console.log("Fetched Regions:", response.data); // Log the response
+                if (response.data && Array.isArray(response.data)) {
+                    setRegionsData(response.data);
+                } else {
+                    console.error('Regions data is not an array or missing:', response.data);
+                }
+            } catch (error) {
                 console.error('Error fetching regions data:', error);
-            });
+            }
+        };
+        fetchRegions();
     }, []);
 
     // Handle Region Change
-    const handleRegionChange = (e) => {
+    const handleRegionChange = async (e) => {
         const selectedRegion = e.target.value;
         setRegion(selectedRegion);
-        setProvince('');
+        setProvince(''); // Reset the province, city, and barangay when the region changes
         setCity('');
         setBarangay('');
         setProvincesData([]); // Reset provinces data
@@ -188,20 +194,23 @@ export default function Preregister() {
         console.log('Region selected:', selectedRegion);
 
         if (selectedRegion) {
-            // Fetch provinces for the selected region dynamically
-            axios.get(`https://psgc.rootscratch.com/province?id=${selectedRegion}`)
-                .then((response) => {
-                    console.log("Fetched Provinces:", response.data);
+            try {
+                // Fetch provinces using the region's psgc_id
+                const response = await axios.get(`https://psgc.rootscratch.com/province?id=${selectedRegion}`);
+                console.log("Fetched Provinces:", response.data); // Log the response
+                if (response.data && Array.isArray(response.data)) {
                     setProvincesData(response.data);
-                })
-                .catch((error) => {
-                    console.error('Error fetching provinces data:', error);
-                });
+                } else {
+                    console.error('Provinces data is not an array or missing:', response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching provinces data:', error);
+            }
         }
     };
 
     // Handle Province Change
-    const handleProvinceChange = (e) => {
+    const handleProvinceChange = async (e) => {
         const selectedProvince = e.target.value;
         setProvince(selectedProvince);
         setCity('');
@@ -212,20 +221,23 @@ export default function Preregister() {
         console.log('Province selected:', selectedProvince);
 
         if (selectedProvince) {
-            // Fetch cities for the selected province dynamically
-            axios.get(`https://psgc.rootscratch.com/municipal-city?id=${selectedProvince}`)
-                .then((response) => {
-                    console.log("Fetched Cities:", response.data);
+            try {
+                // Fetch cities using the province's psgc_id
+                const response = await axios.get(`https://psgc.rootscratch.com/municipal-city?id=${selectedProvince}`);
+                console.log("Fetched Cities:", response.data); // Log the response
+                if (response.data && Array.isArray(response.data)) {
                     setCitiesData(response.data);
-                })
-                .catch((error) => {
-                    console.error('Error fetching cities data:', error);
-                });
+                } else {
+                    console.error('Cities data is not an array or missing:', response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching cities data:', error);
+            }
         }
     };
 
     // Handle City Change
-    const handleCityChange = (e) => {
+    const handleCityChange = async (e) => {
         const selectedCity = e.target.value;
         setCity(selectedCity);
         setBarangay('');
@@ -234,15 +246,18 @@ export default function Preregister() {
         console.log('City selected:', selectedCity);
 
         if (selectedCity) {
-            // Fetch barangays for the selected city dynamically
-            axios.get(`https://psgc.rootscratch.com/barangay?id=${selectedCity}`)
-                .then((response) => {
-                    console.log("Fetched Barangays:", response.data);
+            try {
+                // Fetch barangays using the city's psgc_id
+                const response = await axios.get(`https://psgc.rootscratch.com/barangay?id=${selectedCity}`);
+                console.log("Fetched Barangays:", response.data); // Log the response
+                if (response.data && Array.isArray(response.data)) {
                     setBarangaysData(response.data);
-                })
-                .catch((error) => {
-                    console.error('Error fetching barangays data:', error);
-                });
+                } else {
+                    console.error('Barangays data is not an array or missing:', response.data);
+                }
+            } catch (error) {
+                console.error('Error fetching barangays data:', error);
+            }
         }
     };
 
@@ -251,6 +266,8 @@ export default function Preregister() {
         setBarangay(e.target.value);
         console.log('Barangay selected:', e.target.value);
     };
+
+
 
     return (
         <div className="body">
@@ -697,11 +714,16 @@ export default function Preregister() {
                                                             value={region}
                                                             onChange={handleRegionChange}
                                                         >
-                                                            {regionsData.map((regionData) => (
-                                                                <option key={regionData.id} value={regionData.id}>
-                                                                    {regionData.name}
-                                                                </option>
-                                                            ))}
+                                                            <option value="">Select Region</option>
+                                                            {regionsData.length > 0 ? (
+                                                                regionsData.map(region => (
+                                                                    <option key={region.psgc_id} value={region.psgc_id}>
+                                                                        {region.name}
+                                                                    </option>
+                                                                ))
+                                                            ) : (
+                                                                <option>No regions available</option>
+                                                            )}
                                                         </select>
                                                     </div>
 
@@ -715,11 +737,15 @@ export default function Preregister() {
                                                             disabled={!region} // Disable until region is selected
                                                         >
                                                             <option value="">Select Province</option>
-                                                            {provincesData.map((provinceData) => (
-                                                                <option key={provinceData.id} value={provinceData.id}>
-                                                                    {provinceData.name}
-                                                                </option>
-                                                            ))}
+                                                            {provincesData.length > 0 ? (
+                                                                provincesData.map(province => (
+                                                                    <option key={province.psgc_id} value={province.psgc_id}>
+                                                                        {province.name}
+                                                                    </option>
+                                                                ))
+                                                            ) : (
+                                                                <option>No provinces available</option>
+                                                            )}
                                                         </select>
                                                     </div>
 
@@ -733,11 +759,15 @@ export default function Preregister() {
                                                             disabled={!province}
                                                         >
                                                             <option value="">Select City</option>
-                                                            {citiesData.map((cityData) => (
-                                                                <option key={cityData.id} value={cityData.id}>
-                                                                    {cityData.name}
-                                                                </option>
-                                                            ))}
+                                                            {citiesData.length > 0 ? (
+                                                                citiesData.map(city => (
+                                                                    <option key={city.psgc_id} value={city.psgc_id}>
+                                                                        {city.name}
+                                                                    </option>
+                                                                ))
+                                                            ) : (
+                                                                <option>No cities available</option>
+                                                            )}
                                                         </select>
                                                     </div>
 
@@ -750,12 +780,15 @@ export default function Preregister() {
                                                             onChange={handleBarangayChange}
                                                             disabled={!city}
                                                         >
-                                                            <option value="">Select Barangay</option>
-                                                            {barangaysData.map((barangayData) => (
-                                                                <option key={barangayData.id} value={barangayData.id}>
-                                                                    {barangayData.name}
-                                                                </option>
-                                                            ))}
+                                                            {barangaysData.length > 0 ? (
+                                                                barangaysData.map(barangay => (
+                                                                    <option key={barangay.psgc_id} value={barangay.psgc_id}>
+                                                                        {barangay.name}
+                                                                    </option>
+                                                                ))
+                                                            ) : (
+                                                                <option>No barangays available</option>
+                                                            )}
                                                         </select>
                                                     </div>
 
