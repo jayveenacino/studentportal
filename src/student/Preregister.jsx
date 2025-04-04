@@ -364,7 +364,7 @@ export default function Preregister() {
                         )}
 
                         {activeSection === "dashboard" && (
-                            <div>
+                            <div style={{ width: "100%" }}>
                                 <div className="premaintab">
                                     <div className="prenavtab">
                                         <h2>Dashboard</h2>
@@ -515,7 +515,7 @@ export default function Preregister() {
                                             <tbody>
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Registration Number</strong></td>
-                                                    <td style={{ fontSize: "13px" }}>{user?.studentNumber || ""}</td>
+                                                    <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style={{ fontSize: "13px" }}><strong>Fullname</strong></td>
@@ -577,7 +577,7 @@ export default function Preregister() {
                                                     {/* Email and Phone Number on the same line */}
                                                     <div className="persofom-group email-phone-container">
                                                         <div className="persofom-group" style={{ marginRight: "15px" }} >
-                                                            <label>Personal Email Address*</label>
+                                                            <label style={{ color: "lightgrey" }}>Personal Email Address*</label>
                                                             <div className="persofom-input" style={{ color: "lightgrey" }}>{user?.email || ""}</div>
                                                         </div>
                                                         <div className="persofom-group" style={{ width: "60px" }}>
@@ -605,7 +605,7 @@ export default function Preregister() {
 
                                                         {/* Middle Name */}
                                                         <div className="persofom-group name">
-                                                            <label>Middle Name</label>
+                                                            <label>Middle Name*</label>
                                                             <div className="persofom-input">{user?.middlename || ""}</div>
                                                         </div>
 
@@ -620,7 +620,7 @@ export default function Preregister() {
 
                                                         {/* Extension Name */}
                                                         <div className="persofom-group ext">
-                                                            <label>Ext Name</label>
+                                                            <label>Ext Name*</label>
                                                             <select className="persofom-input">
                                                                 <option>None</option>
                                                                 <option>Jr.</option>
@@ -642,7 +642,7 @@ export default function Preregister() {
                                                         </div>
                                                     </div>
                                                     <div className="persofom-group ext" style={{ width: "10%" }}>
-                                                        <label>Civil Satus</label>
+                                                        <label>Civil Satus*</label>
                                                         <select className="persofom-input">
                                                             <option>Single</option>
                                                             <option>Married</option>
@@ -651,7 +651,7 @@ export default function Preregister() {
                                                         </select>
                                                     </div>
                                                     <div className="persofom-group ext" style={{ width: "10%" }}>
-                                                        <label>Sex at Birth</label>
+                                                        <label>Sex at Birth*</label>
                                                         <select className="persofom-input">
                                                             <option>Male</option>
                                                             <option>Female</option>
@@ -699,15 +699,15 @@ export default function Preregister() {
                                                         </select>
                                                     </div>
                                                     <div className="persofom-group name" style={{ width: "15%", marginRight: "12px" }}>
-                                                        <label>Religion *</label>
+                                                        <label>Religion*</label>
                                                         <div className="persofom-input-container">
                                                             <input className="persofom-input" type="text" />
                                                         </div>
                                                     </div>
                                                     <div className="smalltitle">
-                                                        <h2 style={{ fontSize: "12px" }}>Current Address</h2>
+                                                        <h2 style={{ fontSize: "12px", color: "green" }}>Current Address</h2>
                                                     </div>
-                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px", marginRight: "-12px" }}>
                                                         <label>Region*</label>
                                                         <select
                                                             className="persofom-input"
@@ -728,7 +728,7 @@ export default function Preregister() {
                                                     </div>
 
                                                     {/* Province Dropdown */}
-                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px", marginRight: "-12px" }}>
                                                         <label>Province*</label>
                                                         <select
                                                             className="persofom-input"
@@ -750,7 +750,7 @@ export default function Preregister() {
                                                     </div>
 
                                                     {/* City Dropdown */}
-                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                    <div className="persofom-group ext" style={{ width: "14%", marginTop: "-15px", marginRight: "-12px" }}>
                                                         <label>City/Municipality*</label>
                                                         <select
                                                             className="persofom-input"
@@ -772,7 +772,7 @@ export default function Preregister() {
                                                     </div>
 
                                                     {/* Barangay Dropdown */}
-                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                    <div className="persofom-group ext" style={{ width: "15%", marginTop: "-15px", marginRight: "-12px"  }}>
                                                         <label>Barangay*</label>
                                                         <select
                                                             className="persofom-input"
@@ -792,11 +792,26 @@ export default function Preregister() {
                                                         </select>
                                                     </div>
 
+                                                    <div className="persofom-group name" style={{ width: "17%", marginTop: "-15px" }}>
+                                                        <label>House No/Lot No/Street*</label>
+                                                        <div className="persofom-input-container">
+                                                            <input className="persofom-input" type="text" placeholder="Ex, WFI Subic" />
+                                                        </div>
+                                                    </div>
+
+
+                                                    <div className="persofom-group name" style={{ width: "7%", marginTop: "-15px", marginLeft: "3px"  }}>
+                                                        <label>Zip Code*</label>
+                                                        <div className="persofom-input-container">
+                                                            <input className="persofom-input" type="text" placeholder="Ex, 2209" />
+                                                        </div>
+                                                    </div>
+
                                                 </div>
 
                                                 <hr />
                                                 <div className="smalltitle">
-                                                    <h2 style={{ fontSize: "12px" }}>Personal Disability Information</h2>
+                                                    <h2 style={{ fontSize: "12px", color: "green" }}>Personal Disability Information</h2>
                                                 </div>
                                                 <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                                                     {/* First row: Disability Selection & Category */}
