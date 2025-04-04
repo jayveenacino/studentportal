@@ -267,6 +267,48 @@ export default function Preregister() {
         console.log('Barangay selected:', e.target.value);
     };
 
+    const handleSubmit = async () => {
+        const formData = {
+            email: user.email, // from context or logged-in user
+            birthdate,
+            birthplace,
+            civilStatus,
+            sexAtBirth,
+            sexualOrientation,
+            genderIdentity,
+            citizenship,
+            religion,
+            region,
+            province,
+            city,
+            barangay,
+            street,
+            zipCode,
+            isDisabled,
+            disabilityCategory,
+            disabilityDetails
+        };
+    
+        try {
+            const res = await fetch("http://localhost:2025/update-student", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            });
+    
+            const data = await res.json();
+            if (res.ok) {
+                alert("Form submitted successfully!");
+            } else {
+                alert(data.message);
+            }
+        } catch (err) {
+            console.error("Error submitting form:", err);
+            alert("Something went wrong");
+        }
+    };
+    
+
 
 
     return (
@@ -809,7 +851,7 @@ export default function Preregister() {
 
                                                 </div>
 
-                                                <hr />
+                                                <hr style={{marginTop:"29px",marginBottom:"29px",background:"grey"}}/>
                                                 <div className="smalltitle">
                                                     <h2 style={{ fontSize: "12px", color: "green" }}>Personal Disability Information</h2>
                                                 </div>
