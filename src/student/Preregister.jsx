@@ -60,32 +60,47 @@ export default function Preregister() {
         });
     };
 
+    //IMAGE  CONST
 
-    // IMAGE UPLOAD STATE
     const [image, setImage] = useState(null);
 
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (!file) {
-            alert("No file selected!");
+            Swal.fire({
+                title: 'Error!',
+                text: 'No file selected!',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
-        const reader = new FileReader()
+        const reader = new FileReader();
         reader.onloadend = () => {
-            setImage(reader.result)
+            setImage(reader.result);
         };
-        reader.readAsDataURL(file)
+        reader.readAsDataURL(file);
     };
 
     const handleUpload = async () => {
         if (!image) {
-            alert("Image is missing! Please select an image.");
+            Swal.fire({
+                title: 'Error!',
+                text: 'Image is missing! Please select an image.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
         if (!user.email) {
-            alert("Email is missing! Please log in.");
+            Swal.fire({
+                title: 'Error!',
+                text: 'Email is missing! Please log in.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 
@@ -96,14 +111,128 @@ export default function Preregister() {
             });
 
             setUser(prev => ({ ...prev, image: response.data.student.image }));
-            setProfilepfp(false)
+            setProfilepfp(false);
+
+            Swal.fire({
+                title: 'Success!',
+                text: 'Image uploaded successfully!',
+                icon: 'success',
+                confirmButtonText: 'OK'
+            });
         } catch (error) {
             console.error("Upload error:", error);
-            alert(error.response?.data?.message || "Failed to upload image.");
+            Swal.fire({
+                title: 'Error!',
+                text: error.response?.data?.message || "Failed to upload image.",
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
         }
     };
 
+    useEffect(() => {
+        const fetchUser = async () => {
+            const email = localStorage.getItem("userEmail");
+            if (!email) return;
 
+            try {
+                const res = await axios.get("http://localhost:2025/getuser", {
+                    params: { email }
+                });
+
+                if (res.data && res.data.student) {
+                    setUser(res.data.student);
+                }
+            } catch (err) {
+                console.error("Error fetching user:", err);
+            }
+        };
+
+        fetchUser();
+    }, []);
+
+    // REGION
+
+    const [region, setRegion] = useState('');
+    const [province, setProvince] = useState('');
+    const [city, setCity] = useState('');
+    const [barangay, setBarangay] = useState('');
+
+    const [regionsData, setRegionsData] = useState([]);
+    const [provincesData, setProvincesData] = useState([]);
+    const [citiesData, setCitiesData] = useState([]);
+    const [barangaysData, setBarangaysData] = useState([]);
+
+    useEffect(() => {
+        axios.get('https://psgc.rootscratch.com/region')
+            .then((response) => {
+                console.log('Regions Data:', response.data); // Log the regions data
+                setRegionsData(response.data);
+            })
+            .catch((error) => {
+                console.error('Error fetching regions data:', error);
+            });
+    }, []);
+
+    
+    const handleRegionChange = (e) => {
+        const selectedRegion = e.target.value;
+        setRegion(selectedRegion);
+        setProvince('');
+        setCity('');
+        setBarangay('');
+
+        if (selectedRegion) {
+            axios.get(`https://psgc.rootscratch.com/province?id=${selectedRegion}`)
+                .then((response) => {
+                    console.log('Provinces Data:', response.data);
+                    setProvincesData(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching provinces data:', error);
+                });
+        }
+    };
+
+    const handleProvinceChange = (e) => {
+        const selectedProvince = e.target.value;
+        setProvince(selectedProvince);
+        setCity('');
+        setBarangay('');
+
+        if (selectedProvince) {
+            axios.get(`https://psgc.rootscratch.com/municipal-city?id=${selectedProvince}`)
+                .then((response) => {
+                    console.log('Cities Data:', response.data); // Log the cities data
+                    setCitiesData(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching cities data:', error);
+                });
+        }
+    };
+
+    const handleCityChange = (e) => {
+        const selectedCity = e.target.value;
+        setCity(selectedCity);
+        setBarangay('');
+
+        if (selectedCity) {
+
+            axios.get(`https://psgc.rootscratch.com/barangay?id=${selectedCity}`)
+                .then((response) => {
+                    console.log('Barangays Data:', response.data); // Log the barangays data
+                    setBarangaysData(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error fetching barangays data:', error);
+                });
+        }
+    };
+
+    const handleBarangayChange = (e) => {
+        setBarangay(e.target.value);
+    };
 
     return (
         <div className="body">
@@ -301,7 +430,7 @@ export default function Preregister() {
                                                 <div className="forgotbg">
                                                     <h2 style={{ color: "#303030" }}>Upload your 2x2 Picture</h2>
                                                     <p style={{ color: "red", fontSize: "12px" }}>
-                                                        Upload your 2x2 picture with WHITE background. For seamless uploading, it is recommended that the file size should be 2MB (2048KB) or less. Valid formats are .png, .jpg/jpeg.
+                                                        Upload your 2x2 picture with WHITE background. For seamless uploading, it is recommended that the file size should be 2MB (70KB) or less. Valid formats are .png, .jpg/jpeg.
                                                     </p>
                                                     <hr />
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
@@ -493,7 +622,7 @@ export default function Preregister() {
                                                             <option>Female</option>
                                                         </select>
                                                     </div>
-                                                    <div className="persofom-group ext" style={{ width: "14%" }}>
+                                                    <div className="persofom-group ext" style={{ width: "20%" }}>
                                                         <label>Sexual Orientation*</label>
                                                         <select className="persofom-input">
                                                             <option value="" disabled hidden>Select One</option>
@@ -507,7 +636,7 @@ export default function Preregister() {
                                                             <option>Horse</option>
                                                         </select>
                                                     </div>
-                                                    <div className="persofom-group ext" style={{ width: "14%" }}>
+                                                    <div className="persofom-group ext" style={{ width: "16%" }}>
                                                         <label>Gender Identity*</label>
                                                         <select className="persofom-input">
                                                             <option value="" disabled hidden>Select One</option>
@@ -545,29 +674,76 @@ export default function Preregister() {
                                                     </div>
                                                     <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
                                                         <label>Region*</label>
-                                                        <select className="persofom-input">
-                                                            <option value="" disabled hidden>Select Region</option>
-                                                            <option>REGION I (Ilocos Region)</option>
-                                                            <option>REGION II (Cagayan Valley)</option>
-                                                            <option>REGION III (Central Luzon)</option>
-                                                            <option>REGION IV-A (Calabarzon)</option>
-                                                            <option>REGION IV-B (Mimaropa)</option>
-                                                            <option>REGION V (Bicol Region) </option>
-                                                            <option>REGION IV (Western Visayas) </option>
-                                                            <option>REGION VII (Central Visayas) </option>
-                                                            <option>REGION VIII (Eastern Visayas) </option>
-                                                            <option>REGION IX (Zamboanga Peninsula) </option>
-                                                            <option>REGION X (Northern Mindanao) </option>
-                                                            <option>REGION XI (Davao Region) </option>
-                                                            <option>REGION XII (Saccsksargen) </option>
-                                                            <option>REGION XIII (Caraga) </option>
-                                                            <option>NATIONAL CAPITAL REGION (NCR) </option>
-                                                            <option>CORDILLERA ADMINISTRATIVE REGION (CAR) </option>
-                                                            <option>AUTONOMOUS REGION IN MUSILIM MINDANAO (ARMM) </option>
-
+                                                        <select
+                                                            className="persofom-input"
+                                                            value={region}
+                                                            onChange={handleRegionChange}
+                                                        >
+                                                            <option value="">Select Region</option>
+                                                            {regionsData.map((region) => (
+                                                                <option key={region.code} value={region.code}>
+                                                                    {region.name}
+                                                                </option>
+                                                            ))}
                                                         </select>
                                                     </div>
+
+                                                    {/* Province Dropdown */}
+                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                        <label>Province*</label>
+                                                        <select
+                                                            className="persofom-input"
+                                                            value={province}
+                                                            onChange={handleProvinceChange}
+                                                            disabled={!region} // Disable until region is selected
+                                                        >
+                                                            <option value="">Select Province</option>
+                                                            {provincesData.map((province) => (
+                                                                <option key={province.code} value={province.code}>
+                                                                    {province.name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    {/* City Dropdown */}
+                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                        <label>City/Municipality*</label>
+                                                        <select
+                                                            className="persofom-input"
+                                                            value={city}
+                                                            onChange={handleCityChange}
+                                                            disabled={!province}
+                                                        >
+                                                            <option value="">Select City</option>
+                                                            {citiesData.map((city) => (
+                                                                <option key={city.code} value={city.code}>
+                                                                    {city.name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
+                                                    {/* Barangay Dropdown */}
+                                                    <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
+                                                        <label>Barangay*</label>
+                                                        <select
+                                                            className="persofom-input"
+                                                            value={barangay}
+                                                            onChange={handleBarangayChange}
+                                                            disabled={!city}
+                                                        >
+                                                            <option value="">Select Barangay</option>
+                                                            {barangaysData.map((barangay) => (
+                                                                <option key={barangay.code} value={barangay.code}>
+                                                                    {barangay.name}
+                                                                </option>
+                                                            ))}
+                                                        </select>
+                                                    </div>
+
                                                 </div>
+
                                                 <hr />
                                                 <div className="smalltitle">
                                                     <h2 style={{ fontSize: "12px" }}>Personal Disability Information</h2>
