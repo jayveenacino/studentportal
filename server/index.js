@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const StudentModel = require("./models/Student");
 
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' })); // Increase JSON body size limit
@@ -92,6 +93,33 @@ app.get("/getuser", async (req, res) => {
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
+
+app.post('/change-password', async (req, res) => {
+    const { email, currentPassword, newPassword } = req.body;
+
+    try {
+        // Ensure the email is case-insensitive when querying
+        const student = await StudentModel.findOne({ email: email.toLowerCase() });
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        if (student.password !== currentPassword) {
+            return res.status(400).json({ message: "Incorrect current password" });
+        }
+
+        student.password = newPassword;
+        await student.save();
+
+        res.status(200).json({ success: true, message: "Password updated successfully" });
+    } catch (error) {
+        console.error('Error changing password:', error);
+        res.status(500).json({ message: "Error changing password", error: error.message });
+    }
+});
+
+
 
 app.listen(2025, () => {
     console.log("Server is running on port 2025");

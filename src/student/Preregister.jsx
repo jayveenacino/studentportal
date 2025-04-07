@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import useAdmin from "../Admin/useAdmin";
@@ -10,7 +10,6 @@ export default function Preregister() {
     const [activeSection, setActiveSection] = useState("welcome");
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
-    const [forgot, setForgot] = useState(false);
     const [profilepfp, setProfilepfp] = useState(false);
     const [fillsection, setFillsection] = useState("data");
     const [fillSection, setFillSection] = useState("personal");
@@ -20,6 +19,7 @@ export default function Preregister() {
     const handleDisabilityChange = (event) => {
         setIsDisabled(event.target.value === "No");
     };
+
     //LOADING EFFECT
 
     useEffect(() => {
@@ -151,6 +151,7 @@ export default function Preregister() {
         fetchUser();
     }, []);
 
+
     //REAGION 
     const [region, setRegion] = useState('');
     const [province, setProvince] = useState('');
@@ -267,6 +268,139 @@ export default function Preregister() {
         console.log('Barangay selected:', e.target.value);
     };
 
+    //CHANGE PASSWORD
+
+    const [forgot, setForgot] = useState(false);
+    const [currentPassword, setCurrentPassword] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const showModal = () => setForgot(true);
+
+    const hideModal = () => {
+        setForgot(false); 
+        setCurrentPassword(''); 
+        setNewPassword(''); 
+        setConfirmPassword(''); 
+    };
+
+    const handleChangePassword = async () => {
+
+        let isValid = true;
+        if (!currentPassword) {
+            document.getElementById("currentPassword").style.border = "1px solid red";
+            isValid = false;
+        } else {
+            document.getElementById("currentPassword").style.border = "";
+        }
+
+        if (!newPassword) {
+            document.getElementById("newPassword").style.border = "1px solid red";
+            isValid = false;
+        } else {
+            document.getElementById("newPassword").style.border = "";
+        }
+
+        if (!confirmPassword) {
+            document.getElementById("confirmPassword").style.border = "1px solid red";
+            isValid = false;
+        } else {
+            document.getElementById("confirmPassword").style.border = "";
+        }
+
+        if (!isValid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Please fill in all the fields.',
+            });
+            return;
+        }
+
+        if (currentPassword === newPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Your new password cannot be the same as the current password.',
+            });
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'New password and confirm password do not match.',
+            });
+            return;
+        }
+
+        try {
+            const response = await fetch('http://localhost:2025/change-password', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: user.email,
+                    currentPassword,
+                    newPassword,
+                }),
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Password Updated',
+                    text: 'Your password has been updated successfully.',
+                }).then(() => {
+
+                    window.location.reload();
+                });
+                setForgot(false);
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: data.message,
+                });
+            }
+        } catch (error) {
+            console.error('Error changing password:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Something went wrong',
+                text: 'Please try again later.',
+            });
+        }
+    };
+
+
+
+
+    useEffect(() => {
+        const fetchUser = async () => {
+            const email = localStorage.getItem("userEmail");
+            if (!email) return;
+
+            try {
+                const res = await axios.get("http://localhost:2025/getuser", {
+                    params: { email }
+                });
+
+                if (res.data && res.data.student) {
+                    setUser(res.data.student);
+                    setUserEmail(res.data.student.email);
+                }
+            } catch (err) {
+                console.error("Error fetching user:", err);
+            }
+        };
+
+        fetchUser();
+    }, []);
 
 
     return (
@@ -302,18 +436,44 @@ export default function Preregister() {
                             <div className="preforgot">
                                 <div className="forgotbg">
                                     <h2 style={{ color: "#303030" }}>Change Password</h2>
-                                    <p style={{ color: "#303030" }}>To change your password, please enter your current password followed by your new password.</p>
+                                    <p style={{ color: "#303030" }}>
+                                        To change your password, please enter your current password followed by your new password.
+                                    </p>
                                     <hr />
-                                    <input type="password" placeholder="Current Password*" />
-                                    <input type="password" placeholder="New Password*" />
-                                    <input type="password" placeholder="Confirm Password*" />
+                                    <input
+                                        id="currentPassword"
+                                        type="password"
+                                        placeholder="Current Password*"
+                                        value={currentPassword}
+                                        onChange={(e) => setCurrentPassword(e.target.value)}
+                                    />
+                                    <input
+                                        id="newPassword"
+                                        type="password"
+                                        placeholder="New Password*"
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                    />
+                                    <input
+                                        id="confirmPassword"
+                                        type="password"
+                                        placeholder="Confirm Password*"
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                    />
                                     <div className="button-container">
-                                        <button style={{ border: "none" }} onClick={() => setForgot(false)}>Cancel</button>
-                                        <button style={{ border: "1px solid #006666", background: "#006666", color: "white" }}>Update Password</button>
+                                        <button style={{ border: "none" }} onClick={hideModal}>Cancel</button>
+                                        <button
+                                            style={{ border: "1px solid #006666", background: "#006666", color: "white" }}
+                                            onClick={handleChangePassword}
+                                        >
+                                            Update Password
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         )}
+
 
                     </div>
                     <div className={`preside ${sidebarVisible ? 'show' : 'hide'}`}>
@@ -457,7 +617,7 @@ export default function Preregister() {
                                     <div className="preprofiledetails">
                                         <div className="profile-image">
                                             <img onClick={() => setProfilepfp(true)} src={user.image || "/img/prof.jpg"} alt="Profile" />
-                                            <p className="change-text" style={{fontSize:"10px"}}>Click/tap to change image</p>
+                                            <p className="change-text" style={{ fontSize: "10px" }}>Click/tap to change image</p>
                                         </div>
 
                                         {profilepfp && (
@@ -465,7 +625,7 @@ export default function Preregister() {
                                                 <div className="forgotbg">
                                                     <h2 style={{ color: "#303030" }}>Upload your 2x2 Picture</h2>
                                                     <p style={{ color: "red", fontSize: "12px" }}>
-                                                        Upload your 2x2 picture with WHITE background. For seamless uploading, it is recommended that the file size should be 2MB (70KB) or less. Valid formats are .png, .jpg/jpeg.
+                                                        Upload your 2x2 picture with WHITE background. For seamless uploading, it is recommended that the file size should be 2MB (20800KB) or less. Valid formats are .png, .jpg/jpeg.
                                                     </p>
                                                     <hr />
                                                     <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center' }}>
@@ -705,7 +865,7 @@ export default function Preregister() {
                                                         </div>
                                                     </div>
                                                     <div className="smalltitle">
-                                                        <h2 style={{ fontSize: "12px",color:"green" }}>Current Address</h2>
+                                                        <h2 style={{ fontSize: "12px", color: "green" }}>Current Address</h2>
                                                     </div>
                                                     <div className="persofom-group ext" style={{ width: "20%", marginTop: "-15px" }}>
                                                         <label>Region*</label>
@@ -794,9 +954,9 @@ export default function Preregister() {
 
                                                 </div>
 
-                                                <hr style={{marginTop:"20px",marginBottom:"20px"}}/>
+                                                <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
                                                 <div className="smalltitle">
-                                                    <h2 style={{ fontSize: "12px",color:"green" }}>Personal Disability Information</h2>
+                                                    <h2 style={{ fontSize: "12px", color: "green" }}>Personal Disability Information</h2>
                                                 </div>
                                                 <div style={{ display: "flex", flexDirection: "column", gap: "15px" }}>
                                                     {/* First row: Disability Selection & Category */}
@@ -851,6 +1011,7 @@ export default function Preregister() {
                                                 </div>
                                                 <hr style={{ background: "darkgrey" }} />
                                             </div>
+
                                         )}
                                     </div>
                                 </div>
