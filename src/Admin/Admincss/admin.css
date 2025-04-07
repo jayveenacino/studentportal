@@ -811,6 +811,15 @@
 
 }
 
+.input{
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
 /* Container for the name fields and lock icon */
 .persofom-input-container {
     position: relative;

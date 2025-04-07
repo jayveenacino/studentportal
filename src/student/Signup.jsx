@@ -4,7 +4,7 @@ import { useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
-import useAdmin from "../Admin/useAdmin";
+    import useAdmin from "../Admin/useAdmin";
 
 const Signup = () => {
     const { setUser } = useAdmin()
@@ -84,6 +84,7 @@ const Signup = () => {
 
     return (
         <div className="container">
+
             {/* Left Section - Login */}
 
             <div className="login-section">
@@ -118,7 +119,7 @@ const Signup = () => {
                                     cursor: "pointer",
                                     color: "#666",
                                     fontSize: "16px"
-                                }}
+                                }}f
                             ></i>
                         </div>
                         <div className="button-group">

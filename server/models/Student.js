@@ -13,6 +13,7 @@ const StudentSchema = new mongoose.Schema({
     conpassword: String,
     studentNumber: String,
     image: { type: String },
+    
 });
 
 const StudentModel = mongoose.model("students", StudentSchema);

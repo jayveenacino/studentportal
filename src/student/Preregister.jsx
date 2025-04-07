@@ -3,6 +3,9 @@ import Swal from "sweetalert2";
 import { useNavigate, Route } from "react-router-dom";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
+import { Link } from 'react-router-dom';
+
+
 
 export default function Preregister() {
     const { user, setUser } = useAdmin()
@@ -438,42 +441,90 @@ export default function Preregister() {
                                         To change your password, please enter your current password followed by your new password.
                                     </p>
                                     <hr />
-                                    <input
-                                        type={newShowPassword ? "text" : "password"}
-                                        id="currentPassword"
-                                        placeholder="Current Password*"
-                                        value={currentPassword}
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
-                                    />
-                                    <i
-                                        className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
-                                        onMouseDown={() => setNewShowPassword(true)}
-                                        onMouseUp={() => setNewShowPassword(false)}
-                                        onMouseLeave={() => setNewShowPassword(false)}
-                                        style={{
-                                            position: "absolute",
-                                            right: "10px",
-                                            top: "50%",
-                                            transform: "translateY(-93%)",
-                                            cursor: "pointer",
-                                            color: "#666",
-                                            fontSize: "16px"
-                                        }}
-                                    ></i>
-                                    <input
-                                        id="newPassword"
-                                        type="password"
-                                        placeholder="New Password*"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                    />
-                                    <input
-                                        id="confirmPassword"
-                                        type="password"
-                                        placeholder="Confirm Password*"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                    />
+                                    <div style={{ position: "relative", width: "100%" }}>
+                                        <input
+                                            id="currentPassword"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                            type={showPassword ? "text" : "password"}
+                                            placeholder="Current Password*"
+                                            className="input"
+                                            style={{ paddingRight: "7px" }}
+                                        />
+
+                                        <i
+                                            className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
+                                            onClick={() => setShowPassword(!showPassword)}
+                                            style={{
+                                                position: "absolute",
+                                                right: "10px",
+                                                top: "35%",
+                                                transform: "translateY(-50%)",
+                                                cursor: "pointer",
+                                                color: "#666",
+                                                fontSize: "16px"
+                                            }}
+                                        ></i>
+                                    </div>
+
+                                    <div style={{ position: "relative", width: "100%" }}>
+                                        <input
+                                            className="input"
+                                            required
+                                            style={{ paddingRight: "30px" }}
+                                            type={newShowPassword ? "text" : "password"}
+                                            id="newPassword"
+                                            placeholder="New Password*"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                        />
+                                        <i
+                                            className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
+                                            onMouseDown={() => setNewShowPassword(true)}
+                                            onMouseUp={() => setNewShowPassword(false)}
+                                            onMouseLeave={() => setNewShowPassword(false)}
+                                            style={{
+                                                position: "absolute",
+                                                right: "10px",
+                                                top: "50%",
+                                                transform: "translateY(-93%)",
+                                                cursor: "pointer",
+                                                color: "#666",
+                                                fontSize: "16px"
+                                            }}
+                                        ></i>
+                                    </div>
+
+                                    <div style={{ position: "relative", width: "100%" }}>
+                                        <input
+                                            className="input"
+                                            required
+                                            style={{ paddingRight: "30px" }}
+                                            type={newShowPassword ? "text" : "password"}
+                                            id="confirmPassword"
+                                            placeholder="Confirm Password*"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+                                        <i
+                                            className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
+                                            onMouseDown={() => setNewShowPassword(true)}
+                                            onMouseUp={() => setNewShowPassword(false)}
+                                            onMouseLeave={() => setNewShowPassword(false)}
+                                            style={{
+                                                position: "absolute",
+                                                right: "10px",
+                                                top: "50%",
+                                                transform: "translateY(-93%)",
+                                                cursor: "pointer",
+                                                color: "#666",
+                                                fontSize: "16px"
+
+                                            }}
+                                        ></i>
+
+                                    </div>
+
                                     <div className="button-container">
                                         <button style={{ border: "none" }} onClick={hideModal}>Cancel</button>
                                         <button
@@ -679,15 +730,10 @@ export default function Preregister() {
                                         )}
 
                                         <table className="status-table" style={{ width: '100%' }}>
-                                            <thead>
-                                                <tr>
-                                                    <th colSpan="1" style={{ width: '10%', background: "grey" }}></th>
-                                                    <th style={{ width: '50%', background: "grey" }}></th>
-                                                </tr>
-                                            </thead>
+
                                             <tbody>
                                                 <tr>
-                                                    <td style={{ fontSize: "13px" }}><strong>Registration Number</strong></td>
+                                                    <td style={{ fontSize: "13px", width: '20%' }}><strong>Registration Number</strong></td>
                                                     <td style={{ fontSize: "13px" }}>{user?.studentNumber || ""}</td>
                                                 </tr>
                                                 <tr>
@@ -722,7 +768,8 @@ export default function Preregister() {
                                         {fillsection === "data" && (
                                             <div style={{ border: "none", background: "none", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
                                                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
-                                                    <strong style={{ fontStyle: "italic", textDecoration: "underline", color: "green" }}> @kolehiyongsubic01@gmail.com</strong> .
+                                                    <Link to="notice" target='_blank'><strong style={{ fontStyle: "italic", textDecoration: "underline", color: "green" }}>  @kolehiyongsubic01@gmail.com</strong> .  </Link>
+
                                                     By clicking the "Accept and Continue" button, I recognize the authority of the Kolehiyo Ng Subic
                                                     to process my personal and sensitive personal information, pursuant to the Kolehiyo Ng Subic General
                                                     Privacy Notice and applicable laws, and agree to the collection and use of information in accordance

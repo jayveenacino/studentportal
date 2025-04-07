@@ -60,7 +60,7 @@ export default function Login({ setPage }) {
 
                         <p style={{ fontSize: "10px", textAlign: "center" }}>
                             By clicking the login button, you recognize the authority of Kolehiyo ng Subic to process your personal and sensitive information,
-                            pursuant to the <Link to="Notice" target='_blank' style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</Link>  and applicable laws.
+                            pursuant to the <Link to="/notice" target='_blank' style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</Link>  and applicable laws.
                         </p>
                     </div>
                 </div>

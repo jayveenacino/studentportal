@@ -24,6 +24,7 @@ const router = createBrowserRouter(
       <Route path="login" element={<Login />} />
       <Route path="preregister" element={<Preregister />} />
       <Route path="login/notice" element={<Notice />} />
+      <Route path="preregister/notice" element={<Notice />} />
       {/* ADMIN SESION */}
       <Route path="adminlogin" element={<Adminlogin />} />
       <Route path="admindashboard" element={<AdminDashboard />} />
