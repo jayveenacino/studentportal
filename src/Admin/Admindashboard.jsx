@@ -23,6 +23,8 @@ function Dashboard() {
         }, 500);
     };
 
+    
+
     const handleLogoutClick = (event) => {
         event.stopPropagation();
 

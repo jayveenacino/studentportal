@@ -1,6 +1,6 @@
 import React, { useState, useEffect, use } from "react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Route } from "react-router-dom";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
 
@@ -13,12 +13,15 @@ export default function Preregister() {
     const [profilepfp, setProfilepfp] = useState(false);
     const [fillsection, setFillsection] = useState("data");
     const [fillSection, setFillSection] = useState("personal");
-
     const [isDisabled, setIsDisabled] = useState(true);
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [newShowPassword, setNewShowPassword] = useState(false);
 
     const handleDisabilityChange = (event) => {
         setIsDisabled(event.target.value === "No");
     };
+
 
     //LOADING EFFECT
 
@@ -216,8 +219,8 @@ export default function Preregister() {
         setProvince(selectedProvince);
         setCity('');
         setBarangay('');
-        setCitiesData([]); // Reset cities data
-        setBarangaysData([]); // Reset barangays data
+        setCitiesData([]);
+        setBarangaysData([]);
 
         console.log('Province selected:', selectedProvince);
 
@@ -242,13 +245,12 @@ export default function Preregister() {
         const selectedCity = e.target.value;
         setCity(selectedCity);
         setBarangay('');
-        setBarangaysData([]); // Reset barangays data
+        setBarangaysData([]);
 
         console.log('City selected:', selectedCity);
 
         if (selectedCity) {
             try {
-                // Fetch barangays using the city's psgc_id
                 const response = await axios.get(`https://psgc.rootscratch.com/barangay?id=${selectedCity}`);
                 console.log("Fetched Barangays:", response.data); // Log the response
                 if (response.data && Array.isArray(response.data)) {
@@ -262,7 +264,6 @@ export default function Preregister() {
         }
     };
 
-    // Handle Barangay Change
     const handleBarangayChange = (e) => {
         setBarangay(e.target.value);
         console.log('Barangay selected:', e.target.value);
@@ -278,10 +279,10 @@ export default function Preregister() {
     const showModal = () => setForgot(true);
 
     const hideModal = () => {
-        setForgot(false); 
-        setCurrentPassword(''); 
-        setNewPassword(''); 
-        setConfirmPassword(''); 
+        setForgot(false);
+        setCurrentPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
     };
 
     const handleChangePassword = async () => {
@@ -356,7 +357,6 @@ export default function Preregister() {
                     title: 'Password Updated',
                     text: 'Your password has been updated successfully.',
                 }).then(() => {
-
                     window.location.reload();
                 });
                 setForgot(false);
@@ -376,9 +376,6 @@ export default function Preregister() {
             });
         }
     };
-
-
-
 
     useEffect(() => {
         const fetchUser = async () => {
@@ -402,9 +399,10 @@ export default function Preregister() {
         fetchUser();
     }, []);
 
-
     return (
+
         <div className="body">
+
             {loading ? (
                 <div className="loading-screen">
                     <div className="loading-content">
@@ -441,12 +439,27 @@ export default function Preregister() {
                                     </p>
                                     <hr />
                                     <input
+                                        type={newShowPassword ? "text" : "password"}
                                         id="currentPassword"
-                                        type="password"
                                         placeholder="Current Password*"
                                         value={currentPassword}
                                         onChange={(e) => setCurrentPassword(e.target.value)}
                                     />
+                                    <i
+                                        className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
+                                        onMouseDown={() => setNewShowPassword(true)}
+                                        onMouseUp={() => setNewShowPassword(false)}
+                                        onMouseLeave={() => setNewShowPassword(false)}
+                                        style={{
+                                            position: "absolute",
+                                            right: "10px",
+                                            top: "50%",
+                                            transform: "translateY(-93%)",
+                                            cursor: "pointer",
+                                            color: "#666",
+                                            fontSize: "16px"
+                                        }}
+                                    ></i>
                                     <input
                                         id="newPassword"
                                         type="password"
