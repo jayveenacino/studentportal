@@ -1,0 +1,15 @@
+import React from 'react'
+
+export default function Upload() {
+    return (
+        <div>
+            <div className="premaintab">
+                <div className="prenavtab">
+                    <h2>Uploads</h2>
+                    <p>View/Change uploaded documents</p>
+                </div>
+                <img src="public/img/knshdlogo.png" alt="Illustration" />
+            </div>
+        </div>
+    )
+}

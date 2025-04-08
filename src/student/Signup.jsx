@@ -20,7 +20,7 @@ const Signup = () => {
     })
 
     const [formData, setFormData] = useState({
-        birthdate: "",
+        birthdate: "",  
         phone: "",
         email: "",
         password: "",

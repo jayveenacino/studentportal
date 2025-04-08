@@ -3,11 +3,10 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const StudentModel = require("./models/Student");
 
-
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: '100mb' })); // Increase JSON body size limit
-app.use(express.urlencoded({ limit: '100mb', extended: true })); // Increase URL-encoded body size limit
+app.use(express.json({ limit: '100mb' }));
+app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 mongoose.connect("mongodb://127.0.0.1:27017/student", {
     useNewUrlParser: true,
@@ -98,7 +97,7 @@ app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
 
     try {
-        // Ensure the email is case-insensitive when querying
+
         const student = await StudentModel.findOne({ email: email.toLowerCase() });
 
         if (!student) {
@@ -116,6 +115,55 @@ app.post('/change-password', async (req, res) => {
     } catch (error) {
         console.error('Error changing password:', error);
         res.status(500).json({ message: "Error changing password", error: error.message });
+    }
+});
+
+app.put("/update-profile", async (req, res) => {
+    const {
+        phone,email, middlename,extension, birthplace, civil, sex, orientation, gender,
+        citizenship, religion, region, province, city, barangay,
+        disability, disabilityCategory, disabilityDetails
+    } = req.body;
+
+    try {
+        console.log("Request Body:", req.body);
+
+        const updatedUser = await StudentModel.findOneAndUpdate(
+            { email: email },
+            {
+                phone,
+                middlename,
+                extension,
+                birthplace,
+                civil,
+                sex,
+                orientation,
+                gender,
+                citizenship,
+                religion,
+                region,
+                province,
+                city,
+                barangay,
+                disability,
+                disabilityCategory,
+                disabilityDetails
+            },
+            { new: true }
+        );
+        if (!updatedUser) {
+            console.error("User not found for email:", email);
+            return res.status(404).json({ error: "User not found" });
+        }
+        res.json({
+            success: true,
+            profileUpdated: true,
+            updatedUser: updatedUser
+        });
+    } catch (err) {
+        console.error("Error during update:", err.message);
+        console.error("Error stack:", err.stack);
+        res.status(500).json({ error: err.message });
     }
 });
 
