@@ -33,7 +33,7 @@ export default function Notice() {
                 </li>
             </ul>
             <p style={{fontSize:"14px", lineHeight:"1.6", color:"#333"}}>
-                The Gordon College website and web applications use cookies to prevent security risks, recognize that the 
+                The Kolehiyo Ng Subic website and web applications use cookies to prevent security risks, recognize that the 
                 user is logged in, customize the user’s browsing experience, store authorization tokens, and permit social 
                 media sharing.
             </p>
