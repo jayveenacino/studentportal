@@ -47,7 +47,7 @@ export default function Body() {
 
 	return (
 		<div>
-			<div className="details text-center p-4">
+			<div className="details text-center py-8">
 				<h2 className="font-medium text-2xl text-zinc-900">
 					Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />
 					First Semester A.Y 2025 - 2026
@@ -58,11 +58,11 @@ export default function Body() {
 				</p>
 			</div>
 
-			<div className="info grid grid-cols-3 gap-4">
+			<div className="info grid grid-cols-1 gap-4">
 				{steps.map((step, index) => (
 					<div
 						key={index}
-						className="border border-zinc-200 p-4 rounded-lg shadow-xs bg-white flex flex-col gap-2">
+						className="border border-zinc-200 p-6 rounded-lg shadow-xs bg-white flex flex-col gap-2 hover:bg-zinc-100 transition duration-200 ease-in-out">
 						<h1 className="font-semibold">{step.title}</h1>
 						{step.content.map((item, i) => (
 							<p key={i} className="">

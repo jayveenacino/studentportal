@@ -1,281 +1,279 @@
-
 .signincontainer {
-  width: 90%;
-  margin: auto;
-  font-family: Arial, sans-serif;
+	width: 90%;
+	margin: auto;
+	font-family: Arial, sans-serif;
 }
 
 .headersign {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding-top: 20px;
-  gap: 5px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	padding-top: 20px;
+	gap: 5px;
 }
 
 .logo {
-  height: 90px;
+	height: 90px;
 }
 
 .college-name {
-  font-size: 16px;
-  font-weight: bold;
-  margin: 0;
+	font-size: 16px;
+	font-weight: bold;
+	margin: 0;
 }
 
 .admission-text {
-  font-size: 12px;
-  margin: 0;
+	font-size: 12px;
+	margin: 0;
 }
 
 .main-content {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
 }
 
 .leftcontainer {
-  width: 45%;
-  padding: 15 px;
-  background: #ffffff;
-  color: #333;
+	width: 45%;
+	padding: 15 px;
+	background: #ffffff;
+	color: #333;
 }
 
 .important {
-  color: red;
-  font-weight: bold;
+	color: red;
+	font-weight: bold;
 }
 
 .section-title {
-  color: #1e40af;
-  font-weight: bold;
-  margin-top: 16px;
+	color: #1e40af;
+	font-weight: bold;
+	margin-top: 16px;
 }
 
 .note {
-  font-style: italic;
-  color: #555;
+	font-style: italic;
+	color: #555;
 }
 
 .security-warning {
-  font-style: italic;
-  color: #d97706;
+	font-style: italic;
+	color: #d97706;
 }
 
 .thank-you {
-  margin-top: 16px;
-  font-weight: bold;
+	margin-top: 16px;
+	font-weight: bold;
 }
 
 .rightcontainer {
-  width: 50%;
-  height: 300px;
-  background: #e6e5e5;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); 
-}
-
-h2 {
-  font-size: 18px;
+	width: 50%;
+	height: 300px;
+	background: #e6e5e5;
+	padding: 20px;
+	border-radius: 8px;
+	box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .grid-container {
-  display: flex;
-  flex-wrap: wrap ;
-  gap: 10px;
-  margin-bottom:10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .grid-container1 {
-  display: flex;
-  flex-wrap: wrap ;
-  gap: 10px;
-  margin-bottom:10px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 10px;
+	margin-bottom: 10px;
 }
 
 .input-field {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 
 .input-field1 {
-  flex: 1;
-  padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+	flex: 1;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
 }
 .privacy-text {
-  font-size: 12px;
-  color: #555;
+	font-size: 12px;
+	color: #555;
 }
 
 .privacy-link {
-  color: #0073e6;
-  text-decoration: none;
-  font-weight: bold;
+	color: #0073e6;
+	text-decoration: none;
+	font-weight: bold;
 }
 
 .short-width {
-  width: 120px; 
+	width: 120px;
 }
 
 .short-width1 {
-  width: 120px; 
+	width: 120px;
 }
 
 .button-container {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
 }
 
 .button-container1 {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
 }
 
 .enabled-btn {
-  background-color: blue;
-  color: white;
-  border: 2px solid blue;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+	background-color: blue;
+	color: white;
+	border: 2px solid blue;
+	padding: 10px 15px;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .enabled-btn:hover {
-  background-color: darkblue;
+	background-color: darkblue;
 }
 
 .disabled-btn {
-  background-color: grey;
-  color: white;
-  border: 2px solid grey;
-  padding: 10px 15px;
-  cursor: not-allowed;
-  border-radius: 5px;
+	background-color: grey;
+	color: white;
+	border: 2px solid grey;
+	padding: 10px 15px;
+	cursor: not-allowed;
+	border-radius: 5px;
 }
 
 .back-btn {
-  background-color: white;
-  color: black;
-  border: 1px solid black;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+	background-color: white;
+	color: black;
+	border: 1px solid black;
+	padding: 10px 15px;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .back-btn:hover {
-  background-color: lightgray;
+	background-color: lightgray;
 }
 
 .back-btn1 {
-  background-color: white;
-  color: black;
-  border: 1px solid black;
-  padding: 10px 15px;
-  cursor: pointer;
-  border-radius: 5px;
+	background-color: white;
+	color: black;
+	border: 1px solid black;
+	padding: 10px 15px;
+	cursor: pointer;
+	border-radius: 5px;
 }
 
 .back-btn1:hover {
-  background-color: lightgray;
+	background-color: lightgray;
 }
 
 .disabled-btn {
-  background: #ccc;
-  border: none;
-  padding: 10px 20px;
-  cursor: not-allowed;
-  border-radius: 5px;
+	background: #ccc;
+	border: none;
+	padding: 10px 20px;
+	cursor: not-allowed;
+	border-radius: 5px;
 }
 
 .back-btn {
-  background: #0073e6;
-  border: none;
-  padding: 10px 20px;
-  color: white;
-  border-radius: 5px;
-  cursor: pointer;
+	background: #0073e6;
+	border: none;
+	padding: 10px 20px;
+	color: white;
+	border-radius: 5px;
+	cursor: pointer;
 }
 
 .back-btn:hover {
-  background: #005bb5;
+	background: #005bb5;
 }
 
 .signincontainer {
-  width: 90%;
-  margin: auto;
-  font-family: Arial, sans-serif;
+	width: 90%;
+	margin: auto;
+	font-family: Arial, sans-serif;
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    flex-direction: column;
-    align-items: center;
-  }
+	.main-content {
+		flex-direction: column;
+		align-items: center;
+	}
 
-  .leftcontainer, .rightcontainer {
-    width: 100%;
-    padding: 15px;
-  }
+	.leftcontainer,
+	.rightcontainer {
+		width: 100%;
+		padding: 15px;
+	}
 
-  .rightcontainer {
-    height: auto;
-  }
+	.rightcontainer {
+		height: auto;
+	}
 
-  .button-container {
-    flex-direction: column;
-    gap: 10px;
-    color: #005bb5;
-  }
+	.button-container {
+		flex-direction: column;
+		gap: 10px;
+		color: #005bb5;
+	}
 
-  .back-btn, .disabled-btn {
-    width: 100%;
-    text-align: center;
-  }
+	.back-btn,
+	.disabled-btn {
+		width: 100%;
+		text-align: center;
+	}
 
-  .logo {
-    height: 70px;
-  }
+	.logo {
+		height: 70px;
+	}
 
-  .college-name {
-    font-size: 14px;
-  }
+	.college-name {
+		font-size: 14px;
+	}
 
-  .admission-text {
-    font-size: 10px;
-  }
+	.admission-text {
+		font-size: 10px;
+	}
 }
 
 .custom-popup {
-  text-align: center; 
+	text-align: center;
 }
 
 .custom-title {
-  font-size: 24px;  
+	font-size: 24px;
 }
 
 .custom-content {
-  margin-bottom: 20px; 
+	margin-bottom: 20px;
 }
 
-.custom-confirm-button, .custom-cancel-button {
-  height: 50px;
-  font-size: 16px; 
-  width: 150px; 
-  margin: 0 10px;  
+.custom-confirm-button,
+.custom-cancel-button {
+	height: 50px;
+	font-size: 16px;
+	width: 150px;
+	margin: 0 10px;
 }
 
 .custom-confirm-button {
-  background-color: #d33; 
+	background-color: #d33;
 }
 
 .custom-cancel-button {
-  background-color: #3085d6; 
+	background-color: #3085d6;
 }
