@@ -1,7 +1,7 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const StudentModel = require("./models/Student");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import StudentModel from "./models/Student.js";
 
 const app = express();
 app.use(cors());
@@ -12,6 +12,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/student", {
     useNewUrlParser: true,
     useUnifiedTopology: true,
 });
+
+
+//! SEPARATE THE CONCERNS, yung Controller para sa controller, routes para sa routes
 
 app.post('/register', async (req, res) => {
     try {
@@ -120,7 +123,7 @@ app.post('/change-password', async (req, res) => {
 
 app.put("/update-profile", async (req, res) => {
     const {
-        phone,email, middlename,extension, birthplace, civil, sex, orientation, gender,
+        phone, email, middlename, extension, birthplace, civil, sex, orientation, gender,
         citizenship, religion, region, province, city, barangay,
         disability, disabilityCategory, disabilityDetails
     } = req.body;
@@ -168,7 +171,7 @@ app.put("/update-profile", async (req, res) => {
 });
 
 
-
+// use standard port
 app.listen(2025, () => {
     console.log("Server is running on port 2025");
 });

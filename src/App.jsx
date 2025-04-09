@@ -32,6 +32,8 @@ function App() {
 					<Route path="signup/create" element={<Create />} />
 					<Route path="login" element={<Login />} />
 					<Route path="preregister" element={<Preregister />} />
+
+					{/* COMMENT: Pwedeng i-merge ang notice sa login at preregister */}
 					<Route path="login/notice" element={<Notice />} />
 					<Route path="preregister/notice" element={<Notice />} />
 
