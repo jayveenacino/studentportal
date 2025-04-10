@@ -83,7 +83,7 @@ export default function Footer() {
 					</Link>
 				</div>
 
-				<div className="h-full max-h-[180px] border-b">
+				<div className="h-full max-h-[180px] ">
 					<h1 className="text-lg font-semibold">Faculty Resources</h1>
 					<p className="font-light">KNS Lamp</p>
 					<p className="font-light">KNS Health Check</p>
