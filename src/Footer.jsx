@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 
 export default function Footer() {
 	return (
-		<div className="footer border border-red-500 ">
+		<div className="footer">
 			<div className="grid grid-cols-3 grid-rows-3 grid-flow-col h-full max-h-[600px] p-6 pb-0 gap-6">
 				<div className="h-full max-h-[180px] border-b">
 					<h1 className="text-lg font-semibold">About KNS</h1>
