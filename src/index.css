@@ -16,9 +16,6 @@
 
 h1 {
 	color: #1ec041;
-	font-size: 20px;
-	margin-bottom: 10px;
-	font-family: Arial, Helvetica, sans-serif;
 }
 
 hr {
@@ -30,48 +27,10 @@ hr {
 
 .NavWarp {
 	background: var(--dark-green);
-	padding: 15px 0;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	width: 100%;
-}
-
-.nav-container {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 90%;
-	max-width: 1200px;
-	margin: 0 auto;
-	padding: 0 15px;
-}
-
-.navlogo {
-	height: 50px;
-	cursor: pointer;
-	margin-right: 10px;
-}
-
-.nav-title {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-
-.nav-title h1 {
-	font-size: 22px;
-	font-weight: bold;
-	color: var(--white);
-	cursor: pointer;
-	margin: 0;
-}
-
-.nav-title p {
-	font-size: 14px;
-	margin-top: -5px;
-	color: #ffffff;
-	font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
 .menu-btn {

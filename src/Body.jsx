@@ -48,7 +48,7 @@ export default function Body() {
 	return (
 		<div>
 			<div className="details text-center py-8">
-				<h2 className="font-medium text-2xl text-zinc-900">
+				<h2 className="font-medium text-2xl text-zinc-900 text-center">
 					Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />
 					First Semester A.Y 2025 - 2026
 				</h2>
