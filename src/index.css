@@ -42,7 +42,7 @@ hr {
 .nav-container {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: start;
     width: 90%;
     max-width: 1200px;
     margin: 0 auto;
@@ -50,7 +50,7 @@ hr {
 }
 
 .navlogo {
-    height: 50px;
+    height: 43px;
     cursor: pointer;
     margin-right: 10px;
 }
@@ -58,11 +58,11 @@ hr {
 .nav-title {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: start;
 }
 
 .nav-title h1 {
-    font-size: 22px;
+    font-size: 15px;
     font-weight: bold;
     color: var(--white);
     cursor: pointer;
@@ -70,11 +70,12 @@ hr {
 }
 
 .nav-title p {
-    font-size: 14px;
-    margin-top: -5px;
+    font-size: 10px;
+    margin-top: -1px;
     color: #ffffff;
     font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
+
 
 .menu-btn {
     display: none;
@@ -86,6 +87,8 @@ hr {
     top: 50%;
     transform: translateY(-160%);
 }
+
+
 
 .mobile-menu {
     display: none;
@@ -161,6 +164,11 @@ hr {
         display: flex;
         max-height: 200px;
     }
+
+    .navcontent{
+        display: none !important;
+    }
+    
 }
 
 

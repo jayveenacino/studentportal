@@ -1,4 +1,5 @@
 import React from 'react'
+import Updocx from './Updocx'
 
 export default function Upload() {
     return (
@@ -10,6 +11,7 @@ export default function Upload() {
                 </div>
                 <img src="public/img/knshdlogo.png" alt="Illustration" />
             </div>
+            <Updocx/>
         </div>
     )
 }

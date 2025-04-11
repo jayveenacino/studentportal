@@ -203,7 +203,7 @@ export default function Preregister() {
                         <div className="dropdown">
                             <button className="dropbtn">
                                 <i className="fa-solid fa-user" style={{ fontSize: "12px" }}></i>
-                                {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""} <span className="arrow">▼</span>
+                                {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""} <span className="arrow"><i class="fa-solid fa-caret-down" style={{fontSize:"15px"}}></i></span>
                             </button>
                             <div className="dropdown-content">
                                 <a href="#" onClick={() => setForgot(true)}><i className="fa-solid fa-key"></i> Change Password</a>

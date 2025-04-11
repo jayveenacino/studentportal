@@ -560,6 +560,21 @@
     margin: 15px auto;
 }
 
+.uploads {
+    width: 90%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15px auto;
+}
+
+.uploads h1{
+    color: red;
+    font-size: 15px;
+}
+
 .preprofile {
     display: flex;
     justify-content: flex-start;

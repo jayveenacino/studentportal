@@ -34,6 +34,24 @@ export default function Welcome() {
                 <div className="admissionsum">
                     <h2>Admission Applicant Summary</h2>
                     <hr />
+                    <table className="status-table" style={{ width: '100%' }}>
+                        <thead style={{ background: "white" }}>
+                            <tr>
+                                <td style={{ textAlign: "center", fontWeight: "bold" }}>Courses</td>
+                                <td style={{ textAlign: "center", fontWeight: "bold" }}>Slot</td>
+                                <td style={{ textAlign: "center", fontWeight: "bold" }}>Status</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style={{ background: "white" }}>
+                                <td></td>
+                                <td style={{ textAlign: 'center' }}>   </td>
+                                <td style={{ textAlign: 'center' }}>
+
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

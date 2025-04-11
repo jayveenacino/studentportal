@@ -27,9 +27,30 @@ const Nav = () => {
                     <Link to="Home" style={{ textDecoration: "none" }}>
                         <p>Educasyon Tungo sa Kaunlaran</p>
                     </Link>
-            
+
                 </div>
-                {/* Hamburger Menu Button */}
+
+                <div
+                    className="navcontent"
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "flex-end",
+                        gap: "30px",   
+                        padding: "20px",
+                        marginLeft: "auto"  
+                    }}
+                >
+                    <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Home</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>About Us</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Administration</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Admission</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Research and Extension</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Campus Life</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>What's New?</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Contact Us</Link>
+                </div>
+
                 <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
                     ☰
                 </div>

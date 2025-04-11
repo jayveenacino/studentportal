@@ -608,8 +608,7 @@ export default function Personal() {
                 </div>
             </div>
 
-            <hr style={{ background: "darkgrey" }} />
-            <div className="unibtn">
+            <div className="unibtn" style={{marginTop:"20px"}}>
                 <button type="submit" onClick={handleUpdateProfile}>
                     <i className="fa-solid fa-download"></i> Save
                 </button>

@@ -5,17 +5,13 @@ import axios from "axios";
 import Data from "./Data";
 import Personal from "./Personal";
 import Education from "./Education";
+import Updocx from "./Updocx";
 
 export default function Profile() {
 
     const { user, setUser } = useAdmin()
     const [profilepfp, setProfilepfp] = useState(false);
     const [fillsection, setFillsection] = useState("data");
-
-
-
-
-
 
     //IMAGE  CONST
     const [image, setImage] = useState(null);
@@ -205,13 +201,11 @@ export default function Profile() {
                     {fillsection === "data" && (
                         <>
                             <Data />
-                            <hr style={{ background: "darkgrey" }} />
-                            <div className="unibtn">
+                            <div className="unibtn" style={{ marginTop: "9px", marginBottom: "20px", marginRight: "20px" }}>
                                 <button onClick={(e) => { e.stopPropagation(); setFillsection("personal"); }}>
                                     <i className="fa-solid fa-forward-step"></i> Accept and Continue
                                 </button>
                             </div>
-                            <hr style={{ background: "darkgrey" }} />
                         </>
                     )}
                 </div>
@@ -226,11 +220,10 @@ export default function Profile() {
                     {fillsection === "personal" && (
                         <>
                             <Personal />
-                            
+
                         </>
                     )}
                 </div>
-
 
                 <div className={`datafill ${fillsection === "education" ? "active" : ""}`} onClick={() => setFillsection("education")}>
                     <div className={`fillhead ${fillsection === "education" ? "active" : ""}`}>
@@ -245,6 +238,57 @@ export default function Profile() {
                     )}
                 </div>
 
+                <div className={`datafill ${fillsection === "family" ? "active" : ""}`} onClick={() => setFillsection("family")}>
+                    <div className={`fillhead ${fillsection === "family" ? "active" : ""}`}>
+                        <span className="step-icon">{fillsection === "family" ? <i className="fa-solid fa-pen"></i> : "4"}</span>
+                        <h2 style={{ fontSize: "12px" }}>FAMILY</h2>
+                    </div>
+
+                    {fillsection === "family" && (
+                        <>
+
+                        </>
+                    )}
+                </div>
+
+                <div className={`datafill ${fillsection === "upload" ? "active" : ""}`} onClick={() => setFillsection("upload")}>
+                    <div className={`fillhead ${fillsection === "upload" ? "active" : ""}`}>
+                        <span className="step-icon">{fillsection === "upload" ? <i className="fa-solid fa-pen"></i> : "6"}</span>
+                        <h2 style={{ fontSize: "12px" }}>UPLOAD DOCUMENTS</h2>
+                    </div>
+                    {fillsection === "upload" && (
+                        <>
+                            <Updocx />
+                        </>
+                    )}
+                </div>
+
+                <div className={`datafill ${fillsection === "confirmation" ? "active" : ""}`} onClick={() => setFillsection("confirmation")}>
+                    <div className={`fillhead ${fillsection === "confirmation" ? "active" : ""}`}>
+                        <span className="step-icon">{fillsection === "confirmation" ? <i className="fa-solid fa-pen"></i> : "7"}</span>
+                        <h2 style={{ fontSize: "12px" }}>CONFIRMATION</h2>
+                    </div>
+
+                    {fillsection === "confirmation" && (
+                        <div className="preprofile">
+                            <div className="uploads">
+                                <h4 >You are almost done!</h4 >
+                                <p style={{ marginBottom: "20px", fontSize: "15px", fontStyle: "italic", marginTop: "10px" }}>Thank you for filling out the form! The next step is to upload the remaining
+                                    images or scanned copies of the required documents. Just click the button below to complete your enlistment.
+                                    Please note that your exam schedule will be provided by the admission office once your enlistment is finalized.
+                                </p>
+                                <div className="unibtn">
+                                    <button>
+                                        <i className="fa-solid fa-forward-step"></i> Finalized Enlistment
+                                    </button>
+                                </div>
+
+
+                            </div>
+
+                        </div>
+                    )}
+                </div>
 
             </div>
         </div>
