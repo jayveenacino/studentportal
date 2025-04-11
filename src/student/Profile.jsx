@@ -4,13 +4,17 @@ import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
 import Data from "./Data";
 import Personal from "./Personal";
+import Education from "./Education";
 
 export default function Profile() {
 
     const { user, setUser } = useAdmin()
     const [profilepfp, setProfilepfp] = useState(false);
     const [fillsection, setFillsection] = useState("data");
-    const [fillSection, setFillSection] = useState("personal");
+
+
+
+
 
 
     //IMAGE  CONST
@@ -190,6 +194,7 @@ export default function Profile() {
 
             </div>
             <div className="fulldetails">
+
                 {/* Data Privacy Section */}
                 <div className={`datafill ${fillsection === "data" ? "active" : ""}`} onClick={() => setFillsection("data")}>
                     <div className={`fillhead ${fillsection === "data" ? "active" : ""}`}>
@@ -217,10 +222,30 @@ export default function Profile() {
                         <span className="step-icon">{fillsection === "personal" ? <i className="fa-solid fa-pen"></i> : "2"}</span>
                         <h2 style={{ fontSize: "12px" }}>PERSONAL INFORMATION</h2>
                     </div>
+
                     {fillsection === "personal" && (
-                        <Personal />
+                        <>
+                            <Personal />
+                            
+                        </>
                     )}
                 </div>
+
+
+                <div className={`datafill ${fillsection === "education" ? "active" : ""}`} onClick={() => setFillsection("education")}>
+                    <div className={`fillhead ${fillsection === "education" ? "active" : ""}`}>
+                        <span className="step-icon">{fillsection === "education" ? <i className="fa-solid fa-pen"></i> : "3"}</span>
+                        <h2 style={{ fontSize: "12px" }}>EDUCATION</h2>
+                    </div>
+
+                    {fillsection === "education" && (
+                        <>
+                            <Education />
+                        </>
+                    )}
+                </div>
+
+
             </div>
         </div>
     )

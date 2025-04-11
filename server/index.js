@@ -118,9 +118,33 @@ app.post('/change-password', async (req, res) => {
     }
 });
 
+app.post('/api/updateUserDetails', async (req, res) => {
+    const { email, disabilityDetails, disabilityCategory } = req.body;
+
+    console.log("Update Request Body:", req.body);
+
+    try {
+        const updatedUser = await StudentModel.findOneAndUpdate(
+            { email }, 
+            { disabilityDetails: disabilityDetails || " ", disabilityCategory: disabilityCategory },
+            { new: true }
+        );
+
+        if (!updatedUser) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json({ message: "User details updated successfully", updatedUser });
+    } catch (err) {
+        console.error('Error updating user details:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 app.put("/update-profile", async (req, res) => {
     const {
-        phone,email, middlename,extension, birthplace, civil, sex, orientation, gender,
+        phone, email, middlename, extension, birthplace, civil, sex, orientation, gender,
         citizenship, religion, region, province, city, barangay,
         disability, disabilityCategory, disabilityDetails
     } = req.body;

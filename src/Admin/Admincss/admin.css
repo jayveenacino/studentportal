@@ -659,7 +659,7 @@
 .preforgot .forgotbg i {
     position: absolute;
     right: 10px;
-        top: 50%;
+    top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
     cursor: pointer;
@@ -768,7 +768,7 @@
 .unibtn {
     display: flex;
     justify-content: flex-end;
-    margin-top: 10px;
+    gap: 10px;
 }
 
 .unibtn button {
@@ -823,6 +823,11 @@
 .email-phone-container .persofom-group {
     flex: 1 1 48%;
 }
+
+.persofom-input.error {
+    border: 1px solid red;
+}
+
 
 /* First Name, Middle Name, Last Name, and Extension on the same line */
 .name-container {
