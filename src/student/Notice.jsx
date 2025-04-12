@@ -46,7 +46,10 @@ export default function Notice() {
                 marginRight: "50px",
             }}>
                 <ul style={{ fontSize: "14", marginBottom: "10px" }}>
-                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Collected personal data is processed manually and/or electronically by authorized personnel. Access is limited to individuals who require the data to perform official functions and duties. Data is used solely for legitimate institutional purposes and not for unauthorized marketing or commercial use.</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>
+                        Collected personal data is processed manually and/or electronically by authorized personnel. 
+                        Access is limited to individuals who require the data to perform official functions and duties. 
+                        Data is used solely for legitimate institutional purposes and not for unauthorized marketing or commercial use.</li>
                 </ul>
             </div>
             <p style={{
