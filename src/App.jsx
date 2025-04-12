@@ -17,12 +17,11 @@ import AdminDashboard from './Admin/Admindashboard';
 import Preregister from './student/Preregister';
 import PrivateRoute from './student/PrivateRoute';
 import { AdminContextProvider } from './Admin/useAdmin';
-import Personal from './student/Personal.jsx';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route element={<Root />}>
-			<Route index element={<Personal />} />
+			<Route index element={<Body />} />
 			<Route path="home" element={<Home />} />
 			<Route path="signup" element={<Signup />} />
 			<Route path="signup/create" element={<Create />} />
