@@ -36,21 +36,37 @@ const Nav = () => {
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "flex-end",
-                        gap: "30px",   
+                        gap: "30px",
                         padding: "20px",
-                        marginLeft: "auto"  
+                        marginLeft: "auto"
                     }}
                 >
-                    <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Home</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>About Us</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Administration</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Admission</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Research and Extension</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Campus Life</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>What's New?</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}>Contact Us</Link>
-                </div>
-
+                    <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "13px", }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}
+                    >Home</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>About Us</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>Administration</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>Admission</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>Research and Extension</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>Campus Life</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>What's New?</Link>
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => e.target.style.color = "orange"}
+                        onMouseLeave={(e) => e.target.style.color = "white"}>Contact Us</Link>
+                </div>  
                 <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
                     ☰
                 </div>
