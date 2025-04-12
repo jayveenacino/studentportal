@@ -46,12 +46,18 @@ const Signup = () => {
         }
     };
 
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            setUser(user);
+            navigate("/preregister");
+        }
+    }, [navigate, setUser]);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
-
         try {
             const response = await axios.post("http://localhost:2025/login", loginForm);
-
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
@@ -64,7 +70,6 @@ const Signup = () => {
                 const user = response.data.student;
                 setUser(user);
                 localStorage.setItem("user", JSON.stringify(user));
-
                 setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
@@ -78,23 +83,15 @@ const Signup = () => {
         }
     };
 
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            navigate("/preregister");
-        }
-    }, [navigate]);
-
     return (
         <div className="container">
-            {/* Left Section - Login */}
             <div className="login-section">
                 <div className="login-box">
                     <div className="logo-container">
                         <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
                     </div>
                     <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
-                    <p className="subtitle" style={{ fontSize: "10px" }}>Office of the Student Welfare and Services</p>
+                    <p className="subtitle" style={{ fontSize: "10px",marginBottom:"20px",marginTop:"-px"}}>Office of the Student Welfare and Services</p>
                     <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal </p>
                     <hr />
                     <form onSubmit={handleSubmit}>
@@ -125,7 +122,9 @@ const Signup = () => {
                         </div>
                         <div className="button-group">
                             <button className="login-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Login</button>
-                            <Link to="create"> <button className="signup-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Sign Up</button></Link>
+                            <Link to="create">
+                                <button className="signup-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Sign Up</button>
+                            </Link>
                         </div>
                         <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>Forgot Password?</p>
                     </form>
@@ -180,7 +179,6 @@ const Signup = () => {
                                     onBlur={(e) => e.target.placeholder = window.innerWidth <= 768 ? "MM/DD/YYYY" : ""}
                                     placeholder={window.innerWidth <= 768 ? "MM/DD/YYYY" : ""}
                                 />
-
                             </div>
 
                             <div className="forgot-input-group">
@@ -239,14 +237,14 @@ const Signup = () => {
                             </div>
 
                             <div className="forgot-reset-buttons">
-                                <button type="button" className="forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
-                                <button type="submit" className="forgot-update-button">Update Password</button>
+                            <button type="button" className="forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
+                            <button type="submit" className="forgot-update-button">Update Password</button>
                             </div>
                         </form>
+                        
                     </div>
                 </div>
             )}
-
             {/* Right Section - Vision/Mission */}
             <div className="info-section">
                 <div className="school-branding">
