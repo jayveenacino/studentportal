@@ -63,7 +63,7 @@ const Signup = () => {
 
                 const user = response.data.student;
                 setUser(user);
-                localStorage.setItem("user", JSON.stringify(user));  
+                localStorage.setItem("user", JSON.stringify(user));
 
                 setTimeout(() => navigate("/preregister"), 2000);
             }
@@ -249,8 +249,10 @@ const Signup = () => {
 
             {/* Right Section - Vision/Mission */}
             <div className="info-section">
-                <div className="logo-container">
-                    <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
+                <div className="school-branding">
+                    <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="school-logo" />
+                    <h2 className="school-name">KOLEHIYO NG SUBIC</h2>
+                    <p className="school-address">WFI Compound, Wawandue, Subic Zambales</p>
                 </div>
 
                 <h2 className="section-title" style={{ color: "white" }}>VISION</h2>
@@ -259,7 +261,7 @@ const Signup = () => {
                 <p className="section-text">To develop globally competitive graduates to be active and responsible members of the community.</p>
                 <h2 className="section-title" style={{ color: "white" }}>GOAL</h2>
                 <p className="section-text">Kolehiyo ng Subic prepares students to succeed, fosters academic excellence through public education, delivers educational opportunities for students and educators to become globally competitive and active members of the community.</p>
-                
+
             </div>
         </div>
     );
