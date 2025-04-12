@@ -254,16 +254,12 @@ const Signup = () => {
                 </div>
 
                 <h2 className="section-title" style={{ color: "white" }}>VISION</h2>
-                <p className="section-text">By 2025, the College envisions to be a premier local institution of higher learning in Region 3 committed to the holistic development of the human person and society.</p>
+                <p className="section-text">Kolehiyo ng Subic uplifts the quality of life of the populace through effective and efficient education.</p>
                 <h2 className="section-title" style={{ color: "white" }}>MISSION</h2>
-                <p className="section-text">To produce well-trained, skilled, dynamic, and competitive individuals imbued with values and attitudes responsive to the changing needs of the local, national and global communities.</p>
-                <h2 className="section-title" style={{ color: "white" }}>GOALS</h2>
-                <ul className="goals-list">
-                    <li>Provide opportunities for high-level education in professional, technical, and vocational studies.</li>
-                    <li>Develop innovative programs and research studies.</li>
-                    <li>Promote community development through relevant programs.</li>
-                    <li>Support employability and entrepreneurship of graduates.</li>
-                </ul>
+                <p className="section-text">To develop globally competitive graduates to be active and responsible members of the community.</p>
+                <h2 className="section-title" style={{ color: "white" }}>GOAL</h2>
+                <p className="section-text">Kolehiyo ng Subic prepares students to succeed, fosters academic excellence through public education, delivers educational opportunities for students and educators to become globally competitive and active members of the community.</p>
+                
             </div>
         </div>
     );
