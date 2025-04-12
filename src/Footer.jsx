@@ -77,8 +77,6 @@ export default function Footer() {
                                 </p>
                             </a>
                         </Link>
-
-
                         <Link to="/" style={{ textDecoration: "None" }}>
                             <a
                                 style={{

@@ -7,11 +7,12 @@ export default function Body({ setPage }) {
   return (
     <div>
       <div className="details">
-        <h2 style={{fontSize:"25px"}}>
+        <h2 style={{fontSize:"37px",marginTop:"20px",marginBottom:"20px"}}>
           Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />
           First Semester A.Y 2025 - 2026
         </h2>
       </div>
+      <img className="imgnotice" src="/img/Untitled-1.png" alt="" style={{ display:"block", margin: "0 auto",pointerEvents:"none",userSelect:"none  "}} />
       <div className="info">
         <p>
           Please be informed that all applications shall be submitted online to prevent line and waiting.

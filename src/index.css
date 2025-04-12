@@ -165,11 +165,12 @@ hr {
         max-height: 200px;
     }
 
-    .navcontent{
+    .navcontent {
         display: none !important;
     }
-    
+
 }
+
 
 
 .details {
@@ -722,6 +723,14 @@ body {
         height: auto;
     }
 }
+
+@media (max-width: 768px) {
+    .imgnotice {
+        display: none;
+    }
+}
+    
+
 
 @media (max-width: 768px) {
     .footer-section.social {
