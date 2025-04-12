@@ -119,7 +119,7 @@ export default function Create() {
                     </p>
 
                     <h3 className="section-title" style={{ fontSize: "13px" }}>Email Address</h3>
-                    <p style={{ fontSize: "12px", marginTop: "-10px" }}>
+                    <p style={{ fontSize: "12px", marginTop: "10px" }}>
                         Enter a valid and existing email address. This will be our secondary means of communication and will be used as an alternate contact for scheduling and interview.
                     </p>
                     <p className="note" style={{ fontSize: "13px" }}>
