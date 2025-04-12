@@ -39,32 +39,17 @@ export default function Notice() {
                 marginLeft: "80px",
                 marginRight: "50px",
             }}>1. Acts of Processing</h3>
-            <p style={{
-                fontSize: "14px", lineHeight: "1.6", color: "#333",
-                marginBottom: "20px",
-                marginLeft: "90px",
-                marginRight: "50px",
-            }}>Kolehiyo Ng Subic processes Personal Data to:</p>
             <div style={{
                 fontSize: "16px", marginTop: "20px",
                 color: "#333",
                 marginLeft: "100px",
                 marginRight: "50px",
             }}>
-                <ul style={{ marginLeft: "20px", paddingLeft: "10px" }}>
-                    <li style={{ fontSize: "14", marginBottom: "5px" }}>Perform its obligations, exercise its rights, and conduct its associated functions as:
-                        <ul style={{ fontSize: "14", marginBottom: "5px" }}>
-                            <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>An instrument of the government</li>
-                            <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px" }}>A higher education institution</li>
-                        </ul>
-                    </li>
-                    <li style={{ fontSize: "14", marginBottom: "5px", marginTop: "20px" }}>Pursue its purposes and mandates:
-                        <ul style={{ fontSize: "14", marginBottom: "5px" }}>
-                            <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>The Higher Education Act of 1994 (Republic Act No. 7722)</li>
-                            <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px" }}>CHED Memorandum Order No. 32 S. 2006</li>
-                            <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px" }}>City Ordinance No. 07 S. 2018</li>
-                        </ul>
-                    </li>
+                <ul style={{ fontSize: "14", marginBottom: "10px" }}>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>
+                        Collected personal data is processed manually and/or electronically by authorized personnel. 
+                        Access is limited to individuals who require the data to perform official functions and duties. 
+                        Data is used solely for legitimate institutional purposes and not for unauthorized marketing or commercial use.</li>
                 </ul>
             </div>
             <p style={{
@@ -298,7 +283,10 @@ export default function Notice() {
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Retention periods for academic and employment records may vary but will not exceed the period allowed by law</li>
                 </ul>
             </div>
+<<<<<<< HEAD
             
+=======
+>>>>>>> c9165e5b230bf424b5b5bed5b32ec4aceaa3667c
             <h3 style={{
                 fontSize: "16px", marginTop: "20px",
                 color: "#333",
