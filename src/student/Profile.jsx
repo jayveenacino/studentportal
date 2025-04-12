@@ -7,6 +7,7 @@ import Personal from "./Personal";
 import Education from "./Education";
 import Updocx from "./Updocx";
 
+
 export default function Profile() {
 
     const { user, setUser } = useAdmin()
@@ -282,8 +283,6 @@ export default function Profile() {
                                         <i className="fa-solid fa-forward-step"></i> Finalized Enlistment
                                     </button>
                                 </div>
-
-
                             </div>
 
                         </div>

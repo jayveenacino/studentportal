@@ -1,26 +1,23 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-    import useAdmin from "../Admin/useAdmin";
+import useAdmin from "../Admin/useAdmin";
 
 const Signup = () => {
-    const { setUser } = useAdmin()
+    const { setUser } = useAdmin();
     const [showPassword, setShowPassword] = useState(false);
     const [newShowPassword, setNewShowPassword] = useState(false);
-    const navigate = useNavigate()
-
+    const navigate = useNavigate();
     const [reset, setReset] = useState(false);
 
     const [loginForm, setLoginForm] = useState({
         email: "",
         password: "",
-    })
+    });
 
     const [formData, setFormData] = useState({
-        birthdate: "",  
+        birthdate: "",
         phone: "",
         email: "",
         password: "",
@@ -53,40 +50,44 @@ const Signup = () => {
         e.preventDefault();
 
         try {
-            const response = await axios.post("http://localhost:2025/login", loginForm)
+            const response = await axios.post("http://localhost:2025/login", loginForm);
 
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
                     title: "Logged In!",
-                    text: "You successfully Logged In. Redirecting...",
+                    text: "You successfully logged in. Redirecting...",
                     showConfirmButton: false,
-                    timer: 2000
+                    timer: 2000,
                 });
 
-                setUser(response.data.student)
-                localStorage.setItem("student", JSON.stringify(response.data.student))
+                const user = response.data.student;
+                setUser(user);
+                localStorage.setItem("user", JSON.stringify(user));  
 
                 setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
-            const errorMessage = error.response?.data?.error
-
+            const errorMessage = error.response?.data?.error;
             Swal.fire({
                 icon: "error",
-                title: "Registration Failed",
+                title: "Login Failed",
                 text: errorMessage,
-                confirmButtonColor: "#d33"
+                confirmButtonColor: "#d33",
             });
         }
+    };
 
-    }
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (user) {
+            navigate("/preregister");
+        }
+    }, [navigate]);
 
     return (
         <div className="container">
-
             {/* Left Section - Login */}
-
             <div className="login-section">
                 <div className="login-box">
                     <div className="logo-container">
@@ -119,7 +120,7 @@ const Signup = () => {
                                     cursor: "pointer",
                                     color: "#666",
                                     fontSize: "16px"
-                                }}f
+                                }}
                             ></i>
                         </div>
                         <div className="button-group">
@@ -245,8 +246,6 @@ const Signup = () => {
                     </div>
                 </div>
             )}
-
-
 
             {/* Right Section - Vision/Mission */}
             <div className="info-section">

@@ -1,6 +1,8 @@
 import React, { useState, useEffect, use } from "react";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
+import { useNavigate } from 'react-router-dom';
+
 import axios from "axios";
 import Welcome from './Welcome';
 import Dashboard from './Dashboard';
@@ -25,17 +27,23 @@ export default function Preregister() {
         }, 1500);
     }, [])
 
+    const navigate = useNavigate();
 
-    //LOGOUT LOCATION
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem('user'));
+        if (!user || Object.keys(user).length === 0) {
+            navigate('/signup', { replace: true });
+        }
+    }, []);
+    
     const handleLogout = (event) => {
         event.preventDefault();
         localStorage.clear();
         sessionStorage.clear();
         setUser({});
-        setTimeout(() => window.location.replace("/signup"), 500);
+        navigate('/signup'); 
     };
 
-    //LOGOUT CONST
     const handleLogoutClick = (event) => {
         event.stopPropagation();
         Swal.fire({
@@ -203,7 +211,7 @@ export default function Preregister() {
                         <div className="dropdown">
                             <button className="dropbtn">
                                 <i className="fa-solid fa-user" style={{ fontSize: "12px" }}></i>
-                                {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""} <span className="arrow"><i class="fa-solid fa-caret-down" style={{fontSize:"15px"}}></i></span>
+                                {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""} <span className="arrow"><i class="fa-solid fa-caret-down" style={{ fontSize: "15px" }}></i></span>
                             </button>
                             <div className="dropdown-content">
                                 <a href="#" onClick={() => setForgot(true)}><i className="fa-solid fa-key"></i> Change Password</a>

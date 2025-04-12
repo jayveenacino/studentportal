@@ -10,6 +10,8 @@ import Adminlogin from './Admin/Adminlogin'
 import Notice from './student/Notice'
 import AdminDashboard from './Admin/Admindashboard'
 import Preregister from './student/Preregister'
+import PrivateRoute from './student/PrivateRoute'
+
 
 
 const router = createBrowserRouter(
@@ -28,6 +30,14 @@ const router = createBrowserRouter(
       {/* ADMIN SESION */}
       <Route path="adminlogin" element={<Adminlogin />} />
       <Route path="admindashboard" element={<AdminDashboard />} />
+      <Route
+        path="/preregister"
+        element={
+          <PrivateRoute>
+            <Preregister />
+          </PrivateRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" />} />
     </Route>
   )
