@@ -283,10 +283,7 @@ export default function Notice() {
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Retention periods for academic and employment records may vary but will not exceed the period allowed by law</li>
                 </ul>
             </div>
-<<<<<<< HEAD
             
-=======
->>>>>>> c9165e5b230bf424b5b5bed5b32ec4aceaa3667c
             <h3 style={{
                 fontSize: "16px", marginTop: "20px",
                 color: "#333",
