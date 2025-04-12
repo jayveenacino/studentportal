@@ -1,0 +1,121 @@
+[
+    {
+        "code": "010000000",
+        "name": "Ilocos Region",
+        "regionName": "Region I",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "0100000000"
+    },
+    {
+        "code": "020000000",
+        "name": "Cagayan Valley",
+        "regionName": "Region II",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "0200000000"
+    },
+    {
+        "code": "030000000",
+        "name": "Central Luzon",
+        "regionName": "Region III",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "0300000000"
+    },
+    {
+        "code": "040000000",
+        "name": "CALABARZON",
+        "regionName": "Region IV-A",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "0400000000"
+    },
+    {
+        "code": "170000000",
+        "name": "MIMAROPA Region",
+        "regionName": "MIMAROPA Region",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "1700000000"
+    },
+    {
+        "code": "050000000",
+        "name": "Bicol Region",
+        "regionName": "Region V",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "0500000000"
+    },
+    {
+        "code": "060000000",
+        "name": "Western Visayas",
+        "regionName": "Region VI",
+        "islandGroupCode": "visayas",
+        "psgc10DigitCode": "0600000000"
+    },
+    {
+        "code": "070000000",
+        "name": "Central Visayas",
+        "regionName": "Region VII",
+        "islandGroupCode": "visayas",
+        "psgc10DigitCode": "0700000000"
+    },
+    {
+        "code": "080000000",
+        "name": "Eastern Visayas",
+        "regionName": "Region VIII",
+        "islandGroupCode": "visayas",
+        "psgc10DigitCode": "0800000000"
+    },
+    {
+        "code": "090000000",
+        "name": "Zamboanga Peninsula",
+        "regionName": "Region IX",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "0900000000"
+    },
+    {
+        "code": "100000000",
+        "name": "Northern Mindanao",
+        "regionName": "Region X",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "1000000000"
+    },
+    {
+        "code": "110000000",
+        "name": "Davao Region",
+        "regionName": "Region XI",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "1100000000"
+    },
+    {
+        "code": "120000000",
+        "name": "SOCCSKSARGEN",
+        "regionName": "Region XII",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "1200000000"
+    },
+    {
+        "code": "130000000",
+        "name": "NCR",
+        "regionName": "National Capital Region",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "1300000000"
+    },
+    {
+        "code": "140000000",
+        "name": "CAR",
+        "regionName": "Cordillera Administrative Region",
+        "islandGroupCode": "luzon",
+        "psgc10DigitCode": "1400000000"
+    },
+    {
+        "code": "160000000",
+        "name": "Caraga",
+        "regionName": "Region XIII",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "1600000000"
+    },
+    {
+        "code": "150000000",
+        "name": "BARMM",
+        "regionName": "Bangsamoro Autonomous Region in Muslim Mindanao",
+        "islandGroupCode": "mindanao",
+        "psgc10DigitCode": "1900000000"
+    }
+]
