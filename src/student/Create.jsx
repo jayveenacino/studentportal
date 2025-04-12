@@ -118,7 +118,7 @@ export default function Create() {
                         <strong className="important">Important:</strong> Please Fill Out the Information Below Accurately
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Email Address</h3>
+                    <h3 className="section-title" style={{ fontSize: "13px",marginBottom:"15px" }}>Email Address</h3>
                     <p style={{ fontSize: "12px", marginTop: "-10px" }}>
                         Enter a valid and existing email address. This will be our secondary means of communication and will be used as an alternate contact for scheduling and interview.
                     </p>

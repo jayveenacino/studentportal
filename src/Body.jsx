@@ -3,9 +3,8 @@ import { Link } from 'react-router-dom';
 
 export default function Body({ setPage }) {
 
-
   return (
-    <div>
+    <div> 
       <div className="details">
         <h2 style={{fontSize:"37px",marginTop:"20px",marginBottom:"20px"}}>
           Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />

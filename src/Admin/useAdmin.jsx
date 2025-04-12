@@ -14,18 +14,18 @@ export function AdminContextProvider({ children }) {
     const [user, setUser] = useState({})
 
     useEffect(() => {
-        const adminExist = localStorage.getItem('Admin')
-        const userExist = localStorage.getItem('student')
-
+        const adminExist = localStorage.getItem("Admin");
+        const userExist = localStorage.getItem("user");
+    
         if (adminExist) {
-            setAdmin(JSON.parse(adminExist))
+            setAdmin(JSON.parse(adminExist));
         }
-
+    
         if (userExist) {
-            setUser(JSON.parse(userExist))
+            console.log("User loaded:", JSON.parse(userExist));
+            setUser(JSON.parse(userExist));
         }
-    }, [])
-
+    }, []);
     return (
         <AdminContext.Provider value={{ admin, setAdmin, user, setUser }}>
             {children}
