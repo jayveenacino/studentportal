@@ -14,8 +14,14 @@ export default function Body({ setPage }) {
                 marginLeft: "80px",
                 marginRight: "50px",
             }}>PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.</h3>
+            <h3 style={{
+                fontSize: "20px", marginTop: "30px",
+                color: "#333",
+                marginLeft: "80px",
+                marginRight: "50px",
+            }}>READ THE INSTRUCTIONS THOROUGLY BEFORE PRE-REGISTERING TO AVOID ERRORS.</h3>
         <h3 style={{
-                fontSize: "20px", marginTop: "20px",
+                fontSize: "18px", marginTop: "30px",
                 color: "#333",
                 marginLeft: "80px",
                 marginRight: "50px",
@@ -103,8 +109,72 @@ export default function Body({ setPage }) {
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After clicking, the Basic Information Page will pop out, this is where you fill out your personal information. After filling out click <strong>"Save"</strong></li>
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out your Basic Information, Fill out your Educational Background, and click <strong>"Save"</strong> after filling out.</li>
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out your Educational Background, Enter your Family Background, click <strong>"Save"</strong> after filling out.</li>
-                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out your Family Background, Upload your Documents at the Upload Documents Page, you will see the documents that are needed to upload.</li>
-                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After uploading your documents, you may now finalize your enlisment by clicking <strong>"Finalize Enlistment"</strong></li>
+                </ul>
+            </div>
+            <h3 style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "80px",
+                marginRight: "50px",
+            }}>STEP 4: DOCUMENT UPLOADS </h3>
+            <div style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "100px",
+                marginRight: "50px",
+            }}>
+                <ul style={{ fontSize: "14", marginBottom: "10px" }}>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>At the profile page, you may scroll down and click the <strong>"Upload Documents"</strong> section.</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>This page is where you will upload the necessary documents that are needed for your enrollment.</li>
+                </ul>
+            </div>
+            <h3 style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "80px",
+                marginRight: "50px",
+            }}>Prepare the Following Documents: </h3>
+            <div style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "100px",
+                marginRight: "50px",
+            }}>
+                <ul style={{ fontSize: "14", marginBottom: "10px" }}>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>2x2 Picture with White Background</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Government Issued ID or Senior High School ID (<strong>Must be Recently Graduated if you are using a Senior High School ID</strong>)</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>NSO/PSA Birth Certificate</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Certficate of Good Moral </li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}><strong>Academic Records:</strong></li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>First Semester Report Card (for SHS Graduating)</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Complete Report Card SF9 (for SHS Graduates)</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Complete Report Card F-138 (for Old BEC Graduates)</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>ALS Certificate of Rating (For ALS Passers)</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Transcript of Records or Certificate of Grades (For Transferees)</li>
+                </ul>
+                
+            </div>
+            <h3 style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "80px",
+                marginRight: "50px",
+            }}>Make sure that the documents that you are uploading are clear and readable as blurred photos may affect the readability of your documents and your enrollment.</h3>
+            <h3 style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "80px",
+                marginRight: "50px",
+            }}>STEP 5: CONFIRMATION</h3>
+            <div style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "100px",
+                marginRight: "50px",
+            }}>
+                <ul style={{ fontSize: "14", marginBottom: "10px" }}>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out the needed information forms you may now click the <strong>"Finalize Enlisment"</strong> button</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After clicking the button, please wait for the confirmation email of your KNS Admission Test Schedule that is sent to you by the school. </li>
                 </ul>
             </div>
             <h3 style={{
@@ -123,14 +193,26 @@ export default function Body({ setPage }) {
                 <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Double Check your information before finalizing.</li>
                     <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Ensure that there are no typos or errors in your information as it may affect your enlistment.</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Be sure that the uploaded documents are clear and readable.</li>
                 </ul>
             </div>
             <h3 style={{
-                fontSize: "20px", marginTop: "25px",
+                fontSize: "16px", marginTop: "20px",
                 color: "#333",
                 marginLeft: "80px",
                 marginRight: "50px",
-            }}>That's All! Please wait for the confirmation email sent to you by the school for your entrance exam schedule. Welcome to Kolehiyo ng Subic!</h3>
+            }}>STEP 6: KNS ADMISSION TEST</h3>
+            <div style={{
+                fontSize: "16px", marginTop: "20px",
+                color: "#333",
+                marginLeft: "100px",
+                marginRight: "50px",
+            }}>
+                <ul style={{ fontSize: "14", marginBottom: "10px" }}>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After recieving the email about your Admission Test Schedule, you may head to the Kolehiyo ng Subic Campus at your designated schedule and room.</li>
+                    <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Since the Exam is computerized, there will be a Observer that will guide you for answering the Exam.</li>
+                </ul>
+            </div>
       </div>
     </div>
   );
