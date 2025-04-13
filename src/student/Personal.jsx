@@ -103,7 +103,7 @@ export default function Personal() {
 			[name]: value,
 		}));
 	};
-
+	
 	//! MAKE THIS AN OBJECT
 	//FILLUP FORM
 	const [phone, setPhone] = useState(user?.phone || '');
