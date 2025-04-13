@@ -6,9 +6,9 @@ import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 
 export default function Create() {
-    const { setUser } = useAdmin()
-
+    const { setUser } = useAdmin();
     const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         firstname: "",
         middlename: "",
@@ -30,9 +30,7 @@ export default function Create() {
 
         if (name === "phone") {
             let numericValue = value.replace(/\D/g, "");
-            if (numericValue.startsWith("0")) {
-                numericValue = numericValue.slice(1);
-            }
+            if (numericValue.startsWith("0")) numericValue = numericValue.slice(1);
             numericValue = numericValue.slice(0, 10);
 
             let formattedPhone = numericValue
@@ -61,10 +59,10 @@ export default function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-
+    
         try {
             const response = await axios.post("http://localhost:2025/register", formData);
-
+    
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
@@ -73,15 +71,18 @@ export default function Create() {
                     showConfirmButton: false,
                     timer: 2000
                 });
-
-                setUser(response.data.student)
-                localStorage.setItem("student", JSON.stringify(response.data.student))
-
-                setTimeout(() => navigate("/preregister"), 2000);
+    
+                localStorage.setItem("user", JSON.stringify(response.data.student));
+    
+                setUser(response.data.student);
+    
+                setTimeout(() => {
+                    navigate("/preregister");
+                }, 2000);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to create an account.";
-
+    
             if (errorMessage.includes("already registered")) {
                 Swal.fire({
                     icon: "warning",
@@ -98,9 +99,10 @@ export default function Create() {
                 });
             }
         }
-
+    
         setLoading(false);
     };
+    
 
     return (
         <div className="signincontainer">
@@ -139,14 +141,42 @@ export default function Create() {
                     <h2>Create An Account</h2>
                     <hr />
                     {message && <p className="message">{message}</p>}
-                    {/* Display success/error message */}
 
                     <form onSubmit={handleSubmit}>
                         <div className="grid-container">
-                            <input type="text" name="firstname" placeholder="Firstname*" className="input-field short-width" value={formData.firstname} onChange={handleChange} />
-                            <input type="text" name="middlename" placeholder="Middlename" className="input-field short-width" value={formData.middlename} onChange={handleChange} />
-                            <input type="text" name="lastname" placeholder="Lastname*" className="input-field short-width" value={formData.lastname} onChange={handleChange} />
-                            <select name="extension" className="input-field short-width" value={formData.extension} onChange={handleChange}>
+                            <input
+                                type="text"
+                                name="firstname"
+                                autoComplete="given-name"
+                                placeholder="Firstname*"
+                                className="input-field short-width"
+                                value={formData.firstname}
+                                onChange={handleChange}
+                            />
+                            <input
+                                type="text"
+                                name="middlename"
+                                autoComplete="additional-name"
+                                placeholder="Middlename"
+                                className="input-field short-width"
+                                value={formData.middlename}
+                                onChange={handleChange}
+                            />
+                            <input
+                                type="text"
+                                name="lastname"
+                                autoComplete="family-name"
+                                placeholder="Lastname*"
+                                className="input-field short-width"
+                                value={formData.lastname}
+                                onChange={handleChange}
+                            />
+                            <select
+                                name="extension"
+                                className="input-field short-width"
+                                value={formData.extension}
+                                onChange={handleChange}
+                            >
                                 <option value="" disabled hidden>Extension</option>
                                 <option value="">None</option>
                                 <option value="Sr">Sr</option>
@@ -158,9 +188,29 @@ export default function Create() {
                         </div>
 
                         <div className="grid-container">
-                            <input type="date" name="birthdate" className="input-field" value={formData.birthdate} onChange={handleChange} />
-                            <input type="text" name="phone" placeholder="+63 XXX-XXX-XXXX" className="input-field" value={formData.phone} onChange={handleChange} />
-                            <select name="register" className="input-field" value={formData.register} onChange={handleChange}>
+                            <input
+                                type="date"
+                                name="birthdate"
+                                autoComplete="bday"
+                                className="input-field"
+                                value={formData.birthdate}
+                                onChange={handleChange}
+                            />
+                            <input
+                                type="tel"
+                                name="phone"
+                                autoComplete="tel"
+                                placeholder="+63 XXX-XXX-XXXX"
+                                className="input-field"
+                                value={formData.phone}
+                                onChange={handleChange}
+                            />
+                            <select
+                                name="register"
+                                className="input-field"
+                                value={formData.register}
+                                onChange={handleChange}
+                            >
                                 <option value="" disabled hidden>Registering As:</option>
                                 <option value="New student">New student</option>
                                 <option value="Transferee">Transferee</option>
@@ -169,9 +219,33 @@ export default function Create() {
                         </div>
 
                         <div className="grid-container">
-                            <input type="email" name="email" placeholder="Email Address*" className="input-field" value={formData.email} onChange={handleChange} />
-                            <input type="password" name="password" placeholder="Desired Password*" className="input-field" value={formData.password} onChange={handleChange} />
-                            <input type="password" name="confirmPassword" placeholder="Confirm Password*" className="input-field" value={formData.confirmPassword} onChange={handleChange} />
+                            <input
+                                type="email"
+                                name="email"
+                                autoComplete="email"
+                                placeholder="Email Address*"
+                                className="input-field"
+                                value={formData.email}
+                                onChange={handleChange}
+                            />
+                            <input
+                                type="password"
+                                name="password"
+                                autoComplete="new-password"
+                                placeholder="Desired Password*"
+                                className="input-field"
+                                value={formData.password}
+                                onChange={handleChange}
+                            />
+                            <input
+                                type="password"
+                                name="confirmPassword"
+                                autoComplete="new-password"
+                                placeholder="Confirm Password*"
+                                className="input-field"
+                                value={formData.confirmPassword}
+                                onChange={handleChange}
+                            />
                         </div>
 
                         <hr />
@@ -181,10 +255,14 @@ export default function Create() {
                         <hr />
 
                         <div className="button-container">
-                            <button className={isFormValid() ? "enabled-btn" : "disabled-btn"} disabled={!isFormValid() || loading}>
+                            <button
+                                type="submit"
+                                className={isFormValid() ? "enabled-btn" : "disabled-btn"}
+                                disabled={!isFormValid() || loading}
+                            >
                                 {loading ? "Creating Account..." : "Continue with Sign Up"}
                             </button>
-                            <button className="back-btn" onClick={() => navigate(-1)}>Back</button>
+                            <button type="button" className="back-btn" onClick={() => navigate(-1)}>Back</button>
                         </div>
                     </form>
                 </div>
