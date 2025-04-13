@@ -13,7 +13,7 @@ export default function Body({ setPage }) {
                     color: "#333",
                     marginLeft: "80px",
                     marginRight: "50px",
-                }}>PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.</h3>
+                }}>PLEASE BE ADVISED THAT ALL REGISTRATION WILL NOW BE MADE ONLINE.</h3>
                 <h3 style={{
                     fontSize: "20px", marginTop: "20px",
                     color: "#333",
