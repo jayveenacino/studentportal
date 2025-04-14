@@ -6,6 +6,7 @@ import Data from "./Data";
 import Personal from "./Personal";
 import Education from "./Education";
 import Updocx from "./Updocx";
+import Family from "./Family";
 
 
 export default function Profile() {
@@ -106,11 +107,11 @@ export default function Profile() {
     return (
         <div>
             <div className="premaintab">
-                <div className="prenavtab">
+                <div className="prenavtab" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
                     <h2>Profile</h2>
                     <p>View / Edit personal information</p>
                 </div>
-                <img src="public/img/knshdlogo.png" alt="Illustration" />
+                <img src="public/img/knshdlogo.png" alt="Illustration" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
             </div>
             <div className="preprofile">
                 <div className="preprofiledetails">
@@ -143,7 +144,6 @@ export default function Profile() {
                                         </div>
                                     )}
                                 </div>
-
                                 <div className="button-container" style={{ marginTop: '20px' }}>
                                     <button style={{ border: "none" }} onClick={() => setProfilepfp(false)}>Cancel</button>
                                     <button
@@ -235,6 +235,11 @@ export default function Profile() {
                     {fillsection === "education" && (
                         <>
                             <Education />
+                            <div className="unibtn" style={{ marginTop: "9px", marginBottom: "20px", marginRight: "20px" }}>
+                                <button onClick={(e) => { e.stopPropagation(); setFillsection("family"); }}>
+                                    <i className="fa-solid fa-forward-step"></i> Accept and Continue
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>
@@ -247,7 +252,12 @@ export default function Profile() {
 
                     {fillsection === "family" && (
                         <>
-
+                            <Family />
+                            <div className="unibtn" style={{ marginTop: "9px", marginBottom: "20px", marginRight: "20px" }}>
+                                <button onClick={(e) => { e.stopPropagation(); setFillsection("upload"); }}>
+                                    <i className="fa-solid fa-forward-step"></i> Accept and Continue
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>
@@ -260,6 +270,11 @@ export default function Profile() {
                     {fillsection === "upload" && (
                         <>
                             <Updocx />
+                            <div className="unibtn" style={{ marginTop: "9px", marginBottom: "20px", marginRight: "20px" }}>
+                                <button onClick={(e) => { e.stopPropagation(); setFillsection("confirmation"); }}>
+                                    <i className="fa-solid fa-forward-step"></i> Accept and Continue
+                                </button>
+                            </div>
                         </>
                     )}
                 </div>
@@ -274,6 +289,7 @@ export default function Profile() {
                         <div className="preprofile">
                             <div className="uploads">
                                 <h4 >You are almost done!</h4 >
+                                <hr style={{background:"grey"}}/>
                                 <p style={{ marginBottom: "20px", fontSize: "15px", fontStyle: "italic", marginTop: "10px" }}>Thank you for filling out the form! The next step is to upload the remaining
                                     images or scanned copies of the required documents. Just click the button below to complete your enlistment.
                                     Please note that your exam schedule will be provided by the admission office once your enlistment is finalized.

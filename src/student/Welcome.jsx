@@ -6,11 +6,11 @@ export default function Welcome() {
     return (
         <div>
             <div className="premaintab">
-                <div className="prenavtab">
+                <div className="prenavtab" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }}  >
                     <h2>Kolehiyo Ng Subic Student Admission Portal</h2>
                     <p>Welcome, {user?.firstname || ""} {user?.middlename || ""} {user?.lastname || ""} {user?.extension || ""}</p>
                 </div>
-                <img src="public/img/knshdlogo.png" alt="Illustration" />
+                <img src="public/img/knshdlogo.png" alt="Illustration" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
             </div>
             <div className="premainad">
                 <div className="addatails">
@@ -19,16 +19,22 @@ export default function Welcome() {
                     <p>Thank you for choosing Kolehiyo Ng Subic as your educational destination. We're excited to guide you through the admission process!</p>
                     <p>Here, you can submit your application, track your progress, and receive important updates regarding your interview and admission status</p>
                     <p style={{ fontWeight: "bold" }}>To get Started :</p>
-                    <p> • Complete your application form with accurate details.</p>
-                    <p> • Make sure to upload the required documents. Please take note that <strong>uploading of false documents and/or blank or incorrect documents is strictly prohibited</strong>  and will be subject to the <strong>immediate deletion of your account</strong> </p>
-                    <p> • Keep track of important deadlines and communications through the <strong>Dashboard section</strong>  of this portal.</p>
-                    <p> • You have 10 working days upon registration to accomplish all of the required documents otherwise your account will be moved to the archived list. </p>
-                    <p>If you have any questions or need assistance, our Admission Team is here to help! Feel free to reach out to us at &nbsp;
+                    <p style={{ marginLeft: "20px" }}> • Complete your application form with accurate details.</p>
+                    <p style={{ marginLeft: "20px" }}> • Make sure to upload the required documents. Please take note that <strong>uploading of false documents and/or blank or incorrect documents is strictly prohibited</strong>  and will be subject to the <strong>immediate deletion of your account</strong> </p>
+                    <p style={{ marginLeft: "20px" }}> • Keep track of important deadlines and communications through the <strong>Dashboard section</strong>  of this portal.</p>
+                    <p style={{ marginLeft: "20px" }}> • You have 10 working days upon registration to accomplish all of the required documents otherwise your account will be moved to the archived list. </p>
+                    <p>Need help or have questions about your application?
+                        Our dedicated Admission Team is here to support you every step of the way! Whether you're unsure about the requirements, deadlines, or the application process itself, don’t hesitate to get in touch with us at &nbsp;
                         <strong style={{ fontSize: "14px", color: "darkgreen" }}>@kolehiyongsubic01@gmail.com</strong>
                     </p>
                     <p>
-                        We look forward to welcoming you to the Kolehiyo ng Subic family and wish you the best luck with your application
+                        We understand that starting your college journey can feel overwhelming—but you’re not alone. We’re here to guide you, answer your concerns, and make the process as smooth as possible.
                     </p>
+                    <p>
+                        We look forward to welcoming you to the Kolehiyo ng Subic family and can't wait to see all the great things you’ll achieve. Wishing you the very best of luck with your application!
+                    </p>
+                    <p><strong>Sincerely,</strong> </p> <br />
+                    <p style={{marginLeft:"20px",marginTop:"-20px"}}> Kolehiyo ng Subic Admissions Team</p>
                 </div>
                 <div className="admissionsum">
                     <h2>Admission Applicant Summary</h2>

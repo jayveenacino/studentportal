@@ -5,19 +5,24 @@ import { Outlet, useLocation } from 'react-router-dom'
 
 export default function Root() {
     const location = useLocation()
+    const hiddenPaths = [
+        "/signup",
+        "/signup/create",
+        "/login",
+        "/adminlogin",
+        "/login/notice",
+        "/admindashboard",
+        "/preregister",
+        "/preregister/notice",
+        "/preregister/"
+    ]
 
+    const shouldShowLayout = !hiddenPaths.includes(location.pathname)
     return (
         <>
-
-            {(location.pathname !== "/signup" && location.pathname !== "/signup/create" && location.pathname !== "/login" && location.pathname !== "/adminlogin" && location.pathname !== "/login/notice" && location.pathname !== "/admindashboard" && location.pathname !== "/preregister" && location.pathname !== "/preregister/notice") &&
-                <Nav />
-            }
-
+            {shouldShowLayout && <Nav />}
             <Outlet />
-            {(location.pathname !== "/signup" && location.pathname !== "/signup/create" && location.pathname !== "/login" && location.pathname !== "/adminlogin" && location.pathname !== "/login/notice" && location.pathname !== "/admindashboard" && location.pathname !== "/preregister" && location.pathname !== "/preregister/notice") &&
-                <Footer />
-            }
-
+            {shouldShowLayout && <Footer />}
         </>
     )
 }

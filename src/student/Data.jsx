@@ -9,8 +9,9 @@ export default function Data() {
     return (
         <div className="uploads">
 
-            <div style={{ border: "none", background: "#f0f0f0", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
+            <div style={{ border: "none", background: "white", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
                 <h4 >Hello their !</h4 >
+                <hr style={{ background: "#333" }} />
                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
                     <Link to="notice" target='_blank'><strong style={{ fontStyle: "italic", textDecoration: "underline", color: "green" }}>  @kolehiyongsubic01@gmail.com</strong> .  </Link>
                     By clicking the "Accept and Continue" button, I recognize the authority of the Kolehiyo Ng Subic

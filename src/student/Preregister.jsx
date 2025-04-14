@@ -203,8 +203,8 @@ export default function Preregister() {
             ) : (
                 <div className="adcontainer">
                     <div className="prenav">
-                        <img className="adlogo" src="./img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />
-                        <div className="prenav-text">
+                        <img className="adlogo" src="./img/knshdlogo.png" alt="Logo" draggable="false" style={{ pointerEvents: "none", userSelect: "none",height: "45px"  }} />
+                        <div className="prenav-text"  draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
                             <h1>Kolehiyo Ng Subic</h1>
                             <p>Student Admission Portal v.0.3</p>
                         </div>

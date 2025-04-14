@@ -103,7 +103,7 @@ export default function Personal() {
 			[name]: value,
 		}));
 	};
-	
+
 	//! MAKE THIS AN OBJECT
 	//FILLUP FORM
 	const [phone, setPhone] = useState(user?.phone || '');
@@ -257,86 +257,100 @@ export default function Personal() {
 
 	return (
 		<div
-			className={`persofom-container ${
-				fillSection === 'personal' ? 'show' : ''
-			}`}>
+			className={`persofom-container ${fillSection === 'personal' ? 'show' : ''
+				}`}>
 			<div className="persofom-grid">
-				<div className="persofom-group email-phone-container">
-					<div className="persofom-group" style={{ marginRight: '15px' }}>
-						<label>Personal Email Address*</label>
-						<div className="persofom-input" style={{ color: 'lightgrey' }}>
-							{user?.email || ''}
+				<div className="uploads" style={{ marginBottom: '1rem', width: "100%" }}>
+					<div>
+						<h4 style={{ color: "#333" }}>Complete your personal information!	</h4>
+						<p style={{ marginBottom: "20px", fontSize: "10px", fontStyle: "italic", marginTop: "10px", color: "orange" }}>
+							This helps us keep your records accurate and up-to-date!
+							<hr style={{ background: "grey" }} />
+						</p>
+
+						<div style={{ display: 'flex', flexDirection: 'row', gap: "3rem", width: '100%', justifyContent: "center" }}>
+
+							<div className="persofom-group" style={{}}>
+								<label>Personal Email Address*</label>
+								<div className="persofom-input" style={{ color: 'lightgrey', background: "white",pointerEvents:"none",userSelect:"none" }}>
+									{user?.email || ''}
+								</div>
+							</div>
+							<div className="persofom-group" style={{}}>
+								<label>Mobile Number*</label>
+								<input
+									type="text"
+									className="persofom-input"
+									value={user?.phone || extension || ''}
+									onChange={(e) => setPhone(e.target.value)}
+								/>
+							</div>
 						</div>
 					</div>
-					<div className="persofom-group" style={{ width: '60px' }}>
-						<label>Mobile Number*</label>
-						<input
-							type="text"
-							className="persofom-input"
-							value={user?.phone || extension || ''}
-							onChange={(e) => setPhone(e.target.value)}
-						/>
+					<div style={{ marginTop: "15px" }}>
+						<div className="persofom-group name-container">
+							{/* First Name */}
+							<div className="persofom-group name">
+								<label>First Name*</label>
+								<div className="persofom-input-container">
+									<div className="persofom-input" style={{ background: "white" }}>{user?.firstname || ''}</div>
+									<i
+										className="lock-icon fa fa-lock"
+										title="This field is locked"></i>
+								</div>
+							</div>
+
+							{/* Middle Name */}
+							<div className="persofom-group name">
+								<label>Middle Name</label>
+								<input
+									className="persofom-input"
+									type="text"
+									value={middlename}
+									onChange={(e) => setMiddlename(e.target.value)}
+								/>
+							</div>
+
+							{/* Last Name */}
+							<div className="persofom-group name">
+								<label>Last Name*</label>
+								<div className="persofom-input-container">
+									<div className="persofom-input" style={{ background: "white" }}>{user?.lastname || ''}</div>
+									<i
+										className="lock-icon fa fa-lock"
+										title="This field is locked"></i>
+								</div>
+							</div>
+
+							{/* Extension Name */}
+							<div className="persofom-group ext">
+								<label>Ext Name</label>
+								<select
+									className="persofom-input"
+									value={extension || user?.extension || ''}
+									onChange={(e) => {
+										const selectedValue = e.target.value;
+										setExtension(selectedValue);
+										if (selectedValue === '') {
+											setExtension('');
+										}
+									}}>
+									<option value="" disabled hidden>
+										Extension
+									</option>
+									<option value=" ">None</option>
+									<option value="Sr">Sr</option>
+									<option value="Jr">Jr</option>
+									<option value="III">III</option>
+									<option value="IV">IV</option>
+									<option value="V">V</option>
+								</select>
+							</div>
+						</div>
 					</div>
+
 				</div>
-				<div className="persofom-group name-container">
-					{/* First Name */}
-					<div className="persofom-group name">
-						<label>First Name*</label>
-						<div className="persofom-input-container">
-							<div className="persofom-input">{user?.firstname || ''}</div>
-							<i
-								className="lock-icon fa fa-lock"
-								title="This field is locked"></i>
-						</div>
-					</div>
 
-					{/* Middle Name */}
-					<div className="persofom-group name">
-						<label>Middle Name</label>
-						<input
-							className="persofom-input"
-							type="text"
-							value={middlename}
-							onChange={(e) => setMiddlename(e.target.value)}
-						/>
-					</div>
-
-					{/* Last Name */}
-					<div className="persofom-group name">
-						<label>Last Name*</label>
-						<div className="persofom-input-container">
-							<div className="persofom-input">{user?.lastname || ''}</div>
-							<i
-								className="lock-icon fa fa-lock"
-								title="This field is locked"></i>
-						</div>
-					</div>
-
-					{/* Extension Name */}
-					<div className="persofom-group ext">
-						<label>Ext Name</label>
-						<select
-							className="persofom-input"
-							value={extension || user?.extension || ''}
-							onChange={(e) => {
-								const selectedValue = e.target.value;
-								setExtension(selectedValue);
-								if (selectedValue === '') {
-									setExtension('');
-								}
-							}}>
-							<option value="" disabled hidden>
-								Extension
-							</option>
-							<option value=" ">None</option>
-							<option value="Sr">Sr</option>
-							<option value="Jr">Jr</option>
-							<option value="III">III</option>
-							<option value="IV">IV</option>
-							<option value="V">V</option>
-						</select>
-					</div>
-				</div>
 				<form onSubmit={handleUpdateProfile} className="persofom-grid">
 					<div
 						className="persofom-group name"
@@ -355,9 +369,8 @@ export default function Personal() {
 						<label>Birth place*</label>
 						<div className="persofom-input-container">
 							<input
-								className={`persofom-input ${
-									formErrors.birthplace ? 'error' : ''
-								}`}
+								className={`persofom-input ${formErrors.birthplace ? 'error' : ''
+									}`}
 								type="text"
 								value={birthplace}
 								onChange={(e) => setBirthplace(e.target.value)}
@@ -400,9 +413,8 @@ export default function Personal() {
 					<div className="persofom-group ext" style={{ width: '20%' }}>
 						<label>Sexual Orientation*</label>
 						<select
-							className={`persofom-input ${
-								formErrors.orientation ? 'error' : ''
-							}`}
+							className={`persofom-input ${formErrors.orientation ? 'error' : ''
+								}`}
 							value={orientation || user?.orientation || ''}
 							onChange={(e) => setOrientation(e.target.value)}>
 							<option value="" disabled hidden>
@@ -437,9 +449,8 @@ export default function Personal() {
 					<div className="persofom-group ext" style={{ width: '14%' }}>
 						<label>Citizenship*</label>
 						<select
-							className={`persofom-input ${
-								formErrors.citizenship ? 'error' : ''
-							}`}
+							className={`persofom-input ${formErrors.citizenship ? 'error' : ''
+								}`}
 							value={citizenship || user?.citizenship || ''}
 							onChange={(e) => setCitizenship(e.target.value)}>
 							<option value="" disabled hidden>
@@ -460,22 +471,23 @@ export default function Personal() {
 						<label>Religion *</label>
 						<div className="persofom-input-container">
 							<input
-								className={`persofom-input ${
-									formErrors.religion ? 'error' : ''
-								}`}
+								className={`persofom-input ${formErrors.religion ? 'error' : ''
+									}`}
 								value={religion}
 								onChange={(e) => setReligion(e.target.value)}
 							/>
 						</div>
 					</div>
+
 					<div className="smalltitle">
+						<hr style={{ marginTop: '20px', marginBottom: '20px' }} />
 						<h2 style={{ fontSize: '12px', color: 'green' }}>
 							Current Address
 						</h2>
 					</div>
 					<div
 						className="persofom-group ext"
-						style={{ width: '20%', marginTop: '-15px' }}>
+						style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>Region*</label>
 						<select
 							name="region"
@@ -499,7 +511,7 @@ export default function Personal() {
 
 					<div
 						className="persofom-group ext"
-						style={{ width: '20%', marginTop: '-15px' }}>
+						style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>Province*</label>
 						<select
 							name="province"
@@ -523,7 +535,7 @@ export default function Personal() {
 
 					<div
 						className="persofom-group ext"
-						style={{ width: '20%', marginTop: '-15px' }}>
+						style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>City/Municipality*</label>
 						<select
 							name="city"
@@ -547,7 +559,7 @@ export default function Personal() {
 
 					<div
 						className="persofom-group ext"
-						style={{ width: '20%', marginTop: '-15px' }}>
+						style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>Barangay*</label>
 						<select
 							name="barangay"
