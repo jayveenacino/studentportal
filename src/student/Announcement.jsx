@@ -10,7 +10,6 @@ export default function Announcement() {
                 </div>
                 <img src="public/img/knshdlogo.png" alt="Illustration"  draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
             </div>
-            <img src="public/img/blackbox.jpg" alt="" style={{width:"100%",height:"auto"}} />
         </div>
     )
 }
