@@ -15,9 +15,9 @@ const Nav = () => {
                         className="navlogo"
                         src="/img/knshdlogo.png"
                         alt="KNS Logo"
+                        
                     />
                 </Link>
-
                 <div
                     className="nav-title"
                 >
@@ -66,18 +66,22 @@ const Nav = () => {
                     <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
                         onMouseEnter={(e) => e.target.style.color = "orange"}
                         onMouseLeave={(e) => e.target.style.color = "white"}>Contact Us</Link>
-                </div>  
+                </div>
                 <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-                    ☰
+                    <i class="fa-solid fa-bars"></i>
                 </div>
             </div>
 
             {/* Mobile Menu */}
             <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-                <p >Home</p>
-                <p >About</p>
-                <p >Programs</p>
-                <p >Contact</p>
+                <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "16px" }}>Home</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>About Us</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Administration</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Admission</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Research and Extension</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Campus Life</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Whats New?</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Contact Us</Link>
             </div>
         </div>
     );

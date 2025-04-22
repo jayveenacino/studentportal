@@ -1,15 +1,11 @@
 import React, { useState, useEffect, use } from "react";
 import { Link } from 'react-router-dom';
 
-export default function Data() {
-    const [fillsection, setFillsection] = useState("data");
-    const [fillSection, setFillSection] = useState("personal");
-
+export default function     Data() {
 
     return (
         <div className="uploads">
-
-            <div style={{ border: "none", background: "white", boxShadow: "none" }} className={`fillfield ${fillsection === "data" ? "show" : ""}`}>
+            <div>
                 <h4 >Hello their !</h4 >
                 <hr style={{ background: "#333" }} />
                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
@@ -21,7 +17,5 @@ export default function Data() {
                 </p>
             </div>
         </div>
-
-
     )
 }

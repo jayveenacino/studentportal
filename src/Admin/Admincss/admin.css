@@ -46,7 +46,14 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-    margin-right: 20px;
+    margin: 20px auto;
+    box-sizing: border-box;
+}
+
+.admissionsum h2 {
+    font-size: 15px;
+    color: #303030;
+    margin-bottom: 10px;
 }
 
 .addatails {
@@ -55,11 +62,15 @@
     padding: 20px;
     border-radius: 5px;
     text-align: center;
+    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 .addatails h2 {
     color: #303030;
     text-align: left;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
 }
 
 .addatails p {
@@ -67,12 +78,311 @@
     padding-top: 10px;
     font-size: 14px;
     text-align: left;
+    line-height: 1.6;
+}
+
+@media (max-width: 1024px) {
+
+    .addatails,
+    .admissionsum {
+        width: 100%;
+        margin: 10px 30px;
+        padding: 15px;
+    }
+
+    .addatails h2,
+    .admissionsum h2 {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    .addatails p {
+        font-size: 15px;
+    }
+
+    .admissionsum {
+        text-align: center;
+    }
+
+    .adnav {
+        height: 50px;
+        padding: 10px;
+    }
+
+    .adside {
+        width: 180px;
+        padding: 10px;
+        transform: translateX(-250px);
+        top: 70px;
+        height: calc(100vh - 50px);
+    }
+
+    .adside.show {
+        transform: translateX(0);
+    }
+
+    .adside.show+.admain {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .menu-icon {
+        left: 30px;
+        font-size: 20px;
+        position: absolute;
+    }
+
+    .admain {
+        padding: 15px;
+        top: 70px;
+    }
+
+    .adlogo {
+        margin-left: 50px;
+    }
 }
 
 
-.admissionsum h2 {
-    font-size: 15px;
-    color: #303030;
+@media (max-width: 768px) {
+
+    .addatails,
+    .admissionsum {
+        width: auto;
+        margin: 20px 20px;
+        padding: 15px;
+    }
+
+    .addatails h2,
+    .admissionsum h2 {
+        font-size: 1.25rem;
+        text-align: center;
+    }
+
+    .addatails p {
+        font-size: 13px;
+    }
+
+    .admissionsum {
+        text-align: center;
+    }
+
+    .adnav {
+        height: 50px;
+        padding: 10px;
+    }
+
+    .adside {
+        width: 180px;
+        padding: 10px;
+        transform: translateX(-250px);
+        top: 70px;
+        height: calc(100vh - 50px);
+    }
+
+    .adside.show {
+        transform: translateX(0);
+    }
+
+    .adside.show+.admain {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .menu-icon {
+        right: 40px;
+        font-size: 20px;
+    }
+
+    .admain {
+        padding: 15px;
+        top: 70px;
+    }
+
+    .preside {
+        width: 180px;
+        padding: 10px;
+        transform: translateX(-250px);
+        top: 70px;
+        height: calc(100vh - 50px);
+    }
+
+    .preside.show {
+        transform: translateX(0);
+    }
+
+    .preside.show+.premain {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .preside ul {
+        padding: 0;
+        list-style: none;
+    }
+
+    .preside li {
+        padding: 10px;
+    }
+
+    .preside a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+    }
+
+    .predashtab {
+        width: 70%;
+        background: rgb(236, 236, 236);
+        color: black;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin: 15px auto;
+
+    }
+
+    .predashtab {
+        width: auto;
+        background: rgb(236, 236, 236);
+        color: black;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin-left: 20px;
+        margin-right: 20px;
+        font-size: 14px;
+        overflow-x: auto;
+    }
+
+}
+
+
+
+@media (max-width: 768px) {
+    .fulldetails {
+        padding-left: 10px;
+        border-left: none;
+    }
+
+    .datafill {
+        width: 100%;
+        margin: 10px 0;
+    }
+
+    .fillhead {
+        width: 100%;
+        padding: 12px 10px;
+        margin: 0;
+        flex-wrap: wrap;
+        gap: 5px;
+        box-sizing: border-box;
+    }
+
+    .step-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+    }
+
+    .fillhead h2 {
+        font-size: 13px;
+        margin: 0;
+        flex: 1;
+        word-break: break-word;
+    }
+
+    .fillfield {
+        width: 100%;
+        padding: 15px 10px;
+    }
+
+    .unibtn {
+        padding: 10px 0;
+        width: 50%;
+        display: flex;
+        margin-left: auto;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+    }
+
+
+    .unibtn button {
+        width: 100%;
+        max-width: 300px;
+        font-size: 14px;
+    }
+}
+
+
+@media (max-width: 480px) {
+
+    .addatails,
+    .admissionsum {
+        width: auto;
+        margin: 20px 15px;
+        padding: 12px;
+    }
+
+    .addatails h2 {
+        font-size: 1.1rem;
+        text-align: start;
+    }
+
+    .admissionsum h2 {
+        font-size: 1.1rem;
+        text-align: center;
+    }
+
+    .addatails p {
+        font-size: 12.5px;
+    }
+
+    .predashtab {
+        width: auto;
+        background: rgb(236, 236, 236);
+        color: black;
+        padding: 12px;
+        border-radius: 5px;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+        margin-left: 15px;
+        margin-right: 15px;
+        font-size: 13px;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .preprofiledetails {
+        display: flex;
+        flex-direction: column;
+        box-sizing: border-box;
+    }
+
+    .profile-image {
+        margin-bottom: -20px;
+        display: flex;
+        justify-content: center;
+    }
+
+    .profile-image img {
+        width: 130px;
+        height: 130px;
+    }
+
+    .status-table {
+        width: 100%;
+        margin-top: 15px;
+    }
+
+    .status-table td {
+        font-size: 12.5px;
+    }
+
+    .change-text {
+        font-size: 10px;
+        text-align: center;
+        margin-top: 5px;
+    }
 }
 
 
@@ -257,6 +567,21 @@
     transform: translateY(15%);
 }
 
+.deptsearch {
+    position: relative;
+    transform: translateY(15%);
+}
+
+.deptsearch button {
+    position: absolute;
+    right: 20px;
+    height: 30px;
+    border: none;
+    width: 20%;
+    background: #4CAF50;
+    color: white;
+}
+
 .enrolsearch {
     height: 25px;
     border-radius: 5px;
@@ -267,7 +592,23 @@
 .enrolgrid {
     width: 100%;
     margin-top: 20px;
+}
+
+.deptgrid{
+    width: 100%;
     overflow-x: auto;
+    margin-top: 20px;
+}
+
+.deptgrid table{
+    width: 100%;
+    border-collapse:collapse;
+}
+
+.deptgrid th, .deptgrid td{
+    padding: 3px;
+    text-align: left;
+    border: 1px solid #333;
 }
 
 .enrolgrid table {
@@ -393,6 +734,11 @@
     margin-top: -5px;
 }
 
+
+.prenavtab {
+    margin-top: 70px;
+}
+
 .preside {
     display: flex;
     flex-direction: column;
@@ -409,6 +755,21 @@
     transition: transform 0.3s ease-in-out;
     z-index: 999;
 }
+
+.userdropname {
+    display: none !important;
+}
+
+@media (max-width: 768px) {
+    .userdropname {
+        display: block !important;
+        font-weight: bold;
+        padding: 8px 12px;
+        color: #333;
+    }
+}
+
+
 
 
 .preside ul {
@@ -449,9 +810,6 @@
     transition: all 0.3s ease;
 }
 
-.prenavtab {
-    margin-top: 70px;
-}
 
 .preside ul li a i {
     margin-right: 10px;
@@ -570,10 +928,121 @@
     margin: 15px auto;
 }
 
-.uploads h1{
-    color: red;
-    font-size: 15px;
+.uploads h4 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
+
+.uploads hr {
+    background: #333;
+    margin: 1rem 0;
+    border: 0;
+    height: 1px;
+}
+
+.uploads p {
+    font-size: 14px;
+    line-height: 1.6;
+    color: #333;
+    margin: 0;
+    padding: 0;
+}
+
+.uploads .privacy-link {
+    font-style: italic;
+    text-decoration: underline;
+    color: green;
+}
+
+@media (max-width: 768px) {
+    .uploads {
+        width: 95%;
+        max-width: 100%;
+        margin: 10px 1px;
+        padding: 14px;
+        box-sizing: border-box;
+    }
+
+    .uploads h4 {
+        font-size: 1.1rem;
+        text-align: start;
+    }
+
+    .uploads p {
+        font-size: 13px;
+        line-height: 1.5;
+        word-wrap: break-word;
+        text-align: justify;
+    }
+
+    .uploads .privacy-link {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 768px) {
+    .ipreprofile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .mainpreprofile {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        align-items: center;
+        box-sizing: border-box;
+    }
+
+    .uploads p {
+        font-size: 14px;
+        text-align: start;
+        margin-bottom: 20px;
+    }
+
+    .status-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .status-table td,
+    .status-table th {
+        font-size: 12px;
+        padding: 8px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    .status-table th {
+        font-weight: bold;
+    }
+
+    .status-table tr {
+        background-color: white;
+    }
+
+    .status-table td button {
+        padding: 6px;
+        border-radius: 3px;
+        background-color: orange;
+        border: none;
+    }
+
+    .status-table td i {
+        font-size: 15px;
+    }
+
+    .uploads p:last-child {
+        font-size: 12px;
+        text-align: start;
+    }
+}
+
+
 
 .preprofile {
     display: flex;
@@ -681,15 +1150,12 @@
     color: #303030;
 }
 
-/* No changes to the icon's size or input box size */
 .preforgot .forgotbg i {
     position: absolute;
     right: 15px;
-    /* Position the icon inside the input field */
     top: 50%;
     transform: translateY(-50%);
     font-size: 18px;
-    /* Adjust size */
     cursor: pointer;
     color: #303030;
 }
@@ -710,6 +1176,77 @@
     color: #ffffff;
     padding: 10px 15px;
 }
+
+@media (max-width: 768px) {
+    .premaintab {
+        position: relative;
+        background: linear-gradient(to right, #004d4d, #008080);
+        color: white;
+        padding: 30px 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        min-height: 150px;
+        overflow: hidden;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .premaintab img {
+        position: absolute;
+        bottom: -30px;
+        right: -20px;
+        width: 170px;
+        height: 170px;
+        opacity: 0.6;
+        object-fit: cover;
+        z-index: 0;
+        pointer-events: none;
+        user-select: none;
+    }
+
+    .prenavtab {
+        position: relative;
+        z-index: 1;
+        pointer-events: none;
+        user-select: none;
+    }
+
+
+    .prenav-text {
+        flex-grow: 1;
+        margin-left: 10px;
+        font-size: 14px;
+        width: 100%;
+    }
+
+    .adlogo {
+        margin-left: 60px;
+    }
+
+    .menu-icon {
+        margin-right: 80%;
+    }
+
+    .username {
+        display: none;
+    }
+
+    .premainad {
+        flex-direction: column;
+        width: 100%;
+
+    }
+
+    .status-table td {
+        font-size: 13px;
+        padding: 5px;
+    }
+
+}
+
+
 
 .fulldetails {
     position: relative;

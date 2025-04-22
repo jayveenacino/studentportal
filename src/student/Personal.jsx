@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import useAdmin from '../Admin/useAdmin';
 import axios from 'axios';
 import Swal from 'sweetalert2';
-import regions from '../../public/json/region.json';
+import Education from "./Education";
 
 export default function Personal() {
 	const handleDisabilityChange = (e) => {
@@ -19,6 +19,23 @@ export default function Personal() {
 			disabilityDetails: ' ',
 			disabilityCategory: 'None',
 		});
+	};
+
+	const handleAddressChange = (e) => {
+		const { name, value } = e.target;
+		if (name === 'region') {
+			setRegion(value);
+			setProvince('');
+			setCity('');
+		} else if (name === 'province') {
+			setProvince(value);
+			setCity('');
+		} else if (name === 'city') {
+			setCity(value);
+		}
+		else if (name === 'barangay') {
+			setBarangay(value)
+		}
 	};
 
 	const updateUserDetails = (updatedDetails) => {
@@ -41,71 +58,9 @@ export default function Personal() {
 	};
 
 	const [isDisabled, setIsDisabled] = useState(true);
-
+	const [fillsection, setFillsection] = useState("data");
 	const [fillSection, setFillSection] = useState('personal');
 	const { user, setUser } = useAdmin();
-
-	const [currentAddress, setCurrentAddress] = useState({
-		region: '',
-		province: '',
-		city: '',
-		barangay: '',
-	});
-
-	console.log(currentAddress);
-
-	const [listOfAddresses, setListOfAddresses] = useState({
-		provinces: [],
-		cities: [],
-		barangays: [],
-	});
-
-	const fetchData = async (url, key) => {
-		try {
-			const res = await axios.get(url);
-			setListOfAddresses((prev) => ({
-				...prev,
-				[key]: res.data,
-			}));
-			console.log(`Fetched ${key.toUpperCase()}:`, res.data);
-		} catch (error) {
-			console.error(`Error fetching ${key}:`, error);
-		}
-	};
-
-	useEffect(() => {
-		if (currentAddress.region) {
-			fetchData(
-				`https://psgc.gitlab.io/api/regions/${currentAddress.region}/provinces.json`,
-				'provinces'
-			);
-		}
-
-		if (currentAddress.province) {
-			fetchData(
-				`https://psgc.gitlab.io/api/provinces/${currentAddress.province}/cities-municipalities.json`,
-				'cities'
-			);
-		}
-
-		if (currentAddress.city) {
-			fetchData(
-				`https://psgc.gitlab.io/api/cities-municipalities/${currentAddress.city}/barangays.json`,
-				'barangays'
-			);
-		}
-	}, [currentAddress, setListOfAddresses]);
-
-	const handleAddressChange = (e) => {
-		const { name, value } = e.target;
-		setCurrentAddress((prev) => ({
-			...prev,
-			[name]: value,
-		}));
-	};
-
-	//! MAKE THIS AN OBJECT
-	//FILLUP FORM
 	const [phone, setPhone] = useState(user?.phone || '');
 	const [middlename, setMiddlename] = useState(user?.middlename || '');
 	const [extension, setExtension] = useState(user?.extension || '');
@@ -186,28 +141,21 @@ export default function Personal() {
 		if (!gender) errors.gender = true;
 		if (!citizenship) errors.citizenship = true;
 		if (!religion) errors.religion = true;
-		if (!region) errors.region = true;
-		if (!province) errors.province = true;
-		if (!city) errors.city = true;
-		if (!barangay) errors.barangay = true;
-
 		setFormErrors(errors);
 		return Object.keys(errors).length === 0;
 	};
 
 	const handleUpdateProfile = async (e) => {
 		e.preventDefault();
-
 		const isValid = validateForm();
+
 		if (!isValid) {
 			const missingFields = Object.keys(formErrors).filter(
 				(field) => formErrors[field]
 			);
 			Swal.fire({
 				title: 'Please fill up the following fields:',
-				html: `<ul>${missingFields
-					.map((field) => `<li>${field}</li>`)
-					.join('')}</ul>`,
+				html: `<ul style="text-align: left;">${missingFields.map((field) => `<li>${field}</li>`).join('')}</ul>`,
 				icon: 'warning',
 				confirmButtonText: 'OK',
 			});
@@ -215,7 +163,12 @@ export default function Personal() {
 		}
 
 		if (!user || !user.email) {
-			alert('No user found!');
+			Swal.fire({
+				title: 'User Not Found!',
+				text: 'No user is currently logged in or user email is missing.',
+				icon: 'error',
+				confirmButtonText: 'OK',
+			});
 			return;
 		}
 
@@ -233,24 +186,42 @@ export default function Personal() {
 		if (city) updatedFields.city = city;
 		if (barangay) updatedFields.barangay = barangay;
 
-		if (Object.keys(updatedFields).length === 0) {
-			alert('No changes detected, but your profile will still be saved.');
-		}
-
 		try {
 			const response = await axios.put('http://localhost:2025/update-profile', {
 				email: user.email,
 				...updatedFields,
 			});
 
-			alert('Profile updated successfully!');
 			console.log('Response:', response.data);
+
+			Swal.fire({
+				title: 'Profile Updated!',
+				text: 'Your profile has been updated successfully.',
+				icon: 'success',
+				showCancelButton: true,
+				confirmButtonText: 'Continue to Education Section',
+				cancelButtonText: 'Stay Here',
+			}).then((result) => {
+				if (result.isConfirmed) {
+					setFillsection("education");
+				}
+			});
 		} catch (error) {
 			console.error('Error while updating profile:', error);
 			if (error.response) {
-				alert(`Backend error: ${error.response.data.error}`);
+				Swal.fire({
+					title: 'Update Failed!',
+					text: `Backend error: ${error.response.data.error}`,
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
 			} else {
-				alert('Something went wrong!');
+				Swal.fire({
+					title: 'Something went wrong!',
+					text: 'Unable to update your profile. Please try again later.',
+					icon: 'error',
+					confirmButtonText: 'OK',
+				});
 			}
 		}
 	};
@@ -272,7 +243,7 @@ export default function Personal() {
 
 							<div className="persofom-group" style={{}}>
 								<label>Personal Email Address*</label>
-								<div className="persofom-input" style={{ color: 'lightgrey', background: "white",pointerEvents:"none",userSelect:"none" }}>
+								<div className="persofom-input" style={{ color: 'lightgrey', background: "white", pointerEvents: "none", userSelect: "none" }}>
 									{user?.email || ''}
 								</div>
 							</div>
@@ -471,8 +442,7 @@ export default function Personal() {
 						<label>Religion *</label>
 						<div className="persofom-input-container">
 							<input
-								className={`persofom-input ${formErrors.religion ? 'error' : ''
-									}`}
+								className={`persofom-input ${formErrors.religion ? 'error' : ''}`}
 								value={religion}
 								onChange={(e) => setReligion(e.target.value)}
 							/>
@@ -485,98 +455,93 @@ export default function Personal() {
 							Current Address
 						</h2>
 					</div>
-					<div
-						className="persofom-group ext"
-						style={{ width: '23.4%', marginTop: '-15px' }}>
+
+					{/* Region */}
+					<div className="persofom-group ext" style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>Region*</label>
 						<select
 							name="region"
 							className={`persofom-input ${formErrors.region ? 'error' : ''}`}
-							value={currentAddress?.region || ''}
-							onChange={handleAddressChange}>
-							<option value="">Select Region</option>
-							{regions.length > 0 ? (
-								regions.map((region) => (
-									<option key={region.code} value={region.code}>
-										{region.name}
-									</option>
-								))
-							) : (
-								<option>Loading...</option>
-							)}
+							value={region}
+							onChange={handleAddressChange}
+						>
+							<option value="Region III">Region III (CENTRAL LUZON)</option>
 						</select>
 					</div>
 
-					{/* Province Dropdown */}
-
-					<div
-						className="persofom-group ext"
-						style={{ width: '23.4%', marginTop: '-15px' }}>
+					{/* Province */}
+					<div className="persofom-group ext" style={{ width: '23.4%', marginTop: '-15px' }}>
 						<label>Province*</label>
 						<select
 							name="province"
 							className={`persofom-input ${formErrors.province ? 'error' : ''}`}
-							value={currentAddress?.province || ''}
-							onChange={handleAddressChange}>
-							<option value="">Select Province</option>
-							{listOfAddresses.provinces.length > 0 ? (
-								listOfAddresses.provinces.map((province) => (
-									<option key={province.code} value={province.code}>
-										{province.name}
-									</option>
-								))
-							) : (
-								<option>Loading...</option>
-							)}
+							value={province}
+							onChange={handleAddressChange}
+						>
+							<option value="" disabled selected>Select One</option>
+							<option value="Bataan">BATAAN</option>
+							<option value="Pampanga">PAMPANGA</option>
+							<option value="Zambales">ZAMBALES</option>
+							<option value="Aurora">AURORA</option>
 						</select>
 					</div>
+					{province === 'Zambales' && (
+						<div className="persofom-group ext" style={{ width: '23.4%', marginTop: '-15px' }}>
+							<label>City/Municipality*</label>
+							<select
+								name="city"
+								className={`persofom-input ${formErrors.city ? 'error' : ''}`}
+								value={city}
+								onChange={handleAddressChange}
+							>
+								<option value="" disabled selected>Select One</option>
+								<option value="Botolan">BOTOLAN</option>
+								<option value="Cabangan">CABANGAN</option>
+								<option value="Candelaria">CANDELARIA</option>
+								<option value="Castillejos">CASTILLEJOS</option>
+								<option value="Iba">IBA</option>
+								<option value="Masinloc">MASINLOC</option>
+								<option value="Olongapo">OLONGAPO CITY</option>
+								<option value="Palauig">PALAUIG</option>
+								<option value="San Antonio">SAN ANTONIO</option>
+								<option value="San Felipe">SAN FELIPE</option>
+								<option value="San Marcelino">SAN MARCELINO</option>
+								<option value="San Narciso">SAN NARCISO</option>
+								<option value="Santa Cruz">SANTA CRUZ</option>
+								<option value="Subic">SUBIC</option>
+							</select>
+						</div>
+					)}
 
-					{/* City Dropdown */}
-
-					<div
-						className="persofom-group ext"
-						style={{ width: '23.4%', marginTop: '-15px' }}>
-						<label>City/Municipality*</label>
-						<select
-							name="city"
-							className={`persofom-input ${formErrors.city ? 'error' : ''}`}
-							value={currentAddress?.city || ''}
-							onChange={handleAddressChange}>
-							<option value="">Select City</option>
-							{listOfAddresses.cities.length > 0 ? (
-								listOfAddresses.cities.map((city) => (
-									<option key={city.code} value={city.code}>
-										{city.name}
-									</option>
-								))
-							) : (
-								<option>Loading...</option>
-							)}
-						</select>
-					</div>
-
-					{/* Barangay Dropdown */}
-
-					<div
-						className="persofom-group ext"
-						style={{ width: '23.4%', marginTop: '-15px' }}>
-						<label>Barangay*</label>
-						<select
-							name="barangay"
-							className={`persofom-input ${formErrors.barangay ? 'error' : ''}`}
-							value={currentAddress?.barangay || ''}
-							onChange={handleAddressChange}>
-							{listOfAddresses.barangays.length > 0 ? (
-								listOfAddresses.barangays.map((barangay) => (
-									<option key={barangay.code} value={barangay.code}>
-										{barangay.name}
-									</option>
-								))
-							) : (
-								<option>Loading...</option>
-							)}
-						</select>
-					</div>
+					{/* Barangay */}
+					{city === 'Subic' && (
+						<div className="persofom-group ext" style={{ width: '23.4%', marginTop: '-15px' }}>
+							<label>Barangay *</label>
+							<select
+								name="barangay"
+								className={`persofom-input ${formErrors.barangay ? 'error' : ''}`}
+								value={barangay}
+								onChange={handleAddressChange}
+							>
+								<option value="" disabled selected>Select One</option>
+								<option value="ANINGWAY-SACATIHAN">ANINGWAY-SACATIHAN</option>
+								<option value="ASINAN PROPER">ASINAN PROPER</option>
+								<option value="ASINAN PINES">ASINAN PINES</option>
+								<option value="BARACA-CAMACHILE">BARACA-CAMACHILE</option>
+								<option value="CALAPACUAN">CALAPACUAN</option>
+								<option value="ILWAS">ILWAS</option>
+								<option value="MANGALIT">MANGALIT</option>
+								<option value="MATAIN">MATAIN</option>
+								<option value="NAGBANGON">NAGBANGON</option>
+								<option value="NATIONAL HIGHWAY">NATIONAL HIGHWAY</option>
+								<option value="PAG-ASA">PAG-ASA</option>
+								<option value="SAN ISIDRO">SAN ISIDRO</option>
+								<option value="SAN RAFAEL">SAN RAFAEL</option>
+								<option value="SANTO TOMAS">SANTO TOMAS</option>
+								<option value="WAWANDUE">WAWANDUE</option>
+							</select>
+						</div>
+					)}
 				</form>
 			</div>
 
@@ -642,7 +607,6 @@ export default function Personal() {
 					</div>
 				</div>
 			</div>
-
 			<div className="unibtn" style={{ marginTop: '20px' }}>
 				<button type="submit" onClick={handleUpdateProfile}>
 					<i className="fa-solid fa-download"></i> Save

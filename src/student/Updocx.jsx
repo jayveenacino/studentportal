@@ -2,7 +2,7 @@ import React from 'react'
 
 export default function Updocx() {
     return (
-        <div className="preprofile">
+        <div className="ipreprofile">
             <div className="uploads">
                 <h1>PLEASE READ!</h1>
                 <p style={{ marginBottom: "20px", fontSize: "15px" }}>Here are the documents you'll need for admission. Please make sure to upload everything that's required so we can get started on processing your application.</p>
@@ -68,8 +68,9 @@ export default function Updocx() {
                         </tr>
                     </tbody>
                 </table>
-                <p style={{ fontSize: "12px", marginTop: "19px" }}>*   - requirements to take KNSAT</p>
-                <p style={{ fontSize: "12px" }}>** - requirements for evaluation and interview</p>
+                <p>- requirements to take KNSAT  <br />
+                - requirements for evaluation and interview
+                </p>
             </div>
 
         </div>

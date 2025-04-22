@@ -35,13 +35,13 @@ export default function Preregister() {
             navigate('/signup', { replace: true });
         }
     }, []);
-    
+
     const handleLogout = (event) => {
         event.preventDefault();
         localStorage.clear();
         sessionStorage.clear();
         setUser({});
-        navigate('/signup'); 
+        navigate('/signup');
     };
 
     const handleLogoutClick = (event) => {
@@ -203,17 +203,26 @@ export default function Preregister() {
             ) : (
                 <div className="adcontainer">
                     <div className="prenav">
-                        <img className="adlogo" src="./img/knshdlogo.png" alt="Logo" draggable="false" style={{ pointerEvents: "none", userSelect: "none",height: "45px"  }} />
-                        <div className="prenav-text"  draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
+                        <img className="adlogo" src="./img/knshdlogo.png" alt="Logo" draggable="false" style={{ pointerEvents: "none", userSelect: "none", height: "45px" }} />
+                        <div className="prenav-text" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
                             <h1>Kolehiyo Ng Subic</h1>
                             <p>Student Admission Portal v.0.3</p>
                         </div>
                         <div className="dropdown">
                             <button className="dropbtn">
                                 <i className="fa-solid fa-user" style={{ fontSize: "12px" }}></i>
-                                {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""} <span className="arrow"><i class="fa-solid fa-caret-down" style={{ fontSize: "15px" }}></i></span>
+
+                                <span className="username">
+                                    {user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""}
+                                </span>
+
+                                <span className="arrow">
+                                    <i className="fa-solid fa-caret-down" style={{ fontSize: "15px" }}></i>
+                                </span>
                             </button>
+
                             <div className="dropdown-content">
+                                <a className="userdropname" href="#">{user?.firstname || ""} {user.middlename ? user.middlename.charAt(0) + ". " : ""} {user?.lastname || ""} {user?.extension || ""}</a>
                                 <a href="#" onClick={() => setForgot(true)}><i className="fa-solid fa-key"></i> Change Password</a>
                                 <a href="#" onClick={handleLogoutClick}><i className="fa-solid fa-right-from-bracket"></i> Logout</a>
                             </div>

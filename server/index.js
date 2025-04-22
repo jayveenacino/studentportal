@@ -16,7 +16,7 @@ mongoose.connect("mongodb://127.0.0.1:27017/student", {
 app.post('/register', async (req, res) => {
     try {
         const currentYear = new Date().getFullYear();
-        const yearPrefix = currentYear.toString().slice(-2);
+        const yearPrefix = currentYear.toString().slice(-2);    
 
         const lastStudent = await StudentModel.findOne().sort({ studentNumber: -1 });
         let lastNumber = 0;
@@ -125,7 +125,7 @@ app.post('/api/updateUserDetails', async (req, res) => {
 
     try {
         const updatedUser = await StudentModel.findOneAndUpdate(
-            { email }, 
+            { email },
             { disabilityDetails: disabilityDetails || " ", disabilityCategory: disabilityCategory },
             { new: true }
         );
@@ -165,10 +165,10 @@ app.put("/update-profile", async (req, res) => {
                 gender,
                 citizenship,
                 religion,
-                region,
-                province,
-                city,
-                barangay,
+                region: String(region),   
+                province: String(province), 
+                city: String(city),     
+                barangay: String(barangay), 
                 disability,
                 disabilityCategory,
                 disabilityDetails
@@ -192,7 +192,6 @@ app.put("/update-profile", async (req, res) => {
 });
 
 
-
-app.listen(2025, () => {
+app.listen(2025, '0.0.0.0', () => {
     console.log("Server is running on port 2025");
 });

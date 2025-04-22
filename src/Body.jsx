@@ -7,77 +7,62 @@ export default function Body({ setPage }) {
     return (
         <div style={{ pointerEvents: "none", userSelect: "none" }}>
             <div className="details" >
-                <h2 style={{ fontSize: "37px", marginTop: "20px", marginBottom: "20px",pointerEvents: "none", userSelect: "none"  }}>
+                <h2 className="headtitle">
                     Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />
                     First Semester A.Y 2025 - 2026
                 </h2>
             </div>
-            <img className="imgnotice" src="/img/Untitled-1.png" alt="" draggable="false" style={{ display: "block", margin: "0 auto", pointerEvents: "none", userSelect: "none" }} />
+            <img
+                className="imgnotice"
+                src="/img/Untitled-1.png"
+                alt=""
+                draggable="false"
+                style={{ margin: "0 auto", pointerEvents: "none", userSelect: "none" }}
+            />
             <div className="info">
-                <h3 style={{
-                    fontSize: "25px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.</h3>
-                <h3 style={{
-                    fontSize: "20px", marginTop: "30px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>READ THE INSTRUCTIONS THOROUGLY BEFORE PRE-REGISTERING TO AVOID ERRORS.</h3>
-                <h3 style={{
-                    fontSize: "18px", marginTop: "30px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>STEP BY STEP INSTRUCTIONS FOR REGISTERING STUDENTS:</h3>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>Step 1: CREATE A PRE-REGISTRATION ACCOUNT </h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
-                    <ul style={{ fontSize: "14", marginBottom: "10px" }}>
-                        <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>
-                            Go to the Kolehiyo ng Subic Admmision Portal Login Page &nbsp; <Link to="signup" target='_blank' style={{ color: "green", pointerEvents: "auto", userSelect: "none" }}
+                <h3 className='infoheader3'>PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.</h3>
+                <h3 className='stepsheader'>Step 1: CREATE A PRE-REGISTRATION ACCOUNT </h3>
+                <div className='instructionsTB'>
+                    <ul>
+                        <li>
+                            Go to the Kolehiyo ng Subic Admission Portal Login Page &nbsp;
+                            <Link
+                                to="signup"
+                                target="_blank"
+                                style={{ color: "green", pointerEvents: "auto", userSelect: "none" }}
                                 onMouseEnter={(e) => {
                                     e.target.style.color = "orange";
-                                    e.target.style.fontSize = "1.03rem"; // Increase font size
+                                    e.target.style.fontSize = "1.03rem";
                                 }}
                                 onMouseLeave={(e) => {
                                     e.target.style.color = "green";
-                                    e.target.style.fontSize = "1rem"; // Reset font size
+                                    e.target.style.fontSize = "1rem";
                                 }}
-
+                                onTouchStart={(e) => {
+                                    e.target.style.color = "orange";
+                                }}
+                                onTouchEnd={(e) => {
+                                    setTimeout(() => {
+                                        e.target.style.color = "green";
+                                    });
+                                }}
                             >
-                                ( localhost:30001/signup )</Link>
+                                ( localhost:30001/signup )
+                            </Link>
+
                         </li>
-                        <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Click <strong>"Create Account" </strong> </li>
-                        <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Type your Email Address, First Name, Last Name, Date of Birth, Contact Number, Desired Password, and
-                            Select Type of Student <br /><br /> (NEW STUDENT, TRANSFEREE, SECOND COURSER) </li>
-                        <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Click <strong>"Register"</strong></li>
+                        <li>Click <strong>"Create Account"</strong></li>
+                        <li>
+                            Type your Email Address, First Name, Last Name, Date of Birth, Contact Number, Desired Password, and Select Type of Student
+                            <br /><br />
+                            (NEW STUDENT, TRANSFEREE, SECOND COURSER)
+                        </li>
+                        <li>Click <strong>"Register"</strong></li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>TAKE NOTE: </h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                    fontWeight: "bold",
-                }}>
+
+                <h3 className='stepsheader'>TAKE NOTE: </h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>A valid and existing email address is required in this process. </li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Ensure the all information are true as accounts with false information will be deleted.</li>
@@ -85,18 +70,8 @@ export default function Body({ setPage }) {
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Do not forget your email and password.</li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>STEP 2: LOG ON TO YOUR ACCOUNT</h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
+                <h3 className='stepsheader'>STEP 2: LOG ON TO YOUR ACCOUNT</h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Go to the <strong>Portal Login Page</strong>. </li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Type your previously registered email address and password, then click <strong>"Log in"</strong></li>
@@ -104,18 +79,8 @@ export default function Body({ setPage }) {
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>The Dashboard displays the status of your application.</li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>STEP 3: PROFILING</h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
+                <h3 className='stepsheader'>STEP 3: PROFILING</h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After logging in, you will be redirected at the Welcome Page. Here you will see the available slots of each department for the semester </li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>On the Left Side of the page, click "Profile". The Profile page is where you will input your Basic Information.</li>
@@ -127,35 +92,15 @@ export default function Body({ setPage }) {
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out your Educational Background, Enter your Family Background, click <strong>"Save"</strong> after filling out.</li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>STEP 4: DOCUMENT UPLOADS </h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
+                <h3 className='stepsheader'>STEP 4: DOCUMENT UPLOADS </h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>At the profile page, you may scroll down and click the <strong>"Upload Documents"</strong> section.</li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>This page is where you will upload the necessary documents that are needed for your enrollment.</li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>Prepare the Following Documents: </h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
+                <h3 className='instructions'>Prepare the Following Documents: </h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>2x2 Picture with White Background</li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Government Issued ID or Senior High School ID (<strong>Must be Recently Graduated if you are using a Senior High School ID</strong>)</li>
@@ -170,42 +115,16 @@ export default function Body({ setPage }) {
                     </ul>
 
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>Make sure that the documents that you are uploading are clear and readable as blurred photos may affect the readability of your documents and your enrollment.</h3>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>STEP 5: CONFIRMATION</h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                }}>
+                <h3 className='instructions' >Make sure that the documents that you are uploading are clear and readable as blurred photos may affect the readability of your documents and your enrollment.</h3>
+                <h3 className='stepsheader'>STEP 5: CONFIRMATION</h3>
+                <div className='instructions'>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After filling out the needed information forms you may now click the <strong>"Finalize Enlisment"</strong> button</li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>After clicking the button, please wait for the confirmation email of your KNS Admission Test Schedule that is sent to you by the school. </li>
                     </ul>
                 </div>
-                <h3 style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "red",
-                    marginLeft: "80px",
-                    marginRight: "50px",
-                }}>TAKE NOTE : </h3>
-                <div style={{
-                    fontSize: "16px", marginTop: "20px",
-                    color: "#333",
-                    marginLeft: "100px",
-                    marginRight: "50px",
-                    fontWeight: "bold",
-                }}>
+                <h3 className='Tnote'>TAKE NOTE : </h3>
+                <div className='instructions' style={{ fontWeight: "bold" }}>
                     <ul style={{ fontSize: "14", marginBottom: "10px" }}>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Double Check your information before finalizing.</li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Ensure that there are no typos or errors in your information as it may affect your enlistment.</li>

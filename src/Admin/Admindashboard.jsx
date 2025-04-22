@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import Enrollees from "./Enrollees";
+import Department from "./Department";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -9,7 +11,7 @@ function Dashboard() {
     const [createad, setCreatead] = useState(false);
     const [loading, setLoading] = useState(true);
 
-    
+
 
     const handleLogout = (event) => {
         event.preventDefault();
@@ -22,8 +24,6 @@ function Dashboard() {
             window.location.replace("/adminlogin");
         }, 500);
     };
-
-    
 
     const handleLogoutClick = (event) => {
         event.stopPropagation();
@@ -97,7 +97,7 @@ function Dashboard() {
                             <li><a href="#" onClick={() => setActiveSection("dashboard")}> <i className="fa-solid fa-house"></i> Dashboard</a></li>
                             <li><a href="#" onClick={() => setActiveSection("enrollees")}> <i className="fa-solid fa-calendar"></i> Enrollees</a></li>
                             <li><a href="#"> <i className="fa-solid fa-book"></i> Subjects</a></li>
-                            <li><a href="#"><i className="fa-solid fa-building"></i> Department</a></li>
+                            <li><a href="#" onClick={() => setActiveSection("department")}><i className="fa-solid fa-building"></i> Department</a></li>
                             <li><a href="#"> <i className="fa-solid fa-calendar"> </i> Courses</a></li>
                             <li><a href="#"> <i className="fa-solid fa-graduation-cap"></i> Schedule</a></li>
                             <li><a href="#"> <i className="fa-solid fa-users"></i> Students</a></li>
@@ -120,29 +120,18 @@ function Dashboard() {
                         )}
 
                         {activeSection === "enrollees" && (
-                            <div className="enrollment-form">
-                                <h2>Enrollees</h2>
-                                <p>Enter the name or the student number</p>
-                                <hr />
-                                <div className="ensearch">
-                                    <label >Search </label>
-                                    <input className="enrolsearch" type="text" placeholder="student name / student no" />
-                                </div>
-                                <div className="enrolgrid">
-                                    <table>
-                                        <th>
-                                            <td>Id</td>
-                                            <td>Name</td>
-                                            <td>Birthday</td>
-                                            <td>Phone Number</td>
-                                            <td>Registering As</td>
-                                            <td>Status</td>
-                                            <td>Details</td>
-                                        </th>
-                                    </table>
-                                </div>
+                            <div className="">
+                                <Enrollees />
                             </div>
                         )}
+
+                        {activeSection === "department" && (
+                            <div className="">
+                                <Department />
+                            </div>
+                        )}
+
+
 
                         {activeSection === "user" && (
                             <div>

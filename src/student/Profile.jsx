@@ -221,11 +221,11 @@ export default function Profile() {
                     {fillsection === "personal" && (
                         <>
                             <Personal />
-
                         </>
                     )}
                 </div>
 
+                {/* Education Information Section */}
                 <div className={`datafill ${fillsection === "education" ? "active" : ""}`} onClick={() => setFillsection("education")}>
                     <div className={`fillhead ${fillsection === "education" ? "active" : ""}`}>
                         <span className="step-icon">{fillsection === "education" ? <i className="fa-solid fa-pen"></i> : "3"}</span>
@@ -244,6 +244,7 @@ export default function Profile() {
                     )}
                 </div>
 
+                {/* Family Information Section */}
                 <div className={`datafill ${fillsection === "family" ? "active" : ""}`} onClick={() => setFillsection("family")}>
                     <div className={`fillhead ${fillsection === "family" ? "active" : ""}`}>
                         <span className="step-icon">{fillsection === "family" ? <i className="fa-solid fa-pen"></i> : "4"}</span>
@@ -262,6 +263,7 @@ export default function Profile() {
                     )}
                 </div>
 
+                {/* Upload Docx Information Section */}
                 <div className={`datafill ${fillsection === "upload" ? "active" : ""}`} onClick={() => setFillsection("upload")}>
                     <div className={`fillhead ${fillsection === "upload" ? "active" : ""}`}>
                         <span className="step-icon">{fillsection === "upload" ? <i className="fa-solid fa-pen"></i> : "6"}</span>
@@ -279,6 +281,7 @@ export default function Profile() {
                     )}
                 </div>
 
+                {/* Finalised Information Section */}
                 <div className={`datafill ${fillsection === "confirmation" ? "active" : ""}`} onClick={() => setFillsection("confirmation")}>
                     <div className={`fillhead ${fillsection === "confirmation" ? "active" : ""}`}>
                         <span className="step-icon">{fillsection === "confirmation" ? <i className="fa-solid fa-pen"></i> : "7"}</span>
@@ -289,7 +292,7 @@ export default function Profile() {
                         <div className="preprofile">
                             <div className="uploads">
                                 <h4 >You are almost done!</h4 >
-                                <hr style={{background:"grey"}}/>
+                                <hr style={{ background: "grey" }} />
                                 <p style={{ marginBottom: "20px", fontSize: "15px", fontStyle: "italic", marginTop: "10px" }}>Thank you for filling out the form! The next step is to upload the remaining
                                     images or scanned copies of the required documents. Just click the button below to complete your enlistment.
                                     Please note that your exam schedule will be provided by the admission office once your enlistment is finalized.

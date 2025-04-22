@@ -1,6 +1,8 @@
 import React from 'react'
 
 export default function Education() {
+
+    
     return (
         <div className="preprofile">
             <div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>

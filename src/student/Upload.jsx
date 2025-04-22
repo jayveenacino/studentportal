@@ -1,5 +1,5 @@
 import React from 'react'
-import Updocx from './Updocx'
+import Iupdocx from './Iupdocx'
 
 export default function Upload() {
     return (
@@ -11,7 +11,7 @@ export default function Upload() {
                 </div>
                 <img src="public/img/knshdlogo.png" alt="Illustration"  draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
             </div>
-            <Updocx/>
+            <Iupdocx />
         </div>
     )
 }

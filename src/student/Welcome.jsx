@@ -49,11 +49,9 @@ export default function Welcome() {
                         </thead>
                         <tbody>
                             <tr style={{ background: "white" }}>
-                                <td></td>
-                                <td style={{ textAlign: 'center' }}>   </td>
-                                <td style={{ textAlign: 'center' }}>
-
-                                </td>
+                                <td>Bachelor of Science in Computer Science (BSCS)</td>
+                                <td style={{ textAlign: 'center' }}> 500</td>
+                                <td style={{ textAlign: 'center' }}>Open</td>
                             </tr>
                         </tbody>
                     </table>
