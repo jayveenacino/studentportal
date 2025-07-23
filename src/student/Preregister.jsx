@@ -2,7 +2,6 @@ import React, { useState, useEffect, use } from "react";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 import { useNavigate } from 'react-router-dom';
-
 import axios from "axios";
 import Welcome from './Welcome';
 import Dashboard from './Dashboard';

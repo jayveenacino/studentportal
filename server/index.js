@@ -146,7 +146,8 @@ app.put("/update-profile", async (req, res) => {
     const {
         phone, email, middlename, extension, birthplace, civil, sex, orientation, gender,
         citizenship, religion, region, province, city, barangay,
-        disability, disabilityCategory, disabilityDetails
+        disability, disabilityCategory, disabilityDetails,scholar,elementary,elemYear,highYear,
+        highschool,schoolType,strand,lrn,honor,college,technical,certificate,course,year,program,yearCom,achivements,
     } = req.body;
 
     try {
@@ -171,7 +172,25 @@ app.put("/update-profile", async (req, res) => {
                 barangay: String(barangay), 
                 disability,
                 disabilityCategory,
-                disabilityDetails
+                disabilityDetails,
+                scholar,
+                elementary,
+                highschool,
+                elemYear,
+                highYear,
+                schoolType,
+                strand,
+                lrn,
+                honor,
+                college,
+                technical,
+                certificate,
+                course,
+                year,
+                program,
+                yearCom,
+                achivements,
+                
             },
             { new: true }
         );

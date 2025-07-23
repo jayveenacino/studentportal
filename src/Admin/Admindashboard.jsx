@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Enrollees from "./Enrollees";
 import Department from "./Department";
+import Adminuser from "./Adminuser";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -69,7 +70,6 @@ function Dashboard() {
                 </div>
             ) : (
                 <div className="adcontainer">
-                    {/* Navbar Section */}
                     <div className="adnav">
                         <img className="adlogo" src="./img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />
                         <div className="adnav-text">
@@ -91,7 +91,6 @@ function Dashboard() {
                         <i className="fa-solid fa-bars menu-icon" onClick={() => setSidebarVisible(!sidebarVisible)}></i>
                     </div>
 
-                    {/* Sidebar Section */}
                     <div className={`adside ${sidebarVisible ? 'show' : 'hide'}`}>
                         <ul>
                             <li><a href="#" onClick={() => setActiveSection("dashboard")}> <i className="fa-solid fa-house"></i> Dashboard</a></li>
@@ -131,54 +130,12 @@ function Dashboard() {
                             </div>
                         )}
 
-
-
                         {activeSection === "user" && (
-                            <div>
-                                <div className="label-container1">
-                                    <h2>List of Users </h2>
-                                    <button className="back-btn1" onClick={() => setCreatead(true)}><i class="fa-solid fa-plus"></i> Add New</button>
-                                </div>
-
-                                <hr />
-                                <div className="ensearch">
-                                    <label >Search </label>
-                                    <input className="enrolsearch" type="text" placeholder="" />
-                                </div>
+                            <div className="">
+                                <Adminuser />
                             </div>
                         )}
-                        {createad &&
-                            <div className="reset">
-                                <div className="resetbg" style={{ position: "relative", padding: "20px" }}>
-                                    <h1 style={{ display: "inline-block", margin: 0 }}>
-                                        <i className="fa-solid fa-user"></i> Create New User
-                                    </h1>
-                                    <a href="" style={{ position: "absolute", top: "10px", right: "10px" }}>
-                                        <i
-                                            onClick={() => setReset(false)}
-                                            style={{ fontSize: "20px", color: "black", cursor: "pointer" }}
-                                            className="fa-solid fa-xmark">
-                                        </i>
-                                    </a>
-                                    <hr />
-                                    <div className="grid-container1">
-                                        <input type="text" name="firstname" placeholder="Username*" className="input-field short-width1" />
-                                        <select className="input-field short-width1">
-                                            <option value="" disabled selected hidden>Role</option>
-                                            <option value="">Admin</option>
-                                            <option value="Sr">Registrar</option>
-                                        </select>
-                                    </div>
-                                    <div className="grid-container1">
-                                        <input type="password" name="password" placeholder="Desired Password*" className="input-field1" />
-                                        <input type="password" name="confirmPassword" placeholder="Confirm Password*" className="input-field1" />
-                                    </div>
-                                    <div className="button-container1">
-                                        <button className="back-btn1" style={{ display: "block", margin: "0 auto" }}>Create</button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
+
                     </div>
                 </div>
             )}

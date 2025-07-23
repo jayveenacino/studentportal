@@ -479,10 +479,9 @@ export default function Personal() {
 							onChange={handleAddressChange}
 						>
 							<option value="" disabled selected>Select One</option>
-							<option value="Bataan">BATAAN</option>
-							<option value="Pampanga">PAMPANGA</option>
 							<option value="Zambales">ZAMBALES</option>
-							<option value="Aurora">AURORA</option>
+							<option value="Zambales">OLONGAPO</option>
+						
 						</select>
 					</div>
 					{province === 'Zambales' && (

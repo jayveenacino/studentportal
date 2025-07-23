@@ -34,7 +34,7 @@ export default function Welcome() {
                         We look forward to welcoming you to the Kolehiyo ng Subic family and can't wait to see all the great things you’ll achieve. Wishing you the very best of luck with your application!
                     </p>
                     <p><strong>Sincerely,</strong> </p> <br />
-                    <p style={{marginLeft:"20px",marginTop:"-20px"}}> Kolehiyo ng Subic Admissions Team</p>
+                    <p style={{ marginLeft: "20px", marginTop: "-20px" }}> Kolehiyo ng Subic Admissions Team</p>
                 </div>
                 <div className="admissionsum">
                     <h2>Admission Applicant Summary</h2>

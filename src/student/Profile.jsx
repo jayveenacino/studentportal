@@ -235,11 +235,7 @@ export default function Profile() {
                     {fillsection === "education" && (
                         <>
                             <Education />
-                            <div className="unibtn" style={{ marginTop: "9px", marginBottom: "20px", marginRight: "20px" }}>
-                                <button onClick={(e) => { e.stopPropagation(); setFillsection("family"); }}>
-                                    <i className="fa-solid fa-forward-step"></i> Accept and Continue
-                                </button>
-                            </div>
+
                         </>
                     )}
                 </div>

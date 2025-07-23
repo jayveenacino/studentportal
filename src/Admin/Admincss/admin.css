@@ -132,10 +132,7 @@
         position: absolute;
     }
 
-    .admain {
-        padding: 15px;
-        top: 70px;
-    }
+
 
     .adlogo {
         margin-left: 50px;
@@ -193,10 +190,6 @@
         font-size: 20px;
     }
 
-    .admain {
-        padding: 15px;
-        top: 70px;
-    }
 
     .preside {
         width: 180px;
@@ -515,19 +508,16 @@
 }
 
 .admain {
-    position: relative;
-    top: 60px;
-    flex: 1;
-    padding: 40px;
-    margin-left: 0;
-    width: 100%;
     transition: margin-left 0.3s ease-in-out, width 0.3s ease-in-out;
+    width: calc(100% - 230px);
+    margin-left: 230px;
 }
 
-.adside.show+.admain {
-    margin-left: 220px;
-    width: calc(100% - 220px);
+.admain.expanded {
+    width: 100%;
+    margin-left: 0;
 }
+
 
 @media (max-width: 768px) {
     .adnav {
@@ -594,18 +584,18 @@
     margin-top: 20px;
 }
 
-.deptgrid{
+.deptgrid {
     width: 100%;
     overflow-x: auto;
     margin-top: 20px;
 }
 
-.deptgrid table{
+.deptgrid table {
     width: 100%;
-    border-collapse:collapse;
+    border-collapse: collapse;
 }
 
-.deptgrid th, .deptgrid td{
+.deptgrid th, .deptgrid td {
     padding: 3px;
     text-align: left;
     border: 1px solid #333;
@@ -854,6 +844,7 @@
     overflow: hidden;
 }
 
+
 .premaintab img {
     position: absolute;
     bottom: -45px;
@@ -874,6 +865,57 @@
     margin: 15px auto;
 
 }
+
+.admaintab {
+    position: relative;
+    color: #313131;
+    padding: 30px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    min-height: 110px;
+    overflow: hidden;
+}
+
+
+.admaintab img {
+    position: absolute;
+    bottom: -45px;
+    right: 40px;
+    width: 190px;
+    height: 190px;
+    opacity: 0.5;
+    object-fit: cover;
+}
+
+.addashtab {
+    width: 90%;
+    background: rgb(236, 236, 236);
+    color: black;
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    margin: 15px auto;
+
+}
+
+.addnavtab {
+    margin-top: 70px;
+}
+
+    .search-enrollee-container {
+        margin-top: 70px;
+        text-align: center;
+    }
+
+    .search-enrollee-input {
+        width: 100%;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        font-size: 15px;
+    }
+
 
 
 .predash {
@@ -1365,7 +1407,6 @@
     width: 100%;
 }
 
-/* Email and Phone Number on the same line */
 .email-phone-container {
     display: flex;
     width: 50%;
@@ -1380,8 +1421,6 @@
     border: 1px solid red;
 }
 
-
-/* First Name, Middle Name, Last Name, and Extension on the same line */
 .name-container {
     display: flex;
     width: 100%;
@@ -1409,13 +1448,11 @@
     box-sizing: border-box;
 }
 
-/* Container for the name fields and lock icon */
 .persofom-input-container {
     position: relative;
     width: 100%;
 }
 
-/* Style for the lock icon */
 .lock-icon {
     position: absolute;
     right: -5px;
@@ -1425,7 +1462,6 @@
     font-size: 16px;
 }
 
-/* Styles for labels */
 .persofom-group label {
     font-size: 12px;
     font-weight: bold;
@@ -1433,7 +1469,6 @@
     color: #333;
 }
 
-/* Styles for inputs */
 .persofom-input {
     padding: 7px;
     border: 1px solid #ccc;

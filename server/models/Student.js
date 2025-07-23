@@ -27,6 +27,26 @@ const StudentSchema = new mongoose.Schema({
     disability: { type: String },
     disabilityCategory: { type: String },
     disabilityDetails: { type: String },
+
+    //education
+    scholar: { type: String },
+    otherScholar: { type: String },
+    elementary: { type: String },
+    elemYear: { type: String },
+    highschool: { type: String },
+    highYear: { type: String },
+    schoolType: { type: String },
+    strand: { type: String },
+    lrn: { type: String },
+    honor: { type: String },
+    college: { type: String },
+    technical: { type: String },
+    certificate: { type: String },
+    course: { type: String },
+    year: { type: String },
+    program: { type: String },
+    yearCom: { type: String },
+    achivements: { type: String },
 });
 
 const StudentModel = mongoose.model("students", StudentSchema);
