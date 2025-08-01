@@ -19,6 +19,11 @@ export default function Preregister() {
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
+    useEffect(() => {
+        document.title = "KNS Student Admission";
+    }, []);
+
+
     //LOADING EFFECT
     useEffect(() => {
         setTimeout(() => {

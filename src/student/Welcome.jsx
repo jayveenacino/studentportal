@@ -1,8 +1,19 @@
-import React from 'react'
+import React, { useState, useEffect, use } from "react";
 import useAdmin from "../Admin/useAdmin";
+import axios from "axios";
+
 
 export default function Welcome() {
     const { user, setUser } = useAdmin()
+
+    const [courses, setCourses] = useState([]);
+
+    useEffect(() => {
+        axios.get("http://localhost:2025/api/courses")
+            .then(res => setCourses(res.data))
+            .catch(err => console.error("Course fetch error:", err));
+    }, []);
+
     return (
         <div>
             <div className="premaintab">
@@ -43,18 +54,37 @@ export default function Welcome() {
                         <thead style={{ background: "white" }}>
                             <tr>
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Courses</td>
-                                <td style={{ textAlign: "center", fontWeight: "bold" }}>Slot</td>
+                                
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Status</td>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr style={{ background: "white" }}>
-                                <td>Bachelor of Science in Computer Science (BSCS)</td>
-                                <td style={{ textAlign: 'center' }}> 500</td>
-                                <td style={{ textAlign: 'center' }}>Open</td>
-                            </tr>
+                            {courses.map((course, index) => (
+                                <tr key={index} style={{ background: "white" }}>
+                                    <td>
+                                        {course.title}{" "}
+                                        {course.department && (
+                                            <>
+
+                                            </>
+                                        )}
+                                    </td>
+                                    
+                                    <td
+                                        style={{
+                                            textAlign: 'center',
+                                            fontWeight: 'bold',
+                                            color: course.status === 'Active' ? 'green' : 'red'
+                                        }}
+                                    >
+                                        {course.status === 'Active' ? 'Open' : 'Closed'}
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
+
+
                 </div>
             </div>
         </div>

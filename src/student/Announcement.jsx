@@ -9,6 +9,8 @@ export default function Announcement() {
                     <p>Visual bulletin boards, reminders, and posted announcements</p>
                 </div>
                 <img src="public/img/knshdlogo.png" alt="Illustration"  draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
+
+                
             </div>
         </div>
     )

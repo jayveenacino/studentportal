@@ -2,8 +2,9 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import Enrollees from "./Enrollees";
-import Department from "./Department";
 import Adminuser from "./Adminuser";
+import Courses from "./Courses";
+import Departments from "./Departments";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -96,8 +97,8 @@ function Dashboard() {
                             <li><a href="#" onClick={() => setActiveSection("dashboard")}> <i className="fa-solid fa-house"></i> Dashboard</a></li>
                             <li><a href="#" onClick={() => setActiveSection("enrollees")}> <i className="fa-solid fa-calendar"></i> Enrollees</a></li>
                             <li><a href="#"> <i className="fa-solid fa-book"></i> Subjects</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("department")}><i className="fa-solid fa-building"></i> Department</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-calendar"> </i> Courses</a></li>
+                            <li><a href="#" onClick={() => setActiveSection("departments")}><i className="fa-solid fa-building"></i> Department</a></li>
+                            <li><a href="#" onClick={() => setActiveSection("courses")}> <i className="fa-solid fa-calendar"> </i> Courses</a></li>
                             <li><a href="#"> <i className="fa-solid fa-graduation-cap"></i> Schedule</a></li>
                             <li><a href="#"> <i className="fa-solid fa-users"></i> Students</a></li>
                             <li><a href="#"> <i className="fa-solid fa-users"></i> Instructor</a></li>
@@ -113,8 +114,7 @@ function Dashboard() {
                     <div className={`admain ${sidebarVisible ? '' : 'expanded'}`} style={{ display: 'block' }}>
                         {activeSection === "dashboard" && (
                             <div>
-                                <h2>Welcome to Admin Dashboard</h2>
-                                <p>Manage the system efficiently using the admin panel.</p>
+                                
                             </div>
                         )}
 
@@ -124,9 +124,15 @@ function Dashboard() {
                             </div>
                         )}
 
-                        {activeSection === "department" && (
+                        {activeSection === "departments" && (
                             <div className="">
-                                <Department />
+                                <Departments />
+                            </div>
+                        )}
+
+                        {activeSection === "courses" && (
+                            <div className="">
+                                <Courses />
                             </div>
                         )}
 

@@ -1,6 +1,26 @@
-import React from 'react'
+import React, { useState, useEffect, use } from "react";
+import useAdmin from "../Admin/useAdmin";
+import axios from "axios";
 
 export default function Dashboard() {
+    const [courses, setCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState("");
+    const [selectedSecCourse, setSelectedSecCourse] = useState("");
+
+    const { user, setUser } = useAdmin()
+
+    useEffect(() => {
+        axios.get("http://localhost:2025/api/courses")
+            .then(res => setCourses(res.data))
+            .catch(err => console.error("Course fetch error:", err));
+    }, []);
+
+    const isProfilingDone =
+        user?.selectedCourse &&
+        user?.firstName &&
+        user?.lastName &&
+        user?.birthDate; // and other required fields
+
     return (
         <div>
             <div className="premaintab" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
@@ -24,12 +44,12 @@ export default function Dashboard() {
                         <tbody>
                             <tr>
                                 <td>First Choice:</td>
-                                <td style={{ width: "35%" }}></td>
-                                <td>Profiling not yet done</td>
+                                <td style={{ width: "35%" }}>{user?.selectedCourse || ""}</td>
+                                <td style={{textAlign:"center"}}>Your Final Course</td>
                             </tr>
                             <tr>
                                 <td>Second Choice:</td>
-                                <td></td>
+                                <td>{user?.selectedSecCourse || ""}</td>
                                 <td></td>
                             </tr>
                         </tbody>

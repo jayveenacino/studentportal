@@ -222,7 +222,6 @@ export default function Education() {
                                 onChange={(e) => setScholar(e.target.value)}
                                 className={`persofom-input ${formErrors.scholar ? 'error' : ''}`}
                             >
-
                                 <option value="" disabled selected>Select One</option>
                                 <option value="FGE" >Free Goverment Education</option>
                                 <option value="SPS" >Non - Scholar Paying Student</option>

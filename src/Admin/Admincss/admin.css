@@ -903,18 +903,18 @@
     margin-top: 70px;
 }
 
-    .search-enrollee-container {
-        margin-top: 70px;
-        text-align: center;
-    }
+.search-enrollee-container {
+    margin-top: 70px;
+    text-align: center;
+}
 
-    .search-enrollee-input {
-        width: 100%;
-        padding: 5px 10px;
-        border-radius: 5px;
-        border: 1px solid #ccc;
-        font-size: 15px;
-    }
+.search-enrollee-input {
+    width: 100%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 15px;
+}
 
 
 
@@ -1084,6 +1084,19 @@
     }
 }
 
+.familypreprofile {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+.familypreprofiledetails {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 90%;
+}
 
 
 .preprofile {
@@ -1417,15 +1430,28 @@
     flex: 1 1 48%;
 }
 
+
+
 .persofom-input.error {
     border: 1px solid red;
 }
 
 .name-container {
     display: flex;
-    width: 100%;
+    width: 95%;
     gap: 20px;
     flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.name-container {
+    display: flex;
+    width: 95%;
+    gap: 20px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin: 0 auto;
 }
 
 .name-container .persofom-group.name {

@@ -174,6 +174,8 @@ export default function Personal() {
 
 		const updatedFields = {};
 		if (phone) updatedFields.phone = phone;
+		if (middlename) updatedFields.middlename = middlename;
+		if (extension) updatedFields.extension = extension;
 		if (birthplace) updatedFields.birthplace = birthplace;
 		if (civil) updatedFields.civil = civil;
 		if (sex) updatedFields.sex = sex;
@@ -185,6 +187,9 @@ export default function Personal() {
 		if (province) updatedFields.province = province;
 		if (city) updatedFields.city = city;
 		if (barangay) updatedFields.barangay = barangay;
+		if (disability) updatedFields.disability = disability;
+		if (disabilityCategory) updatedFields.disabilityCategory = disabilityCategory;
+		if (disabilityDetails) updatedFields.disabilityDetails = disabilityDetails;
 
 		try {
 			const response = await axios.put('http://localhost:2025/update-profile', {

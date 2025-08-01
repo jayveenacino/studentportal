@@ -2,22 +2,25 @@ const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const StudentModel = require("./models/Student");
+const AdminData = require('./models/admin/admindata');
+const CourseModel = require('./models/Course');
+const CourseRoutes = require('./routes/courses');
+const studentRoutes = require('./routes/students');
+require('dotenv').config();
+
+
 
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
-mongoose.connect("mongodb://127.0.0.1:27017/student", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+mongoose.connect("mongodb://127.0.0.1:27017/student");
 
 app.post('/register', async (req, res) => {
     try {
         const currentYear = new Date().getFullYear();
-        const yearPrefix = currentYear.toString().slice(-2);    
-
+        const yearPrefix = currentYear.toString().slice(-2);
         const lastStudent = await StudentModel.findOne().sort({ studentNumber: -1 });
         let lastNumber = 0;
 
@@ -29,15 +32,24 @@ app.post('/register', async (req, res) => {
 
         const nextNumber = lastNumber + 1;
         const formattedNumber = nextNumber.toString().padStart(4, '0');
-
         const studentNumber = `${yearPrefix}-${formattedNumber}`;
+        const domainEmail = `${yearPrefix}${formattedNumber}@knsians.edu.ph`;
 
-        const student = await StudentModel.create({ ...req.body, studentNumber });
+        const portalPassword = Math.random().toString(36).slice(-8);
+
+        const student = await StudentModel.create({
+            ...req.body,
+            studentNumber,
+            domainEmail,
+            portalPassword
+        });
+
         res.status(201).json({ message: "Account created successfully", student });
     } catch (err) {
         res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
@@ -56,7 +68,7 @@ app.post('/login', async (req, res) => {
 });
 
 app.post('/upload', async (req, res) => {
-    const { email, image } = req.body
+    const { email, image } = req.body;
 
     try {
         if (!email || !image) {
@@ -65,7 +77,12 @@ app.post('/upload', async (req, res) => {
 
         const student = await StudentModel.findOneAndUpdate(
             { email },
-            { image },
+            {
+                $set: {
+                    image,
+                    profileImage: '✔️'  
+                }
+            },
             { new: true }
         );
 
@@ -77,6 +94,131 @@ app.post('/upload', async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+app.post('/upload-id-image', async (req, res) => {
+    const { email, idimage } = req.body;
+
+    if (!email || !idimage) {
+        return res.status(400).json({ message: "Email and ID image are required" });
+    }
+
+    try {
+        const student = await StudentModel.findOneAndUpdate(
+            { email },
+            {
+                $set: {
+                    idimage,
+                    validId: '✔️' 
+                }
+            },
+            { new: true }
+        );
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json({ message: "ID image uploaded successfully!", student });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+// Upload Birth Certificate
+app.post('/upload-birth-cert', async (req, res) => {
+    const { email, birthCertImage } = req.body;
+
+    if (!email || !birthCertImage) {
+        return res.status(400).json({ message: "Email and birth certificate image are required" });
+    }
+
+    try {
+        const student = await StudentModel.findOneAndUpdate(
+            { email },
+            {
+                $set: {
+                    birthCertImage,
+                    birthCert: true  
+                }
+            },
+            { new: true }
+        );
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json({ message: "Birth certificate uploaded successfully!", student });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+// Upload Academic Records
+app.post('/upload-academic', async (req, res) => {
+    const { email, academicImage } = req.body;
+
+    if (!email || !academicImage) {
+        return res.status(400).json({ message: "Email and academic image are required" });
+    }
+
+    try {
+        const student = await StudentModel.findOneAndUpdate(
+            { email },
+            {
+                $set: {
+                    academicImage,
+                    academic: true 
+                }
+            },
+            { new: true }
+        );
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found" });
+        }
+
+        res.status(200).json({ message: "Academic records uploaded successfully!", student });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+app.get('/get-upload-status/:email', async (req, res) => {
+    try {
+        const student = await StudentModel.findOne({ email: req.params.email });
+
+        if (!student) {
+            return res.json({
+                validId: false,
+                birthCert: false,
+                goodMoral: false,
+                academic: false,
+                profileImage: false
+            });
+        }
+
+        res.json({
+            validId: student.validId === '✔️',
+            birthCert: student.birthCert === '✔️',
+            goodMoral: student.goodMoral === '✔️',
+            academic: student.academic === '✔️',
+            profileImage: student.profileImage === '✔️'
+        });
+    } catch (error) {
+        console.error("Error in /get-upload-status:", error);
+        res.status(500).json({
+            validId: false,
+            birthCert: false,
+            goodMoral: false,
+            academic: false,
+            profileImage:false
+        });
     }
 });
 
@@ -97,7 +239,6 @@ app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
 
     try {
-
         const student = await StudentModel.findOne({ email: email.toLowerCase() });
 
         if (!student) {
@@ -141,13 +282,14 @@ app.post('/api/updateUserDetails', async (req, res) => {
     }
 });
 
-
 app.put("/update-profile", async (req, res) => {
     const {
         phone, email, middlename, extension, birthplace, civil, sex, orientation, gender,
         citizenship, religion, region, province, city, barangay,
-        disability, disabilityCategory, disabilityDetails,scholar,elementary,elemYear,highYear,
-        highschool,schoolType,strand,lrn,honor,college,technical,certificate,course,year,program,yearCom,achivements,
+        disability, disabilityCategory, disabilityDetails, scholar, elementary, elemYear, highYear,
+        highschool, schoolType, strand, lrn, honor, college, technical, certificate, course, year, program, yearCom, achivements,
+        fatName, fatMidName, fatLastName, fatExt, motName, motMidName, motLastName, broNum, sisNum, guarName, guarRelationship,
+        guarAddress, guarEmail, guarTel, selectedCourse, selectedSecCourse, initialDept,
     } = req.body;
 
     try {
@@ -166,10 +308,10 @@ app.put("/update-profile", async (req, res) => {
                 gender,
                 citizenship,
                 religion,
-                region: String(region),   
-                province: String(province), 
-                city: String(city),     
-                barangay: String(barangay), 
+                region,
+                province,
+                city,
+                barangay,
                 disability,
                 disabilityCategory,
                 disabilityDetails,
@@ -190,7 +332,23 @@ app.put("/update-profile", async (req, res) => {
                 program,
                 yearCom,
                 achivements,
-                
+                fatName,
+                fatMidName,
+                fatLastName,
+                fatExt,
+                motName,
+                motMidName,
+                motLastName,
+                broNum,
+                sisNum,
+                guarName,
+                guarRelationship,
+                guarAddress,
+                guarEmail,
+                guarTel,
+                selectedCourse,
+                selectedSecCourse,
+                initialDept,
             },
             { new: true }
         );
@@ -210,6 +368,92 @@ app.put("/update-profile", async (req, res) => {
     }
 });
 
+app.get("/api/departments", async (req, res) => {
+    try {
+        const departments = await AdminData.find().sort({ createdAt: -1 });
+        res.json(departments);
+    } catch (err) {
+        console.error("Get departments error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/api/departments", async (req, res) => {
+    try {
+        const newDepartment = new AdminData(req.body);
+        await newDepartment.save();
+        res.status(201).json(newDepartment);
+    } catch (err) {
+        console.error("Add department error:", err);
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.put("/api/departments/:id", async (req, res) => {
+    try {
+        const updated = await AdminData.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        if (!updated) {
+            return res.status(404).json({ error: "Department not found" });
+        }
+        res.json(updated);
+    } catch (err) {
+        console.error("Update department error:", err);
+        res.status(500).json({ error: "Error updating department" });
+    }
+});
+
+app.get("/api/courses", async (req, res) => {
+    try {
+        const courses = await CourseModel.find().sort({ createdAt: -1 });
+        res.json(courses);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post("/api/courses", async (req, res) => {
+    try {
+        const newCourse = new CourseModel(req.body);
+        await newCourse.save();
+        res.status(201).json(newCourse);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.put("/api/courses/:id", async (req, res) => {
+    try {
+        const updated = await CourseModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        res.json(updated);
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.delete("/api/courses/:id", async (req, res) => {
+    try {
+        await CourseModel.findByIdAndDelete(req.params.id);
+        res.json({ message: "Course deleted" });
+    } catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+
+app.get('/api/students/:id', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const student = await StudentModel.findById(id);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        res.status(200).json(student);
+    } catch (err) {
+        console.error('Error fetching student details:', err);
+        res.status(500).json({ message: 'Error fetching student details', error: err.message });
+    }
+});
+
+app.use(studentRoutes);
 
 app.listen(2025, '0.0.0.0', () => {
     console.log("Server is running on port 2025");

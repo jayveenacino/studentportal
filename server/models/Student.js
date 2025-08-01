@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
 const StudentSchema = new mongoose.Schema({
+    
+    //!Profile
     firstname: String,
     middlename: String,
     lastname: String,
@@ -12,7 +14,18 @@ const StudentSchema = new mongoose.Schema({
     password: { type: String, required: true },
     conpassword: String,
     studentNumber: String,
+    domainEmail: String,
+    portalPassword: String,
+    idimage: { type: String },
+    validId: { type: String, default: '❌' },
+    birthCertImage: { type: String },
+    birthCert: { type: String, default: '❌' },
+    goodMoralImage: { type: String },
+    goodMoral: { type: String, default: '❌' },
+    academic: { type: String },
+    academicImage: { type: String, default: '❌' },
     image: { type: String },
+    profileImage: { type: String, default: '❌' },
     birthplace: { type: String },
     civil: { type: String },
     sex: { type: String },
@@ -28,7 +41,10 @@ const StudentSchema = new mongoose.Schema({
     disabilityCategory: { type: String },
     disabilityDetails: { type: String },
 
-    //education
+    //!Education
+    selectedCourse: { type: String },
+    selectedSecCourse: { type: String },
+    initialDept: { type: String },
     scholar: { type: String },
     otherScholar: { type: String },
     elementary: { type: String },
@@ -47,6 +63,24 @@ const StudentSchema = new mongoose.Schema({
     program: { type: String },
     yearCom: { type: String },
     achivements: { type: String },
+
+    //!Family
+    fatName: { type: String },
+    fatMidName: { type: String },
+    fatLastName: { type: String },
+    fatExt: { type: String },
+    motName: { type: String },
+    motMidName: { type: String },
+    motLastName: { type: String },
+    broNum: { type: String },
+    sisNum: { type: String },
+    guarName: { type: String },
+    guarRelationship: { type: String },
+    guarAddress: { type: String },
+    guarEmail: { type: String },
+    guarTel: { type: String },
+
+
 });
 
 const StudentModel = mongoose.model("students", StudentSchema);
