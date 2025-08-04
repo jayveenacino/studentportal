@@ -35,11 +35,37 @@ export default function Enrollees() {
 
         try {
             const res = await axios.put(`http://localhost:2025/api/students/${id}/accept`);
+
             Swal.fire({
                 icon: 'success',
                 title: 'Student Accepted!',
-                text: 'The student has been accepted and notified via email.',
+                html: (() => {
+                    const student = res.data.student;
+                    if (!student) return 'No student data received.';
+
+                    return `
+            <div style="text-align:left;">
+                <strong>Student No:</strong> ${student.studentNumber}<br/>
+                <strong>Email:</strong> ${student.domainEmail}<br/>
+                <strong>Temp Password:</strong> <u id="temp-password">${student.portalPassword}</u>
+                <br/><br/>
+                <small>Temporary password copied on click.</small>
+            </div>
+        `;
+                })(),
+                didOpen: () => {
+                    const el = document.getElementById('temp-password');
+                    if (el) {
+                        el.style.cursor = 'pointer';
+                        el.addEventListener('click', () => {
+                            navigator.clipboard.writeText(el.innerText);
+                            el.style.textDecoration = 'underline dotted';
+                            Swal.showValidationMessage('Copied!');
+                        });
+                    }
+                }
             });
+
 
             fetchEnrollees();
         } catch (err) {
@@ -51,6 +77,7 @@ export default function Enrollees() {
             });
         }
     };
+
 
     const handleDecline = async (id) => {
         const result = await Swal.fire({
@@ -90,7 +117,6 @@ export default function Enrollees() {
             }
         }
     };
-
 
     const openModal = async (studentId) => {
         try {

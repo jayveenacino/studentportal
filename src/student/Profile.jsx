@@ -11,19 +11,9 @@ export default function Profile() {
     const navigate = useNavigate();
     const { user, setUser } = useAdmin()
 
-    // State for toggling profile picture preview/edit modal
     const [profilepfp, setProfilepfp] = useState(false);
-    // Controls which section of the form is currently visible (e.g., "data", "uploads", etc.)
     const [fillsection, setFillsection] = useState("data");
-    // Stores the list of available courses fetched from the backend
     const [courses, setCourses] = useState([]);
-
-    /**
-    * Fetch list of available courses from the backend API on component mount.
-    * 
-    * This runs once when the component mounts.
-    * If the fetch fails, log the error to the console for debugging.
-    */
 
     useEffect(() => {
         axios.get("http://localhost:2025/api/courses")
@@ -31,43 +21,25 @@ export default function Profile() {
             .catch(err => console.error("Course fetch error:", err));
     }, []);
 
-    // Define the sections of the multi-step form in their expected order
     //? LOCK SECTION
     const formSections = ["personal", "education", "family", "uploads", "confirmation"];
 
-    /**
-    * Track which form sections are unlocked (i.e., accessible).
-    * 
-    * Priority: 
-    * - Load the unlocked section state from localStorage if available, allowing session persistence.
-    * - If not present, default to starting with only the "personal" section unlocked.
-    * 
-    * This enables conditional rendering/navigation through the multi-step form.
-    */
-
     const [unlockedSections, setUnlockedSections] = useState(() => {
-        // Load from localStorage or default to just 'personal' unlocked
         return JSON.parse(localStorage.getItem("unlockedSections")) || ["personal"];
     });
 
     //!DOCXS FUNCTION
-    // Modal state controls for each document type
-    // These manage the visibility of modal dialogs for each document upload
     const [uploadModalOpen, setUploadModalOpen] = useState(false);
     const [birthCertModalOpen, setBirthCertModalOpen] = useState(false);
     const [goodMoralModalOpen, setGoodMoralModalOpen] = useState(false);
     const [academicModalOpen, setAcademicModalOpen] = useState(false);
 
-    // Base64-encoded image data states for each upload type
-    // These hold the selected image data prior to uploading
-    const [image, setImage] = useState(null);                     // Profile picture
-    const [idimage, setIdImage] = useState(null);                 // Valid ID
-    const [birthCertImage, setBirthCertImage] = useState(null);   // Birth Certificate
-    const [goodMoralImage, setGoodMoralImage] = useState(null);   // Good Moral Certificate
-    const [academicImage, setAcademicImage] = useState(null);     // Academic Records
+    const [image, setImage] = useState(null);                     
+    const [idimage, setIdImage] = useState(null);                 
+    const [birthCertImage, setBirthCertImage] = useState(null);   
+    const [goodMoralImage, setGoodMoralImage] = useState(null);   
+    const [academicImage, setAcademicImage] = useState(null);     
 
-    // Tracks the current upload status for each required document
-    // Each field will either show a ❌ (not uploaded) or ✔️ (uploaded)
     const [uploadStatus, setUploadStatus] = useState({
         profileImage: '❌',
         validId: '❌',
@@ -75,14 +47,6 @@ export default function Profile() {
         goodMoral: '❌',
         academic: '❌',
     });
-
-    /**
-     * Effect to fetch and update document upload status for the current user.
-     * 
-     * Triggers whenever the `user` object changes and contains a valid email.
-     * Makes an API call to retrieve each document's upload state from the server,
-     * and updates the UI with corresponding check or cross icons.
-     */
     
     useEffect(() => {
         if (user?.email) {
@@ -100,12 +64,6 @@ export default function Profile() {
         }
     }, [user]);
 
-    /**
-     * Handler for file input changes (e.g., uploading valid ID).
-     * 
-     * Converts the selected file to a base64 string using FileReader,
-     * then stores the result in the `idimage` state for preview or upload use.
-     */
     const handleFileChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
@@ -116,7 +74,6 @@ export default function Profile() {
         };
         reader.readAsDataURL(file);
     };
-
 
     //! SHS
     const idHandleUpload = async () => {
