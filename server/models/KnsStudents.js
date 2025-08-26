@@ -1,8 +1,7 @@
 const mongoose = require("mongoose");
 
-const StudentSchema = new mongoose.Schema({
-
-    //!Profile
+const knsStudentSchema = new mongoose.Schema({
+    //! Profile
     firstname: String,
     middlename: String,
     lastname: String,
@@ -17,15 +16,15 @@ const StudentSchema = new mongoose.Schema({
     domainEmail: String,
     portalPassword: String,
     idimage: { type: String },
-    validId: { type: String, default: '❌' },
+    validId: { type: String, default: "❌" },
     birthCertImage: { type: String },
-    birthCert: { type: String, default: '❌' },
+    birthCert: { type: String, default: "❌" },
     goodMoralImage: { type: String },
-    goodMoral: { type: String, default: '❌' },
-    academic: { type: String },
-    academicImage: { type: String, default: '❌' },
+    goodMoral: { type: String, default: "❌" },
+    academicImage: { type: String },
+    academic: { type: String, default: "❌" },
     image: { type: String },
-    profileImage: { type: String, default: '❌' },
+    profileImage: { type: String, default: "❌" },
     birthplace: { type: String },
     civil: { type: String },
     sex: { type: String },
@@ -41,7 +40,7 @@ const StudentSchema = new mongoose.Schema({
     disabilityCategory: { type: String },
     disabilityDetails: { type: String },
 
-    //!Education
+    //! Education
     selectedCourse: { type: String },
     selectedSecCourse: { type: String },
     initialDept: { type: String },
@@ -64,7 +63,7 @@ const StudentSchema = new mongoose.Schema({
     yearCom: { type: String },
     achivements: { type: String },
 
-    //!Family
+    //! Family
     fatName: { type: String },
     fatMidName: { type: String },
     fatLastName: { type: String },
@@ -79,11 +78,7 @@ const StudentSchema = new mongoose.Schema({
     guarAddress: { type: String },
     guarEmail: { type: String },
     guarTel: { type: String },
+}, { timestamps: true });
 
-    //!student aprroval
-    studentyear: { type: String },
-    isAccepted: { type: Boolean, default: false }
-});
-
-const StudentModel = mongoose.model("students", StudentSchema);
-module.exports = StudentModel;
+// ✅ fixed: name matches variable
+module.exports = mongoose.model("KnsStudent", knsStudentSchema);

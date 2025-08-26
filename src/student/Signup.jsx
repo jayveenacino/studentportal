@@ -47,10 +47,15 @@ const Signup = () => {
     };
 
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
-        if (user) {
-            setUser(user);
-            navigate("/preregister");
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            try {
+                const user = JSON.parse(storedUser);
+                setUser(user);
+                navigate("/preregister");
+            } catch (err) {
+                console.error("Failed to parse user from localStorage:", err);
+            }
         }
     }, [navigate, setUser]);
 
@@ -91,7 +96,7 @@ const Signup = () => {
                         <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
                     </div>
                     <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
-                    <p className="subtitle" style={{ fontSize: "10px",marginBottom:"20px",marginTop:"-px"}}>Office of the Student Welfare and Services</p>
+                    <p className="subtitle" style={{ fontSize: "10px", marginBottom: "20px", marginTop: "-px" }}>Office of the Student Welfare and Services</p>
                     <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal </p>
                     <hr />
                     <form onSubmit={handleSubmit}>
@@ -132,7 +137,7 @@ const Signup = () => {
                     <hr />
                     <p style={{ fontSize: "10px", textAlign: "center" }}>
                         By clicking the login button, you recognize the authority of Kolehiyo ng Subic to process your personal and sensitive information,
-                        pursuant to the <a href="" style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</a> and applicable laws.
+                        pursuant to the <Link to="notice" target='_blank' style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</Link> and applicable laws.
                     </p>
                 </div>
             </div>
@@ -237,11 +242,11 @@ const Signup = () => {
                             </div>
 
                             <div className="forgot-reset-buttons">
-                            <button type="button" className="forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
-                            <button type="submit" className="forgot-update-button">Update Password</button>
+                                <button type="button" className="forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
+                                <button type="submit" className="forgot-update-button">Update Password</button>
                             </div>
                         </form>
-                        
+
                     </div>
                 </div>
             )}

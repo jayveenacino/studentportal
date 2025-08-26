@@ -1,0 +1,228 @@
+.backuprestore-container {
+    padding: 100px 32px;
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.backuprestore-header h1 {
+    font-size: 2rem;
+    color: #0a3d18;
+    margin-bottom: 0.3rem;
+}
+
+.backuprestore-header p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.backuprestore-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.backuprestore-search {
+    padding: 8px 12px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.backuprestore-add-btn {
+    background-color: #0a3d18;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.backuprestore-add-btn:hover {
+    background-color: #097129;
+}
+
+.backuprestore-table-container {
+    overflow-x: auto;
+}
+
+.backuprestore-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.backuprestore-table th,
+.backuprestore-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.backuprestore-table th {
+    background-color: #0a3d18;
+    color: white;
+}
+
+.backup-status-active {
+    color: green;
+    font-weight: 500;
+}
+
+.backup-status-inactive {
+    color: #888;
+    font-weight: 500;
+}
+
+.backup-action-btn {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.backup-action-btn.edit {
+    background-color: #129c16;
+    color: white;
+}
+
+.backup-action-btn.delete {
+    background-color: #d9534f;
+    color: white;
+}
+
+.backuprestore-pagination-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.backuprestore-pagination-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    margin: 0 3px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.backuprestore-pagination-btn.active,
+.backuprestore-pagination-btn:hover {
+    background-color: #0a3d18;
+    color: white;
+    border-color: #0a3d18;
+}
+
+.backuprestore-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    backdrop-filter: blur(3px); 
+}
+
+.backuprestore-modal-content {
+    background: #fff;
+    padding: 30px 35px;
+    border-radius: 7px;
+    width: 420px;
+    max-width: 90%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.backuprestore-modal-content h2 {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #333;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 3px;
+    margin-top: -10px;
+}
+
+.backuprestore-modal-content input,
+.backuprestore-modal-content select {
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    transition: border 0.2s ease;
+}
+
+.backuprestore-modal-content input:focus,
+.backuprestore-modal-content select:focus {
+    border-color: #999;
+    outline: none;
+}
+
+.backuprestore-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 10px;
+}
+
+.backuprestore-modal-buttons button {
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.backuprestore-modal-buttons button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.backuprestore-modal-buttons button:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.backuprestore-modal-buttons button:first-child {
+    background-color: #28a745;
+    color: #fff;
+}
+
+.backuprestore-modal-buttons button:first-child:hover {
+    background-color: #218838;
+}
+
+.backuprestore-modal-buttons button:last-child {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.backuprestore-modal-buttons button:last-child:hover {
+    background-color: #c82333;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -6,8 +6,11 @@ const AdminData = require('./models/admin/admindata');
 const CourseModel = require('./models/Course');
 const CourseRoutes = require('./routes/courses');
 const studentRoutes = require('./routes/students');
-require('dotenv').config();
+const backupRoutes = require("./routes/backupRoutes");
+const departmentRoutes = require('./routes/department');
 
+
+require('dotenv').config();
 
 
 const app = express();
@@ -62,7 +65,7 @@ app.post('/upload', async (req, res) => {
             {
                 $set: {
                     image,
-                    profileImage: '✔️'  
+                    profileImage: '✔️'
                 }
             },
             { new: true }
@@ -92,7 +95,7 @@ app.post('/upload-id-image', async (req, res) => {
             {
                 $set: {
                     idimage,
-                    validId: '✔️' 
+                    validId: '✔️'
                 }
             },
             { new: true }
@@ -123,7 +126,7 @@ app.post('/upload-birth-cert', async (req, res) => {
             {
                 $set: {
                     birthCertImage,
-                    birthCert: true  
+                    birthCert: true
                 }
             },
             { new: true }
@@ -154,7 +157,7 @@ app.post('/upload-academic', async (req, res) => {
             {
                 $set: {
                     academicImage,
-                    academic: true 
+                    academic: true
                 }
             },
             { new: true }
@@ -199,7 +202,7 @@ app.get('/get-upload-status/:email', async (req, res) => {
             birthCert: false,
             goodMoral: false,
             academic: false,
-            profileImage:false
+            profileImage: false
         });
     }
 });
@@ -350,39 +353,9 @@ app.put("/update-profile", async (req, res) => {
     }
 });
 
-app.get("/api/departments", async (req, res) => {
-    try {
-        const departments = await AdminData.find().sort({ createdAt: -1 });
-        res.json(departments);
-    } catch (err) {
-        console.error("Get departments error:", err);
-        res.status(500).json({ error: err.message });
-    }
-});
 
-app.post("/api/departments", async (req, res) => {
-    try {
-        const newDepartment = new AdminData(req.body);
-        await newDepartment.save();
-        res.status(201).json(newDepartment);
-    } catch (err) {
-        console.error("Add department error:", err);
-        res.status(400).json({ error: err.message });
-    }
-});
+app.use('/api/departments', departmentRoutes);
 
-app.put("/api/departments/:id", async (req, res) => {
-    try {
-        const updated = await AdminData.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        if (!updated) {
-            return res.status(404).json({ error: "Department not found" });
-        }
-        res.json(updated);
-    } catch (err) {
-        console.error("Update department error:", err);
-        res.status(500).json({ error: "Error updating department" });
-    }
-});
 
 app.get("/api/courses", async (req, res) => {
     try {
@@ -435,6 +408,8 @@ app.get('/api/students/:id', async (req, res) => {
     }
 });
 
+
+app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 
 app.listen(2025, '0.0.0.0', () => {

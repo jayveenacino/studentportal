@@ -77,7 +77,6 @@ export default function Departments() {
         }
     };
 
-
     const handleEdit = dept => {
         setNewDept({ name: dept.name, head: dept.head, status: dept.status });
         setEditId(dept._id);

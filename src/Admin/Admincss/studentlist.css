@@ -1,0 +1,360 @@
+.studentlist-container {
+    padding: 100px 32px;
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.studentlist-header h1 {
+    font-size: 2rem;
+    color: #0a3d18;
+    margin-bottom: 0.3rem;
+}
+
+.studentlist-header p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.studentlist-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.studentlist-search {
+    padding: 8px 12px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.studentlist-add-btn {
+    background-color: #0a3d18;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.studentlist-add-btn:hover {
+    background-color: #097129;
+}
+
+.studentlist-table-container {
+    overflow-x: auto;
+}
+
+.studentlist-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.studentlist-table th,
+.studentlist-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: center;
+}
+
+.studentlist-table th {
+    background-color: #0a3d18;
+    color: white;
+}
+
+.status-active {
+    color: green;
+    font-weight: 500;
+}
+
+.status-inactive {
+    color: #888;
+    font-weight: 500;
+}
+
+.action-btn {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.action-btn.confirm {
+    background-color: #28a745;
+    color: white;
+}
+
+.action-btn.delete {
+    background-color: #dc3545;
+    color: white;
+}
+
+.pagination-controls {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.pagination-btn {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 8px 14px;
+    margin: 0 3px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.3s;
+}
+
+.pagination-btn.active,
+.pagination-btn:hover {
+    background-color: #0a3d18;
+    color: white;
+    border-color: #0a3d18;
+}
+
+.upload-status {
+    font-weight: 500;
+    color: #555;
+}
+
+.studentlist-modal-backdrop,
+.studentlist-edit-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.studentlist-modal-content {
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    width: 900px;
+    max-width: 98%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+}
+
+.studentlist-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333;
+}
+
+.studentlist-close-btn:hover {
+    color: crimson;
+}
+
+.studentlist-edit-content {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    width: 700px;
+    max-width: 95%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 30px rgba(0, 0, 0, 0.15);
+    font-family: 'Segoe UI', sans-serif;
+    position: relative;
+}
+
+.studentlist-edit-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    font-size: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #333;
+}
+
+.student-details-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.student-details-modal-content {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    max-width: 750px;
+    width: 90%;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    position: relative;
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.student-details-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 26px;
+    font-weight: bold;
+    color: #888;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.student-details-close-btn:hover {
+    color: #333;
+}
+
+.student-details-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px 30px;
+    font-size: 16px;
+    color: #333;
+    word-break: break-word;
+}
+
+.student-details-grid div {
+    background-color: #f9f9f9;
+    padding: 12px 15px;
+    border-radius: 8px;
+    border: 1px solid #e0e0e0;
+}
+
+
+.studentlist-edit-grid,
+.student-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 20px;
+    font-size: 15px;
+}
+
+.student-info-grid {
+    margin-top: 20px;
+    padding: 15px;
+    border: 1px solid #ccc;
+    background-color: #f9f9f9;
+}
+
+.student-info-grid div,
+.student-info-grid p {
+    padding: 10px;
+    border: 1px solid #ddd;
+    background-color: #fff;
+    border-radius: 5px;
+    word-break: break-word;
+}
+
+.studentlist-edit-grid input,
+.studentlist-edit-grid select {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 640px) {
+    .studentlist-edit-grid,
+    .student-info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .studentlist-edit-content {
+        padding: 20px;
+        width: 90%;
+    }
+}
+
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
+    gap: 10px;
+    margin-top: -10px;
+}
+
+.document-item {
+    text-align: center;
+}
+
+.document-item img {
+    width: 100%;
+    height: 120px;
+    border-radius: 4px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.document-item p {
+    margin-top: 3px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.profile-picture img {
+    width: 100px;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.enlarged-image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.enlarged-image-content {
+    background-color: transparent;
+}
+
+.enlarged-image-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 5px solid white;
+    background-color: #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.enlarged-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}

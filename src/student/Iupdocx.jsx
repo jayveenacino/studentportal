@@ -109,7 +109,12 @@ export default function Iupdocx() {
     //! BIRTH CERT
     const birthCertHandleUpload = async () => {
         if (!birthCertImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Birth Certificate first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Birth Certificate before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -120,6 +125,13 @@ export default function Iupdocx() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Birth Certificate has been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, birthCert: '✔️' }));
                 setBirthCertModalOpen(false);
                 setBirthCertImage(null);
@@ -127,14 +139,25 @@ export default function Iupdocx() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, birthCert: '❌' }));
-            Swal.fire("Error", "Birth Certificate upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Birth Certificate upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
 
     //! GOOD MORAL
     const goodMoralHandleUpload = async () => {
         if (!goodMoralImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Good Moral Certificate first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Good Moral Certificate before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -145,6 +168,13 @@ export default function Iupdocx() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Good Moral Certificate has been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, goodMoral: '✔️' }));
                 setGoodMoralModalOpen(false);
                 setGoodMoralImage(null);
@@ -152,14 +182,25 @@ export default function Iupdocx() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, goodMoral: '❌' }));
-            Swal.fire("Error", "Good Moral upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Good Moral upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
 
     //! ACADEMIC RECORDS
     const academicHandleUpload = async () => {
         if (!academicImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Academic Records first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Academic Records before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -170,6 +211,13 @@ export default function Iupdocx() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Academic Records have been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, academic: '✔️' }));
                 setAcademicModalOpen(false);
                 setAcademicImage(null);
@@ -177,7 +225,13 @@ export default function Iupdocx() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, academic: '❌' }));
-            Swal.fire("Error", "Academic Records upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Academic Records upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
 

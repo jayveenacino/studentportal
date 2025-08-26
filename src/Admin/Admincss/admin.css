@@ -1511,3 +1511,15 @@
 .persofom-button:hover {
     background: #0056b3;
 }
+
+.notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+}

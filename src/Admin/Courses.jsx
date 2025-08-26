@@ -32,11 +32,15 @@ export default function Courses() {
             .catch(err => console.error("Department fetch error:", err));
     };
 
-    const filtered = courses.filter(
-        c =>
-            c.title.toLowerCase().includes(search.toLowerCase()) ||
-            c.instructor.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = courses.filter(c => {
+        const title = c.title || "";
+        const instructor = c.instructor || "";
+        return (
+            title.toLowerCase().includes(search.toLowerCase()) ||
+            instructor.toLowerCase().includes(search.toLowerCase())
+        );
+    });
+
     const pageCount = Math.ceil(filtered.length / perPage);
     const start = (currentPage - 1) * perPage;
     const current = filtered.slice(start, start + perPage);
@@ -69,7 +73,7 @@ export default function Courses() {
             title: course.title,
             status: course.status,
             department: course.department || "",
-            initialDept: course.initialDept || "" 
+            initialDept: course.initialDept || ""
         });
         setEditId(course._id);
         setEditMode(true);
@@ -192,7 +196,7 @@ export default function Courses() {
                             value={newCourse.title}
                             onChange={e => setNewCourse({ ...newCourse, title: e.target.value })}
                         />
-                        
+
                         <select
                             value={newCourse.department}
                             onChange={e => setNewCourse({ ...newCourse, department: e.target.value })}
@@ -217,7 +221,7 @@ export default function Courses() {
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
                         </select>
-                        
+
                         <div className="modal-buttons">
                             <button onClick={handleSubmit}>Save</button>
                             <button onClick={resetForm}>Cancel</button>

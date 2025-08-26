@@ -139,9 +139,9 @@
     margin-top: 50px;
     position: fixed;
     bottom: 20px;
-    left: 20px; 
-    right: 20px; 
-    width: calc(100vw - 40px); 
+    left: 20px;
+    right: 20px;
+    width: calc(100vw - 40px);
     height: auto;
     background-color: transparent;
     display: flex;
@@ -150,111 +150,21 @@
     z-index: 1000;
 }
 
-
 .modal.open {
     bottom: 20px;
 }
 
 .modal-content {
+    position: relative;
     background-color: white;
-    padding: 20px;
+    padding: 30px 24px 20px;
     border-radius: 10px;
-    width: 100%;            
-    max-width: 1200px;      
+    width: 100%;
+    max-width: 1280px;
     margin: 0 auto;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
     overflow-y: auto;
     max-height: 90vh;
-}
-
-.close-btn {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    font-size: 24px;
-    cursor: pointer;
-}
-
-.document-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(95px, 1fr));
-    gap: 10px;
-    margin-top: -10px;
-}
-
-.document-item {
-    text-align: center;
-}
-
-.document-item img {
-    width: 100%;
-    height: 120px;
-    border-radius: 4px;
-    object-fit: cover;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.document-item p {
-    margin-top: 3px;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-.profile-picture img {
-    width: 100px;
-    height: 120px;
-    object-fit: cover;
-    border-radius: 4px;
-}
-
-.enlarged-image-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-
-.enlarged-image-modal {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 2000;
-}
-
-.enlarged-image-content {
-    position: relative;
-    padding: 0;
-    border-radius: 0; 
-    background-color: transparent; 
-}
-
-.enlarged-image-modal img {
-    max-width: 90vw;
-    max-height: 90vh;
-    object-fit: contain;
-    border: 5px solid white; 
-    background-color: #ccc;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
-}
-
-.enlarged-image {
-    width: 100%;
-    height: auto;
-    object-fit: contain;
 }
 
 .close-btn {
@@ -275,12 +185,187 @@
     background-color: darkred;
 }
 
-
 .student-info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px 20px;
-    margin: 10px 0 20px;
-    margin-top: -10px;
+    gap: 14px 40px;
+    margin: 10px 0 30px;
     font-size: 15px;
+    line-height: 1.5;
+}
+
+.student-info-grid div {
+    word-break: break-word;
+    white-space: normal;
+    font-weight: 500;
+}
+
+.profile-picture img {
+    width: 120px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.document-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.document-item {
+    text-align: center;
+}
+
+.document-item img {
+    width: 100%;
+    height: 120px;
+    border-radius: 6px;
+    object-fit: cover;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.document-item p {
+    margin-top: 6px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.enlarged-image-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+
+.enlarged-image-content {
+    position: relative;
+    background-color: transparent;
+    padding: 0;
+    border-radius: 0;
+}
+
+.enlarged-image-modal img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border: 5px solid white;
+    background-color: #ccc;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+.enlarged-image {
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.studentdetails-modal-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
+}
+
+.studentdetails-modal {
+    background: #fff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    max-width: 900px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.studentdetails-title {
+    font-size: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.studentdetails-info-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px 25px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.studentdetails-subtitle {
+    font-size: 16px;
+    margin: 30px 0 10px;
+}
+
+.studentdetails-docs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 20px;
+}
+
+.studentdetails-doc-item {
+    text-align: center;
+}
+
+.studentdetails-doc-item img {
+    width: 100%;
+    max-width: 140px;
+    height: 140px;
+    object-fit: cover;
+    border-radius: 8px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    transition: transform 0.2s ease;
+}
+
+.studentdetails-doc-item img:hover {
+    transform: scale(1.05);
+}
+
+.studentdetails-doc-item p {
+    margin-top: 8px;
+    font-size: 13px;
+}
+
+.export-btn {
+    margin-left: 10px;
+    padding: 8px 14px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.export-btn:hover {
+    background-color: #45a049;
+}
+
+.notif-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
 }

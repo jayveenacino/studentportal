@@ -17,6 +17,7 @@ import AdminDashboard from './Admin/Admindashboard';
 import Preregister from './student/Preregister';
 import PrivateRoute from './student/PrivateRoute';
 import { AdminContextProvider } from './Admin/useAdmin';
+import Student from './student/Student';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -25,11 +26,13 @@ const router = createBrowserRouter(
 			<Route path="home" element={<Home />} />
 			<Route path="signup" element={<Signup />} />
 			<Route path="signup/create" element={<Create />} />
+			<Route path="signup/notice" element={<Notice />} />
 			<Route path="login" element={<Login />} />
 			<Route path="login/notice" element={<Notice />} />
 			<Route path="preregister/notice" element={<Notice />} />
 			<Route path="adminlogin" element={<Adminlogin />} />
 			<Route path="admindashboard" element={<AdminDashboard />} />
+			<Route path="student" element={<Student />} />
 			<Route
 				path="preregister"
 				element={
@@ -50,3 +53,5 @@ export default function App() {
 		</AdminContextProvider>
 	);
 }
+
+

@@ -14,7 +14,9 @@ export default function Root() {
         "/admindashboard",
         "/preregister",
         "/preregister/notice",
-        "/preregister/"
+        "/preregister/",
+        "/student",
+        "/signup/notice"
     ]
 
     const shouldShowLayout = !hiddenPaths.includes(location.pathname)

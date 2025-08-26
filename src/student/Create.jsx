@@ -93,7 +93,7 @@ export default function Create() {
             } else {
                 Swal.fire({
                     icon: "error",
-                    title: "Registration Failed",
+                    title: "User Already Registered",
                     text: errorMessage,
                     confirmButtonColor: "#d33"
                 });
@@ -116,7 +116,7 @@ export default function Create() {
             <div className="main-content">
                 <div className="leftcontainer">
                     <p style={{ fontSize: "12px" }}>
-                        <strong className="important">Important:</strong> Please Fill Out the Information Below Accurately
+                        <strong className="important">Important:</strong> Please Fill Out the Information Accurately
                     </p>
 
                     <h3 className="section-title" style={{ fontSize: "13px" }}>Email Address</h3>

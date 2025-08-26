@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -5,6 +6,8 @@ import Enrollees from "./Enrollees";
 import Adminuser from "./Adminuser";
 import Courses from "./Courses";
 import Departments from "./Departments";
+import StudentList from "./StudentList";
+import BackupRestore from "./BackupRestore";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -12,8 +15,24 @@ function Dashboard() {
     const navigate = useNavigate();
     const [createad, setCreatead] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [dropdownOpen, setDropdownOpen] = useState(false);
+    const [notifCount, setNotifCount] = useState(0);
 
+    useEffect(() => {
+        const fetchEnrolleesCount = async () => {
+            try {
+                const res = await axios.get("http://localhost:2025/api/enrollees");
+                setNotifCount(res.data.length); 
+            } catch (err) {
+                console.error("Failed to fetch enrollees count:", err);
+            }
+        };
 
+        fetchEnrolleesCount();
+
+        const interval = setInterval(fetchEnrolleesCount, 30000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleLogout = (event) => {
         event.preventDefault();
@@ -95,18 +114,40 @@ function Dashboard() {
                     <div className={`adside ${sidebarVisible ? 'show' : 'hide'}`}>
                         <ul>
                             <li><a href="#" onClick={() => setActiveSection("dashboard")}> <i className="fa-solid fa-house"></i> Dashboard</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("enrollees")}> <i className="fa-solid fa-calendar"></i> Enrollees</a></li>
+                            <ul>
+                                <li>
+                                    <a
+                                        href="#"
+                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                    >
+                                        <i className="fa-solid fa-calendar"></i> Enrollees <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
+                                    </a>
+                                    {dropdownOpen && (
+                                        <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
+                                            <li>
+                                                <a href="#" onClick={() => setActiveSection("enrollees")}>Pre Registered</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => setActiveSection("accepted")}>Enrollees</a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => setActiveSection("pending")}>Pending Approval</a>
+                                            </li>
+                                        </ul>
+                                    )}
+                                </li>
+                            </ul>
                             <li><a href="#"> <i className="fa-solid fa-book"></i> Subjects</a></li>
                             <li><a href="#" onClick={() => setActiveSection("departments")}><i className="fa-solid fa-building"></i> Department</a></li>
                             <li><a href="#" onClick={() => setActiveSection("courses")}> <i className="fa-solid fa-calendar"> </i> Courses</a></li>
                             <li><a href="#"> <i className="fa-solid fa-graduation-cap"></i> Schedule</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-users"></i> Students</a></li>
+                            <li><a href="#" onClick={() => setActiveSection("studentlist")}> <i className="fa-solid fa-users"></i> Students</a></li>
                             <li><a href="#"> <i className="fa-solid fa-users"></i> Instructor</a></li>
                             <li><a href="#"> <i className="fa-solid fa-gear"></i> Set Semester</a></li>
                             <li><a href="#"> <i className="fa-solid fa-credit-card"></i> Classroom Utilization</a></li>
                             <li><a href="#"> <i className="fa-solid fa-file"></i> Report</a></li>
                             <li><a href="#" onClick={() => setActiveSection("user")}> <i className="fa-solid fa-user"></i> User</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-users"></i> Backup and Restore</a></li>
+                            <li><a href="#" onClick={() => setActiveSection("backuprestore")}> <i className="fa-solid fa-users"></i> Backup and Restore</a></li>
                         </ul>
                     </div>
 
@@ -114,7 +155,7 @@ function Dashboard() {
                     <div className={`admain ${sidebarVisible ? '' : 'expanded'}`} style={{ display: 'block' }}>
                         {activeSection === "dashboard" && (
                             <div>
-                                
+
                             </div>
                         )}
 
@@ -136,9 +177,21 @@ function Dashboard() {
                             </div>
                         )}
 
+                        {activeSection === "studentlist" && (
+                            <div className="">
+                                <StudentList />
+                            </div>
+                        )}
+
                         {activeSection === "user" && (
                             <div className="">
                                 <Adminuser />
+                            </div>
+                        )}
+
+                        {activeSection === "backuprestore" && (
+                            <div className="">
+                                <BackupRestore />
                             </div>
                         )}
 

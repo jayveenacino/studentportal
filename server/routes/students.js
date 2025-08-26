@@ -4,10 +4,35 @@ const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const router = express.Router();
 
-// GET: List all students with populated initialDept from selectedCourse
+// ================= LOGIN =================
+router.post('/api/students/login', async (req, res) => {
+    const { studentNumber, portalPassword } = req.body;
+
+    try {
+        const student = await Student.findOne({
+            $or: [
+                { studentNumber: studentNumber },
+                { domainEmail: studentNumber }
+            ]
+        });
+
+        if (!student) return res.status(404).json({ message: "Student not found" });
+
+        const isMatch = await bcrypt.compare(portalPassword, student.portalPassword);
+        if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+
+        const fullName = `${student.firstname} ${student.middlename} ${student.lastname}`;
+        res.json({ message: "Login successful", student: { fullName, id: student._id } });
+
+    } catch (err) {
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+});
+
+// ================= GET ALL STUDENTS =================
 router.get('/api/students', async (req, res) => {
     try {
-        const students = await Student.find()
+        const students = await Student.find({ isAccepted: true })
             .populate('selectedCourse', 'initialDept')
             .exec();
 
@@ -17,7 +42,7 @@ router.get('/api/students', async (req, res) => {
     }
 });
 
-// DELETE: Decline and remove student
+// ================= DECLINE STUDENT =================
 router.delete('/api/students/:id/decline', async (req, res) => {
     try {
         const student = await Student.findByIdAndDelete(req.params.id);
@@ -29,17 +54,25 @@ router.delete('/api/students/:id/decline', async (req, res) => {
     }
 });
 
-// PUT: Accept student, assign credentials, send email
+// ================= ACCEPT STUDENT =================
 router.put('/api/students/:id/accept', async (req, res) => {
     try {
         const id = req.params.id;
         const student = await Student.findById(id);
 
-        if (!student) return res.status(404).json({ message: 'Student not found' });
-        if (!student.email) return res.status(400).json({ message: 'Student email is missing' });
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
 
+        const recipientEmail = student.email || student.gmail || student.personalEmail;
+        if (!recipientEmail) {
+            return res.status(400).json({ message: 'No valid email found for this student' });
+        }
+
+        // ================= STUDENT NUMBER GENERATION =================
         const currentYear = new Date().getFullYear();
         const yearPrefix = currentYear.toString().slice(-2);
+
         const lastStudent = await Student.find({ studentNumber: { $exists: true } })
             .sort({ studentNumber: -1 })
             .limit(1);
@@ -47,24 +80,31 @@ router.put('/api/students/:id/accept', async (req, res) => {
         let lastNumber = 0;
         if (lastStudent.length > 0) {
             const lastStudentNumber = lastStudent[0].studentNumber;
-            const lastNumberString = lastStudentNumber.split('-')[1];
-            lastNumber = parseInt(lastNumberString, 10) || 0;
+            if (lastStudentNumber && lastStudentNumber.includes('-')) {
+                const lastNumberString = lastStudentNumber.split('-')[1];
+                lastNumber = parseInt(lastNumberString, 10) || 0;
+            }
         }
 
         const nextNumber = lastNumber + 1;
         const formattedNumber = nextNumber.toString().padStart(4, '0');
         const studentNumber = `${yearPrefix}-${formattedNumber}`;
         const domainEmail = `${yearPrefix}${formattedNumber}@knsians.edu.ph`;
+
+        // ================= PASSWORD =================
         const plainPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
+        // ================= UPDATE STUDENT =================
         student.studentNumber = studentNumber;
         student.domainEmail = domainEmail;
         student.portalPassword = hashedPassword;
         student.status = 'Accepted';
+        student.isAccepted = true;
 
         await student.save();
 
+        // ================= SEND EMAIL =================
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -74,57 +114,61 @@ router.put('/api/students/:id/accept', async (req, res) => {
         });
 
         const mailOptions = {
-            from: `"KNS Admin" <${process.env.EMAIL_USER}>`,
-            to: student.email,
+            from: `"KNS Admin" <jayveemadriaganacino@gmail.com>`,
+            to: recipientEmail,
             subject: 'KNS Pre-Registration Accepted',
             html: `
-            <div style="text-align: center; font-family: Arial, sans-serif; padding: 20px;">
-                <img src="https://i.imgur.com/cV0u8i4.png" alt="KNS Logo" style="width: 100px; margin-bottom: 20px;" />
-                <hr>
-                <h2 style="margin-bottom: 10px;">
-                    Hi ${student.firstname || ''} ${student.middlename || ''} ${student.lastname || ''},
-                </h2>
-                <p style="font-size: 16px; margin-bottom: 20px;">
-                    Your pre-registration has been <strong>accepted</strong>.<br />
-                    Welcome to <strong>KOLEHIYO NG SUBIC</strong>!
-                </p>
-                <p style="font-size: 16px; margin-bottom: 20px;">
-                    Here is your official school portal domain:<br />
-                    <strong>School Domain:</strong> ${domainEmail}<br />
-                    <strong>Temporary Password:</strong> 
-                    <span style="color: #007bff; text-decoration: underline;">${plainPassword}</span>
-                </p>
-                <p style="font-size: 14px; margin-bottom: 20px;">
-                    Access your student portal here:<br />
-                    <a href="http://localhost:3000" target="_blank" style="color: #007bff; text-decoration: underline;">
-                        http://localhost:3000
-                    </a>
-                </p>
-                <p style="font-size: 14px; color: #555;">
-                    Your journey starts here.<br />
-                    Keep learning and growing.<br />
-                    — Kolehiyo ng Subic Admissions Team
-                </p>
-            </div>
-            `
+                <div style="text-align: center; font-family: Arial, sans-serif; padding: 20px;">
+                    <img src="https://i.imgur.com/cV0u8i4.png" alt="KNS Logo" style="width: 100px; margin-bottom: 20px;" />
+                    <hr>
+                    <h2>Hi ${student.firstname || ''} ${student.middlename || ''} ${student.lastname || ''},</h2>
+                    <p>Your pre-registration has been <b>accepted</b>. <br> Welcome to <b>KOLEHIYO NG SUBIC</b>!</p>
+                    <p>Here is your official school portal domain:</p>
+                    <p><b>School Domain:</b> ${domainEmail}<br/>
+                    <b>Temporary Password:</b> <span style="color: #007bff;">${plainPassword}</span>
+                    </p>
+                    <p>Login here: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+                    <p style="font-size: 14px; color: #555;">
+                        Keep learning and growing.<br/>
+                        — Kolehiyo ng Subic Admissions Team
+                    </p>
+                </div>
+            `,
         };
 
         await transporter.sendMail(mailOptions);
         console.log('Email sent successfully.');
 
-        res.json({
+        return res.json({
             message: 'Student accepted, credentials saved, and email sent.',
             studentNumber,
             domainEmail,
-            temporaryPassword: plainPassword
+            temporaryPassword: plainPassword,
         });
+
     } catch (err) {
         console.error('Error in accept route:', err);
-        res.status(500).json({ error: err.message });
+        return res.status(500).json({ error: err.message });
     }
 });
 
-// POST: Upload birth certificate
+// ================= ENROLLEES FILTER =================
+router.get("/api/enrollees", async (req, res) => {
+    try {
+        const enrollees = await Student.find({
+            selectedCourse: { $exists: true, $ne: "" },
+            isAccepted: { $ne: true }
+        });
+
+        res.json(enrollees);
+    } catch (err) {
+        console.error("Error fetching enrollees:", err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+// ================= UPLOAD ROUTES =================
+// Birth Certificate
 router.post('/upload-birthcert-image', async (req, res) => {
     const { email, birthCertImage } = req.body;
     if (!email || !birthCertImage) {
@@ -146,7 +190,7 @@ router.post('/upload-birthcert-image', async (req, res) => {
     }
 });
 
-// POST: Upload good moral image
+// Good Moral
 router.post('/upload-goodmoral-image', async (req, res) => {
     const { email, goodMoralImage } = req.body;
     if (!email || !goodMoralImage) {
@@ -168,7 +212,7 @@ router.post('/upload-goodmoral-image', async (req, res) => {
     }
 });
 
-// POST: Upload academic image
+// Academic Records
 router.post('/upload-academic-image', async (req, res) => {
     const { email, academicImage } = req.body;
     if (!email || !academicImage) {
@@ -190,7 +234,7 @@ router.post('/upload-academic-image', async (req, res) => {
     }
 });
 
-// POST: Upload profile image (renamed from duplicate)
+// Profile Image
 router.post('/upload-profile-image', async (req, res) => {
     const { email, imgImage } = req.body;
     if (!email || !imgImage) {
@@ -211,5 +255,42 @@ router.post('/upload-profile-image', async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
+//ID Image
+router.post('/upload-id-image', async (req, res) => {
+    const { email, idimage } = req.body;
+    if (!email || !idimage) {
+        return res.status(400).json({ message: "Email and ID image are required" });
+    }
+
+    try {
+        const student = await Student.findOneAndUpdate(
+            { email },
+            { $set: { idimage, idStatus: '✔️' } },
+            { new: true }
+        );
+        if (!student) return res.status(404).json({ message: "Student not found" });
+
+        res.status(200).json({ message: "ID uploaded successfully!", student });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error", error: error.message });
+    }
+});
+
+// DELETE student
+router.delete('/api/students/:id', async (req, res) => {
+    try {
+        const student = await Student.findByIdAndDelete(req.params.id);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        res.json({ message: 'Student deleted successfully' });
+    } catch (err) {
+        console.error('Error deleting student:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 module.exports = router;

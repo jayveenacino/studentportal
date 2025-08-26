@@ -130,7 +130,6 @@ export default function Body({ setPage }) {
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Ensure that there are no typos or errors in your information as it may affect your enlistment.</li>
                         <li style={{ fontSize: "14", marginBottom: "5px", marginLeft: "20px", marginTop: "10px" }}>Be sure that the uploaded documents are clear and readable.</li>
                     </ul>
-                    <hr />
                 </div>
 
             </div>

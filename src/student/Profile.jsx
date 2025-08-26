@@ -34,11 +34,11 @@ export default function Profile() {
     const [goodMoralModalOpen, setGoodMoralModalOpen] = useState(false);
     const [academicModalOpen, setAcademicModalOpen] = useState(false);
 
-    const [image, setImage] = useState(null);                     
-    const [idimage, setIdImage] = useState(null);                 
-    const [birthCertImage, setBirthCertImage] = useState(null);   
-    const [goodMoralImage, setGoodMoralImage] = useState(null);   
-    const [academicImage, setAcademicImage] = useState(null);     
+    const [image, setImage] = useState(null);
+    const [idimage, setIdImage] = useState(null);
+    const [birthCertImage, setBirthCertImage] = useState(null);
+    const [goodMoralImage, setGoodMoralImage] = useState(null);
+    const [academicImage, setAcademicImage] = useState(null);
 
     const [uploadStatus, setUploadStatus] = useState({
         profileImage: '❌',
@@ -47,7 +47,7 @@ export default function Profile() {
         goodMoral: '❌',
         academic: '❌',
     });
-    
+
     useEffect(() => {
         if (user?.email) {
             axios.get(`http://localhost:2025/get-upload-status/${user.email}`)
@@ -75,7 +75,6 @@ export default function Profile() {
         reader.readAsDataURL(file);
     };
 
-    //! SHS
     const idHandleUpload = async () => {
         if (!idimage || !user?.email) {
             Swal.fire({
@@ -121,7 +120,12 @@ export default function Profile() {
     //! BIRTH CERT
     const birthCertHandleUpload = async () => {
         if (!birthCertImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Birth Certificate first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Birth Certificate before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -132,6 +136,13 @@ export default function Profile() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Birth Certificate has been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, birthCert: '✔️' }));
                 setBirthCertModalOpen(false);
                 setBirthCertImage(null);
@@ -139,14 +150,25 @@ export default function Profile() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, birthCert: '❌' }));
-            Swal.fire("Error", "Birth Certificate upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Birth Certificate upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
 
     //! GOOD MORAL
     const goodMoralHandleUpload = async () => {
         if (!goodMoralImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Good Moral Certificate first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Good Moral Certificate before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -157,6 +179,13 @@ export default function Profile() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Good Moral Certificate has been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, goodMoral: '✔️' }));
                 setGoodMoralModalOpen(false);
                 setGoodMoralImage(null);
@@ -164,14 +193,25 @@ export default function Profile() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, goodMoral: '❌' }));
-            Swal.fire("Error", "Good Moral upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Good Moral upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
 
     //! ACADEMIC RECORDS
     const academicHandleUpload = async () => {
         if (!academicImage || !user?.email) {
-            Swal.fire("Error", "Please upload your Academic Records first.", "error");
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Required',
+                text: 'Please upload your Academic Records before submitting.',
+                confirmButtonColor: '#006666'
+            });
             return;
         }
 
@@ -182,6 +222,13 @@ export default function Profile() {
             });
 
             if (res.status === 200) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Uploaded Successfully',
+                    text: 'Your Academic Records have been uploaded!',
+                    confirmButtonColor: '#006666'
+                });
+
                 setUploadStatus(prev => ({ ...prev, academic: '✔️' }));
                 setAcademicModalOpen(false);
                 setAcademicImage(null);
@@ -189,10 +236,15 @@ export default function Profile() {
         } catch (err) {
             console.error("Upload failed:", err);
             setUploadStatus(prev => ({ ...prev, academic: '❌' }));
-            Swal.fire("Error", "Academic Records upload failed.", "error");
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Upload Failed',
+                text: 'Academic Records upload failed. Please try again.',
+                confirmButtonColor: '#006666'
+            });
         }
     };
-
 
     const goToSection = (section) => {
         if (unlockedSections.includes(section)) {
@@ -237,12 +289,34 @@ export default function Profile() {
             return;
         }
 
+        if (!file.type.startsWith("image/")) {
+            Swal.fire({
+                title: 'Invalid File!',
+                text: 'Please upload an image file (.png, .jpg, .jpeg).',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        const maxSize = 2 * 1024 * 1024;
+        if (file.size > maxSize) {
+            Swal.fire({
+                title: 'File Too Large!',
+                text: 'Image must be 2MB or less.',
+                icon: 'error',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
         const reader = new FileReader();
         reader.onloadend = () => {
             setImage(reader.result);
         };
         reader.readAsDataURL(file);
     };
+
 
     const handleUpload = async () => {
         if (!image) {
@@ -833,8 +907,6 @@ export default function Profile() {
                 title: "Enlistment Finalized",
                 text: "Your enlistment has been successfully finalized. Wait for further instructions.",
             });
-
-
         }
     };
 

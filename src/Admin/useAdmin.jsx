@@ -16,16 +16,26 @@ export function AdminContextProvider({ children }) {
     useEffect(() => {
         const adminExist = localStorage.getItem("Admin");
         const userExist = localStorage.getItem("user");
-    
+
         if (adminExist) {
-            setAdmin(JSON.parse(adminExist));
+            try {
+                setAdmin(JSON.parse(adminExist));
+            } catch (err) {
+                console.error("Failed to parse Admin from localStorage:", err);
+            }
         }
-    
+
         if (userExist) {
-            console.log("User loaded:", JSON.parse(userExist));
-            setUser(JSON.parse(userExist));
+            try {
+                const parsedUser = JSON.parse(userExist || "{}"); // fallback to empty object
+                console.log("User loaded:", parsedUser);
+                setUser(parsedUser);
+            } catch (err) {
+                console.error("Failed to parse User from localStorage:", err);
+            }
         }
     }, []);
+
     return (
         <AdminContext.Provider value={{ admin, setAdmin, user, setUser }}>
             {children}

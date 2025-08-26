@@ -19,7 +19,7 @@ export default function Dashboard() {
         user?.selectedCourse &&
         user?.firstName &&
         user?.lastName &&
-        user?.birthDate; // and other required fields
+        user?.birthDate; 
 
     return (
         <div>
