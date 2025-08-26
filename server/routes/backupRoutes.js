@@ -2,7 +2,6 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const mongoose = require("mongoose");
 
 const Student = require("../models/Student");
 const Course = require("../models/Course");
@@ -12,6 +11,12 @@ const backupDir = path.join(__dirname, "../backups");
 if (!fs.existsSync(backupDir)) {
     fs.mkdirSync(backupDir, { recursive: true });
 }
+
+// Helper to remove _id from documents
+const stripIds = (array) => array.map(doc => {
+    const { _id, ...rest } = doc;
+    return rest;
+});
 
 // 🔹 Create JSON backup
 router.post("/create", async (req, res) => {
@@ -25,7 +30,6 @@ router.post("/create", async (req, res) => {
         const departments = await Department.find().lean(); 
 
         const data = { students, courses, departments }; 
-
         fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
 
         res.json({ success: true, file: fileName });
@@ -36,32 +40,26 @@ router.post("/create", async (req, res) => {
 });
 
 // 🔹 Restore JSON backup
-router.post("/restore", async (req, res) => {
-    try {
-        const { file } = req.body;
-        if (!file) return res.status(400).json({ success: false, error: "No file specified" });
+router.post("/restore/:file", async (req, res) => {
+    const file = req.params.file;
+    if (!file) return res.status(400).json({ success: false, error: "No file specified" });
 
-        const filePath = path.join(backupDir, file);
-        if (!fs.existsSync(filePath)) return res.status(404).json({ success: false, error: "File not found" });
+    const filePath = path.join(backupDir, file);
+    if (!fs.existsSync(filePath)) return res.status(404).json({ success: false, error: "File not found" });
 
-        const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
+    const data = JSON.parse(fs.readFileSync(filePath, "utf8"));
 
-        // Clear old data
-        await Student.deleteMany({});
-        await Course.deleteMany({});
-        await Department.deleteMany({});
+    await Student.deleteMany({});
+    await Course.deleteMany({});
+    await Department.deleteMany({});
 
-        // Insert backup data
-        if (data.students?.length) await Student.insertMany(data.students);
-        if (data.courses?.length) await Course.insertMany(data.courses);
-        if (data.departments?.length) await Department.insertMany(data.departments); 
+    if (data.students?.length) await Student.insertMany(stripIds(data.students), { ordered: false });
+    if (data.courses?.length) await Course.insertMany(stripIds(data.courses), { ordered: false });
+    if (data.departments?.length) await Department.insertMany(stripIds(data.departments), { ordered: false });
 
-        res.json({ success: true, message: `Database restored from ${file}` });
-    } catch (err) {
-        console.error("❌ Restore error:", err);
-        res.status(500).json({ success: false, error: err.message });
-    }
+    res.json({ success: true, message: `Database restored from ${file}` });
 });
+
 
 // 🔹 List backups
 router.get("/", (req, res) => {
@@ -100,6 +98,5 @@ router.delete("/:file", (req, res) => {
         res.status(500).json({ success: false, error: err.message });
     }
 });
-
 
 module.exports = router;
