@@ -13,7 +13,7 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            const res = await fetch("http://localhost:2025/api/students/login", {
+            const res = await fetch("http://localhost:2025/api/acceptedstudents/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ studentNumber, portalPassword: password })
@@ -24,8 +24,9 @@ export default function Login() {
                 return Swal.fire("Login Failed", data.message, "error");
             }
 
-            Swal.fire("Welcome!", `Logged in as ${data.student.fullName}`, "success");
-            navigate("/student"); 
+            Swal.fire("Welcome!", `${data.student.fullName}`, "success");
+            navigate("/studentmain");
+
         } catch (err) {
             console.error(err);
             Swal.fire("Error", "Something went wrong", "error");

@@ -3,29 +3,44 @@ const Student = require('../models/Student');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
 const router = express.Router();
+const AcceptedStudent = require('../models/AcceptedStudent');
 
-// ================= LOGIN =================
-router.post('/api/students/login', async (req, res) => {
-    const { studentNumber, portalPassword } = req.body;
 
+// ================= ACCEPTED STUDENT LOGIN =================
+router.post('/api/acceptedstudents/login', async (req, res) => {
     try {
-        const student = await Student.findOne({
+        const { studentNumber, domainEmail, portalPassword } = req.body;
+
+        const student = await AcceptedStudent.findOne({
             $or: [
                 { studentNumber: studentNumber },
-                { domainEmail: studentNumber }
+                { domainEmail: studentNumber },
+                { domainEmail: domainEmail }
             ]
         });
 
-        if (!student) return res.status(404).json({ message: "Student not found" });
+        if (!student) {
+            return res.status(404).json({ message: "Account not found." });
+        }
 
         const isMatch = await bcrypt.compare(portalPassword, student.portalPassword);
-        if (!isMatch) return res.status(401).json({ message: "Invalid password" });
+        if (!isMatch) {
+            return res.status(401).json({ message: "Invalid password." });
+        }
 
-        const fullName = `${student.firstname} ${student.middlename} ${student.lastname}`;
-        res.json({ message: "Login successful", student: { fullName, id: student._id } });
-
+        return res.json({
+            message: "Login successful",
+            student: {
+                id: student._id,
+                studentNumber: student.studentNumber,
+                domainEmail: student.domainEmail,
+                fullName: `${student.firstname} ${student.middlename || ''} ${student.lastname}`.trim(),
+                status: student.status
+            }
+        });
     } catch (err) {
-        res.status(500).json({ message: "Server error", error: err.message });
+        console.error("Error in acceptedstudent login route:", err);
+        return res.status(500).json({ error: err.message });
     }
 });
 
@@ -55,6 +70,7 @@ router.delete('/api/students/:id/decline', async (req, res) => {
 });
 
 // ================= ACCEPT STUDENT =================
+// ================= ACCEPT STUDENT =================
 router.put('/api/students/:id/accept', async (req, res) => {
     try {
         const id = req.params.id;
@@ -62,6 +78,10 @@ router.put('/api/students/:id/accept', async (req, res) => {
 
         if (!student) {
             return res.status(404).json({ message: 'Student not found' });
+        }
+
+        if (student.isAccepted) {
+            return res.status(400).json({ message: 'Student already accepted' });
         }
 
         const recipientEmail = student.email || student.gmail || student.personalEmail;
@@ -73,7 +93,7 @@ router.put('/api/students/:id/accept', async (req, res) => {
         const currentYear = new Date().getFullYear();
         const yearPrefix = currentYear.toString().slice(-2);
 
-        const lastStudent = await Student.find({ studentNumber: { $exists: true } })
+        const lastStudent = await AcceptedStudent.find({ studentNumber: { $exists: true } })
             .sort({ studentNumber: -1 })
             .limit(1);
 
@@ -95,13 +115,33 @@ router.put('/api/students/:id/accept', async (req, res) => {
         const plainPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-        // ================= UPDATE STUDENT =================
+        // ================= CREATE NEW ACCEPTED STUDENT =================
+        const acceptedStudent = new AcceptedStudent({
+            preregisterPassword: student.password,
+            initialDept: student.initialDept,
+
+            firstname: student.firstname,
+            middlename: student.middlename,
+            lastname: student.lastname,
+            email: student.email || student.gmail || student.personalEmail,
+
+            studentNumber,
+            domainEmail,
+            portalPassword: hashedPassword,
+
+            // 👇 added fields for freshmen
+            yearLevel: "1ST YEAR",
+            status: "REGULAR",
+
+            acceptedAt: new Date()
+        });
+
+        await acceptedStudent.save();
+
+        student.isAccepted = true;
         student.studentNumber = studentNumber;
         student.domainEmail = domainEmail;
         student.portalPassword = hashedPassword;
-        student.status = 'Accepted';
-        student.isAccepted = true;
-
         await student.save();
 
         // ================= SEND EMAIL =================
@@ -140,9 +180,8 @@ router.put('/api/students/:id/accept', async (req, res) => {
         console.log('Email sent successfully.');
 
         return res.json({
-            message: 'Student accepted, credentials saved, and email sent.',
-            studentNumber,
-            domainEmail,
+            message: 'Student accepted. Added to AcceptedStudent DB with year level & status, preregister record kept, credentials sent via email.',
+            student: acceptedStudent,
             temporaryPassword: plainPassword,
         });
 
@@ -151,6 +190,8 @@ router.put('/api/students/:id/accept', async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 });
+
+
 
 // ================= ENROLLEES FILTER =================
 router.get("/api/enrollees", async (req, res) => {
@@ -234,17 +275,18 @@ router.post('/upload-academic-image', async (req, res) => {
     }
 });
 
+
 // Profile Image
 router.post('/upload-profile-image', async (req, res) => {
-    const { email, imgImage } = req.body;
-    if (!email || !imgImage) {
+    const { email, profileImage } = req.body;
+    if (!email || !profileImage) {
         return res.status(400).json({ message: "Email and profile image are required" });
     }
 
     try {
         const student = await Student.findOneAndUpdate(
             { email },
-            { $set: { imgImage, image: '✔️' } },
+            { $set: { profileImage, image: '✔️' } },
             { new: true }
         );
         if (!student) return res.status(404).json({ message: "Student not found" });
@@ -255,6 +297,7 @@ router.post('/upload-profile-image', async (req, res) => {
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
+
 
 //ID Image
 router.post('/upload-id-image', async (req, res) => {

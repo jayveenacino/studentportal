@@ -8,7 +8,8 @@ const CourseRoutes = require('./routes/courses');
 const studentRoutes = require('./routes/students');
 const backupRoutes = require("./routes/backupRoutes");
 const departmentRoutes = require('./routes/department');
-
+const AcceptedStudent = require("./models/AcceptedStudent");
+const acceptedStudentsRoutes = require("./routes/acceptedStudents");
 
 require('dotenv').config();
 
@@ -411,6 +412,8 @@ app.get('/api/students/:id', async (req, res) => {
 
 app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
+app.use(acceptedStudentsRoutes);
+
 
 app.listen(2025, '0.0.0.0', () => {
     console.log("Server is running on port 2025");

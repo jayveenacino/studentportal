@@ -15,7 +15,7 @@ export default function Root() {
         "/preregister",
         "/preregister/notice",
         "/preregister/",
-        "/student",
+        "/studentmain",
         "/signup/notice"
     ]
 

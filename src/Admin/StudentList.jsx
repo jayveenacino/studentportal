@@ -4,7 +4,8 @@ import './Admincss/studentlist.css';
 import Swal from 'sweetalert2';
 
 export default function StudentList() {
-    const [students, setStudents] = useState([]);
+    // 📌 State management
+    const [students, setStudents] = useState([]); // accepted students
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(5);
@@ -12,25 +13,55 @@ export default function StudentList() {
     const [showDetailsModal, setShowDetailsModal] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editedStudent, setEditedStudent] = useState({});
+    const [courses, setCourses] = useState([]);
 
+    // 🎯 Fetch accepted students from backend
     useEffect(() => {
-        axios.get("http://localhost:2025/api/students")
+        axios.get("http://localhost:2025/api/acceptedstudents")
             .then(res => setStudents(res.data))
-            .catch(err => console.error(err));
+            .catch(err => console.error("Error fetching accepted students:", err));
     }, []);
 
+    // 🎯 Fetch courses for dropdowns
+    useEffect(() => {
+        const fetchCourses = async () => {
+            try {
+                const res = await axios.get("http://localhost:2025/api/courses");
+                setCourses(res.data);
+            } catch (err) {
+                console.error("Error fetching courses:", err);
+            }
+        };
+        fetchCourses();
+    }, []);
+
+    // 🔎 Filter students by name, number, or course
     const filtered = students.filter(s => {
         const full = `${s.lastname || ''} ${s.firstname || ''} ${s.middlename || ''}`.toLowerCase();
         const number = s.studentNumber?.toLowerCase() || '';
-        const course = s.course?.toLowerCase() || '';
-        return full.includes(search.toLowerCase()) || number.includes(search.toLowerCase()) || course.includes(search.toLowerCase());
+        const dept = s.initialDept?.toLowerCase() || ''; // ✅ fixed (was s.course)
+        return full.includes(search.toLowerCase()) || number.includes(search.toLowerCase()) || dept.includes(search.toLowerCase());
     });
 
+    // 📑 Pagination
     const indexOfLast = currentPage * perPage;
     const indexOfFirst = indexOfLast - perPage;
     const current = filtered.slice(indexOfFirst, indexOfLast);
     const totalPages = Math.ceil(filtered.length / perPage);
 
+    // 📝 Format student full name nicely
+    const formatFullName = (student) => {
+        if (!student) return '';
+        const { lastname, firstname, middlename, extension } = student;
+
+        const format = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
+
+        let name = `${format(firstname)} ${middlename ? format(middlename) + ' ' : ''}${format(lastname)}`;
+        if (extension) name += ` ${extension.toUpperCase()}`;
+        return name;
+    };
+
+    // 🗑 Delete student from acceptedstudents DB
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -42,7 +73,7 @@ export default function StudentList() {
             confirmButtonText: 'Yes, delete it!'
         }).then((result) => {
             if (result.isConfirmed) {
-                axios.delete(`http://localhost:2025/api/students/${id}`)
+                axios.delete(`http://localhost:2025/api/acceptedstudents/${id}`)
                     .then(() => {
                         setStudents(prevStudents => prevStudents.filter(s => s._id !== id));
 
@@ -64,40 +95,15 @@ export default function StudentList() {
         });
     };
 
-
-
-    const formatFullName = (student) => {
-        if (!student) return '';
-        const { lastname, firstname, middlename, extension } = student;
-
-        const format = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
-
-        let name = `${format(firstname)} ${middlename ? format(middlename) + ' ' : ''}${format(lastname)}`;
-        if (extension) name += ` ${extension.toUpperCase()}`;
-        return name;
-    };
-
-    const [courses, setCourses] = useState([]);
-
-    useEffect(() => {
-        const fetchCourses = async () => {
-            try {
-                const res = await axios.get("http://localhost:2025/api/courses");
-                setCourses(res.data);
-            } catch (err) {
-                console.error("Error fetching courses:", err);
-            }
-        };
-        fetchCourses();
-    }, []);
-
     return (
         <div className="studentlist-container">
+            {/* 🏷 Header */}
             <div className="studentlist-header">
-                <h1>Student List</h1>
-                <p>Browse and manage student accounts</p>
+                <h1>Accepted Student List</h1>
+                <p>Browse and manage accepted student accounts</p>
             </div>
 
+            {/* 🔎 Controls */}
             <div className="studentlist-controls">
                 <input
                     type="text"
@@ -109,6 +115,7 @@ export default function StudentList() {
                 <button className="studentlist-add-btn">+ Add Student</button>
             </div>
 
+            {/* 📋 Table */}
             <div className="studentlist-table-container">
                 <table className="studentlist-table">
                     <thead>
@@ -124,17 +131,15 @@ export default function StudentList() {
                     <tbody>
                         {current.length === 0 ? (
                             <tr>
-                                <td colSpan="6">
-                                    No students found
-                                </td>
+                                <td colSpan="6">No students found</td>
                             </tr>
                         ) : (
                             current.map((s, i) => (
                                 <tr key={s._id}>
                                     <td>{indexOfFirst + i + 1}</td>
-                                    <td>{`${s.lastname || ''} ${s.firstname || ''} ${s.middlename || ''}`.trim()}</td>
+                                    <td>{formatFullName(s)}</td>
                                     <td>{s.studentNumber || "N/A"}</td>
-                                    <td>{s.course || s.initialDept || "N/A"}</td>
+                                    <td>{s.initialDept || "N/A"}</td> {/* ✅ fixed */}
                                     <td>
                                         <span
                                             className="studentlist-more-details"
@@ -158,16 +163,21 @@ export default function StudentList() {
                                         >
                                             Edit
                                         </button>
-                                        <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
+                                        <button
+                                            className="action-btn delete"
+                                            onClick={() => handleDelete(s._id)}
+                                        >
+                                            Delete
+                                        </button>
                                     </td>
                                 </tr>
                             ))
                         )}
                     </tbody>
-
                 </table>
             </div>
 
+            {/* 📌 Pagination */}
             {totalPages > 1 && (
                 <div className="pagination-controls">
                     {Array.from({ length: totalPages }, (_, i) => (
@@ -182,6 +192,7 @@ export default function StudentList() {
                 </div>
             )}
 
+            {/* 📌 Details Modal */}
             {showDetailsModal && selectedStudent && (
                 <div className="student-details-modal-backdrop">
                     <div className="student-details-modal-content">
@@ -193,16 +204,16 @@ export default function StudentList() {
                             <div><strong>Student No:</strong> {selectedStudent.studentNumber}</div>
                             <div><strong>Domain Email:</strong> {selectedStudent.domainEmail}</div>
                             <div><strong>Student Portal Pass:</strong> {selectedStudent.portalPassword}</div>
-                            <div><strong>Course:</strong> {selectedStudent.initialDept}</div>
-                            <div><strong>PRE-REG Password:</strong> {selectedStudent.password}</div>
+                            <div><strong>Course:</strong> {selectedStudent.initialDept}</div> {/* ✅ fixed */}
+                            <div><strong>PRE-REG Password:</strong> {selectedStudent.preregisterPassword}</div> {/* ✅ fixed */}
                             <div><strong>Email:</strong> {selectedStudent.email}</div>
-                            <div><strong>Year:</strong> {selectedStudent.year}</div>
+                            <div><strong>Year:</strong> {selectedStudent.yearLevel}</div> {/* ✅ fixed */}
                         </div>
                     </div>
                 </div>
             )}
 
-
+            {/* 📌 Edit Modal */}
             {showEditModal && selectedStudent && (
                 <div className="studentlist-edit-backdrop">
                     <div className="studentlist-edit-content" style={{ width: '600px' }}>
@@ -223,8 +234,8 @@ export default function StudentList() {
                             <div>
                                 <label><strong>Course:</strong></label>
                                 <select
-                                    value={editedStudent.course || selectedStudent.course || selectedStudent.initialDept || ""}
-                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, course: e.target.value }))}
+                                    value={editedStudent.initialDept || selectedStudent.initialDept || ""}
+                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, initialDept: e.target.value }))}
                                     style={{ width: "100%" }}
                                 >
                                     {courses.map(course => (
@@ -238,15 +249,15 @@ export default function StudentList() {
                             <div>
                                 <label><strong>School Year:</strong></label>
                                 <select
-                                    value={editedStudent.year || ''}
-                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, year: e.target.value }))}
+                                    value={editedStudent.yearLevel || selectedStudent.yearLevel || ''}
+                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, yearLevel: e.target.value }))}
                                     style={{ width: "100%" }}
                                 >
                                     <option value="">-- Select Year --</option>
-                                    <option value="1st Year">1st Year</option>
-                                    <option value="2nd Year">2nd Year</option>
-                                    <option value="3rd Year">3rd Year</option>
-                                    <option value="4th Year">4th Year</option>
+                                    <option value="1ST YEAR">1st Year</option>
+                                    <option value="2ND YEAR">2nd Year</option>
+                                    <option value="3RD YEAR">3rd Year</option>
+                                    <option value="4TH YEAR">4th Year</option>
                                 </select>
                             </div>
 
@@ -264,8 +275,8 @@ export default function StudentList() {
                                 <label><strong>Pre Register Password:</strong></label>
                                 <input
                                     type="text"
-                                    value={editedStudent.password || selectedStudent.password || ''}
-                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, password: e.target.value }))}
+                                    value={editedStudent.preregisterPassword || selectedStudent.preregisterPassword || ''}
+                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, preregisterPassword: e.target.value }))}
                                     style={{ width: "100%" }}
                                 />
                             </div>
@@ -274,8 +285,8 @@ export default function StudentList() {
                                 <label><strong>Student Portal Password:</strong></label>
                                 <input
                                     type="text"
-                                    value={editedStudent.password || selectedStudent.password || ''}
-                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, password: e.target.value }))}
+                                    value={editedStudent.portalPassword || selectedStudent.portalPassword || ''}
+                                    onChange={(e) => setEditedStudent(prev => ({ ...prev, portalPassword: e.target.value }))}
                                     style={{ width: "100%" }}
                                 />
                             </div>
@@ -285,7 +296,7 @@ export default function StudentList() {
                                     type="button"
                                     className="action-btn confirm"
                                     onClick={() => {
-                                        axios.put(`http://localhost:2025/api/students/${selectedStudent._id}`, editedStudent)
+                                        axios.put(`http://localhost:2025/api/acceptedstudents/${selectedStudent._id}`, editedStudent)
                                             .then(res => {
                                                 setStudents(prev => prev.map(s => s._id === selectedStudent._id ? res.data : s));
                                                 setShowEditModal(false);

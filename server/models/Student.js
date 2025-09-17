@@ -16,16 +16,19 @@ const StudentSchema = new mongoose.Schema({
     studentNumber: String,
     domainEmail: String,
     portalPassword: String,
+
     idimage: { type: String },
-    validId: { type: String, default: '❌' },
     birthCertImage: { type: String },
-    birthCert: { type: String, default: '❌' },
     goodMoralImage: { type: String },
-    goodMoral: { type: String, default: '❌' },
     academic: { type: String },
-    academicImage: { type: String, default: '❌' },
     image: { type: String },
+
+    validId: { type: String, default: '❌' },
+    birthCert: { type: String, default: '❌' },
+    goodMoral: { type: String, default: '❌' },
+    academicImage: { type: String, default: "" },
     profileImage: { type: String, default: '❌' },
+    
     birthplace: { type: String },
     civil: { type: String },
     sex: { type: String },

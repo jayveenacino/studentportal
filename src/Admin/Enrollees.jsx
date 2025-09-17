@@ -10,6 +10,16 @@ export default function Enrollees() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [enlargedImage, setEnlargedImage] = useState(null);
 
+    const [courses, setCourses] = useState([]); 
+    const [selectedCourse, setSelectedCourse] = useState("All"); 
+    const [searchTerm, setSearchTerm] = useState(""); 
+
+    const formatFullName = (student) => {
+        const { lastname, firstname, middlename } = student;
+        const formattedLastname = lastname.charAt(0).toUpperCase() + lastname.slice(1).toLowerCase();
+        return `${formattedLastname}, ${firstname} ${middlename ? middlename : ''}`;
+    };
+
     useEffect(() => {
         fetchEnrollees();
     }, []);
@@ -18,10 +28,24 @@ export default function Enrollees() {
         try {
             const res = await axios.get('http://localhost:2025/api/enrollees');
             setEnrollees(res.data);
+
+            const uniqueCourses = [
+                ...new Set(res.data.map(e => e.initialDept).filter(Boolean))
+            ];
+            setCourses(uniqueCourses);
         } catch (error) {
             console.error("Failed to fetch students:", error);
         }
     };
+
+    const filteredEnrollees = enrollees.filter(e => {
+        const matchesCourse =
+            selectedCourse === "All" || e.initialDept === selectedCourse;
+        const matchesSearch =
+            formatFullName(e).toLowerCase().includes(searchTerm.toLowerCase()) ||
+            e._id.toLowerCase().includes(searchTerm.toLowerCase());
+        return matchesCourse && matchesSearch;
+    });
 
     const handleAccept = async (id) => {
         const student = enrollees.find(s => s._id === id);
@@ -47,35 +71,13 @@ export default function Enrollees() {
         });
 
         try {
-            const res = await axios.put(`http://localhost:2025/api/students/${id}/accept`);
+            await axios.put(`http://localhost:2025/api/students/${id}/accept`);
 
             Swal.fire({
                 icon: 'success',
                 title: 'Student Accepted!',
-                html: (() => {
-                    const student = res.data.student;
-                    if (!student) return 'Done Sending Email to Student';
-                    return `
-                    <div style="text-align:left;">
-                        <strong>Student No:</strong> ${student.studentNumber}<br/>
-                        <strong>Email:</strong> ${student.domainEmail}<br/>
-                        <strong>Temp Password:</strong> <u id="temp-password">${student.portalPassword}</u>
-                        <br/><br/>
-                        <small>Temporary password copied on click.</small>
-                    </div>
-                `;
-                })(),
-                didOpen: () => {
-                    const el = document.getElementById('temp-password');
-                    if (el) {
-                        el.style.cursor = 'pointer';
-                        el.addEventListener('click', () => {
-                            navigator.clipboard.writeText(el.innerText);
-                            el.style.textDecoration = 'underline dotted';
-                            Swal.showValidationMessage('Copied!');
-                        });
-                    }
-                }
+                text: 'Done Sending Email to Student',
+                confirmButtonColor: '#3085d6'
             });
 
             setEnrollees(prev => prev.filter(student => student._id !== id));
@@ -144,12 +146,6 @@ export default function Enrollees() {
         setEnlargedImage(null);
     };
 
-    const formatFullName = (student) => {
-        const { lastname, firstname, middlename } = student;
-        const formattedLastname = lastname.charAt(0).toUpperCase() + lastname.slice(1).toLowerCase();
-        return `${formattedLastname}, ${firstname} ${middlename ? middlename : ''}`;
-    };
-
     const handleImageClick = (image) => {
         setEnlargedImage(image);
     };
@@ -177,14 +173,13 @@ export default function Enrollees() {
             "4:00 PM - 5:00 PM"
         ];
 
-        let scheduleIndex = 0; // time slot index
-        let dayCount = 1; // day counter
-        let roomTrack = { AVR: 0, "COMLAB 2": 0 }; // current student count per room
+        let scheduleIndex = 0;
+        let dayCount = 1;
+        let roomTrack = { AVR: 0, "COMLAB 2": 0 };
 
         const rows = enrollees.map((enrollee, index) => {
             let assignedRoom = null;
 
-            // Find a room with available space
             for (let room of Object.keys(capacities)) {
                 if (roomTrack[room] < capacities[room]) {
                     assignedRoom = room;
@@ -193,16 +188,14 @@ export default function Enrollees() {
                 }
             }
 
-            // If no room has space in this slot, move to next time slot
             if (!assignedRoom) {
                 scheduleIndex++;
-                roomTrack = { AVR: 0, "COMLAB 2": 0 }; // reset room counters
-                // If time slots are exhausted, go to next day
+                roomTrack = { AVR: 0, "COMLAB 2": 0 };
                 if (scheduleIndex >= timeSlots.length) {
                     scheduleIndex = 0;
                     dayCount++;
                 }
-                assignedRoom = "AVR"; // always start with AVR
+                assignedRoom = "AVR";
                 roomTrack[assignedRoom] = 1;
             }
 
@@ -240,12 +233,29 @@ export default function Enrollees() {
                     type="text"
                     className="enrollees-search"
                     placeholder="Search enrollees..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
                 />
+
+                <select
+                    className="course-filter"
+                    value={selectedCourse}
+                    onChange={(e) => setSelectedCourse(e.target.value)}
+                >
+                    <option value="All">All Courses</option>
+                    {courses.map((course, idx) => (
+                        <option key={idx} value={course}>
+                            {course}
+                        </option>
+                    ))}
+                </select>
+
                 <button className="export-btn" onClick={handleExport}>
                     Export List
                 </button>
             </div>
 
+            {/* student list table */}
             <div className="enrollees-table-container">
                 <table className="enrollees-table">
                     <thead>
@@ -259,7 +269,7 @@ export default function Enrollees() {
                         </tr>
                     </thead>
                     <tbody>
-                        {enrollees.map((enrollee, index) => (
+                        {filteredEnrollees.map((enrollee, index) => (
                             <tr key={enrollee._id}>
                                 <td>{index + 1}</td>
                                 <td>{formatFullName(enrollee)}</td>
@@ -274,16 +284,12 @@ export default function Enrollees() {
                                 </td>
                                 <td>{enrollee.initialDept || 'No courses selected'}</td>
                                 <td>
-                                    <button className="action-btn confirm" onClick={() => handleAccept(enrollee._id)}>
-                                        Confirm
-                                    </button>
-                                    <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>
-                                        Delete
-                                    </button>
+                                    <button className="action-btn confirm" onClick={() => handleAccept(enrollee._id)}>Confirm</button>
+                                    <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>Delete</button>
                                 </td>
                             </tr>
                         ))}
-                        {enrollees.length === 0 && (
+                        {filteredEnrollees.length === 0 && (
                             <tr>
                                 <td colSpan="6" style={{ textAlign: 'center' }}>No enrollees found.</td>
                             </tr>
@@ -292,6 +298,7 @@ export default function Enrollees() {
                 </table>
             </div>
 
+            {/* modal for student details */}
             {isModalOpen && selectedStudent && (
                 <div className="studentdetails-modal-wrapper" onClick={closeModal}>
                     <div className="studentdetails-modal" onClick={(e) => e.stopPropagation()}>
@@ -348,7 +355,7 @@ export default function Enrollees() {
                                     <p>Good Moral</p>
                                 </div>
                             )}
-                            {selectedStudent.academicImage && (
+                            {selectedStudent.academicImage && selectedStudent.academicImage !== "❌" && (
                                 <div className="studentdetails-doc-item">
                                     <img
                                         src={selectedStudent.academicImage}
@@ -363,6 +370,7 @@ export default function Enrollees() {
                 </div>
             )}
 
+            {/* enlarged image preview */}
             {enlargedImage && (
                 <div className="enlarged-image-modal">
                     <div className="enlarged-image-content">

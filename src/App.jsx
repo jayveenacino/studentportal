@@ -18,6 +18,7 @@ import Preregister from './student/Preregister';
 import PrivateRoute from './student/PrivateRoute';
 import { AdminContextProvider } from './Admin/useAdmin';
 import Student from './student/Student';
+import StudentMain from './StudentPortalMain/StudentMain';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -33,6 +34,7 @@ const router = createBrowserRouter(
 			<Route path="adminlogin" element={<Adminlogin />} />
 			<Route path="admindashboard" element={<AdminDashboard />} />
 			<Route path="student" element={<Student />} />
+			<Route path="studentmain" element={<StudentMain />} />
 			<Route
 				path="preregister"
 				element={

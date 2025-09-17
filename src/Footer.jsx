@@ -37,7 +37,7 @@ export default function Footer() {
                     <div className="student-resources">
                         <h1 style={{ fontSize: "18px" }}>Student Resources</h1>
                         <p style={{ color: "grey", fontSize: "13px" }}>  KNSLamp</p>
-                        <Link to="login" style={{ textDecoration: "None" }}>
+                        <Link to="login" style={{ textDecoration: "None" }} target='_blank'>
                             <a
                                 style={{
                                     fontSize: "16px",

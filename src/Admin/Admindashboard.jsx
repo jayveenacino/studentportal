@@ -8,6 +8,7 @@ import Courses from "./Courses";
 import Departments from "./Departments";
 import StudentList from "./StudentList";
 import BackupRestore from "./BackupRestore";
+import Overview from "./Overview";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -18,11 +19,24 @@ function Dashboard() {
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const [notifCount, setNotifCount] = useState(0);
 
+    // In your component state
+    const [openDropdown, setOpenDropdown] = useState(null); // "dashboard", "enrollees", or null
+
+    const toggleDropdown = (menu) => {
+        setOpenDropdown(openDropdown === menu ? null : menu);
+    };
+
+    const handleMenuClick = (section) => {
+        setActiveSection(section);
+        setOpenDropdown(null); // close all dropdowns when navigating
+    };
+
+
     useEffect(() => {
         const fetchEnrolleesCount = async () => {
             try {
                 const res = await axios.get("http://localhost:2025/api/enrollees");
-                setNotifCount(res.data.length); 
+                setNotifCount(res.data.length);
             } catch (err) {
                 console.error("Failed to fetch enrollees count:", err);
             }
@@ -113,49 +127,145 @@ function Dashboard() {
 
                     <div className={`adside ${sidebarVisible ? 'show' : 'hide'}`}>
                         <ul>
-                            <li><a href="#" onClick={() => setActiveSection("dashboard")}> <i className="fa-solid fa-house"></i> Dashboard</a></li>
+
                             <ul>
                                 <li>
                                     <a
                                         href="#"
-                                        onClick={() => setDropdownOpen(!dropdownOpen)}
+                                        onClick={() => toggleDropdown("dashboard")}
                                     >
-                                        <i className="fa-solid fa-calendar"></i> Enrollees <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
+                                        <i className="fa-solid fa-house" style={{ marginLeft: "-2px" }}></i> Dashboard
+                                        <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
                                     </a>
-                                    {dropdownOpen && (
+                                    {openDropdown === "dashboard" && (
                                         <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
                                             <li>
-                                                <a href="#" onClick={() => setActiveSection("enrollees")}>Pre Registered</a>
+                                                <a href="#" onClick={() => handleMenuClick("overview")}>
+                                                    <i className="fa-solid fa-chart-pie"></i> Overview
+                                                </a>
                                             </li>
                                             <li>
-                                                <a href="#" onClick={() => setActiveSection("accepted")}>Enrollees</a>
+                                                <a href="#" onClick={() => handleMenuClick("announcements")}>
+                                                    <i className="fa-solid fa-bullhorn"></i> Announcements
+                                                </a>
                                             </li>
                                             <li>
-                                                <a href="#" onClick={() => setActiveSection("pending")}>Pending Approval</a>
+                                                <a href="#" onClick={() => handleMenuClick("uploads")}>
+                                                    <i className="fa-solid fa-upload"></i> Uploadings
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => handleMenuClick("statistics")}>
+                                                    <i className="fa-solid fa-chart-line"></i> Statistics
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => handleMenuClick("settings")}>
+                                                    <i className="fa-solid fa-gear"></i> Dashboard Settings
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    )}
+
+                                </li>
+                            </ul>
+
+                            {/* Enrollees Dropdown */}
+                            <ul>
+                                <li>
+                                    <a
+                                        href="#"
+                                        onClick={() => toggleDropdown("enrollees")}
+                                    >
+                                        <i className="fa-solid fa-calendar"></i> Enrollees
+                                        <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
+                                    </a>
+                                    {openDropdown === "enrollees" && (
+                                        <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
+                                            <li>
+                                                <a href="#" onClick={() => handleMenuClick("enrollees")}>
+                                                    Pre Registered
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => handleMenuClick("accepted")}>
+                                                    Enrollees
+                                                </a>
+                                            </li>
+                                            <li>
+                                                <a href="#" onClick={() => handleMenuClick("pending")}>
+                                                    Pending Approval
+                                                </a>
                                             </li>
                                         </ul>
                                     )}
                                 </li>
                             </ul>
-                            <li><a href="#"> <i className="fa-solid fa-book"></i> Subjects</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("departments")}><i className="fa-solid fa-building"></i> Department</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("courses")}> <i className="fa-solid fa-calendar"> </i> Courses</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-graduation-cap"></i> Schedule</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("studentlist")}> <i className="fa-solid fa-users"></i> Students</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-users"></i> Instructor</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-gear"></i> Set Semester</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-credit-card"></i> Classroom Utilization</a></li>
-                            <li><a href="#"> <i className="fa-solid fa-file"></i> Report</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("user")}> <i className="fa-solid fa-user"></i> User</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("backuprestore")}> <i className="fa-solid fa-users"></i> Backup and Restore</a></li>
+
+                            {/* Other Menu Items */}
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("subjects")}>
+                                    <i className="fa-solid fa-book"></i> Subjects
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("departments")}>
+                                    <i className="fa-solid fa-building"></i> Department
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("courses")}>
+                                    <i className="fa-solid fa-calendar"></i> Courses
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("schedule")}>
+                                    <i className="fa-solid fa-graduation-cap"></i> Schedule
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("studentlist")}>
+                                    <i className="fa-solid fa-users"></i> Students
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("instructor")}>
+                                    <i className="fa-solid fa-users"></i> Instructor
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("setsemester")}>
+                                    <i className="fa-solid fa-gear"></i> Set Semester
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("classroomutilization")}>
+                                    <i className="fa-solid fa-credit-card"></i> Classroom Utilization
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("report")}>
+                                    <i className="fa-solid fa-file"></i> Report
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("user")}>
+                                    <i className="fa-solid fa-user"></i> User
+                                </a>
+                            </li>
+                            <li>
+                                <a href="#" onClick={() => handleMenuClick("backuprestore")}>
+                                    <i className="fa-solid fa-database"></i> Backup and Restore
+                                </a>
+                            </li>
                         </ul>
                     </div>
 
                     {/* Main Content Area */}
                     <div className={`admain ${sidebarVisible ? '' : 'expanded'}`} style={{ display: 'block' }}>
-                        {activeSection === "dashboard" && (
-                            <div>
-
+                        {activeSection === "overview" && (
+                            <div className="">
+                                <Overview />
                             </div>
                         )}
 
