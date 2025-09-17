@@ -6197,7 +6197,10 @@ export default function Profile() {
                           <option value="nc4">National Certificate IV</option>
                         </select>
                       </div>
-                    </div>
+                    </div>   
+
+
+                    
                   </div>
                   <div
                     className="unibtn"
