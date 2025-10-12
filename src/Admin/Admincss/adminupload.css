@@ -53,6 +53,7 @@
     padding: 12px 16px;
     border-bottom: 1px solid #ddd;
     text-align: left;
+    font-size: 13px;
 }
 
 .adminupload-table th {
@@ -97,7 +98,6 @@
 
 .adminupload-action-btn.edit {
     background-color: #28a745;
-    /* Green */
     color: white;
     border: none;
     padding: 6px 14px;

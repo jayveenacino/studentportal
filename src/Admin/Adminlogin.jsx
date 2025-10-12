@@ -19,6 +19,44 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (
+            emailOrUsername === "knsadmincsd.gmail.com" &&
+            password === "kolehiyongsubiccsd2002"
+        ) {
+            const defaultAdmin = {
+                email: "knsadmincsd.gmail.com",
+                username: "KNS Admin",
+                role: "Super Admin",
+            };
+
+            setAdmin(defaultAdmin);
+            localStorage.setItem("Admin", JSON.stringify(defaultAdmin));
+
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Default Admin Login Successful',
+                text: `Welcome back, ${defaultAdmin.username}!`,
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+            });
+
+            await Swal.fire({
+                title: 'Loading Dashboard...',
+                html: '<b>Please wait</b>',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => Swal.showLoading(),
+                timer: 2000,
+                timerProgressBar: true,
+            });
+
+            navigate('/admindashboard');
+            return;
+        }
+
         try {
             const res = await axios.post("http://localhost:2025/api/adminlogin", {
                 emailOrUsername,
@@ -45,7 +83,7 @@ export default function Login() {
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 didOpen: () => Swal.showLoading(),
-                timer: 2000,                 
+                timer: 2000,
                 timerProgressBar: true,
             });
 
@@ -64,8 +102,6 @@ export default function Login() {
             });
         }
     };
-
-
 
     return (
         <div>
