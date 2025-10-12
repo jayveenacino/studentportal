@@ -56,19 +56,24 @@ router.post("/", upload.single("image"), async (req, res) => {
         const { title, caption } = req.body;
         const filename = req.file ? req.file.filename : null;
 
-        if (!title || !caption || !filename) {
-            return res.status(400).json({ message: "All fields are required." });
+        if (!title || !filename) {
+            return res.status(400).json({ message: "Title and image are required." });
         }
 
-        const newUpload = new Upload({ title, caption, filename });
-        await newUpload.save();
+        const newUpload = new Upload({
+            title,
+            caption: caption || "", 
+            filename
+        });
 
+        await newUpload.save();
         res.json({ message: "Announcement posted successfully!" });
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error." });
     }
 });
+
 
 router.get("/", async (req, res) => {
     try {
