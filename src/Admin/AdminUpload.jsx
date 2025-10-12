@@ -54,15 +54,20 @@ export default function AdminUpload() {
     };
 
     const handleUpload = async () => {
-        if (!caption.trim() && !title.trim() && !selectedFile) {
-            Swal.fire("Warning", "Please add a title, caption or select an image.", "warning");
+        if (!selectedFile) {
+            Swal.fire("Missing Image", "Please upload an image for your announcement.", "warning");
+            return;
+        }
+
+        if (!title.trim()) {
+            Swal.fire("Missing Title", "Please enter a title for your announcement.", "warning");
             return;
         }
 
         const formData = new FormData();
-        if (selectedFile) formData.append("image", selectedFile);
+        formData.append("image", selectedFile);
         formData.append("title", title);
-        formData.append("caption", caption);
+        formData.append("caption", caption || "");
 
         setLoading(true);
         try {
@@ -89,14 +94,14 @@ export default function AdminUpload() {
     };
 
     const handleUpdate = async () => {
-        if (!caption.trim() && !title.trim()) {
-            Swal.fire("Warning", "Title or caption cannot be empty.", "warning");
+        if (!title.trim()) {
+            Swal.fire("Missing Title", "Please enter a title before saving changes.", "warning");
             return;
         }
 
         const formData = new FormData();
         formData.append("title", title);
-        formData.append("caption", caption);
+        formData.append("caption", caption || "");
         if (selectedFile) formData.append("image", selectedFile);
 
         setLoading(true);

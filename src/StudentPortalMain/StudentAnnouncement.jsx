@@ -53,7 +53,7 @@ export default function StudentAnnouncement() {
                                 ).toLocaleDateString()}
                             </p>
                             <p className="announcement-caption">
-                                {selectedAnnouncement.caption || "No Caption"}
+                                {selectedAnnouncement.caption || ""}
                             </p>
                         </>
                     ) : (
