@@ -10,7 +10,7 @@
     left: 0;
     width: 220px;
     height: 100vh;
-    background-color: #ecebeb;
+    background-color: #ffffff;
     color: #0a3d18;
     display: flex;
     flex-direction: column;
@@ -26,17 +26,20 @@
     text-align: center;
     margin-bottom: 25px;
 }
+
 .stud-sidebar-header img {
     width: 90px;
     height: auto;
     margin-bottom: 5px;
     margin-top: -13px;
 }
+
 .stud-sidebar-header h2 {
     font-size: 15px;
     font-weight: bold;
     margin-bottom: 4px;
 }
+
 .stud-sidebar-header p {
     font-size: 12px;
     color: #0a3d18;
@@ -48,6 +51,7 @@
     margin-top: -25px;
     width: 100%;
 }
+
 .stud-sidebar-menu li {
     width: 100%;
     display: flex;
@@ -60,6 +64,7 @@
     box-sizing: border-box;
     gap: 10px;
 }
+
 .stud-sidebar-menu li:hover {
     background-color: rgba(56, 44, 44, 0.1);
 }
@@ -70,20 +75,24 @@
     flex-direction: column;
     padding-left: 0;
 }
+
 .stud-content {
     margin-left: 230px;
     padding: 20px;
     margin-top: 50px;
 }
+
 .stud-content h1 {
     font-size: 26px;
     color: #0a3d18;
     margin-bottom: 10px;
 }
+
 .stud-content p {
     font-size: 14px;
     color: #444;
 }
+
 .sidehr {
     border: 0;
     height: 1px;
@@ -94,28 +103,47 @@
 }
 
 .studmain-navbar {
-    position: fixed;
-    top: 0;
-    left: 220px;
-    height: 60px;
-    width: calc(100% - 220px);
-    background-color: #0a3d18;
-    color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 0 20px;
-    font-weight: bold;
+    height: 60px;
+    background-color: #0a3d18;
+    color: #fff;
+    position: fixed;
+    top: 0;
+    left: 220px;
+    right: 0;
     z-index: 1000;
 }
+
+.studmain-navbar .stud-menu-toggle {
+    font-size: 20px;
+    cursor: pointer;
+}
+
 .navbar-user {
+    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 8px;
+    font-size: 14px;
+    font-weight: 500;
 }
+
+.navbar-user .fa-user-circle {
+    font-size: 20px;
+}
+
+.navbar-user .dropdown-icon {
+    font-size: 12px;
+    margin-left: 4px;
+}
+
 .studentname {
     font-size: 13px;
 }
+
 .user-icon {
     font-size: 13px;
 }
@@ -130,10 +158,46 @@
     transform: translateX(0);
     transition: transform 0.3s ease;
 }
+
 .stud-sidebar.hide {
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 }
+
+.user-dropdown {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    min-width: 150px;
+    z-index: 1001;
+    display: none;
+}
+
+.navbar-user:hover .user-dropdown,
+.navbar-user.show .user-dropdown {
+    display: block;
+}
+
+.user-dropdown .dropdown-item {
+    padding: 8px 12px;
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 13px;
+    color: #0a3d18;
+    transition: background-color 0.2s ease;
+}
+
+.user-dropdown .dropdown-item:hover {
+    background-color: rgba(56, 44, 44, 0.1);
+}
+
 
 @media (max-width: 768px) {
     .stud-sidebar.university-style {
@@ -143,28 +207,34 @@
         transform: translateX(-100%);
         transition: transform 0.3s ease;
     }
+
     .stud-sidebar.show {
         transform: translateX(0) !important;
     }
+
     .stud-sidebar.hide {
         transform: translateX(-100%) !important;
     }
+
     .stud-menu-toggle {
         display: block;
         margin-left: 10px;
         font-size: 22px;
         cursor: pointer;
     }
+
     .studmain-navbar {
         left: 0;
         width: 100%;
         padding: 0 15px;
     }
+
     .stud-content {
         margin-left: 0;
         padding: 80px 15px 15px 15px;
         margin: -3px;
     }
+
     .sidebar-overlay {
         display: none;
         position: fixed;
@@ -172,10 +242,160 @@
         left: 0;
         width: 100vw;
         height: 100vh;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0, 0, 0, 0.5);
         z-index: 1000;
     }
+
     .sidebar-overlay.show {
         display: block;
+    }
+}
+
+/* Modal Overlay */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+/* Password Modal */
+.password-modal {
+    background: #fff;
+    padding: 25px 30px;
+    border-radius: 12px;
+    width: 350px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    text-align: left;
+}
+
+.password-modal h2 {
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.password-modal input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.save-btn, .cancel-btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background-color: #076316;
+    color: white;
+}
+
+.cancel-btn {
+    background-color: #ccc;
+}
+
+.password-field {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-field input {
+    width: 100%;
+    padding: 10px 35px 10px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.password-field i {
+    position: absolute;
+    right: 10px;
+    cursor: pointer;
+    color: #888;
+    margin-top: -10px;
+    font-size: 18px;
+    transition: color 0.2s;
+}
+
+.password-field i:hover {
+    color: #076316;
+}
+
+.password-modal {
+    position: relative;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 22px;
+    color: #666;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.close-modal:hover {
+    color: #d32f2f;
+}
+
+@media (max-width: 768px) {
+    .close-modal {
+        display: block;
+        position: absolute;
+        top: 10px;
+        right: 15px;
+        font-size: 22px;
+        color: #555;
+        cursor: pointer;
+        transition: color 0.2s ease;
+        z-index: 10;
+    }
+
+    .close-modal:hover {
+        color: #d32f2f;
+    }
+
+    .password-modal {
+        width: 90%;
+        padding: 20px;
+        font-size: 15px;
+    }
+
+    .password-field input {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .modal-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    .save-btn {
+        width: 100%;
+        padding: 10px;
+        font-size: 15px;
     }
 }

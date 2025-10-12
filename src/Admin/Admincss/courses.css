@@ -104,6 +104,10 @@
     color: white;
 }
 
+.editcourse-actions{
+    margin-top: 20px;
+}
+
 /* Pagination */
 .pagination-controls {
     text-align: center;

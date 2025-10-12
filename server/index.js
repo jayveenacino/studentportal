@@ -10,6 +10,10 @@ const backupRoutes = require("./routes/backupRoutes");
 const departmentRoutes = require('./routes/department');
 const AcceptedStudent = require("./models/AcceptedStudent");
 const acceptedStudentsRoutes = require("./routes/acceptedStudents");
+const Settings = require("./models/Settings");
+const adminRoutes = require("./routes/adminRoutes");
+const uploadRoutes = require("./routes/uploadRoutes");
+const Upload = require('./models/Upload');
 
 require('dotenv').config();
 
@@ -20,9 +24,13 @@ app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
-
 app.post('/register', async (req, res) => {
     try {
+        const settings = await Settings.findOne();
+        if (settings && !settings.preRegister) {
+            return res.status(403).json({ message: "Pre-registration is currently closed." });
+        }
+
         const student = await StudentModel.create({
             ...req.body,
             studentNumber: null,
@@ -35,6 +43,7 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
+
 
 
 app.post('/login', async (req, res) => {
@@ -53,35 +62,49 @@ app.post('/login', async (req, res) => {
     }
 });
 
-app.post('/upload', async (req, res) => {
-    const { email, image } = req.body;
-
+app.post("/upload", async (req, res) => {
     try {
+        const { email, image } = req.body;
+
+        // ✅ Validate input
         if (!email || !image) {
-            return res.status(400).json({ message: "Email and image are required" });
+            return res.status(400).json({ message: "Email and image are required." });
         }
 
+        // ✅ Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,
-                    profileImage: '✔️'
-                }
+                    image,              // save new profile image (base64 or URL)
+                    profileImage: "✔️", // mark as uploaded
+                },
             },
-            { new: true }
+            { new: true, runValidators: true } // return updated & validate schema
         );
 
+        // ✅ Handle not found
         if (!student) {
-            return res.status(404).json({ message: "Student not found" });
+            return res.status(404).json({ message: "Student not found." });
         }
 
-        res.status(200).json({ message: "Image uploaded successfully!", student });
+        // ✅ Success response
+        return res.json({
+            success: true,
+            message: "Image uploaded successfully!",
+            student,
+        });
+
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "Server error", error: error.message });
+        console.error("Upload error:", error);
+        return res.status(500).json({
+            success: false,
+            message: "Server error while uploading image.",
+            error: error.message,
+        });
     }
 });
+
 
 app.post('/upload-id-image', async (req, res) => {
     const { email, idimage } = req.body;
@@ -210,16 +233,15 @@ app.get('/get-upload-status/:email', async (req, res) => {
 
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
-
     try {
-        const student = await StudentModel.findOne({ email });
-        if (!student) return res.status(404).json({ message: "Student not found" });
-
-        res.status(200).json({ student });
+        const student = await Student.findOne({ email }); // fresh from DB
+        if (!student) return res.status(404).json({ message: "User not found" });
+        res.json({ student });
     } catch (err) {
-        res.status(500).json({ message: "Server error", error: err.message });
+        res.status(500).json({ message: "Server error" });
     }
 });
+
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
@@ -395,6 +417,18 @@ app.delete("/api/courses/:id", async (req, res) => {
     }
 });
 
+
+app.delete('/api/acceptedstudents/:id', async (req, res) => {
+    try {
+        const student = await AcceptedStudent.findByIdAndDelete(req.params.id);
+        if (!student) return res.status(404).send({ message: 'Student not found' });
+        res.send({ message: 'Student deleted successfully' });
+    } catch (err) {
+        res.status(500).send({ message: 'Server error', error: err.message });
+    }
+});
+
+
 app.get('/api/students/:id', async (req, res) => {
     const { id } = req.params;
     try {
@@ -409,11 +443,42 @@ app.get('/api/students/:id', async (req, res) => {
     }
 });
 
+app.get('/settings', async (req, res) => {
+    try {
+        const settings = await Settings.findOne();
+        if (!settings) {
+            return res.json({ preRegister: false });
+        }
+        res.json({ preRegister: settings.preRegister });
+    } catch (err) {
+        res.status(500).json({ preRegister: false });
+    }
+});
+
+app.post("/settings", async (req, res) => {
+    try {
+        const { preRegister, activeSemester } = req.body;
+        let settings = await Settings.findOne();
+        if (!settings) {
+            settings = await Settings.create({ preRegister, activeSemester });
+        } else {
+            settings.preRegister = preRegister;
+            settings.activeSemester = activeSemester;
+            await settings.save();
+        }
+        res.json(settings);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
 
 app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 app.use(acceptedStudentsRoutes);
+app.use("/api", adminRoutes);
 
+app.use("/uploads", express.static("uploads"));
+app.use("/api/uploads", uploadRoutes);
 
 app.listen(2025, '0.0.0.0', () => {
     console.log("Server is running on port 2025");

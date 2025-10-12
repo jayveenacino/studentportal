@@ -12,7 +12,6 @@ if (!fs.existsSync(backupDir)) {
     fs.mkdirSync(backupDir, { recursive: true });
 }
 
-// Helper to remove _id from documents
 const stripIds = (array) => array.map(doc => {
     const { _id, ...rest } = doc;
     return rest;

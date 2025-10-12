@@ -158,13 +158,11 @@ export default function Enrollees() {
 
         const headers = ["#", "Student Name", "Room", "Schedule"];
 
-        // Room capacities
         const capacities = {
             AVR: 30,
             "COMLAB 2": 20
         };
 
-        // Time slots per day
         const timeSlots = [
             "8:00 AM - 10:00 AM",
             "10:00 AM - 11:00 AM",

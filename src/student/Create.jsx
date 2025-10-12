@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./student css/create.css";
 import Swal from "sweetalert2";
@@ -59,10 +59,34 @@ export default function Create() {
     const handleSubmit = async (e) => {
         e.preventDefault();
         setLoading(true);
-    
+
+        const bannedList = [
+            "123", "1234", "12345", "123456", "password", "password123",
+            "username", "user", "user123", "admin", "test", "qwerty",
+            "abc123", "guest", "default", "letmein"
+        ];
+
+        const usernameCheck = `${formData.firstname}${formData.lastname}`.toLowerCase();
+        const passwordCheck = formData.password.toLowerCase();
+
+        if (bannedList.some(item => usernameCheck.includes(item) || passwordCheck.includes(item))) {
+            Swal.fire({
+                toast: true,
+                icon: "error",
+                title: "Default Credentials Detected!",
+                text: "Your password uses a default. Please choose a stronger one.",
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 4000,
+                timerProgressBar: true
+            });
+            setLoading(false);
+            return;
+        }
+        
         try {
             const response = await axios.post("http://localhost:2025/register", formData);
-    
+
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
@@ -71,18 +95,18 @@ export default function Create() {
                     showConfirmButton: false,
                     timer: 2000
                 });
-    
+
                 localStorage.setItem("user", JSON.stringify(response.data.student));
-    
+
                 setUser(response.data.student);
-    
+
                 setTimeout(() => {
                     navigate("/preregister");
                 }, 2000);
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to create an account.";
-    
+
             if (errorMessage.includes("already registered")) {
                 Swal.fire({
                     icon: "warning",
@@ -99,9 +123,10 @@ export default function Create() {
                 });
             }
         }
-    
+
         setLoading(false);
     };
+
 
     return (
         <div className="signincontainer">
@@ -249,7 +274,7 @@ export default function Create() {
 
                         <hr />
                         <p className="privacy-text" style={{ textAlign: "center" }}>
-                            I have read the Kolehiyo Ng Subic General Privacy Notice at <a href="#" className="privacy-link">Kolehiyo Ng Subic Privacy Policy</a>.
+                            <input type="checkbox" required /> I have read the Kolehiyo Ng Subic General Privacy Notice at <Link to='notice' target='_blank' className="privacy-link">Kolehiyo Ng Subic Privacy Policy.</Link>
                         </p>
                         <hr />
 

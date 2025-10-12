@@ -1,22 +1,18 @@
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
-const AdminContext = createContext()
+const AdminContext = createContext();
 
 export default function useAdmin() {
-    return useContext(AdminContext)
+    return useContext(AdminContext);
 }
 
 export function AdminContextProvider({ children }) {
-    const [admin, setAdmin] = useState({
-        email: ""
-    })
-
-    const [user, setUser] = useState({})
+    const [admin, setAdmin] = useState({ email: "" });
+    const [user, setUser] = useState({});
+    const [acceptedStudent, setAcceptedStudent] = useState({});
 
     useEffect(() => {
         const adminExist = localStorage.getItem("Admin");
-        const userExist = localStorage.getItem("user");
-
         if (adminExist) {
             try {
                 setAdmin(JSON.parse(adminExist));
@@ -25,20 +21,35 @@ export function AdminContextProvider({ children }) {
             }
         }
 
+        const userExist = localStorage.getItem("user");
         if (userExist) {
             try {
-                const parsedUser = JSON.parse(userExist || "{}"); // fallback to empty object
-                console.log("User loaded:", parsedUser);
-                setUser(parsedUser);
+                setUser(JSON.parse(userExist || "{}"));
             } catch (err) {
                 console.error("Failed to parse User from localStorage:", err);
+            }
+        }
+
+        const acceptedExist = localStorage.getItem("acceptedStudent");
+        if (acceptedExist) {
+            try {
+                const parsedStudent = JSON.parse(acceptedExist);
+                setAcceptedStudent({
+                    firstname: parsedStudent.firstName || parsedStudent.firstname || "",
+                    middlename: parsedStudent.middleName || parsedStudent.middlename || "",
+                    lastname: parsedStudent.lastName || parsedStudent.lastname || "",
+                    extension: parsedStudent.extension || ""
+                });
+                console.log("Accepted student loaded:", parsedStudent);
+            } catch (err) {
+                console.error("Failed to parse acceptedStudent from localStorage:", err);
             }
         }
     }, []);
 
     return (
-        <AdminContext.Provider value={{ admin, setAdmin, user, setUser }}>
+        <AdminContext.Provider value={{ admin, setAdmin, user, setUser, acceptedStudent, setAcceptedStudent }}>
             {children}
         </AdminContext.Provider>
-    )
+    );
 }

@@ -129,7 +129,6 @@ router.put('/api/students/:id/accept', async (req, res) => {
             domainEmail,
             portalPassword: hashedPassword,
 
-            // 👇 added fields for freshmen
             yearLevel: "1ST YEAR",
             status: "REGULAR",
 
@@ -190,8 +189,6 @@ router.put('/api/students/:id/accept', async (req, res) => {
         return res.status(500).json({ error: err.message });
     }
 });
-
-
 
 // ================= ENROLLEES FILTER =================
 router.get("/api/enrollees", async (req, res) => {

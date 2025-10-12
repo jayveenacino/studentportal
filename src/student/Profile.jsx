@@ -356,14 +356,18 @@ export default function Profile() {
             });
             return;
         }
-
         try {
             const response = await axios.post("http://localhost:2025/upload", {
                 email: user.email,
                 image,
             });
 
-            setUser((prev) => ({ ...prev, image: response.data.student.image }));
+            const updatedUser = response.data.student;
+
+            // ✅ update state + localStorage
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
             setProfilepfp(false);
 
             Swal.fire({
@@ -381,9 +385,14 @@ export default function Profile() {
                 confirmButtonText: "OK",
             });
         }
-    };
 
+    };
     useEffect(() => {
+        const savedUser = localStorage.getItem("user");
+        if (savedUser) {
+            setUser(JSON.parse(savedUser));
+        }
+
         const fetchUser = async () => {
             const email = localStorage.getItem("userEmail");
             if (!email) return;
@@ -395,6 +404,7 @@ export default function Profile() {
 
                 if (res.data && res.data.student) {
                     setUser(res.data.student);
+                    localStorage.setItem("user", JSON.stringify(res.data.student));
                 }
             } catch (err) {
                 console.error("Error fetching user:", err);
@@ -403,6 +413,7 @@ export default function Profile() {
 
         fetchUser();
     }, []);
+
 
     const handleDisabilityChange = (e) => {
         const value = e.target.value;
@@ -3048,7 +3059,7 @@ export default function Profile() {
                             {fillsection === "upload" ? (
                                 <i className="fa-solid fa-pen"></i>
                             ) : (
-                                "6"
+                                "5"
                             )}
                         </span>
                         <h2 style={{ fontSize: "10px" }}>UPLOAD DOCUMENTS</h2>
@@ -3489,7 +3500,7 @@ export default function Profile() {
                             {fillsection === "confirmation" ? (
                                 <i className="fa-solid fa-pen"></i>
                             ) : (
-                                "7"
+                                "6"
                             )}
                         </span>
                         <h2 style={{ fontSize: "10px" }}>CONFIRMATION</h2>

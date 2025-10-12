@@ -1,0 +1,177 @@
+.semester-page {
+    padding: 40px 34px;
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+    min-height: 100vh;
+    box-sizing: border-box;
+}
+
+.semester-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10px;
+    position: relative;
+    margin-top: 50px;
+    max-width: 1400px;
+    margin-bottom: 40px;
+}
+
+.header-left {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: -20px;
+}
+
+.active-semester-badge {
+    font-weight: bold;
+}
+
+.active-semester-badge .badge {
+    background-color: #0a3d18;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 8px;
+    margin-left: 6px;
+}
+
+.semester-header h1 {
+    font-size: 2rem;
+    color: #0a3d18;
+    margin-bottom: 0.3rem;
+}
+
+.semester-header p {
+    color: #555;
+}
+
+.semester-card {
+    background: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
+    margin-bottom: 30px;
+}
+
+.semester-card h2 {
+    font-size: 1.4rem;
+    color: #0a3d18;
+    margin-bottom: 5px;
+}
+
+.semester-card p {
+    color: #666;
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+}
+
+.toggle-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 32px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 24px;
+    width: 24px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked+.slider {
+    background-color: #0a3d18;
+}
+
+input:checked+.slider:before {
+    transform: translateX(28px);
+}
+
+.switch-label {
+    font-size: 1rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.semester-options {
+    display: flex;
+    gap: 25px;
+    flex-wrap: wrap;
+}
+
+.semester-options label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: #f4f4f4;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background .2s ease;
+}
+
+.semester-options label:hover {
+    background: #e9e9e9;
+}
+
+.semester-options input[type="radio"] {
+    accent-color: #0a3d18;
+    width: 18px;
+    height: 18px;
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+.card-header-left {
+    display: flex;
+    flex-direction: column;
+}
+
+.save-semester-btn {
+    background-color: #0a3d18;
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.save-semester-btn:hover {
+    background-color: #218838;
+}

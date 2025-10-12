@@ -2,49 +2,74 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAdmin from './useAdmin';
 import Swal from 'sweetalert2';
+import axios from 'axios';
 import './Admincss/admin.css';
 
 export default function Login() {
-    const { admin, setAdmin } = useAdmin()
+    const { admin, setAdmin } = useAdmin();
     const [showPassword, setShowPassword] = useState(false);
-    const [email, setEmail] = useState("");
+    const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (admin.email) navigate('/admindashboard')
-    }, [admin])
+        if (admin?.email) navigate('/admindashboard');
+    }, [admin, navigate]);
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (email === "admin@gmail.com" && password === "admin") {
-            setAdmin({ email });
-            localStorage.setItem("Admin", JSON.stringify({ email }));
-
-            Swal.fire({
-                icon: 'success',
-                title: 'Login Successful',
-                text: 'Welcome to the Admin Dashboard!',
-                timer: 2000,
-                showConfirmButton: false
+        try {
+            const res = await axios.post("http://localhost:2025/api/adminlogin", {
+                emailOrUsername,
+                password
             });
 
-            setTimeout(() => navigate('/admindashboard'), 5000);
+            setAdmin(res.data.admin);
+            localStorage.setItem("Admin", JSON.stringify(res.data.admin));
 
-        } else {
+            await Swal.fire({
+                toast: true,
+                position: 'top-end',
+                icon: 'success',
+                title: 'Login Successful',
+                text: `Welcome back, ${res.data.admin.username}!`,
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true,
+            });
+
+            await Swal.fire({
+                title: 'Loading Dashboard...',
+                html: '<b>Please wait</b>',
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => Swal.showLoading(),
+                timer: 2000,                 
+                timerProgressBar: true,
+            });
+
+            navigate('/admindashboard');
+
+        } catch (err) {
             Swal.fire({
+                toast: true,
+                position: 'top-end',
                 icon: 'error',
                 title: 'Login Failed',
-                text: 'Incorrect email or password',
+                text: err.response?.data?.message || 'Incorrect email/username or password',
+                showConfirmButton: false,
+                timer: 2500,
+                timerProgressBar: true,
             });
         }
     };
 
+
+
     return (
         <div>
             <div className="container">
-                {/* Left Section - Login */}
                 <div className="login-section">
                     <div className="login-box">
                         <div className="logo-container">
@@ -55,17 +80,23 @@ export default function Login() {
                         <p className="subtitle" style={{ fontSize: "10px" }}>Integrated System Admin Portal</p>
 
                         <form onSubmit={handleSubmit}>
-                            <input value={email} onChange={e => setEmail(e.target.value)} type="email" placeholder="Username" className="input" required />
+                            <input
+                                value={emailOrUsername}
+                                onChange={e => setEmailOrUsername(e.target.value)}
+                                type="text"
+                                placeholder="Email or Username"
+                                className="input"
+                                required
+                            />
 
-                            {/* Password Input Field with Eye Icon */}
                             <div style={{ position: "relative", width: "100%" }}>
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     placeholder="Enter your password"
                                     className="input"
                                     required
-                                    style={{ paddingRight: "7px" }}
-                                    value={password} onChange={e => setPassword(e.target.value)}
+                                    value={password}
+                                    onChange={e => setPassword(e.target.value)}
                                 />
                                 <i
                                     className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
@@ -82,23 +113,30 @@ export default function Login() {
                                 ></i>
                             </div>
 
-                            {/* Login Button */}
                             <div className="button-group1">
                                 <button type='submit' className="login-button1">Login</button>
                             </div>
                         </form>
 
                         <p style={{ fontSize: "10px", textAlign: "center", paddingTop: "20px" }}>
-                            <a href="" style={{ color: "green", }}>Kolehiyo ng Subic General Privacy Notice</a>
+                            <a href="" style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</a>
                         </p>
                     </div>
                 </div>
             </div>
-        
-            <div style={{ textAlign: "center", fontSize: "12px", padding: "10px", background: "#111", color: "#fff", position: "fixed", bottom: 0, width: "100%" }}>
+
+            <div style={{
+                textAlign: "center",
+                fontSize: "12px",
+                padding: "10px",
+                background: "#111",
+                color: "#fff",
+                position: "fixed",
+                bottom: 0,
+                width: "100%"
+            }}>
                 © 2025 Kolehiyo Ng Subic. Management Information Systems Unit.
             </div>
-            
         </div>
-    )
+    );
 }

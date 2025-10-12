@@ -1,0 +1,239 @@
+.adminupload-container {
+    padding: 100px 32px;
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+}
+
+.adminupload-header h1 {
+    font-size: 2rem;
+    color: #0a3d18;
+    margin-bottom: 0.3rem;
+}
+
+.adminupload-header p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+.adminupload-controls {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.adminupload-upload-btn {
+    background-color: #0a3d18;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.adminupload-upload-btn:hover {
+    background-color: #097129;
+}
+
+.adminupload-table-container {
+    overflow-x: auto;
+}
+
+.adminupload-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.adminupload-table th,
+.adminupload-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.adminupload-table th {
+    background-color: #0a3d18;
+    color: white;
+}
+
+.adminupload-preview {
+    width: 70px;
+    height: 70px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.adminupload-caption-cell {
+    max-width: 250px;
+}
+
+.caption-scroll {
+    max-height: 80px;
+    overflow-y: auto;
+    padding-right: 6px;
+}
+
+.adminupload-action-btn {
+    padding: 6px 12px;
+    margin-right: 6px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.adminupload-action-btn.delete {
+    background-color: #d9534f;
+    color: white;
+}
+
+.adminupload-action-btn.delete:hover {
+    background-color: #c9302c;
+}
+
+.adminupload-action-btn.edit {
+    background-color: #28a745;
+    /* Green */
+    color: white;
+    border: none;
+    padding: 6px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.adminupload-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+}
+
+.adminupload-modal-content {
+    background: #fff;
+    width: 600px;
+    margin-top: 40px;
+    max-width: 80%;
+    border-radius: 10px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: fadeIn 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    max-height: 75vh;
+}
+
+.adminupload-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.adminupload-modal-header h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #0a3d18;
+}
+
+.adminupload-close {
+    font-size: 24px;
+    cursor: pointer;
+    color: #888;
+}
+
+.adminupload-close:hover {
+    color: #000;
+}
+
+.adminupload-modal-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    overflow-y: auto;
+}
+
+.adminupload-top-row {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 12px;
+}
+
+.adminupload-title-input {
+    flex: 1;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    height: 40px;
+}
+
+.adminupload-image-box {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border 0.3s;
+}
+
+.adminupload-image-box:hover {
+    border-color: #0a3d18;
+}
+
+.adminupload-image-preview {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.adminupload-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    resize: vertical;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
+    min-height: 120px;
+    max-height: 250px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    word-wrap: break-word;
+}
+
+.adminupload-modal-footer {
+    padding: 16px 20px;
+    border-top: 1px solid #eee;
+    text-align: right;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-15px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

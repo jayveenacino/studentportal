@@ -80,5 +80,4 @@ const knsStudentSchema = new mongoose.Schema({
     guarTel: { type: String },
 }, { timestamps: true });
 
-// ✅ fixed: name matches variable
 module.exports = mongoose.model("KnsStudent", knsStudentSchema);

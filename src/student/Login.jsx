@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
@@ -9,29 +9,129 @@ export default function Login() {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
+    useEffect(() => {
+        const activeSession = localStorage.getItem('activeSession');
+        if (activeSession) {
+            const student = JSON.parse(localStorage.getItem('acceptedStudent'));
+            if (student) {
+                navigate("/studentmain");
+            }
+        }
+    }, [navigate]);
+
+    useEffect(() => {
+        document.title = "Kolehiyo Ng Subic - Student Portal Login";
+    }, []);
+    useEffect(() => {
+        if (localStorage.getItem("autoLogout") === "true") {
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "info",
+                title: "Auto Logout",
+                text: "You were logged out due to 3 minutes of inactivity. Please re-login.",
+                timer: 4000,
+                showConfirmButton: false
+            });
+            localStorage.removeItem("autoLogout");
+        }
+
+        const expiry = localStorage.getItem("sessionExpiry");
+        if (expiry && Date.now() > Number(expiry)) {
+            localStorage.removeItem("acceptedStudent");
+            localStorage.removeItem("activeSession");
+
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "warning",
+                title: "Session Expired",
+                text: "Your session has expired. Please login again.",
+                timer: 4500,
+                showConfirmButton: false
+            });
+        }
+
+        const activeSession = localStorage.getItem("activeSession");
+        if (activeSession) {
+            const student = JSON.parse(localStorage.getItem("acceptedStudent"));
+            if (student) {
+                navigate("/studentmain");
+            }
+        }
+    }, [navigate]);
+
     const handleLogin = async (e) => {
         e.preventDefault();
-
         try {
+            Swal.fire({
+                title: "Logging in...",
+                text: "Please wait",
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                }
+            });
+
             const res = await fetch("http://localhost:2025/api/acceptedstudents/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ studentNumber, portalPassword: password })
             });
-
             const data = await res.json();
+            Swal.close();
+
             if (!res.ok) {
-                return Swal.fire("Login Failed", data.message, "error");
+                return Swal.fire({
+                    toast: true,
+                    position: "top-end",
+                    icon: "error",
+                    title: "Login Failed",
+                    text: data.message,
+                    timer: 3000,
+                    showConfirmButton: false
+                });
             }
 
-            Swal.fire("Welcome!", `${data.student.fullName}`, "success");
-            navigate("/studentmain");
+            localStorage.setItem("acceptedStudent", JSON.stringify(data.student));
+            localStorage.setItem("activeSession", "true");
+
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: `Login Successful!`,
+                showConfirmButton: false,
+                timer: 1500,
+                timerProgressBar: true
+            }).then(() => {
+                navigate("/studentmain");
+            });
 
         } catch (err) {
-            console.error(err);
-            Swal.fire("Error", "Something went wrong", "error");
+            Swal.close();
+            Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "error",
+                title: "Error",
+                text: "Something went wrong",
+                timer: 3000,
+                showConfirmButton: false
+            });
         }
     };
+
+    useEffect(() => {
+        const handleStorageChange = (e) => {
+            if (e.key === 'activeSession' && e.newValue === null) {
+                navigate("/login");
+            }
+        };
+        window.addEventListener("storage", handleStorageChange);
+        return () => window.removeEventListener("storage", handleStorageChange);
+    }, [navigate]);
 
     return (
         <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", overflow: "hidden" }}>
@@ -45,7 +145,6 @@ export default function Login() {
                         <p className="subtitle" style={{ fontSize: "10px" }}>STUDENT PORTAL</p>
                         <p className="subtitle" style={{ fontSize: "10px", marginTop: "-20px", color: "darkgreen", fontWeight: "bold" }}>STUDENT ENROLLMENT SYSTEM v0.1</p>
                         <hr />
-
                         <form onSubmit={handleLogin}>
                             <input
                                 type="text"
@@ -55,7 +154,6 @@ export default function Login() {
                                 onChange={(e) => setStudentNumber(e.target.value)}
                                 required
                             />
-
                             <div style={{ position: "relative", width: "100%" }}>
                                 <input
                                     type={showPassword ? "text" : "password"}
@@ -80,25 +178,20 @@ export default function Login() {
                                     }}
                                 ></i>
                             </div>
-
                             <div className="button-group1">
                                 <button type="submit" className="login-button1">Login</button>
                             </div>
-
                             <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>
                                 Forgot Password?
                             </p>
                         </form>
-
                         <hr />
-
                         <p style={{ fontSize: "10px", textAlign: "center" }}>
                             By clicking the login button, you recognize the authority of Kolehiyo ng Subic to process your personal and sensitive information,
                             pursuant to the <Link to="notice" target='_blank' style={{ color: "green" }}>Kolehiyo ng Subic General Privacy Notice</Link> and applicable laws.
                         </p>
                     </div>
                 </div>
-
                 {reset &&
                     <div className="reset">
                         <div className="resetbg" style={{ position: "relative", padding: "20px" }}>
@@ -137,7 +230,6 @@ export default function Login() {
                     </div>
                 }
             </div>
-
             <div style={{ textAlign: "center", fontSize: "12px", padding: "10px", background: "#111", color: "#fff", position: "fixed", bottom: 0, width: "100%" }}>
                 © 2025 Kolehiyo Ng Subic. Management Information Systems Unit.
             </div>

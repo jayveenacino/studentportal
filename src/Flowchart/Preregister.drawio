@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="HsM2UNDoKso9f_c-DG2F" name="Page-1">
-        <mxGraphModel dx="1823" dy="549" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+        <mxGraphModel dx="2961" dy="575" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -96,7 +96,7 @@
                     </mxGeometry>
                 </mxCell>
                 <mxCell id="33" value="EMAIL OR PASS&lt;div&gt;WRONG&lt;/div&gt;" style="rhombus;whiteSpace=wrap;html=1;" parent="1" vertex="1">
-                    <mxGeometry x="-130" y="270" width="160" height="70" as="geometry"/>
+                    <mxGeometry x="-160" y="260" width="160" height="70" as="geometry"/>
                 </mxCell>
                 <mxCell id="42" value="END" style="ellipse;whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="280" y="410" width="134.5" height="44" as="geometry"/>
@@ -290,6 +290,39 @@
                 </mxCell>
                 <mxCell id="154" value="" style="whiteSpace=wrap;html=1;" parent="1" vertex="1">
                     <mxGeometry x="60" y="740" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="166" style="edgeStyle=none;html=1;exitX=0;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="156" target="157">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="156" value="START" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-960" y="960" width="120" height="60" as="geometry"/>
+                </mxCell>
+                <mxCell id="163" style="edgeStyle=none;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="157" target="159">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="157" value="SIDE BAR" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-1140" y="1080" width="120" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="158" value="DEAN FLOW DESIGN" style="text;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;spacingLeft=4;spacingRight=4;overflow=hidden;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;rotatable=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-970" y="920" width="140" height="30" as="geometry"/>
+                </mxCell>
+                <mxCell id="159" value="&lt;ul&gt;&lt;li&gt;&lt;b&gt;DASHBOARD&lt;/b&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;TEACHERS&lt;/b&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;SHEDULE&lt;/b&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;ADD SETS&lt;/b&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;PROFILE&lt;/b&gt;&lt;/li&gt;&lt;li&gt;&lt;b&gt;LOGOUT&lt;/b&gt;&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+                    <mxGeometry x="-980" y="1060" width="140" height="140" as="geometry"/>
+                </mxCell>
+                <mxCell id="161" value="&lt;div style=&quot;text-align: center;&quot;&gt;&lt;span style=&quot;background-color: transparent; color: rgb(63, 63, 63);&quot;&gt;&lt;b&gt;TEACHERS&lt;/b&gt;&lt;/span&gt;&lt;/div&gt;&lt;ul&gt;&lt;li&gt;SETS&lt;/li&gt;&lt;li&gt;YEAR&lt;/li&gt;&lt;li&gt;STUDENTS&lt;/li&gt;&lt;li&gt;SHEDULE&lt;/li&gt;&lt;li&gt;DATE/YEAR&lt;/li&gt;&lt;li&gt;DELETE&lt;/li&gt;&lt;li&gt;EDIT&lt;/li&gt;&lt;/ul&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=left;" vertex="1" parent="1">
+                    <mxGeometry x="-770" y="1060" width="140" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="162" style="edgeStyle=none;html=1;exitX=1.014;exitY=0.306;exitDx=0;exitDy=0;entryX=0;entryY=0.579;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="159" target="161">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="167" value="&lt;b&gt;DASHBOARD&lt;/b&gt;&lt;div&gt;&lt;b&gt;&lt;br&gt;&lt;/b&gt;&lt;/div&gt;&lt;div&gt;&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;WELCOME&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;DATAS&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;REPORTS OF AJUSTMENTS&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;ANNOUNCEMENT&lt;/li&gt;&lt;/ul&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+                    <mxGeometry x="-775" y="860" width="170" height="190" as="geometry"/>
+                </mxCell>
+                <mxCell id="168" style="edgeStyle=none;html=1;exitX=1;exitY=0.25;exitDx=0;exitDy=0;entryX=-0.001;entryY=0.461;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="159" target="167">
+                    <mxGeometry relative="1" as="geometry"/>
+                </mxCell>
+                <mxCell id="169" value="START" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+                    <mxGeometry x="-430" y="890" width="120" height="50" as="geometry"/>
                 </mxCell>
             </root>
         </mxGraphModel>

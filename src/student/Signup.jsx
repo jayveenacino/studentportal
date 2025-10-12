@@ -10,11 +10,28 @@ const Signup = () => {
     const [newShowPassword, setNewShowPassword] = useState(false);
     const navigate = useNavigate();
     const [reset, setReset] = useState(false);
+    const [loading, setLoading] = useState(true);
+    const [preRegisterOpen, setPreRegisterOpen] = useState(true); // default open
 
+
+    useEffect(() => {
+        setTimeout(() => {
+            setLoading(false);
+        }, 1500);
+    }, [])
     const [loginForm, setLoginForm] = useState({
         email: "",
         password: "",
     });
+
+    useEffect(() => {
+        axios.get("http://localhost:2025/settings")
+            .then(res => {
+                setPreRegisterOpen(res.data.preRegister);
+            })
+            .catch(() => setPreRegisterOpen(false)); // if error assume closed
+    }, []);
+
 
     const [formData, setFormData] = useState({
         birthdate: "",
@@ -126,11 +143,34 @@ const Signup = () => {
                             ></i>
                         </div>
                         <div className="button-group">
-                            <button className="login-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Login</button>
-                            <Link to="create">
-                                <button className="signup-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Sign Up</button>
-                            </Link>
+                            <button
+                                className="login-button"
+                                style={{ border: "none", backgroundColor: "#005bb5" }}
+                            >
+                                Login
+                            </button>
+
+                            <button
+                                className="signup-button"
+                                style={{ border: "none", backgroundColor: "#005bb5" }}
+                                onClick={(e) => {
+                                    e.preventDefault();
+                                    if (!preRegisterOpen) {
+                                        Swal.fire({
+                                            icon: "error",
+                                            title: "Pre-registration Closed",
+                                            text: "The server has closed pre-registration. Please try again later.",
+                                            confirmButtonColor: "#d33",
+                                        });
+                                    } else {
+                                        navigate("./create");
+                                    }
+                                }}
+                            >
+                                Sign Up
+                            </button>
                         </div>
+
                         <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>Forgot Password?</p>
                     </form>
 

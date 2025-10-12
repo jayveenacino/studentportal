@@ -1,111 +1,167 @@
-import React, { useEffect, useState } from "react";
-import axios from "axios";
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-    Cell,
-    Legend
-} from "recharts";
+import React, { useEffect, useRef } from "react";
+import Chart from "chart.js/auto";
 import "./Admincss/overview.css";
 
-export default function DashboardOverview() {
-    const [stats, setStats] = useState({
-        students: 0,
-        enrollees: 0,
-        departments: 0,
-        instructors: 0,
-    });
-
-    const [departmentData, setDepartmentData] = useState([]);
-
-    // fixed color mapping
-    const COLORS = {
-        "Business Education": "#FFD700",   // Yellow
-        "Hospitality Mgmt": "#FF0000",     // Red
-        "Computer Studies": "#800080",     // Purple
-        "Teacher Education": "#0000FF",    // Blue
-    };
-
-    const fetchData = async () => {
-        try {
-            const res = await axios.get("http://localhost:2025/api/overview");
-            setStats(res.data.stats);
-            setDepartmentData(res.data.departments);
-        } catch {
-            // fallback demo data
-            setStats({
-                students: 1200,
-                enrollees: 340,
-                departments: 4,
-                instructors: 45,
-            });
-            setDepartmentData([
-                { name: "Business Education", students: 320 },
-                { name: "Hospitality Mgmt", students: 180 },
-                { name: "Computer Studies", students: 450 },
-                { name: "Teacher Education", students: 260 },
-            ]);
-        }
-    };
+export default function Dashboard() {
+    const lineChartRef = useRef(null);
+    const barChartRef = useRef(null);
 
     useEffect(() => {
-        fetchData(); // only load once
+        if (lineChartRef.current) lineChartRef.current.destroy();
+        if (barChartRef.current) barChartRef.current.destroy();
+
+        const ctx1 = document.getElementById("enrollmentGraph").getContext("2d");
+        lineChartRef.current = new Chart(ctx1, {
+            type: "line",
+            data: {
+                labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                datasets: [
+                    {
+                        label: "Enrollments",
+                        data: [45, 60, 80, 75, 100, 130, 120],
+                        fill: true,
+                        backgroundColor: "rgba(40,167,69,0.1)",
+                        borderColor: "#28a745",
+                        tension: 0.4,
+                        pointRadius: 4,
+                        pointBackgroundColor: "#28a745",
+                    },
+                ],
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { ticks: { stepSize: 20 } },
+                },
+            },
+        });
+
+        const ctx2 = document.getElementById("departmentChart").getContext("2d");
+        barChartRef.current = new Chart(ctx2, {
+            type: "bar",
+            data: {
+                labels: ["BSBA", "BSHM", "BSCS", "BSED"],
+                datasets: [
+                    {
+                        label: "Students",
+                        data: [320, 180, 450, 260],
+                        backgroundColor: [
+                            "#F4D03F",
+                            "#EC7063",
+                            "#A569BD",
+                            "#3498DB"
+                        ],
+                    },
+                ],
+            }
+            ,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false },
+                },
+                scales: {
+                    x: { grid: { display: false } },
+                    y: { beginAtZero: true },
+                },
+            },
+        });
     }, []);
 
     return (
         <div className="overview-container">
             <div className="overview-header">
-                <h1>Dashboard Overview</h1>
-                <p>Quick insights into your school’s activities.</p>
+                <div>
+                    <h1>Dashboard</h1>
+                    <p>Welcome back, Admin! Here’s what’s happening today.</p>
+                </div>
+                <div className="active-semester-badge">
+                    <span className="dot"></span>
+                    Active Semester: <strong>1st Semester</strong>
+                </div>
             </div>
 
-            {/* Stats Cards */}
+            {/* Stats */}
             <div className="overview-stats">
                 <div className="overview-card">
-                    <h2>{stats.students}</h2>
-                    <p>Total Students</p>
+                    <h2>1,250</h2>
+                    <p>Registered Students</p>
                 </div>
                 <div className="overview-card">
-                    <h2>{stats.enrollees}</h2>
-                    <p>Current Enrollees</p>
+                    <h2>320</h2>
+                    <p>Pending Applications</p>
                 </div>
                 <div className="overview-card">
-                    <h2>{stats.departments}</h2>
-                    <p>Departments</p>
+                    <h2>58</h2>
+                    <p>New Enrollments</p>
                 </div>
                 <div className="overview-card">
-                    <h2>{stats.instructors}</h2>
-                    <p>Instructors</p>
+                    <h2>12</h2>
+                    <p>Courses Offered</p>
                 </div>
             </div>
 
-            {/* Students per Department Chart */}
-            <div className="overview-chart-container">
-                <h2>Students Enrolled per Department</h2>
-                <ResponsiveContainer width="50%" height={200}>
-                    <BarChart
-                        data={departmentData}
-                        margin={{ top: 10, right: 20, left: 20, bottom: 10 }}
-                        barSize={28}
-                    >
-                        <CartesianGrid strokeDasharray="3 3" vertical={false} />
-                        <XAxis dataKey="name" tick={{ fontSize: 11 }} />
-                        <YAxis tick={{ fontSize: 11 }} />
-                        <Tooltip />
-                        <Legend wrapperStyle={{ fontSize: "12px" }} />
-                        <Bar dataKey="students" name="Enrolled Students" radius={[6, 6, 0, 0]}>
-                            {departmentData.map((entry, index) => (
-                                <Cell key={`cell-${index}`} fill={COLORS[entry.name] || "#999999"} />
-                            ))}
-                        </Bar>
-                    </BarChart>
-                </ResponsiveContainer>
+            {/* Charts */}
+            <div className="charts-container">
+                <div className="graph-card">
+                    <div className="graph-card-header">
+                        <h3>Enrollment Trends</h3>
+                        <div className="graph-controls">
+                            <select>
+                                <option>Last 7 days</option>
+                                <option>Last 30 days</option>
+                                <option>This Year</option>
+                            </select>
+                            <button>Export</button>
+                        </div>
+                    </div>
+                    <canvas id="enrollmentGraph"></canvas>
+                </div>
 
+                <div className="graph-card">
+                    <div className="graph-card-header">
+                        <h3>Students by Department</h3>
+                    </div>
+                    <canvas id="departmentChart"></canvas>
+                </div>
+            </div>
+
+            <div className="updates-container">
+                <div className="updates-header">
+                    <h1>Recent Updates</h1>
+                    <p>Latest changes in the system</p>
+                </div>
+
+                <div className="updates-table-container">
+                    <table className="updates-table">
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Update</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>1</td>
+                                <td>New course added to Computer Studies</td>
+                                <td>Aug 05, 2025</td>
+                            </tr>
+                            <tr>
+                                <td>2</td>
+                                <td>Registration deadline moved to Aug 15</td>
+                                <td>Aug 02, 2025</td>
+                            </tr>
+                            <tr>
+                                <td>3</td>
+                                <td>25 new students enrolled today</td>
+                                <td>Aug 01, 2025</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     );

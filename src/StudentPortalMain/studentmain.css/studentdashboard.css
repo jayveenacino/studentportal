@@ -1,0 +1,290 @@
+.student-dashboard-stdash {
+    font-family: Arial, sans-serif;
+    padding: 20px;
+    background: #ffffff;
+}
+
+.dashboard-header-stdash {
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.dashboard-header-stdash h1 {
+    font-size: 22px;
+    color: #0a3d18;
+}
+
+.dashboard-header-stdash p {
+    color: #666;
+    font-size: 14px;
+}
+
+.dashboard-grid-stdash {
+    display: grid;
+    grid-template-columns: 2fr 2fr;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card-stdash {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.card-stdash h2 {
+    margin-bottom: 10px;
+    font-size: 16px;
+    color: #333;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+}
+
+.table-stdash {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+.table-stdash th,
+.table-stdash td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.table-stdash th {
+    background: #f0f0f5;
+    font-weight: bold;
+    color: #333;
+}
+
+.table-stdash tr:nth-child(even) {
+    background: #fafafa;
+}
+
+/* Status colors */
+.status-stdash.cleared-stdash,
+.status-stdash.enrolled-stdash {
+    color: green;
+    font-weight: bold;
+}
+
+.status-stdash.not-enrolled-stdash {
+    color: orange;
+    font-weight: bold;
+}
+
+.status-stdash.will-not-enroll-stdash {
+    color: red;
+    font-weight: bold;
+}
+
+/* Inbox */
+.inbox-empty-stdash {
+    text-align: center;
+    padding: 20px;
+    color: #777;
+}
+
+.inbox-empty-stdash i {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: #888;
+}
+
+/* Events */
+.card-stdash.events-stdash {
+    background: #fff;
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.card-stdash.events-stdash h2 {
+    margin-bottom: 10px;
+    font-size: 18px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 5px;
+}
+
+.event-today-stdash {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 12px 15px;
+    background: #fff;
+    margin-top: 8px;
+}
+
+.event-today-stdash h3 {
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #0a3d18;
+}
+
+.event-today-stdash p {
+    margin: 4px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.event-today-stdash i {
+    margin-right: 6px;
+    color: #1e40af;
+}
+
+.no-event-stdash {
+    margin-top: 80px;
+    text-align: center;
+    color: #888;
+}
+
+.no-event-stdash i {
+    font-size: 30px;
+    margin-bottom: 8px;
+    color: #888;
+}
+
+.view-calendar-stdash {
+    margin-top: 10px;
+    background: #0a3d18;
+    color: #fff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.view-calendar-stdash:hover {
+    background: green;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .dashboard-grid-stdash {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-header-stdash h1 {
+        font-size: 18px;
+    }
+
+    .dashboard-header-stdash p {
+        font-size: 12px;
+    }
+
+    .card-stdash h2 {
+        font-size: 14px;
+    }
+
+    .table-stdash {
+        font-size: 12px;
+    }
+
+    .table-stdash th,
+    .table-stdash td {
+        padding: 6px 8px;
+    }
+
+    .view-calendar-stdash {
+        width: 100%;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .student-dashboard-stdash {
+        padding: 10px;
+    }
+
+    .dashboard-header-stdash h1 {
+        font-size: 16px;
+    }
+
+    .dashboard-header-stdash p {
+        font-size: 11px;
+    }
+
+    .card-stdash {
+        padding: 10px;
+    }
+
+    .card-stdash h2 {
+        font-size: 13px;
+    }
+
+    .table-stdash {
+        font-size: 11px;
+    }
+
+    .table-stdash th,
+    .table-stdash td {
+        padding: 5px;
+    }
+
+    .no-event-stdash {
+        margin-top: 40px;
+        font-size: 13px;
+    }
+}
+
+.dashboard-grid-stdash {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: masonry;
+    gap: 20px;
+}
+
+.card-stdash:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+}
+
+.card-stdash:nth-child(2) {
+    grid-column: span 2;
+}
+
+.card-stdash:nth-child(3) {
+    grid-column: span 2;
+}
+
+.card-stdash:nth-child(4) {
+    grid-column: span 4;
+}
+
+.card-stdash {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+@media (max-width: 1024px) {
+    .dashboard-grid-stdash {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .card-stdash:nth-child(1),
+    .card-stdash:nth-child(2),
+    .card-stdash:nth-child(3),
+    .card-stdash:nth-child(4) {
+        grid-column: span 2;
+        grid-row: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .dashboard-grid-stdash {
+        grid-template-columns: 1fr;
+    }
+
+    .card-stdash {
+        grid-column: span 1;
+        grid-row: auto;
+    }
+}

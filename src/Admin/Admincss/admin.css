@@ -81,6 +81,25 @@
     line-height: 1.6;
 }
 
+.swal2-container {
+    z-index: 2147483647 !important;
+}
+
+.loading-screen {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.9);
+    z-index: 1000;
+}
+
+.loading-screen .loading-content {
+    text-align: center;
+}
+
+
 @media (max-width: 1024px) {
 
     .addatails,
@@ -1300,8 +1319,6 @@
     }
 
 }
-
-
 
 .fulldetails {
     position: relative;
