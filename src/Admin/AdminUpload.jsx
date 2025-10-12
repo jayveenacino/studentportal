@@ -162,7 +162,7 @@ export default function AdminUpload() {
 
             <div className="adminupload-table-container">
                 <table className="adminupload-table">
-                    <thead>
+                    <thead style={{fontSize:"16px"}}>
                         <tr>
                             <th>#</th>
                             <th>Preview</th>
@@ -172,7 +172,7 @@ export default function AdminUpload() {
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody style={{fontSize:"12px"}}>
                         {uploads.length > 0 ? (
                             uploads.map((u, i) => (
                                 <tr key={u._id}>

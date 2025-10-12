@@ -5,6 +5,7 @@
     height: 100%;
     box-sizing: border-box;
     overflow-y: auto;
+    font-size: 20px;
 }
 
 .adminupload-header h1 {
@@ -39,6 +40,7 @@
 
 .adminupload-table-container {
     overflow-x: auto;
+
 }
 
 .adminupload-table {
@@ -53,12 +55,12 @@
     padding: 12px 16px;
     border-bottom: 1px solid #ddd;
     text-align: left;
-    font-size: 13px;
 }
 
 .adminupload-table th {
     background-color: #0a3d18;
     color: white;
+    
 }
 
 .adminupload-preview {
