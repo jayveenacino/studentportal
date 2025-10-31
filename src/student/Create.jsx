@@ -156,7 +156,7 @@ export default function Create() {
                     <p style={{ fontSize: "12px" }}>
                         Make sure to remember your username and password. These credentials will be required to access your application, view updates, and schedule your interview.
                     </p>
-                    <p className="security-warning" style={{ fontSize: "12px" }}>
+                    <p className="security-warning" s   le={{ fontSize: "12px" }}>
                         <em>For your security, do not share your login information with others</em>
                     </p>
                 </div>

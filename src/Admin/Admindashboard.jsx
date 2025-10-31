@@ -11,6 +11,7 @@ import BackupRestore from "./BackupRestore";
 import Overview from "./Overview";
 import Semester from "./Semester";
 import AdminUpload from "./AdminUpload";
+import StudentEnrollees from "./StudentEnrollees";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -24,14 +25,14 @@ function Dashboard() {
     const [adminUsername, setAdminUsername] = useState("");
     const storedAdmin = JSON.parse(localStorage.getItem("Admin"));
 
-    // 🔐 SECURITY FEATURE 1: Check if Admin is logged in
+    //  SECURITY FEATURE 1: Check if Admin is logged in
     useEffect(() => {
         if (!storedAdmin || !storedAdmin.username) {
             navigate("/adminlogin", { replace: true });
         }
     }, [navigate, storedAdmin]);
 
-    // 🔐 SECURITY FEATURE 2: Disable Back/Undo Navigation
+    //  SECURITY FEATURE 2: Disable Back/Undo Navigation
     useEffect(() => {
         window.history.pushState(null, "", window.location.href);
         const handleBack = () => {
@@ -44,7 +45,7 @@ function Dashboard() {
         };
     }, []);
 
-    // 🔐 SECURITY FEATURE 3: Disable Right Click
+    //  SECURITY FEATURE 3: Disable Right Click
     useEffect(() => {
         const handleContextMenu = (e) => e.preventDefault();
         document.addEventListener("contextmenu", handleContextMenu);
@@ -173,8 +174,8 @@ function Dashboard() {
                                     {openDropdown === "dashboard" && (
                                         <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
                                             <li><a href="#" onClick={() => handleMenuClick("overview")}><i className="fa-solid fa-chart-pie"></i> Overview</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("announcements")}><i className="fa-solid fa-bullhorn"></i> Announcements</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("uploads")}><i className="fa-solid fa-upload"></i> Uploadings</a></li>
+                                            <li><a href="#" onClick={() => handleMenuClick("uploads")}><i className="fa-solid fa-bullhorn "></i> Announcements</a></li>
+                                            <li><a href="#" onClick={() => handleMenuClick("announcements")}><i className="fa-solid fa-upload"></i> Uploadings</a></li>
                                             <li><a href="#" onClick={() => handleMenuClick("statistics")}><i className="fa-solid fa-chart-line"></i> Statistics</a></li>
                                             <li><a href="#" onClick={() => handleMenuClick("settings")}><i className="fa-solid fa-gear"></i> Dashboard Settings</a></li>
                                         </ul>
@@ -214,6 +215,7 @@ function Dashboard() {
 
                     <div className={`admain ${sidebarVisible ? '' : 'expanded'}`} style={{ display: 'block' }}>
                         {activeSection === "overview" && <Overview />}
+                        {activeSection === "accepted" && <StudentEnrollees />}
                         {activeSection === "uploads" && <AdminUpload />}
                         {activeSection === "enrollees" && <Enrollees />}
                         {activeSection === "departments" && <Departments />}

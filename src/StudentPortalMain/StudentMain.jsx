@@ -120,8 +120,14 @@ export default function StudentMain() {
 
     useEffect(() => {
         let timeout; const resetTimer = () => {
-            clearTimeout(timeout); const expiry = Date.now() + 1 * 60 * 1000;
-            localStorage.setItem("sessionExpiry", expiry); timeout = setTimeout(() => { localStorage.removeItem("acceptedStudent"); localStorage.removeItem("activeSession"); localStorage.setItem("autoLogout", "true"); window.location.href = "/login"; }, 1 * 60 * 1000);
+            clearTimeout(timeout); const expiry = Date.now() + 10 * 60 * 1000;
+            localStorage.setItem("sessionExpiry", expiry);
+            timeout = setTimeout(() => {
+                localStorage.removeItem("acceptedStudent");
+                localStorage.removeItem("activeSession");
+                localStorage.setItem("autoLogout", "true");
+                window.location.href = "/login";
+            }, 10 * 60 * 1000);
         };
         const events = ["mousemove", "keydown", "click"];
         events.forEach(evt => window.addEventListener(evt, resetTimer)); resetTimer();

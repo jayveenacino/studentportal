@@ -14,6 +14,8 @@ const Settings = require("./models/Settings");
 const adminRoutes = require("./routes/adminRoutes");
 const uploadRoutes = require("./routes/uploadRoutes");
 const Upload = require('./models/Upload');
+const studentByDomainRoute = require("./routes/studentByDomain");
+const semesterSettingsRoutes = require("./routes/semesterSettings");
 
 require('dotenv').config();
 
@@ -22,6 +24,15 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
+app.use("/", studentByDomainRoute);
+
+app.use("/api/backups", backupRoutes);
+app.use(studentRoutes);
+app.use(acceptedStudentsRoutes);
+app.use("/api", adminRoutes);
+app.use("/api/settings", semesterSettingsRoutes);
+app.use("/uploads", express.static("uploads"));
+app.use("/api/uploads", uploadRoutes);
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
 app.post('/register', async (req, res) => {
@@ -44,8 +55,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-
-
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -66,12 +75,12 @@ app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
 
-        // ✅ Validate input
+        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
-        // ✅ Update student and return updated doc
+        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
@@ -83,12 +92,12 @@ app.post("/upload", async (req, res) => {
             { new: true, runValidators: true } // return updated & validate schema
         );
 
-        // ✅ Handle not found
+        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
-        // ✅ Success response
+        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -104,7 +113,6 @@ app.post("/upload", async (req, res) => {
         });
     }
 });
-
 
 app.post('/upload-id-image', async (req, res) => {
     const { email, idimage } = req.body;
@@ -376,9 +384,7 @@ app.put("/update-profile", async (req, res) => {
     }
 });
 
-
 app.use('/api/departments', departmentRoutes);
-
 
 app.get("/api/courses", async (req, res) => {
     try {
@@ -417,7 +423,6 @@ app.delete("/api/courses/:id", async (req, res) => {
     }
 });
 
-
 app.delete('/api/acceptedstudents/:id', async (req, res) => {
     try {
         const student = await AcceptedStudent.findByIdAndDelete(req.params.id);
@@ -427,7 +432,6 @@ app.delete('/api/acceptedstudents/:id', async (req, res) => {
         res.status(500).send({ message: 'Server error', error: err.message });
     }
 });
-
 
 app.get('/api/students/:id', async (req, res) => {
     const { id } = req.params;
@@ -472,13 +476,87 @@ app.post("/settings", async (req, res) => {
     }
 });
 
-app.use("/api/backups", backupRoutes);
-app.use(studentRoutes);
-app.use(acceptedStudentsRoutes);
-app.use("/api", adminRoutes);
+app.get("/api/enrollment-status/:email", async (req, res) => {
+    try {
+        const email = req.params.email?.trim().toLowerCase();
+        if (!email) return res.status(400).json({ message: "Email is required" });
 
-app.use("/uploads", express.static("uploads"));
-app.use("/api/uploads", uploadRoutes);
+        const student = await AcceptedStudent.findOne({ domainEmail: email });
+        if (!student) return res.status(404).json([]);
+
+        const settings = await Settings.findOne();
+        const activeSem = settings?.activeSemester?.trim();
+        if (!activeSem) return res.json(student.enrollmentHistory || []);
+
+        let history = [...(student.enrollmentHistory || [])];
+        const formattedActiveSem = `${activeSem} Sem`;
+        const yearForActive = student.academicYear || `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`;
+
+        // Preserve Officially Enrolled records
+        if (student.semester && student.enrollmentStatus === "Officially Enrolled") {
+            const existsOfficial = history.some(
+                h =>
+                    h.academicYear === student.academicYear &&
+                    h.semester === student.semester &&
+                    h.enrollmentStatus === "Officially Enrolled"
+            );
+            if (!existsOfficial) {
+                history.push({
+                    academicYear: student.academicYear,
+                    semester: student.semester,
+                    enrollmentStatus: "Officially Enrolled",
+                    acceptedAt: student.acceptedAt,
+                    dateEnlisted: student.dateEnlisted
+                });
+            }
+        }
+
+        // Convert old Open for Enrollment → Not Enlisted except current active semester
+        history = history.map(h => {
+            if (h.enrollmentStatus === "Open for Enrollment" &&
+                !(h.academicYear === yearForActive && h.semester.toLowerCase() === formattedActiveSem.toLowerCase())
+            ) {
+                return {
+                    ...h,
+                    enrollmentStatus: "Not Enlisted",
+                    dateEnrolled: "",
+                    dateEnlisted: h.dateEnlisted || null
+                };
+            }
+            return h;
+        });
+
+        // Force current active semester to Open for Enrollment
+        const index = history.findIndex(
+            h => h.academicYear === yearForActive && h.semester.toLowerCase() === formattedActiveSem.toLowerCase()
+        );
+
+        if (index === -1) {
+            // Add if missing
+            history.unshift({
+                academicYear: yearForActive,
+                semester: formattedActiveSem,
+                enrollmentStatus: "Open for Enrollment",
+                dateEnlisted: null,
+                dateEnrolled: ""
+            });
+        } else {
+            // Update existing record to Open for Enrollment
+            history[index].enrollmentStatus = "Open for Enrollment";
+            history[index].dateEnrolled = "";
+            history[index].dateEnlisted = null;
+        }
+
+        student.enrollmentHistory = history;
+        await student.save();
+
+        res.json(history);
+
+    } catch (err) {
+        console.error("Error fetching enrollment status:", err);
+        res.status(500).json({ message: "Server error", error: err.message });
+    }
+});
 
 app.listen(2025, '0.0.0.0', () => {
     console.log("Server is running on port 2025");

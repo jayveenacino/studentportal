@@ -3,17 +3,9 @@ import "./studentmain.css/studentdashboard.css";
 
 export default function StudentDashboard() {
     const [student, setStudent] = useState(null);
-    const [todayEvent, setTodayEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [enrollments, setEnrollments] = useState([]);
     const didFetch = useRef(false);
-
-    const formatFullName = () => {
-        if (!student) return "Student";
-        if (student.fullName) return student.fullName;
-        const { firstname, middlename, lastname, extension } = student || {};
-        return `${lastname || ""} ${firstname || ""} ${middlename ? middlename.charAt(0) + "." : ""} ${extension || ""}`.trim();
-    };
 
     const formatDate = (dateString) => {
         if (!dateString) return "-";
@@ -25,8 +17,7 @@ export default function StudentDashboard() {
                 "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
             ];
             return `${monthNames[parseInt(month, 10) - 1]} ${String(day).padStart(2, "0")}, ${year}`;
-        } catch (err) {
-            console.error("formatDate error:", err, dateString);
+        } catch {
             return "-";
         }
     };
@@ -36,50 +27,34 @@ export default function StudentDashboard() {
         didFetch.current = true;
 
         const storedStudent = localStorage.getItem("acceptedStudent");
-        if (storedStudent) {
-            try {
-                setStudent(JSON.parse(storedStudent));
-            } catch {
-                localStorage.removeItem("acceptedStudent");
-            }
+        if (!storedStudent) {
+            setLoading(false);
+            return;
         }
 
-        fetch("http://localhost:2025/api/acceptedstudents")
+        const parsed = JSON.parse(storedStudent);
+        setStudent(parsed);
+
+        const email = parsed.domainEmail; // use domainEmail instead of email
+
+        fetch(`http://localhost:2025/api/enrollment-status/${email}`)
             .then((res) => res.json())
             .then((data) => {
-                const savedStudent = JSON.parse(localStorage.getItem("acceptedStudent"));
-                let filtered = Array.isArray(data) ? data : [];
-
-                if (savedStudent && savedStudent.email) {
-                    filtered = filtered.filter(
-                        (e) => e.email && e.email.toLowerCase() === savedStudent.email.toLowerCase()
-                    );
+                if (Array.isArray(data)) {
+                    // Sort by academic year (desc) and semester (First, Second, Summer)
+                    const semesterOrder = { First: 1, Second: 2, Summer: 3 };
+                    const sorted = data.sort((a, b) => {
+                        if (a.academicYear === b.academicYear) {
+                            return (semesterOrder[a.semester] || 99) - (semesterOrder[b.semester] || 99);
+                        }
+                        return b.academicYear.localeCompare(a.academicYear);
+                    });
+                    setEnrollments(sorted);
                 }
-
-                const grouped = filtered.reduce((acc, e) => {
-                    const key = `${e.academicYear || "N/A"}-${e.semester || "N/A"}`;
-                    const curTs = e.dateEnlisted ? Date.parse(e.dateEnlisted) : Infinity;
-
-                    if (!acc[key]) {
-                        acc[key] = e;
-                    } else {
-                        const existingTs = acc[key].dateEnlisted ? Date.parse(acc[key].dateEnlisted) : Infinity;
-                        if (curTs < existingTs) acc[key] = e;
-                    }
-                    return acc;
-                }, {});
-
-                const uniqueEnrollments = Object.values(grouped).sort((a, b) => {
-                    const at = a.dateEnlisted ? Date.parse(a.dateEnlisted) : Infinity;
-                    const bt = b.dateEnlisted ? Date.parse(b.dateEnlisted) : Infinity;
-                    return at - bt;
-                });
-
-                setEnrollments(uniqueEnrollments);
                 setLoading(false);
             })
             .catch((err) => {
-                console.error("Error fetching accepted students:", err);
+                console.error("Error fetching enrollment status:", err);
                 setLoading(false);
             });
     }, []);
@@ -102,11 +77,12 @@ export default function StudentDashboard() {
                             <tr><td>Enlisted, For Scheduling</td><td>You are already done with the Enlistment Process. Waiting for schedule</td></tr>
                             <tr><td>Scheduled</td><td>Schedule given by coordinator, waiting for registrar approval</td></tr>
                             <tr><td>Officially Enrolled</td><td>Your enrollment has been approved by the registrar</td></tr>
+                            <tr><td>Open for Enrollment</td><td>The semester is open and you can now start enrolling</td></tr>
+                            <tr><td>Pending</td><td>You have submitted your requirements and are waiting for approval</td></tr>
                             <tr><td>Will Not Enroll</td><td>You marked yourself as not enrolling OR failed to complete enlistment</td></tr>
                         </tbody>
                     </table>
                 </div>
-
 
                 <div className="card-stdash enrollment-history-stdash">
                     <h2>Enrollment History</h2>
@@ -129,29 +105,42 @@ export default function StudentDashboard() {
                                         </tr>
                                     ))}
                                 </>
-                            ) : enrollments && enrollments.length > 0 ? (
-                                enrollments.map((e) => (
-                                    <tr key={e._id}>
+                            ) : enrollments.length > 0 ? (
+                                enrollments.map((e, i) => (
+                                    <tr key={i}>
                                         <td>{`${e.academicYear || "N/A"}, ${e.semester || ""}`}</td>
                                         <td
                                             className={
                                                 e.enrollmentStatus === "Officially Enrolled"
                                                     ? "status-stdash enrolled-stdash"
-                                                    : "status-stdash not-enrolled-stdash"
+                                                    : e.enrollmentStatus === "Open for Enrollment"
+                                                        ? "status-stdash open-stdash"
+                                                        : e.enrollmentStatus === "Pending"
+                                                            ? "status-stdash pending-stdash"
+                                                            : (e.enrollmentStatus && e.enrollmentStatus.includes("Not Enlisted"))
+                                                                ? "status-stdash not-enrolled-stdash"
+                                                                : "status-stdash"
                                             }
                                         >
                                             {e.enrollmentStatus || "N/A"}
                                         </td>
-                                        <td>{e.dateEnlisted ? formatDate(e.dateEnlisted) : "Not yet enlisted"}</td>
+                                        <td>
+                                            {e.enrollmentStatus === "Open for Enrollment"
+                                                ? "Pending"
+                                                : e.dateEnlisted
+                                                    ? formatDate(e.dateEnlisted)
+                                                    : "Not yet enlisted"}
+                                        </td>
+
                                     </tr>
                                 ))
                             ) : (
                                 <tr><td colSpan="3">No enrollment history found</td></tr>
                             )}
                         </tbody>
-
                     </table>
                 </div>
+
                 <div className="card-stdash inbox-stdash">
                     <h2>Inbox</h2>
                     <div className="inbox-empty-stdash">

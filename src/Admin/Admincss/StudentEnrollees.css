@@ -1,0 +1,46 @@
+/* 🔹 PENDING APPROVAL DROPDOWNS - same style as semester-department */
+.pendingapproval-filter-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+}
+
+.status-dropdown,
+.course-dropdown {
+    display: flex;
+    flex-direction: column;
+}
+
+.status-dropdown label,
+.course-dropdown label {
+    font-weight: 600;
+    margin-bottom: 6px;
+    color: #333;
+}
+
+.status-dropdown select,
+.course-dropdown select {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    background-color: #fff;
+    cursor: pointer;
+    transition: border-color 0.2s ease;
+}
+
+.status-dropdown select:focus,
+.course-dropdown select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.status-dropdown select {
+    width: 200px;
+}
+
+.course-dropdown select {
+    width: 220px;
+}

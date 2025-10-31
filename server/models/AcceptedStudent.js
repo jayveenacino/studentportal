@@ -24,16 +24,29 @@ const AcceptedStudentSchema = new mongoose.Schema({
     semester: {
         type: String,
         enum: ["1st Sem", "2nd Sem", "Summer"],
-        default: "1st Sem"
+        default: "1st Sem",
     },
     enrollmentStatus: {
         type: String,
         enum: ["Officially Enrolled", "Not Enrolled"],
-        default: "Officially Enrolled"
+        default: "Officially Enrolled",
     },
     dateEnlisted: { type: Date, default: Date.now },
     dateEnrolled: { type: Date },
+
+    // 🆕 ADD THIS PART
+    enrollmentHistory: [
+        {
+            academicYear: { type: String },
+            semester: { type: String },
+            enrollmentStatus: { type: String },
+            dateEnlisted: { type: Date },
+        },
+    ],
 });
 
-const AcceptedStudentModel = mongoose.model("acceptedstudents", AcceptedStudentSchema);
+const AcceptedStudentModel = mongoose.model(
+    "acceptedstudents",
+    AcceptedStudentSchema
+);
 module.exports = AcceptedStudentModel;

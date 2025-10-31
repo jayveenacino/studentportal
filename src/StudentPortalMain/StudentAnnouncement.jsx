@@ -64,7 +64,7 @@ export default function StudentAnnouncement() {
                 {/* RIGHT: List of all announcements */}
                 <div className="announcement-right-list">
                     {announcements.length === 0 ? (
-                        <p>No announcements available.</p>
+                        <p>Aww Snap no Announcement.</p>
                     ) : (
                         announcements.map((item, index) => (
                             <div

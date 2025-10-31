@@ -332,5 +332,30 @@ router.delete('/api/students/:id', async (req, res) => {
     }
 });
 
+router.get('/api/student/original/:identifier', async (req, res) => {
+    try {
+        const { identifier } = req.params;
+
+        const student = await Student.findOne({
+            $or: [
+                { email: identifier },
+                { gmail: identifier },
+                { personalEmail: identifier },
+                { domainEmail: identifier },
+                { studentNumber: identifier }
+            ]
+        });
+
+        if (!student) {
+            return res.status(404).json({ message: "No matching student record found in the Student DB." });
+        }
+
+        res.json(student);
+    } catch (err) {
+        console.error("Error fetching student data:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
 
 module.exports = router;

@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Admincss/adminupload.css";
-import { FiImage } from "react-icons/fi";
 
 export default function AdminUpload() {
     const [uploads, setUploads] = useState([]);
@@ -156,23 +155,23 @@ export default function AdminUpload() {
                         setShowModal(true);
                     }}
                 >
-                    + Add Announcement
+                    Add Announcement
                 </button>
             </div>
 
             <div className="adminupload-table-container">
                 <table className="adminupload-table">
-                    <thead style={{fontSize:"16px"}}>
+                    <thead style={{ fontSize: "16px" }}>
                         <tr>
                             <th>#</th>
                             <th>Preview</th>
-                            <th>Title</th>
+                            <th  style={{textAlign: "center"}}>Title</th>
                             <th>Caption</th>
-                            <th>Date</th>
+                            <th style={{textAlign: "center"}}>Date</th>
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
                     </thead>
-                    <tbody style={{fontSize:"12px"}}>
+                    <tbody style={{ fontSize: "12px" }}>
                         {uploads.length > 0 ? (
                             uploads.map((u, i) => (
                                 <tr key={u._id}>
@@ -186,7 +185,7 @@ export default function AdminUpload() {
                                             />
                                         )}
                                     </td>
-                                    <td>{u.title || "-"}</td>
+                                    <td  style={{textAlign: "center"}}>{u.title || "-"}</td>
                                     <td className="adminupload-caption-cell">
                                         <div
                                             className="caption-scroll"
@@ -198,7 +197,7 @@ export default function AdminUpload() {
                                             See More
                                         </div>
                                     </td>
-                                    <td>{new Date(u.date).toLocaleString()}</td>
+                                    <td  style={{textAlign: "center"}}>{new Date(u.date).toLocaleString()}</td>
                                     <td style={{ textAlign: "right" }}>
                                         <button
                                             className="adminupload-action-btn edit"

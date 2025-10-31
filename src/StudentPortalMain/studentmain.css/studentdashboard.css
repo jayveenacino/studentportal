@@ -264,6 +264,30 @@
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.status-stdash {
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    font-weight: 500;
+    text-align: center;
+}
+
+.enrolled-stdash {
+    color: green;
+}
+
+.open-stdash {
+    color: orange;
+    font-weight: bold   ;
+}
+
+.pending-stdash {
+    color: blue;
+}
+
+table tbody tr td.status-stdash.not-enrolled-stdash {
+    color: red;
+}
+
 @media (max-width: 1024px) {
     .dashboard-grid-stdash {
         grid-template-columns: repeat(2, 1fr);

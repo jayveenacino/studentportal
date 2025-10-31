@@ -6,7 +6,7 @@ export default function     Data() {
     return (
         <div className="uploads">
             <div>
-                <h4 >Hello their !</h4 >
+                <h4 >Hello There !</h4 >
                 <hr style={{ background: "#333" }} />
                 <p style={{ fontSize: "14px" }}>I have read the Kolehiyo Ng Subic General Privacy Notice at
                     <Link to="notice" target='_blank'><strong style={{ fontStyle: "italic", textDecoration: "underline", color: "green" }}>  @kolehiyongsubic01@gmail.com</strong> .  </Link>

@@ -930,8 +930,9 @@ export default function Profile() {
         }
     };
 
+
     const handleFinalize = () => {
-        if (!user.selectedCourse) {
+        if (!selectedCourse) {
             Swal.fire({
                 icon: "error",
                 title: "Missing First Choice",
@@ -940,7 +941,7 @@ export default function Profile() {
             return;
         }
 
-        if (!user.selectedSecCourse) {
+        if (!selectedSecCourse) {
             Swal.fire({
                 icon: "error",
                 title: "Missing Second Choice",
@@ -964,6 +965,7 @@ export default function Profile() {
             text: "Your enlistment has been successfully finalized. Wait for further instructions.",
         });
     };
+
 
 
     return (
@@ -1113,7 +1115,6 @@ export default function Profile() {
             </div>
 
             <div className="fulldetails">
-                {/* Data Privacy Section */}
                 <div
                     className={`datafill ${fillsection === "data" ? "active" : ""}`}
                     onClick={() => setFillsection("data")}

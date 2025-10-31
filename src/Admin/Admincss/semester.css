@@ -175,3 +175,192 @@ input:checked+.slider:before {
 .save-semester-btn:hover {
     background-color: #218838;
 }
+
+.semester-department-inline {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap; 
+}
+
+.semester-department-inline p {
+    margin: 0;
+    font-size: 16px;
+    color: #cbd5e1;
+}
+
+.department-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.department-dropdown label {
+    font-size: 15px;
+    color: #303030;
+    margin-top: 7px;
+}
+
+.department-dropdown select {
+    background-color: #ffffff;
+    color: #000000;
+    border: 1px solid #64748b;
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 14px;
+    outline: none;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+}
+
+.department-dropdown select:hover {
+    border-color: #000000;
+}
+
+.semester-department-inline {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 5px;
+}
+
+.semester-department-inline p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #555;
+}
+
+.department-dropdown {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.department-dropdown label {
+    font-size: 0.95rem;
+    color: #333;
+    font-weight: 500;
+}
+
+.department-dropdown select {
+    background-color: #f8f9fa;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 0.95rem;
+    outline: none;
+    cursor: pointer;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    min-width: 180px;
+}
+
+.department-dropdown select:hover {
+    border-color: #0a3d18;
+    box-shadow: 0 0 0 2px rgba(10, 61, 24, 0.1);
+}
+
+.department-dropdown select:focus {
+    border-color: #0a3d18;
+    box-shadow: 0 0 0 2px rgba(10, 61, 24, 0.15);
+}
+
+.semester-reui {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
+    padding: 30px;
+    transition: all 0.3s ease-in-out;
+}
+
+.semester-reui-form {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+    margin-top: 10px;
+}
+
+.semester-reui-form .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.semester-reui-form .form-group label {
+    font-weight: 600;
+    color: #0a3d18;
+    font-size: 15px;
+}
+
+.semester-reui-form select {
+    padding: 10px 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    outline: none;
+    font-size: 15px;
+    background: #f8f9fa;
+    transition: 0.3s;
+    width: 30%;
+}
+
+.semester-reui-form select:focus {
+    border-color: #0a3d18;
+    box-shadow: 0 0 4px rgba(10, 61, 24, 0.3);
+}
+
+.radio-group {
+    display: flex;
+    gap: 20px;
+    margin-top: 5px;
+    flex-wrap: wrap;
+
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: #333;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.radio-option input[type="radio"] {
+    accent-color: #0a3d18;
+    width: 18px;
+    height: 18px;
+}
+
+.semester-card {
+    background: white;
+    padding: 24px 28px;
+    border-radius: 10px;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+    max-width: 100%;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.save-btn {
+    position: absolute;
+    top: 20px;
+    right: 24px;
+    background-color: #0a3d18;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s ease-in-out;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.save-btn:hover {
+    background-color: #145c2d;
+    transform: scale(1.02);
+}

@@ -69,16 +69,15 @@ export default function Login() {
                 text: "Please wait",
                 allowOutsideClick: false,
                 allowEscapeKey: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
+                didOpen: () => Swal.showLoading(),
             });
 
             const res = await fetch("http://localhost:2025/api/acceptedstudents/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ studentNumber, portalPassword: password })
+                body: JSON.stringify({ studentNumber, portalPassword: password }),
             });
+
             const data = await res.json();
             Swal.close();
 
@@ -90,25 +89,38 @@ export default function Login() {
                     title: "Login Failed",
                     text: data.message,
                     timer: 3000,
-                    showConfirmButton: false
+                    showConfirmButton: false,
                 });
             }
 
+            // ✅ Save accepted student info
             localStorage.setItem("acceptedStudent", JSON.stringify(data.student));
             localStorage.setItem("activeSession", "true");
 
+            // ✅ Fetch original student record using email or studentNumber
+            const identifier = data.student.domainEmail || data.student.studentNumber;
+
+            try {
+                const res2 = await fetch(`http://localhost:2025/api/student/original/${identifier}`);
+                if (res2.ok) {
+                    const studentRecord = await res2.json();
+
+                    // ✅ Save original student info (including image)
+                    localStorage.setItem("originalStudent", JSON.stringify(studentRecord));
+                }
+            } catch (err) {
+                console.error("Error fetching original student record:", err);
+            }
+
+            // ✅ Success alert + redirect
             Swal.fire({
                 toast: true,
                 position: "top-end",
                 icon: "success",
-                title: `Login Successful!`,
+                title: "Login Successful!",
                 showConfirmButton: false,
                 timer: 1500,
-                timerProgressBar: true
-            }).then(() => {
-                navigate("/studentmain");
-            });
-
+            }).then(() => navigate("/studentmain"));
         } catch (err) {
             Swal.close();
             Swal.fire({
@@ -118,7 +130,7 @@ export default function Login() {
                 title: "Error",
                 text: "Something went wrong",
                 timer: 3000,
-                showConfirmButton: false
+                showConfirmButton: false,
             });
         }
     };

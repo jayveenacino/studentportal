@@ -4,8 +4,7 @@ import './Admincss/studentlist.css';
 import Swal from 'sweetalert2';
 
 export default function StudentList() {
-    // 📌 State management
-    const [students, setStudents] = useState([]); // accepted students
+    const [students, setStudents] = useState([]); 
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(5);
@@ -15,14 +14,12 @@ export default function StudentList() {
     const [editedStudent, setEditedStudent] = useState({});
     const [courses, setCourses] = useState([]);
 
-    // 🎯 Fetch accepted students from backend
     useEffect(() => {
         axios.get("http://localhost:2025/api/acceptedstudents")
             .then(res => setStudents(res.data))
             .catch(err => console.error("Error fetching accepted students:", err));
     }, []);
 
-    // 🎯 Fetch courses for dropdowns
     useEffect(() => {
         const fetchCourses = async () => {
             try {
@@ -35,21 +32,18 @@ export default function StudentList() {
         fetchCourses();
     }, []);
 
-    // 🔎 Filter students by name, number, or course
     const filtered = students.filter(s => {
         const full = `${s.lastname || ''} ${s.firstname || ''} ${s.middlename || ''}`.toLowerCase();
         const number = s.studentNumber?.toLowerCase() || '';
-        const dept = s.initialDept?.toLowerCase() || ''; // ✅ fixed (was s.course)
+        const dept = s.initialDept?.toLowerCase() || ''; 
         return full.includes(search.toLowerCase()) || number.includes(search.toLowerCase()) || dept.includes(search.toLowerCase());
     });
 
-    // 📑 Pagination
     const indexOfLast = currentPage * perPage;
     const indexOfFirst = indexOfLast - perPage;
     const current = filtered.slice(indexOfFirst, indexOfLast);
     const totalPages = Math.ceil(filtered.length / perPage);
 
-    // 📝 Format student full name nicely
     const formatFullName = (student) => {
         if (!student) return '';
         const { lastname, firstname, middlename, extension } = student;
@@ -61,7 +55,6 @@ export default function StudentList() {
         return name;
     };
 
-    // 🗑 Delete student from acceptedstudents DB
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -97,13 +90,11 @@ export default function StudentList() {
 
     return (
         <div className="studentlist-container">
-            {/* 🏷 Header */}
             <div className="studentlist-header">
                 <h1>Accepted Student List</h1>
                 <p>Browse and manage accepted student accounts</p>
             </div>
 
-            {/* 🔎 Controls */}
             <div className="studentlist-controls">
                 <input
                     type="text"
@@ -115,20 +106,19 @@ export default function StudentList() {
                 <button className="studentlist-add-btn">+ Add Student</button>
             </div>
 
-            {/* 📋 Table */}
             <div className="studentlist-table-container">
                 <table className="studentlist-table">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Student Name</th>
+                            <th style={{textAlign: "left"}}>Student Name</th>
                             <th>Student Number</th>
                             <th>Course</th>
                             <th>More Details</th>
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody >
                         {current.length === 0 ? (
                             <tr>
                                 <td colSpan="6">No students found</td>
@@ -137,9 +127,9 @@ export default function StudentList() {
                             current.map((s, i) => (
                                 <tr key={s._id}>
                                     <td>{indexOfFirst + i + 1}</td>
-                                    <td>{formatFullName(s)}</td>
+                                    <td style={{textAlign: "left"}}>{formatFullName(s)}</td>
                                     <td>{s.studentNumber || "N/A"}</td>
-                                    <td>{s.initialDept || "N/A"}</td> {/* ✅ fixed */}
+                                    <td>{s.initialDept || "N/A"}</td>
                                     <td>
                                         <span
                                             className="studentlist-more-details"
