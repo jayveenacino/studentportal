@@ -41,7 +41,7 @@ const Nav = () => {
                         marginLeft: "auto"
                     }}
                 >
-                    <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "13px", }}
+                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px", }}
                         onMouseEnter={(e) => e.target.style.color = "orange"}
                         onMouseLeave={(e) => e.target.style.color = "white"}
                     >Home</Link>

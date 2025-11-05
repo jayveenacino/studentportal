@@ -109,7 +109,7 @@ export default function Departments() {
                     setEditId(null);
                     setShowModal(true);
                 }}>
-                    + Add Department
+                    Add Department
                 </button>
             </div>
 

@@ -279,6 +279,13 @@ body {
     background: #f2f2f2;
 }
 
+.news-section video {
+    width: 1000px;
+    max-width: 1000px;
+    border-radius: 8px;
+    margin-bottom: 30px;
+}
+
 .news-title {
     font-size: 24px;
     font-weight: bold;
@@ -341,6 +348,34 @@ body {
 .news-button:hover {
     background: green;
 }
+
+.image-row {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin: 30px 0;
+}
+
+.image-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    text-decoration: none;
+    color: #0a7031;
+    font-weight: bold;
+    font-size: 14px;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.image-item img {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-bottom: 8px;
+}
+
 
 body {
     margin: 0;
@@ -1000,3 +1035,4 @@ body {
         grid-column: span 1;
     }
 }
+

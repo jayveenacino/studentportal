@@ -488,11 +488,15 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
         const activeSem = settings?.activeSemester?.trim();
         if (!activeSem) return res.json(student.enrollmentHistory || []);
 
-        let history = [...(student.enrollmentHistory || [])];
-        const formattedActiveSem = `${activeSem} Sem`;
-        const yearForActive = student.academicYear || `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`;
+        let history = Array.isArray(student.enrollmentHistory)
+            ? [...student.enrollmentHistory]
+            : [];
 
-        // Preserve Officially Enrolled records
+        const formattedActiveSem = `${activeSem} Sem`;
+        const yearForActive =
+            student.academicYear ||
+            `${new Date().getFullYear()}/${new Date().getFullYear() + 1}`;
+
         if (student.semester && student.enrollmentStatus === "Officially Enrolled") {
             const existsOfficial = history.some(
                 h =>
@@ -500,58 +504,72 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
                     h.semester === student.semester &&
                     h.enrollmentStatus === "Officially Enrolled"
             );
+
             if (!existsOfficial) {
                 history.push({
                     academicYear: student.academicYear,
                     semester: student.semester,
                     enrollmentStatus: "Officially Enrolled",
                     acceptedAt: student.acceptedAt,
-                    dateEnlisted: student.dateEnlisted
+                    dateEnlisted: student.dateEnlisted || null
                 });
             }
         }
 
-        // Convert old Open for Enrollment → Not Enlisted except current active semester
         history = history.map(h => {
-            if (h.enrollmentStatus === "Open for Enrollment" &&
-                !(h.academicYear === yearForActive && h.semester.toLowerCase() === formattedActiveSem.toLowerCase())
+            if (
+                h.enrollmentStatus === "Open for Enrollment" &&
+                !(
+                    h.academicYear === yearForActive &&
+                    h.semester.toLowerCase() === formattedActiveSem.toLowerCase()
+                )
             ) {
+
                 return {
                     ...h,
-                    enrollmentStatus: "Not Enlisted",
-                    dateEnrolled: "",
+                    enrollmentStatus: "Not Enrolled",
                     dateEnlisted: h.dateEnlisted || null
                 };
             }
             return h;
         });
 
-        // Force current active semester to Open for Enrollment
-        const index = history.findIndex(
-            h => h.academicYear === yearForActive && h.semester.toLowerCase() === formattedActiveSem.toLowerCase()
+        const existingIndex = history.findIndex(
+            h =>
+                h.academicYear === yearForActive &&
+                h.semester.toLowerCase() === formattedActiveSem.toLowerCase()
         );
 
-        if (index === -1) {
-            // Add if missing
+        if (existingIndex === -1) {
             history.unshift({
                 academicYear: yearForActive,
                 semester: formattedActiveSem,
                 enrollmentStatus: "Open for Enrollment",
-                dateEnlisted: null,
-                dateEnrolled: ""
+                dateEnlisted: null
             });
         } else {
-            // Update existing record to Open for Enrollment
-            history[index].enrollmentStatus = "Open for Enrollment";
-            history[index].dateEnrolled = "";
-            history[index].dateEnlisted = null;
+            history[existingIndex].enrollmentStatus = "Open for Enrollment";
+            history[existingIndex].dateEnlisted = null;
         }
+
+        history = history.filter(h =>
+            h &&
+            h.academicYear &&
+            h.enrollmentStatus &&
+            h.enrollmentStatus !== "Not Enrolled" &&
+            h.enrollmentStatus !== "Not Enlisted"
+        );
+
+        history = history.filter(h => {
+            const [startYear] = h.academicYear.split("/").map(Number);
+            const [activeStartYear] = yearForActive.split("/").map(Number);
+            return startYear >= activeStartYear - 1;
+        });
 
         student.enrollmentHistory = history;
         await student.save();
 
         res.json(history);
-
     } catch (err) {
         console.error("Error fetching enrollment status:", err);
         res.status(500).json({ message: "Server error", error: err.message });
@@ -559,5 +577,5 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
 });
 
 app.listen(2025, '0.0.0.0', () => {
-    console.log("Server is running on port 2025");
+    console.log("Server’s awake and ready to roll!");
 });

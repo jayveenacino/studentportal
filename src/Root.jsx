@@ -14,7 +14,10 @@ export default function Root() {
         "/admindashboard",
         "/preregister",
         "/preregister/notice",
+        "/auth/secure-access/admin-portal",
         "/preregister/",
+        "/auth/secure-access/admin-portal/admindashboard",
+        "/body/signup",
         "/studentmain",
         "/signup/notice",
         "/signup/create/notice"

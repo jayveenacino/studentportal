@@ -136,12 +136,39 @@ export default function StudentMain() {
 
     const formatFullName = () => {
         if (!student) return "Student";
-        if (student.fullName) return student.fullName;
 
-        const { firstname = "", middlename = "", lastname = "", extension = "" } = student;
-        const middleInitial = middlename.trim() ? middlename.trim().charAt(0).toUpperCase() + "." : "";
-        return `${lastname} ${firstname} ${middleInitial} ${extension}`.trim();
+        if (student.fullName) {
+            const parts = student.fullName.trim().split(" ");
+            if (parts.length >= 3) {
+                const first = parts[0];
+                const middle = parts[1];
+                const last = parts[2];
+                return `${capitalize(first)} ${middle.charAt(0).toUpperCase()}. ${capitalize(last)}`;
+            }
+            return capitalizeWords(student.fullName);
+        }
+
+        const firstname = student.firstname || student.firstName || "";
+        const middlename = student.middlename || student.middleName || "";
+        const lastname = student.lastname || student.lastName || "";
+        const extension = student.extension || "";
+
+        const formattedFirst = capitalize(firstname.trim());
+        const formattedLast = capitalize(lastname.trim());
+        const middleInitial = middlename.trim()
+            ? `${middlename.trim().charAt(0).toUpperCase()}.`
+            : "";
+
+        return `${formattedFirst} ${middleInitial} ${formattedLast} ${extension}`.trim();
     };
+
+    const capitalize = (str) =>
+        str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
+
+    const capitalizeWords = (str) =>
+        str
+            .toLowerCase()
+            .replace(/\b\w/g, (char) => char.toUpperCase());
 
     if (loading) {
         return (
@@ -242,8 +269,6 @@ export default function StudentMain() {
                                 <button type="submit" className="save-btn">Save</button>
                             </div>
                         </form>
-
-                        {/* ❌ Close Button */}
                         <i
                             className="fa-solid fa-xmark close-modal"
                             onClick={() => setShowPasswordModal(false)}
@@ -262,7 +287,7 @@ export default function StudentMain() {
                 </div>
                 <ul className="stud-sidebar-menu">
                     <li onClick={() => setActiveSection("welcome")}>
-                        <i className="fa-solid fa-house"></i> Dashboard
+                        <i className="fa-solid fa-house"></i> Student Dashboard
                     </li>
                     <li onClick={() => setActiveSection("profile")}>
                         <i className="fa-solid fa-id-card"></i> Profile/Enlistment

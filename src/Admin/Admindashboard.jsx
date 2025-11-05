@@ -28,7 +28,7 @@ function Dashboard() {
     //  SECURITY FEATURE 1: Check if Admin is logged in
     useEffect(() => {
         if (!storedAdmin || !storedAdmin.username) {
-            navigate("/adminlogin", { replace: true });
+            navigate("/auth/secure-access/admin-portal", { replace: true });
         }
     }, [navigate, storedAdmin]);
 
@@ -94,7 +94,7 @@ function Dashboard() {
         localStorage.clear();
         sessionStorage.clear();
         setTimeout(() => {
-            window.location.replace("/adminlogin");
+            window.location.replace("/auth/secure-access/admin-portal");
         }, 500);
     };
 
@@ -138,7 +138,7 @@ function Dashboard() {
             ) : (
                 <div className="adcontainer">
                     <div className="adnav">
-                        <img className="adlogo" src="./img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />
+                        <img className="adlogo" src="/img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />
                         <div className="adnav-text">
                             <h1>Kolehiyo Ng Subic</h1>
                             <p>Management Information Systems Unit</p>

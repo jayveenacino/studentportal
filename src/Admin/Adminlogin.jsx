@@ -13,18 +13,18 @@ export default function Login() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (admin?.email) navigate('/admindashboard');
+        if (admin?.email) navigate("/auth/secure-access/admin-portal/admindashboard");
     }, [admin, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (
-            emailOrUsername === "knsadmincsd.gmail.com" &&
+            emailOrUsername === "knsadmincsd@gmail.com" &&
             password === "kolehiyongsubiccsd2002"
         ) {
             const defaultAdmin = {
-                email: "knsadmincsd.gmail.com",
+                email: "knsadmincsd@gmail.com",
                 username: "KNS Admin",
                 role: "Super Admin",
             };
@@ -53,7 +53,7 @@ export default function Login() {
                 timerProgressBar: true,
             });
 
-            navigate('/admindashboard');
+            navigate('/auth/secure-access/admin-portal/admindashboard');
             return;
         }
 
@@ -90,7 +90,7 @@ export default function Login() {
             navigate('/admindashboard');
 
         } catch (err) {
-            Swal.fire({
+            Swal.fire({ 
                 toast: true,
                 position: 'top-end',
                 icon: 'error',
@@ -109,8 +109,9 @@ export default function Login() {
                 <div className="login-section">
                     <div className="login-box">
                         <div className="logo-container">
-                            <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
+                            <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
                         </div>
+
                         <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
                         <p className="subtitle" style={{ fontSize: "10px" }}>MANAGEMENT INFORMATION SYSTEMS UNIT</p>
                         <p className="subtitle" style={{ fontSize: "10px" }}>Integrated System Admin Portal</p>

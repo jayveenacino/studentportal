@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
 import "./Admincss/adminupload.css";
+import { FiImage } from "react-icons/fi";
 
 export default function AdminUpload() {
     const [uploads, setUploads] = useState([]);

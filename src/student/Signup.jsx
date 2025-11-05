@@ -110,7 +110,7 @@ const Signup = () => {
             <div className="login-section">
                 <div className="login-box">
                     <div className="logo-container">
-                        <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
+                        <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
                     </div>
                     <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
                     <p className="subtitle" style={{ fontSize: "10px", marginBottom: "20px", marginTop: "-px" }}>Office of the Student Welfare and Services</p>
@@ -293,7 +293,7 @@ const Signup = () => {
             {/* Right Section - Vision/Mission */}
             <div className="info-section">
                 <div className="school-branding">
-                    <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="school-logo" />
+                    <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="school-logo" />
                     <h2 className="school-name">KOLEHIYO NG SUBIC</h2>
                     <p className="school-address">WFI Compound, Wawandue, Subic Zambales</p>
                 </div>

@@ -83,21 +83,23 @@ export default function Create() {
             setLoading(false);
             return;
         }
-        
+
         try {
             const response = await axios.post("http://localhost:2025/register", formData);
 
             if (response.status === 201) {
                 Swal.fire({
+                    toast: true,
                     icon: "success",
                     title: "Account Created!",
                     text: "Your account has been successfully created. Redirecting...",
+                    position: "top-end",
                     showConfirmButton: false,
-                    timer: 2000
+                    timer: 2000,
+                    timerProgressBar: true
                 });
 
                 localStorage.setItem("user", JSON.stringify(response.data.student));
-
                 setUser(response.data.student);
 
                 setTimeout(() => {
@@ -106,27 +108,52 @@ export default function Create() {
             }
         } catch (error) {
             const errorMessage = error.response?.data?.message || "Failed to create an account.";
+            const existingUser = error.response?.data?.existingUser;
 
-            if (errorMessage.includes("already registered")) {
-                Swal.fire({
-                    icon: "warning",
-                    title: "Email Already Registered",
-                    text: "The email address is already in use. Try another one.",
-                    confirmButtonColor: "#ff9800"
-                });
+            if (existingUser) {
+                const nameMismatch =
+                    existingUser.firstname !== formData.firstname ||
+                    existingUser.middlename !== formData.middlename ||
+                    existingUser.lastname !== formData.lastname;
+
+                if (nameMismatch) {
+                    Swal.fire({
+                        toast: true,
+                        icon: "error",
+                        title: "Name Mismatch Detected",
+                        text: "The email or phone number is already registered with a different name.",
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true
+                    });
+                } else {
+                    Swal.fire({
+                        toast: true,
+                        icon: "warning",
+                        title: "Already Registered",
+                        text: "This email or phone is already registered with the same name.",
+                        position: "top-end",
+                        showConfirmButton: false,
+                        timer: 4000,
+                        timerProgressBar: true
+                    });
+                }
             } else {
                 Swal.fire({
+                    toast: true,
                     icon: "error",
-                    title: "User Already Registered",
+                    title: "Registration Failed",
                     text: errorMessage,
-                    confirmButtonColor: "#d33"
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
                 });
             }
         }
-
         setLoading(false);
     };
-
 
     return (
         <div className="signincontainer">
@@ -156,7 +183,7 @@ export default function Create() {
                     <p style={{ fontSize: "12px" }}>
                         Make sure to remember your username and password. These credentials will be required to access your application, view updates, and schedule your interview.
                     </p>
-                    <p className="security-warning" s   le={{ fontSize: "12px" }}>
+                    <p className="security-warning" style={{ fontSize: "12px" }}>
                         <em>For your security, do not share your login information with others</em>
                     </p>
                 </div>

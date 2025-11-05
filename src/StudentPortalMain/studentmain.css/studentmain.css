@@ -129,6 +129,17 @@
     gap: 8px;
     font-size: 14px;
     font-weight: 500;
+    flex-shrink: 0;
+    max-width: none; 
+    overflow: visible; 
+}
+
+.studentname {
+    white-space: nowrap;
+    overflow: visible;
+    text-overflow: unset;
+    max-width: none;
+    font-size: 13px;
 }
 
 .navbar-user .fa-user-circle {
@@ -137,12 +148,10 @@
 
 .navbar-user .dropdown-icon {
     font-size: 12px;
-    margin-left: 4px;
+    margin-left: 2px;
+    margin-right: 20px;
 }
 
-.studentname {
-    font-size: 13px;
-}
 
 .user-icon {
     font-size: 13px;
@@ -198,6 +207,15 @@
     background-color: rgba(56, 44, 44, 0.1);
 }
 
+@media (max-width: 1024px) {
+    .navbar-user {
+        max-width: 200px;
+    }
+
+    .studentname {
+        max-width: 130px;
+    }
+}
 
 @media (max-width: 768px) {
     .stud-sidebar.university-style {
@@ -214,6 +232,16 @@
 
     .stud-sidebar.hide {
         transform: translateX(-100%) !important;
+    }
+
+    .navbar-user {
+        max-width: 160px;
+        margin-right: 10px;
+        gap: 6px;
+    }
+
+    .studentname {
+        max-width: 100px;
     }
 
     .stud-menu-toggle {

@@ -5,6 +5,8 @@ export default function StudentDashboard() {
     const [student, setStudent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [enrollments, setEnrollments] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [selectedEnrollment, setSelectedEnrollment] = useState(null);
     const didFetch = useRef(false);
 
     const formatDate = (dateString) => {
@@ -35,13 +37,13 @@ export default function StudentDashboard() {
         const parsed = JSON.parse(storedStudent);
         setStudent(parsed);
 
-        const email = parsed.domainEmail; // use domainEmail instead of email
+        const email = parsed.domainEmail;
 
         fetch(`http://localhost:2025/api/enrollment-status/${email}`)
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {
-                    // Sort by academic year (desc) and semester (First, Second, Summer)
+
                     const semesterOrder = { First: 1, Second: 2, Summer: 3 };
                     const sorted = data.sort((a, b) => {
                         if (a.academicYear === b.academicYear) {
@@ -59,10 +61,26 @@ export default function StudentDashboard() {
             });
     }, []);
 
+    const handleOpenModal = (enrollment) => {
+        setSelectedEnrollment(enrollment);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedEnrollment(null);
+    };
+
+    const handleProceed = () => {
+        console.log("Proceeding with enrollment for:", selectedEnrollment);
+        setShowModal(false);
+        alert("Enrollment process started!");
+    };
+
     return (
         <div className="student-dashboard-stdash">
             <div className="dashboard-header-stdash">
-                <h1><i className="fa-solid fa-book"></i> Dashboard</h1>
+                <h1><i className="fa-solid fa-book"></i> Student Dashboard</h1>
             </div>
 
             <div className="dashboard-grid-stdash">
@@ -114,12 +132,15 @@ export default function StudentDashboard() {
                                                 e.enrollmentStatus === "Officially Enrolled"
                                                     ? "status-stdash enrolled-stdash"
                                                     : e.enrollmentStatus === "Open for Enrollment"
-                                                        ? "status-stdash open-stdash"
+                                                        ? "status-stdash open-stdash clickable-status"
                                                         : e.enrollmentStatus === "Pending"
                                                             ? "status-stdash pending-stdash"
                                                             : (e.enrollmentStatus && e.enrollmentStatus.includes("Not Enlisted"))
                                                                 ? "status-stdash not-enrolled-stdash"
                                                                 : "status-stdash"
+                                            }
+                                            onClick={() =>
+                                                e.enrollmentStatus === "Open for Enrollment" && handleOpenModal(e)
                                             }
                                         >
                                             {e.enrollmentStatus || "N/A"}
@@ -131,7 +152,6 @@ export default function StudentDashboard() {
                                                     ? formatDate(e.dateEnlisted)
                                                     : "Not yet enlisted"}
                                         </td>
-
                                     </tr>
                                 ))
                             ) : (
@@ -149,6 +169,25 @@ export default function StudentDashboard() {
                     </div>
                 </div>
             </div>
+
+            {/* 🧩 Modal */}
+            {showModal && (
+                <div className="modal-overlay" onClick={handleCloseModal}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <h3>Open for Enrollment</h3>
+                        <p>
+                            You are eligible to enroll for{" "}
+                            <strong>{selectedEnrollment?.academicYear}, {selectedEnrollment?.semester}</strong>.
+                        </p>
+                        <p>Would you like to proceed with enrollment?</p>
+
+                        <div className="modal-buttons">
+                            <button className="btn-proceed" onClick={handleProceed}>Proceed</button>
+                            <button className="btn-cancel" onClick={handleCloseModal}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

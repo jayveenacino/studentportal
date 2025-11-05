@@ -40,7 +40,7 @@ export default function ProfileEnlistment() {
     }, [loggedInAcceptedStudent]);
 
     const toggleSection = (section) => {
-        setActiveSection((prev) => (prev === section ? null : section));
+        setActiveSection((prev) => (prev === section ? section : section));
     };
 
     if (error) return <p className="prolist-error">{error}</p>;

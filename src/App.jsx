@@ -11,20 +11,23 @@ import {
 import Root from './Root';
 import Create from './student/Create';
 import Login from './student/Login';
-import Adminlogin from './Admin/Adminlogin';
+import AdminLogin from './Admin/Adminlogin';
 import Notice from './student/Notice';
 import AdminDashboard from './Admin/Admindashboard';
 import Preregister from './student/Preregister';
 import PrivateRoute from './student/PrivateRoute';
 import { AdminContextProvider } from './Admin/useAdmin';
-import Student from './student/Student';
+import Student from './student/Student';	
 import StudentMain from './StudentPortalMain/StudentMain';
+import PresidentOffice from './HomePage/PresidentOffice';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route element={<Root />}>
-			<Route index element={<Body />} />
+			<Route index element={<Home />} />
 			<Route path="home" element={<Home />} />
+			<Route path="body" element={<Body />} />
+			<Route path="body/signup" element={<Signup />} />
 			<Route path="signup" element={<Signup />} />
 			<Route path="signup/create" element={<Create />} />
 			<Route path="signup/create/notice" element={<Notice />} />
@@ -32,10 +35,11 @@ const router = createBrowserRouter(
 			<Route path="login" element={<Login />} />
 			<Route path="login/notice" element={<Notice />} />
 			<Route path="preregister/notice" element={<Notice />} />
-			<Route path="adminlogin" element={<Adminlogin />} />
-			<Route path="admindashboard" element={<AdminDashboard />} />
+			<Route path="auth/secure-access/admin-portal" element={<AdminLogin />} />
+			<Route path="auth/secure-access/admin-portal/admindashboard" element={<AdminDashboard />} />
 			<Route path="student" element={<Student />} />
 			<Route path="studentmain" element={<StudentMain />} />
+			<Route path="home/collegepresident" element={<PresidentOffice />} />
 			<Route
 				path="preregister"
 				element={
