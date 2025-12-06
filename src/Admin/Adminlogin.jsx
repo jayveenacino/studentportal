@@ -6,15 +6,18 @@ import axios from 'axios';
 import './Admincss/admin.css';
 
 export default function Login() {
-    const { admin, setAdmin } = useAdmin();
+    const { admin, setAdmin, adminLoaded } = useAdmin();
     const [showPassword, setShowPassword] = useState(false);
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (admin?.email) navigate("/auth/secure-access/admin-portal/admindashboard");
-    }, [admin, navigate]);
+        if (!adminLoaded) return;
+        if (admin?.email) {
+            navigate("/auth/secure-access/admin-portal/admindashboard");
+        }
+    }, [admin, adminLoaded, navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -34,33 +37,30 @@ export default function Login() {
 
             await Swal.fire({
                 toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Default Admin Login Successful',
-                text: `Welcome back, ${defaultAdmin.username}!`,
+                position: "top-end",
+                icon: "success",
+                title: "Default Admin Login Successful",
                 showConfirmButton: false,
                 timer: 1500,
-                timerProgressBar: true,
             });
 
             await Swal.fire({
-                title: 'Loading Dashboard...',
-                html: '<b>Please wait</b>',
+                title: "Loading Dashboard...",
+                html: "<b>Please wait</b>",
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 didOpen: () => Swal.showLoading(),
                 timer: 2000,
-                timerProgressBar: true,
             });
 
-            navigate('/auth/secure-access/admin-portal/admindashboard');
+            navigate("/auth/secure-access/admin-portal/admindashboard");
             return;
         }
 
         try {
             const res = await axios.post("http://localhost:2025/api/adminlogin", {
                 emailOrUsername,
-                password
+                password,
             });
 
             setAdmin(res.data.admin);
@@ -68,37 +68,33 @@ export default function Login() {
 
             await Swal.fire({
                 toast: true,
-                position: 'top-end',
-                icon: 'success',
-                title: 'Login Successful',
+                position: "top-end",
+                icon: "success",
+                title: "Login Successful",
                 text: `Welcome back, ${res.data.admin.username}!`,
                 showConfirmButton: false,
                 timer: 1500,
-                timerProgressBar: true,
             });
 
             await Swal.fire({
-                title: 'Loading Dashboard...',
-                html: '<b>Please wait</b>',
+                title: "Loading Dashboard...",
+                html: "<b>Please wait</b>",
                 allowOutsideClick: false,
                 allowEscapeKey: false,
                 didOpen: () => Swal.showLoading(),
                 timer: 2000,
-                timerProgressBar: true,
             });
 
-            navigate('/admindashboard');
-
+            navigate("/auth/secure-access/admin-portal/admindashboard");
         } catch (err) {
-            Swal.fire({ 
+            Swal.fire({
                 toast: true,
-                position: 'top-end',
-                icon: 'error',
-                title: 'Login Failed',
-                text: err.response?.data?.message || 'Incorrect email/username or password',
+                position: "top-end",
+                icon: "error",
+                title: "Login Failed",
+                text: err.response?.data?.message || "Incorrect login details",
                 showConfirmButton: false,
                 timer: 2500,
-                timerProgressBar: true,
             });
         }
     };
