@@ -35,7 +35,7 @@ const router = createBrowserRouter(
 			<Route path="login" element={<Login />} />
 			<Route path="login/notice" element={<Notice />} />
 			<Route path="preregister/notice" element={<Notice />} />
-			<Route path="auth/secure-access/admin-portal" element={<AdminLogin />} />
+			<Route path="auth/secure-access/admin-portal/login" element={<AdminLogin />} />
 			<Route path="auth/secure-access/admin-portal/admindashboard" element={<AdminDashboard />} />
 			<Route path="student" element={<Student />} />
 			<Route path="studentmain" element={<StudentMain />} />

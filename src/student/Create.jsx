@@ -8,6 +8,10 @@ import useAdmin from "../Admin/useAdmin";
 export default function Create() {
     const { setUser } = useAdmin();
     const navigate = useNavigate();
+    const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
+    const [showPasswords, setShowPasswords] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const [formData, setFormData] = useState({
         firstname: "",
@@ -21,9 +25,6 @@ export default function Create() {
         password: "",
         confirmPassword: "",
     });
-
-    const [message, setMessage] = useState("");
-    const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -186,6 +187,21 @@ export default function Create() {
                     <p className="security-warning" style={{ fontSize: "12px" }}>
                         <em>For your security, do not share your login information with others</em>
                     </p>
+
+                    <h3 className="section-title" style={{ fontSize: "13px" }}>Forgot Password Verification</h3>
+                    <p style={{ fontSize: "12px" }}>
+                        If you forget your password, you will need to answer your verification questions. Provide accurate information to ensure easy account recovery.
+                    </p>
+
+                    <h3 className="section-title" style={{ fontSize: "13px" }}>Document Upload</h3>
+                    <p style={{ fontSize: "12px" }}>
+                        Upload only clear and valid documents as required. Make sure all files are complete and readable to avoid delays in your application.
+                    </p>
+
+                    <h3 className="section-title" style={{ fontSize: "13px" }}>Multiple Accounts</h3>
+                    <p style={{ fontSize: "12px" }}>
+                        Do not create multiple accounts. Submitting more than one application may result in disapproval.
+                    </p>
                 </div>
 
                 <div className="rightcontainer">
@@ -270,34 +286,57 @@ export default function Create() {
                         </div>
 
                         <div className="grid-container">
-                            <input
-                                type="email"
-                                name="email"
-                                autoComplete="email"
-                                placeholder="Email Address*"
-                                className="input-field"
-                                value={formData.email}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="password"
-                                name="password"
-                                autoComplete="new-password"
-                                placeholder="Desired Password*"
-                                className="input-field"
-                                value={formData.password}
-                                onChange={handleChange}
-                            />
-                            <input
-                                type="password"
-                                name="confirmPassword"
-                                autoComplete="new-password"
-                                placeholder="Confirm Password*"
-                                className="input-field"
-                                value={formData.confirmPassword}
-                                onChange={handleChange}
-                            />
+                            <div className="input-row">
+                                <div className="input-wrapper">
+                                    <input
+                                        type="email"
+                                        name="email"
+                                        autoComplete="email"
+                                        placeholder="Email Address*"
+                                        className="input-field"
+                                        value={formData.email}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                <div className="input-wrapper">
+                                    <input
+                                        type={showPasswords ? "text" : "password"}
+                                        name="password"
+                                        autoComplete="new-password"
+                                        placeholder="Password*"
+                                        className="input-field"
+                                        value={formData.password}
+                                        onChange={handleChange}
+                                    />
+                                    <i
+                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                        onMouseDown={() => setShowPasswords(true)}
+                                        onMouseUp={() => setShowPasswords(false)}
+                                        onMouseLeave={() => setShowPasswords(false)}
+                                    ></i>
+                                </div>
+
+                                <div className="input-wrapper">
+                                    <input
+                                        type={showPasswords ? "text" : "password"}
+                                        name="confirmPassword"
+                                        autoComplete="new-password"
+                                        placeholder="Confirm Password*"
+                                        className="input-field"
+                                        value={formData.confirmPassword}
+                                        onChange={handleChange}
+                                    />
+                                    <i
+                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                        onMouseDown={() => setShowPasswords(true)}
+                                        onMouseUp={() => setShowPasswords(false)}
+                                        onMouseLeave={() => setShowPasswords(false)}
+                                    ></i>
+                                </div>
+                            </div>
                         </div>
+
 
                         <hr />
                         <p className="privacy-text" style={{ textAlign: "center" }}>

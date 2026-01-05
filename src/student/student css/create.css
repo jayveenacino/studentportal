@@ -1,9 +1,9 @@
-
 .signincontainer {
   width: 90%;
   margin: auto;
   font-family: Arial, sans-serif;
 }
+
 .school-branding {
   display: flex;
   flex-direction: column;
@@ -11,12 +11,12 @@
   text-align: center;
 }
 
-.school-branding p{
+.school-branding p {
   margin-top: 4px;
 }
 
 .school-logo {
-  width: 100px; 
+  width: 100px;
   height: auto;
 }
 
@@ -100,7 +100,7 @@
   background: #e6e5e5;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1); 
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
 h2 {
@@ -109,16 +109,16 @@ h2 {
 
 .grid-container {
   display: flex;
-  flex-wrap: wrap ;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .grid-container1 {
   display: flex;
-  flex-wrap: wrap ;
+  flex-wrap: wrap;
   gap: 10px;
-  margin-bottom:10px;
+  margin-bottom: 10px;
 }
 
 .input-field {
@@ -134,6 +134,7 @@ h2 {
   border: 1px solid #ccc;
   border-radius: 5px;
 }
+
 .privacy-text {
   font-size: 12px;
   color: #555;
@@ -146,11 +147,11 @@ h2 {
 }
 
 .short-width {
-  width: 120px; 
+  width: 120px;
 }
 
 .short-width1 {
-  width: 120px; 
+  width: 120px;
 }
 
 .button-container {
@@ -246,7 +247,8 @@ h2 {
     align-items: center;
   }
 
-  .leftcontainer, .rightcontainer {
+  .leftcontainer,
+  .rightcontainer {
     width: 100%;
     padding: 15px;
   }
@@ -261,7 +263,8 @@ h2 {
     color: #005bb5;
   }
 
-  .back-btn, .disabled-btn {
+  .back-btn,
+  .disabled-btn {
     width: 100%;
     text-align: center;
   }
@@ -280,28 +283,82 @@ h2 {
 }
 
 .custom-popup {
-  text-align: center; 
+  text-align: center;
 }
 
 .custom-title {
-  font-size: 24px;  
+  font-size: 24px;
 }
 
 .custom-content {
-  margin-bottom: 20px; 
+  margin-bottom: 20px;
 }
 
-.custom-confirm-button, .custom-cancel-button {
+.custom-confirm-button,
+.custom-cancel-button {
   height: 50px;
-  font-size: 16px; 
-  width: 150px; 
-  margin: 0 10px;  
+  font-size: 16px;
+  width: 150px;
+  margin: 0 10px;
 }
 
 .custom-confirm-button {
-  background-color: #d33; 
+  background-color: #d33;
 }
 
 .custom-cancel-button {
-  background-color: #3085d6; 
+  background-color: #3085d6;
+}
+
+.password-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+.password-wrapper .toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+  user-select: none;
+}
+
+.input-row {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+}
+
+.input-row .input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+.input-row .input-wrapper .input-field {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 40px;
+}
+
+.input-row .input-wrapper .toggle-eye {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 16px;
+}
+
+@media (max-width: 768px) {
+  .input-row {
+    flex-direction: column;
+  }
+
+  .input-row .input-wrapper .input-field {
+    padding-right: 40px;
+  }
 }

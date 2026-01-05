@@ -94,7 +94,7 @@ function Dashboard() {
         localStorage.clear();
         sessionStorage.clear();
         setTimeout(() => {
-            window.location.replace("/auth/secure-access/admin-portal");
+            window.location.replace("/auth/secure-access/admin-portal/login");
         }, 500);
     };
 
@@ -130,12 +130,11 @@ function Dashboard() {
         <div className="body">
             {loading ? (
                 <div className="loading-screen">
-                    <div className="loading-content">
-                        <img src="./img/loading.gif" alt="" />
-                        <p>Loading... Please Wait</p>
-                    </div>
+                    <div className="spinner"></div>
+                    <p>Loading... Please Wait</p>
                 </div>
             ) : (
+
                 <div className="adcontainer">
                     <div className="adnav">
                         <img className="adlogo" src="/img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />

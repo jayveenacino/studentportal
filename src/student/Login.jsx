@@ -7,6 +7,7 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [studentNumber, setStudentNumber] = useState('');
     const [password, setPassword] = useState('');
+    const [showModal, setShowModal] = useState(true);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -22,6 +23,7 @@ export default function Login() {
     useEffect(() => {
         document.title = "Kolehiyo Ng Subic - Student Portal Login";
     }, []);
+
     useEffect(() => {
         if (localStorage.getItem("autoLogout") === "true") {
             Swal.fire({
@@ -63,6 +65,8 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
+        if (showModal) return; // Prevent login while modal is open
+
         try {
             Swal.fire({
                 title: "Logging in...",
@@ -93,26 +97,20 @@ export default function Login() {
                 });
             }
 
-            // ✅ Save accepted student info
             localStorage.setItem("acceptedStudent", JSON.stringify(data.student));
             localStorage.setItem("activeSession", "true");
 
-            // ✅ Fetch original student record using email or studentNumber
             const identifier = data.student.domainEmail || data.student.studentNumber;
-
             try {
                 const res2 = await fetch(`http://localhost:2025/api/student/original/${identifier}`);
                 if (res2.ok) {
                     const studentRecord = await res2.json();
-
-                    // ✅ Save original student info (including image)
                     localStorage.setItem("originalStudent", JSON.stringify(studentRecord));
                 }
             } catch (err) {
                 console.error("Error fetching original student record:", err);
             }
 
-            // ✅ Success alert + redirect
             Swal.fire({
                 toast: true,
                 position: "top-end",
@@ -146,13 +144,78 @@ export default function Login() {
     }, [navigate]);
 
     return (
-        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", overflow: "hidden" }}>
-            <div className="container" style={{ flex: 1 }}>
+        <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh", overflow: "hidden", position: "relative" }}>
+            {showModal && (
+                <div
+                    style={{
+                        position: "fixed",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(0,0,0,0.7)",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 9999,
+                    }}
+                >
+                    <div
+                        className="modal-container"
+                        style={{
+                            position: "relative",
+                            background: "#fff",
+                            padding: "20px",
+                            borderRadius: "10px",
+                            maxWidth: "40%",
+                            maxHeight: "90vh",
+                            overflowY: "auto",
+                            overflowX: "hidden",
+                            boxShadow: "0 0 20px rgba(0,0,0,0.5)",
+                        }}
+                    >
+                        <img
+                            src="public/img/classs shed.png"
+                            alt="Class Shed"
+                            style={{ width: "100%", height: "auto", display: "block" }}
+                        />
+                        <i
+                            onClick={() => setShowModal(false)}
+                            className="fa-solid fa-xmark"
+                            style={{
+                                position: "absolute",
+                                top: "10px",
+                                right: "10px",
+                                background: "red",
+                                color: "#fff",
+                                borderRadius: "50%",
+                                width: "30px",
+                                height: "30px",
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: "center",
+                                cursor: "pointer",
+                                fontSize: "18px",
+                                zIndex: 10000,
+                            }}
+                        ></i>
+                    </div>
+                </div>
+            )}
+
+            <div className="container" style={{ flex: 1, pointerEvents: showModal ? "none" : "auto" }}>
                 <div className="login-section">
                     <div className="login-box">
                         <div className="logo-container">
-                            <img src="public/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
+                            <img
+                                src="public/img/knshdlogo.png"
+                                alt="Kolehiyo Ng Subic"
+                                className="maiinlogo"
+                                style={{ cursor: "pointer" }}
+                                onClick={() => setShowModal(true)}  
+                            />
                         </div>
+
                         <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
                         <p className="subtitle" style={{ fontSize: "10px" }}>STUDENT PORTAL</p>
                         <p className="subtitle" style={{ fontSize: "10px", marginTop: "-20px", color: "darkgreen", fontWeight: "bold" }}>STUDENT ENROLLMENT SYSTEM v0.1</p>

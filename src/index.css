@@ -54,7 +54,7 @@ body {
 }
 
 .navlogo {
-    height: 43px;
+    height: 45px;
     cursor: pointer;
     margin-right: 10px;
 }
@@ -534,11 +534,38 @@ body {
     min-height: 100vh;
 }
 
+@media screen and (max-width: 768px) {
+    .modal-container {
+        width: 90% !important;
+        height: 80% !important;
+        max-width: 100% !important;
+        max-height: 100% !important;
+        border-radius: 0 !important;
+        padding: 10px !important;
+        box-sizing: border-box !important;
+    }
+
+    .modal-container img {
+        width: 100% !important;
+        height: auto !important;
+    }
+
+    .modal-container .fa-xmark {
+        width: 30px !important;
+        height: 30px !important;
+        font-size: 18px !important;
+        top: 10px !important;
+        right: 10px !important;
+    }
+}
+
+
 @media (min-width: 768px) {
     .container {
         flex-direction: row;
     }
 }
+
 
 .login-section {
     display: flex;
@@ -634,10 +661,12 @@ body {
     margin-top: 1rem;
     cursor: pointer;
 }
-
 .info-section {
     flex: 1;
-    background-color: var(--dark-green);
+    background-image: url('/img/bg green.png');
+    background-size: cover;      
+    background-position: center;  
+    background-repeat: no-repeat;
     color: white;
     padding: 2.5rem;
     display: flex;
@@ -645,6 +674,7 @@ body {
     justify-content: center;
     text-align: center;
 }
+
 
 .section-title {
     font-size: 1.5rem;

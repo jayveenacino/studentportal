@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import useAdmin from './useAdmin';
 import Swal from 'sweetalert2';
 import axios from 'axios';
@@ -12,12 +12,13 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
+    // ✅ Redirect immediately if already logged in
     useEffect(() => {
-        if (!adminLoaded) return;
-        if (admin?.email) {
-            navigate("/auth/secure-access/admin-portal/admindashboard");
+        const storedAdmin = JSON.parse(localStorage.getItem("Admin"));
+        if (storedAdmin && storedAdmin.email) {
+            navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
         }
-    }, [admin, adminLoaded, navigate]);
+    }, [navigate]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -53,7 +54,7 @@ export default function Login() {
                 timer: 2000,
             });
 
-            navigate("/auth/secure-access/admin-portal/admindashboard");
+            navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
             return;
         }
 
@@ -85,7 +86,7 @@ export default function Login() {
                 timer: 2000,
             });
 
-            navigate("/auth/secure-access/admin-portal/admindashboard");
+            navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
         } catch (err) {
             Swal.fire({
                 toast: true,

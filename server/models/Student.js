@@ -28,12 +28,10 @@ const StudentSchema = new mongoose.Schema({
     goodMoral: { type: String, default: '❌' },
     academicImage: { type: String, default: "" },
     profileImage: { type: String, default: '❌' },
-    
+
     birthplace: { type: String },
     civil: { type: String },
     sex: { type: String },
-    orientation: { type: String },
-    gender: { type: String },
     citizenship: { type: String },
     religion: { type: String },
     region: { type: String },

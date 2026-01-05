@@ -163,12 +163,13 @@ const Signup = () => {
                                             confirmButtonColor: "#d33",
                                         });
                                     } else {
-                                        navigate("./create");
+                                        navigate("/signup/create");
                                     }
                                 }}
                             >
                                 Sign Up
                             </button>
+
                         </div>
 
                         <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>Forgot Password?</p>

@@ -547,8 +547,6 @@ export default function Profile() {
         if (!birthplace) errors.birthplace = true;
         if (!civil) errors.civil = true;
         if (!sex) errors.sex = true;
-        if (!orientation) errors.orientation = true;
-        if (!gender) errors.gender = true;
         if (!citizenship) errors.citizenship = true;
         if (!religion) errors.religion = true;
         setFormErrors(errors);
@@ -564,7 +562,7 @@ export default function Profile() {
                 (field) => formErrors[field]
             );
             Swal.fire({
-                title: "Please fill up the following fields:",
+                title: "Please finish the following fields",
                 html: `<ul style="text-align: left;">${missingFields
                     .map((field) => `<li>${field}</li>`)
                     .join("")}</ul>`,
@@ -591,8 +589,6 @@ export default function Profile() {
         if (birthplace) updatedFields.birthplace = birthplace;
         if (civil) updatedFields.civil = civil;
         if (sex) updatedFields.sex = sex;
-        if (orientation) updatedFields.orientation = orientation;
-        if (gender) updatedFields.gender = gender;
         if (citizenship) updatedFields.citizenship = citizenship;
         if (religion) updatedFields.religion = religion;
         if (region) updatedFields.region = region;
@@ -1374,7 +1370,7 @@ export default function Profile() {
                                             className="persofom-group ext"
                                             style={{ width: "10%" }}
                                         >
-                                            <label>Sex at Birth</label>
+                                            <label>Gender</label>
                                             <select
                                                 className={`persofom-input ${formErrors.sex ? "error" : ""
                                                     }`}
@@ -1386,51 +1382,6 @@ export default function Profile() {
                                                 </option>
                                                 <option>Male</option>
                                                 <option>Female</option>
-                                            </select>
-                                        </div>
-                                        <div
-                                            className="persofom-group ext"
-                                            style={{ width: "20%" }}
-                                        >
-                                            <label>Sexual Orientation*</label>
-                                            <select
-                                                className={`persofom-input ${formErrors.orientation ? "error" : ""
-                                                    }`}
-                                                value={orientation || user?.orientation || ""}
-                                                onChange={(e) => setOrientation(e.target.value)}
-                                            >
-                                                <option value="" disabled hidden>
-                                                    Select One
-                                                </option>
-                                                <option>Decline to Answer</option>
-                                                <option>Straight</option>
-                                                <option>Lesbian</option>
-                                                <option>Gay</option>
-                                                <option>Bisexual</option>
-                                                <option>Queer</option>
-                                                <option>Something Else</option>
-                                            </select>
-                                        </div>
-                                        <div
-                                            className="persofom-group ext"
-                                            style={{ width: "16%" }}
-                                        >
-                                            <label>Gender Identity*</label>
-                                            <select
-                                                className={`persofom-input ${formErrors.gender ? "error" : ""
-                                                    }`}
-                                                value={gender || user?.gender || ""}
-                                                onChange={(e) => setGender(e.target.value)}
-                                            >
-                                                <option value="" disabled hidden>
-                                                    Select One
-                                                </option>
-                                                <option>Male/Man</option>
-                                                <option>Female/Woman</option>
-                                                <option>Transmale/Transman</option>
-                                                <option>Transfemale/Transwomen</option>
-                                                <option>Something else</option>
-                                                <option>Decline to Answer</option>
                                             </select>
                                         </div>
                                         <div
