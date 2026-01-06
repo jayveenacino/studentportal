@@ -34,8 +34,8 @@ export default function Home() {
     return (
         <div className="news-section">
             <div className="homediv">
-                <h2 style={{color:"black"}}>Kolehiyo Ng Subic</h2>
                 <img className="home-header" src="../public/img/bghome.png" alt="" />
+                <h2>Kolehiyo Ng Subic</h2>
             </div>
 
             <hr style={{ background: "grey", marginBottom: "45px" }} />

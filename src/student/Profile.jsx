@@ -588,7 +588,7 @@ export default function Profile() {
         if (extension) updatedFields.extension = extension;
         if (birthplace) updatedFields.birthplace = birthplace;
         if (civil) updatedFields.civil = civil;
-        if (sex) updatedFields.sex = sex; 
+        if (sex) updatedFields.sex = sex;
         if (citizenship) updatedFields.citizenship = citizenship;
         if (religion) updatedFields.religion = religion;
         if (region) updatedFields.region = region;
@@ -622,8 +622,6 @@ export default function Profile() {
     );
     const [selectedCourse, setSelectedCourse] = useState(user?.selectedCourse);
     const [initialDept, setInitialDept] = useState(user?.initialDept);
-    const [scholar, setScholar] = useState(user?.scholar || "");
-    const [otherScholar, setOtherScholar] = useState(user?.otherScholar || "");
     const [elementary, setElementary] = useState(user?.elementary || "");
     const [elemYear, setElemYear] = useState(user?.elemYear || "");
     const [highschool, setHighschool] = useState(user?.highschool || "");
@@ -653,8 +651,6 @@ export default function Profile() {
 
                 setSelectedSecCourse(profileData.selectedSecCourse || "");
                 setSelectedCourse(profileData.selectedCourse || "");
-                setScholar(profileData.scholar || "");
-                setOtherScholar(profileData.otherScholar || "");
                 setElementary(profileData.elementary || "");
                 setElemYear(profileData.elemYear || "");
                 setElemYear(profileData.highYear || "");
@@ -680,7 +676,6 @@ export default function Profile() {
     const [educErrors, setEducErrors] = useState({
         selectedSecCourse: false,
         selectedCourse: false,
-        scholar: false,
         elementary: false,
         elemYear: false,
         highYear: false,
@@ -694,7 +689,6 @@ export default function Profile() {
         const errors = {};
         if (!selectedCourse) errors.selectedCourse = true;
         if (!selectedSecCourse) errors.selectedSecCourse = true;
-        if (!scholar) errors.scholar = true;
         if (!elementary) errors.elementary = true;
         if (!elemYear) errors.elemYear = true;
         if (!highYear) errors.highYear = true;
@@ -753,7 +747,6 @@ export default function Profile() {
         if (selectedCourse) updatedFields.selectedCourse = selectedCourse;
         if (selectedSecCourse) updatedFields.selectedSecCourse = selectedSecCourse;
         if (initialDept) updatedFields.initialDept = initialDept;
-        if (scholar) updatedFields.scholar = scholar;
         if (elementary) updatedFields.elementary = elementary;
         if (elemYear) updatedFields.elemYear = elemYear;
         if (highschool) updatedFields.highschool = highschool;
@@ -1072,7 +1065,7 @@ export default function Profile() {
                                 <td style={{ fontSize: "13px", width: "20%" }}>
                                     <strong>Registration Number</strong>
                                 </td>
-                                <td style={{ fontSize: "13px" }}>{user?.register || ""}</td>
+                                <td style={{ fontSize: "13px" }}>{user?.registerNumber || ""}</td>
                             </tr>
                             <tr>
                                 <td style={{ fontSize: "13px" }}>
@@ -2259,51 +2252,7 @@ export default function Profile() {
                                         </div>
                                     </div>
                                     <hr />
-                                    <div
-                                        style={{
-                                            display: "flex",
-                                            gap: "1rem",
-                                            width: "100%",
-                                            justifyContent: "center",
-                                        }}
-                                    >
-                                        <div
-                                            className="persofom-group ext"
-                                            style={{ width: "30%" }}
-                                        >
-                                            <label>Scholarship Type *</label>
-                                            <select
-                                                value={scholar || user?.scholar || ""}
-                                                onChange={(e) => setScholar(e.target.value)}
-                                                className={`persofom-input ${educErrors.scholar ? "error" : ""
-                                                    }`}
-                                            >
-                                                <option value="" disabled selected>
-                                                    Select One
-                                                </option>
-                                                <option value="FGE">Free Goverment Education</option>
-                                                <option value="SPS">
-                                                    Non - Scholar Paying Student
-                                                </option>
-                                                <option value="Others">Others</option>
-                                            </select>
-                                        </div>
-                                        <div
-                                            className="persofom-group name"
-                                            style={{ width: "30%" }}
-                                        >
-                                            <label>Other Scholarship *</label>
-                                            <div className="persofom-input-container">
-                                                <input
-                                                    className="persofom-input"
-                                                    type="text"
-                                                    style={{ fontSize: "15px" }}
-                                                    value={scholar}
-                                                    onChange={(e) => setOtherScholarship(e.target.value)}
-                                                />
-                                            </div>
-                                        </div>
-                                    </div>
+
                                     <div
                                         style={{
                                             display: "flex",
@@ -2465,7 +2414,7 @@ export default function Profile() {
                                             className="persofom-group name"
                                             style={{ width: "13%" }}
                                         >
-                                            <label>LRN *</label>
+                                            <label>High School LRN *</label>
                                             <div className="persofom-input-container">
                                                 <input
                                                     className={`persofom-input ${educErrors.lrn ? "error" : ""

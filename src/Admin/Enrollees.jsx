@@ -9,10 +9,48 @@ export default function Enrollees() {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [enlargedImage, setEnlargedImage] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState("All");
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const [courses, setCourses] = useState([]); 
-    const [selectedCourse, setSelectedCourse] = useState("All"); 
-    const [searchTerm, setSearchTerm] = useState(""); 
+    const [openChat, setOpenChat] = useState(false);
+    const [chatStudent, setChatStudent] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [adminMessage, setAdminMessage] = useState("");
+
+    const openStudentChat = async (student) => {
+        setChatStudent(student);
+        setOpenChat(true);
+        setAdminMessage("");
+
+        try {
+            const res = await axios.get(
+                `http://localhost:2025/api/chats/${student._id}`
+            );
+            setMessages(res.data.messages);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const sendAdminMessage = async () => {
+        if (!adminMessage.trim()) return;
+
+        try {
+            const res = await axios.post(
+                `http://localhost:2025/api/chats/${chatStudent._id}`,
+                {
+                    sender: "admin",
+                    text: adminMessage,
+                }
+            );
+
+            setMessages(res.data.messages);
+            setAdminMessage("");
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const formatFullName = (student) => {
         const { lastname, firstname, middlename } = student;
@@ -284,7 +322,9 @@ export default function Enrollees() {
                                 <td>
                                     <button className="action-btn confirm" onClick={() => handleAccept(enrollee._id)}>Confirm</button>
                                     <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>Delete</button>
+                                    <button className="action-btn chat" onClick={() => openStudentChat(enrollee)}>Chat</button>
                                 </td>
+
                             </tr>
                         ))}
                         {filteredEnrollees.length === 0 && (
@@ -296,7 +336,68 @@ export default function Enrollees() {
                 </table>
             </div>
 
-            {/* modal for student details */}
+            {openChat && chatStudent && (
+                <div className="admin-chat-wrapper" onClick={() => setOpenChat(false)}>
+                    <div className="admin-chat-modal" onClick={(e) => e.stopPropagation()}>
+
+                        <div className="admin-chat-header">
+                            <div className="admin-chat-user">
+                                <img
+                                    className="admin-chat-avatar"
+                                    src={chatStudent.image || "/public/img/knshdlogo.png"}
+                                    alt={`${chatStudent.firstname} ${chatStudent.lastname}`}
+                                />
+                                <span className="admin-chat-username">
+                                    {chatStudent.firstname} {chatStudent.middlename || ""} {chatStudent.lastname}
+                                </span>
+                            </div>
+
+                            <button className="admin-chat-close" onClick={() => setOpenChat(false)}>✕</button>
+                        </div>
+
+                        <div className="admin-chat-body">
+
+                            <div className="admin-chat-profile">
+                                <img
+                                    src={chatStudent.image || "/public/img/knshdlogo.png"}
+                                    alt={`${chatStudent.firstname} ${chatStudent.lastname}`}
+                                    className="admin-chat-profile-img"
+                                />
+                                <p className="admin-chat-profile-name">
+                                    {chatStudent.firstname} {chatStudent.middlename || ""} {chatStudent.lastname}
+                                </p>
+                            </div>
+
+                            {messages.map((msg, index) => (
+                                <div
+                                    key={index}
+                                    className={`admin-chat-message ${msg.sender === "admin" ? "from-admin" : "from-student"}`}
+                                >
+                                    <p>{msg.text}</p>
+                                </div>
+                            ))}
+
+                        </div>
+
+                        <div className="admin-chat-input-wrapper">
+                            <input
+                                type="text"
+                                placeholder="Type a message..."
+                                value={adminMessage}
+                                onChange={(e) => setAdminMessage(e.target.value)}
+                                onKeyDown={(e) => {
+                                    if (e.key === "Enter") sendAdminMessage();
+                                }}
+                            />
+                            <button onClick={sendAdminMessage} disabled={!adminMessage.trim()}>
+                                Send
+                            </button>
+                        </div>
+
+                    </div>
+                </div>
+            )}
+
             {isModalOpen && selectedStudent && (
                 <div className="studentdetails-modal-wrapper" onClick={closeModal}>
                     <div className="studentdetails-modal" onClick={(e) => e.stopPropagation()}>

@@ -1,7 +1,6 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
-
 
 export default function Welcome() {
     const { user, setUser } = useAdmin()
@@ -9,15 +8,46 @@ export default function Welcome() {
 
     const [openChat, setOpenChat] = useState(false);
     const [message, setMessage] = useState("");
-    const [messages, setMessages] = useState([
-        { from: "admin", text: "Hi 👋 How can we help you?" }
-    ]);
+    const [messages, setMessages] = useState([]);
+    const [hasUnreadAdminMessages, setHasUnreadAdminMessages] = useState(false);
 
+    const checkAdminMessages = async () => {
+        if (!user?._id) return;
+        try {
+            const res = await axios.get(`http://localhost:2025/api/chats/${user._id}`);
+            const unreadAdmin = res.data.messages.filter(msg => msg.sender === "admin" && !msg.readByStudent);
+            if (unreadAdmin.length > 0) setHasUnreadAdminMessages(true);
+        } catch (err) {
+            console.error("Failed to load chat", err);
+        }
+    };
+
+
+    const openStudentChat = async () => {
+        setOpenChat(true);
+
+        try {
+            const res = await axios.get(`http://localhost:2025/api/chats/${user._id}`);
+            const adminOnly = res.data.messages.filter(msg => msg.sender === "admin");
+            setMessages(adminOnly);
+
+            await axios.post(`http://localhost:2025/api/chats/${user._id}/read`);
+
+            const updated = await axios.get(`http://localhost:2025/api/chats/${user._id}`);
+            const updatedAdmin = updated.data.messages.filter(msg => msg.sender === "admin" && !msg.readByStudent);
+            setHasUnreadAdminMessages(updatedAdmin.length > 0 ? true : false);
+
+        } catch (err) {
+            console.error("Failed to load chat", err);
+        }
+    };
 
     useEffect(() => {
         axios.get("http://localhost:2025/api/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error("Course fetch error:", err));
+
+        checkAdminMessages();
     }, []);
 
     return (
@@ -60,7 +90,6 @@ export default function Welcome() {
                         <thead style={{ background: "white" }}>
                             <tr>
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Courses</td>
-
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Status</td>
                             </tr>
                         </thead>
@@ -70,9 +99,7 @@ export default function Welcome() {
                                     <td>
                                         {course.title}{" "}
                                         {course.department && (
-                                            <>
-
-                                            </>
+                                            <></>
                                         )}
                                     </td>
 
@@ -89,17 +116,30 @@ export default function Welcome() {
                             ))}
                         </tbody>
                     </table>
-
-
                 </div>
             </div>
 
             <button
                 className="chat-fab"
-                onClick={() => setOpenChat(true)}
+                onClick={openStudentChat}
             >
                 💬
+                {hasUnreadAdminMessages && !openChat && (
+                    <span
+                        style={{
+                            position: "absolute",
+                            top: "-2px",
+                            right: "-2px",
+                            width: "10px",
+                            height: "10px",
+                            backgroundColor: "red",
+                            borderRadius: "50%",
+                            border: "1px solid white",
+                        }}
+                    ></span>
+                )}
             </button>
+
             {openChat && (
                 <div className="chat-modal">
                     <div className="chat-header">
@@ -109,42 +149,19 @@ export default function Welcome() {
                     </div>
 
                     <div className="chat-body">
-                        {messages.map((msg, i) => (
-                            <div
-                                key={i}
-                                className={`chat-message ${msg.from === "user" ? "user" : "admin"}`}
-                            >
-                                {msg.text}
+                        {messages.length === 0 && (
+                            <p style={{ textAlign: "center", opacity: 0.6 }}>No messages yet</p>
+                        )}
+                        {messages.map((msg, index) => (
+                            <div key={index} className="chat-message admin">
+                                {msg.text.split("\n").map((line, i) => (
+                                    <p key={i}>{line}</p>
+                                ))}
                             </div>
                         ))}
                     </div>
-
-                    <div className="chat-footer">
-                        <input
-                            type="text"
-                            placeholder="Type a message..."
-                            value={message}
-                            onChange={(e) => setMessage(e.target.value)}
-                            onKeyDown={(e) => {
-                                if (e.key === "Enter" && message.trim()) {
-                                    setMessages([...messages, { from: "user", text: message }]);
-                                    setMessage("");
-                                }
-                            }}
-                        />
-                        <button
-                            onClick={() => {
-                                if (!message.trim()) return;
-                                setMessages([...messages, { from: "user", text: message }]);
-                                setMessage("");
-                            }}
-                        >
-                            Send
-                        </button>
-                    </div>
                 </div>
             )}
-
         </div>
     )
 }

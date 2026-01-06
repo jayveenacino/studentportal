@@ -1584,7 +1584,6 @@
     margin-left: 50px;
 }
 
-/* Body */
 .chat-body {
     flex: 1;
     padding: 10px;
@@ -1592,13 +1591,11 @@
     background: #f0f2f5;
 }
 
-/* Messages */
 .chat-message {
     max-width: 75%;
     padding: 8px 12px;
     margin-bottom: 8px;
     border-radius: 15px;
-    font-size: 14px;
 }
 
 .chat-message.admin {
@@ -1613,26 +1610,14 @@
     margin-left: auto;
 }
 
-/* Footer */
+.chat-message p {
+    font-size: 12px; 
+    margin: 0; 
+    line-height: 1.4;
+}
+
 .chat-footer {
-    display: flex;
-    padding: 8px;
-    border-top: 1px solid #ddd;
-}
-
-.chat-footer input {
-    flex: 1;
-    border: none;
-    outline: none;
-    padding: 8px;
-}
-
-.chat-footer button {
-    background: #006666;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    cursor: pointer;
+    display: none;
 }
 
 .chat-logo {

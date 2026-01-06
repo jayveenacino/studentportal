@@ -17,6 +17,7 @@ const Upload = require('./models/Upload');
 const studentByDomainRoute = require("./routes/studentByDomain");
 const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
+const chatRoutes = require("./routes/chatRoutes");
 
 require('dotenv').config();
 
@@ -33,6 +34,7 @@ app.use("/api/settings", semesterSettingsRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
+app.use("/api/chats", chatRoutes);
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
 
@@ -52,9 +54,9 @@ app.post('/register', async (req, res) => {
             const prefix = "KNS";
             while (true) {
                 const random = Math.floor(100000 + Math.random() * 900000);
-                const register = `${prefix}${random}`;
-                const exists = await StudentModel.findOne({ register });
-                if (!exists) return register;
+                const registerNumber = `${prefix}${random}`;
+                const exists = await StudentModel.findOne({ registerNumber });
+                if (!exists) return registerNumber;
             }
         };
 
@@ -62,7 +64,7 @@ app.post('/register', async (req, res) => {
 
         const student = await StudentModel.create({
             ...req.body,
-            register: registerNumber,
+            registerNumber,    
             studentNumber: null,
             domainEmail: null,
             portalPassword: null
@@ -73,6 +75,7 @@ app.post('/register', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
 
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
