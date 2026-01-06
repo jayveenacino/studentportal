@@ -1,0 +1,73 @@
+/* Container & fonts */
+.subjects-container {
+    padding: 100px 32px;
+    background-color: #f8f9fa;
+    font-family: "Segoe UI", sans-serif;
+    height: 100%;
+    box-sizing: border-box;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+
+/* Header */
+.subjects-container h1 {
+    font-size: 2rem;
+    color: #0a3d18;
+    margin-bottom: 0.3rem;
+}
+
+.subjects-header p {
+    color: #555;
+    margin-bottom: 20px;
+}
+
+/* Search + Add controls */
+.subjects-controls {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.subjects-search {
+    padding: 8px 12px;
+    width: 250px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.subjects-add-btn {
+    background-color: #0a3d18;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.subjects-add-btn:hover {
+    background-color: #097129;
+}
+
+.subjects-table-container {
+    overflow-x: auto;
+}
+
+.subjects-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.subjects-table th,
+.subjects-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid #ddd;
+    text-align: left;
+}
+
+.subjects-table th {
+    background-color: #0a3d18;
+    color: white;
+}

@@ -16,6 +16,8 @@ const uploadRoutes = require("./routes/uploadRoutes");
 const Upload = require('./models/Upload');
 const studentByDomainRoute = require("./routes/studentByDomain");
 const semesterSettingsRoutes = require("./routes/semesterSettings");
+const classroomRoutes = require("./routes/classrooms");
+
 
 require('dotenv').config();
 
@@ -33,6 +35,8 @@ app.use("/api", adminRoutes);
 app.use("/api/settings", semesterSettingsRoutes);
 app.use("/uploads", express.static("uploads"));
 app.use("/api/uploads", uploadRoutes);
+app.use("/api/classrooms", classroomRoutes);
+
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
 app.post('/register', async (req, res) => {

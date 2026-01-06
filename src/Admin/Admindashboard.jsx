@@ -12,6 +12,8 @@ import Overview from "./Overview";
 import Semester from "./Semester";
 import AdminUpload from "./AdminUpload";
 import StudentEnrollees from "./StudentEnrollees";
+import Classrooms from "./Classrooms";
+import Subjects from "./subjects";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -205,7 +207,7 @@ function Dashboard() {
                             <li><a href="#" onClick={() => handleMenuClick("studentlist")}><i className="fa-solid fa-users"></i> Students</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("instructor")}><i className="fa-solid fa-users"></i> Instructor</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("setsemester")}><i className="fa-solid fa-gear"></i> Set Semester</a></li>
-                            <li><a href="#" onClick={() => handleMenuClick("classroomutilization")}><i className="fa-solid fa-credit-card"></i> Classroom Utilization</a></li>
+                            <li><a href="#" onClick={() => handleMenuClick("classrooms")}><i className="fa-solid fa-credit-card"></i> Classroom Utilization</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("report")}><i className="fa-solid fa-file"></i> Report</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("user")}><i className="fa-solid fa-user"></i> User</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("backuprestore")}><i className="fa-solid fa-database"></i> Backup and Restore</a></li>
@@ -223,6 +225,8 @@ function Dashboard() {
                         {activeSection === "studentlist" && <StudentList />}
                         {activeSection === "user" && <Adminuser />}
                         {activeSection === "backuprestore" && <BackupRestore />}
+                        {activeSection === "classrooms" && <Classrooms />}
+                        {activeSection === "subjects" && <Subjects />}
                     </div>
                 </div>
             )}
