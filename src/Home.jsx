@@ -9,13 +9,13 @@ export default function Home() {
             title: "HIV/AIDS Awareness Seminar on March 5, 2025",
             description:
                 "To promote health education and prevention, Kolehiyo ng Subic held an HIV/AIDS Awareness Seminar on March 5, 2025, at the Subic Sports Complex Function Hall. The event featured Lester L. Ragadio, RN, MAN, LPT, MAEd, MPA, who provided crucial insights on HIV/AIDS, including transmission, prevention, early detection, and the need to combat stigma.",
-            image: "/img/HIV.jpg", 
+            image: "/img/HIV.jpg",
         },
         {
             title: "Oathtaking Ceremony of Newly Appointed",
             description:
                 "The Kolehiyo Ng Subic Family warmly congratulates Dr. Rosely H. Agustin as she took her oath as the Full Pledged College President of the institution. Dr. Rosely was known as one of the pioneers of KNS and signified her love for the college countless times by her dedication and hard work.",
-            image: "/img/college pres.png", 
+            image: "/img/college pres.png",
         },
     ];
 
@@ -33,14 +33,12 @@ export default function Home() {
 
     return (
         <div className="news-section">
-            {/*<video
-                ref={videoRef}
-                src="/Video/Subic Hymn.mp4"
-                controls
-                playsInline
-                muted
-            ></video>
-            <hr style={{ background: "grey", marginBottom: "45px" }} /> */}
+            <div className="homediv">
+                <h2 style={{color:"black"}}>Kolehiyo Ng Subic</h2>
+                <img className="home-header" src="../public/img/bghome.png" alt="" />
+            </div>
+
+            <hr style={{ background: "grey", marginBottom: "45px" }} />
 
             <div className="image-row">
                 <Link to="home/collegepresident" target="blank_" className="image-item">

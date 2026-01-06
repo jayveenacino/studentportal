@@ -39,6 +39,7 @@ app.use("/api/classrooms", classroomRoutes);
 
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
+
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
@@ -46,8 +47,26 @@ app.post('/register', async (req, res) => {
             return res.status(403).json({ message: "Pre-registration is currently closed." });
         }
 
+        const existingUser = await StudentModel.findOne({ email: req.body.email });
+        if (existingUser) {
+            return res.status(400).json({ message: "Email already registered" });
+        }
+
+        const generateRegisterNumber = async () => {
+            const prefix = "kns";
+            while (true) {
+                const random = Math.floor(100000 + Math.random() * 900000);
+                const register = `${prefix}${random}`;
+                const exists = await StudentModel.findOne({ register });
+                if (!exists) return register;
+            }
+        };
+
+        const registerNumber = await generateRegisterNumber();
+
         const student = await StudentModel.create({
             ...req.body,
+            register: registerNumber,
             studentNumber: null,
             domainEmail: null,
             portalPassword: null
@@ -55,7 +74,7 @@ app.post('/register', async (req, res) => {
 
         res.status(201).json({ message: "Pre-registration successful", student });
     } catch (err) {
-        res.status(500).json({ message: "Error creating account", error: err.message });
+        res.status(500).json({ message: err.message });
     }
 });
 

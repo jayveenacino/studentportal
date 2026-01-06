@@ -5,8 +5,14 @@ import axios from "axios";
 
 export default function Welcome() {
     const { user, setUser } = useAdmin()
-
     const [courses, setCourses] = useState([]);
+
+    const [openChat, setOpenChat] = useState(false);
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState([
+        { from: "admin", text: "Hi 👋 How can we help you?" }
+    ]);
+
 
     useEffect(() => {
         axios.get("http://localhost:2025/api/courses")
@@ -54,7 +60,7 @@ export default function Welcome() {
                         <thead style={{ background: "white" }}>
                             <tr>
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Courses</td>
-                                
+
                                 <td style={{ textAlign: "center", fontWeight: "bold" }}>Status</td>
                             </tr>
                         </thead>
@@ -69,7 +75,7 @@ export default function Welcome() {
                                             </>
                                         )}
                                     </td>
-                                    
+
                                     <td
                                         style={{
                                             textAlign: 'center',
@@ -87,6 +93,58 @@ export default function Welcome() {
 
                 </div>
             </div>
+
+            <button
+                className="chat-fab"
+                onClick={() => setOpenChat(true)}
+            >
+                💬
+            </button>
+            {openChat && (
+                <div className="chat-modal">
+                    <div className="chat-header">
+                        <img className="chat-logo" src="/public/img/knshdlogo.png" alt="" />
+                        <span>Admissions Chat</span>
+                        <button onClick={() => setOpenChat(false)}>✕</button>
+                    </div>
+
+                    <div className="chat-body">
+                        {messages.map((msg, i) => (
+                            <div
+                                key={i}
+                                className={`chat-message ${msg.from === "user" ? "user" : "admin"}`}
+                            >
+                                {msg.text}
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="chat-footer">
+                        <input
+                            type="text"
+                            placeholder="Type a message..."
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === "Enter" && message.trim()) {
+                                    setMessages([...messages, { from: "user", text: message }]);
+                                    setMessage("");
+                                }
+                            }}
+                        />
+                        <button
+                            onClick={() => {
+                                if (!message.trim()) return;
+                                setMessages([...messages, { from: "user", text: message }]);
+                                setMessage("");
+                            }}
+                        >
+                            Send
+                        </button>
+                    </div>
+                </div>
+            )}
+
         </div>
     )
 }

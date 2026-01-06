@@ -36,7 +36,6 @@ export default function Footer() {
                 <div className="footer-section resources">
                     <div className="student-resources">
                         <h1 style={{ fontSize: "18px" }}>Student Resources</h1>
-                        <p style={{ color: "grey", fontSize: "13px" }}>  KNSLamp</p>
                         <Link to="login" style={{ textDecoration: "None" }} target='_blank'>
                             <a
                                 style={{
@@ -97,14 +96,12 @@ export default function Footer() {
                                 </p>
                             </a>
                         </Link>
-
                     </div>
                     <br />
                     <hr />
                     <br />
                     <div className="faculty-resources">
                         <h1 style={{ fontSize: "18px" }}>Faculty Resources</h1>
-                        <p style={{ color: "grey", fontSize: "13px" }}>KNS Lamp</p>
                         <p style={{ color: "grey", fontSize: "13px" }}>KNS Health Check</p>
                         <p style={{ color: "grey", fontSize: "13px" }}>KNS Registrar</p>
                         <p style={{ color: "grey", fontSize: "13px" }}>KNS Teachers Portal</p>

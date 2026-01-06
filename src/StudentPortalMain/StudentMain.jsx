@@ -184,7 +184,9 @@ export default function StudentMain() {
     return (
         <div className="stud-page-layout">
             {isMobile && sidebarVisible && <div className="sidebar-overlay show" onClick={handleOverlayClick}></div>}
+            
             <div className="studmain-navbar">
+                
                 {isMobile && (
                     <i
                         className="fa-solid fa-bars stud-menu-toggle"
@@ -279,6 +281,7 @@ export default function StudentMain() {
 
 
             <div className={`stud-sidebar university-style ${sidebarVisible ? "show" : "hide"}`}>
+                
                 <div className="stud-sidebar-header">
                     <img src="./img/knshdlogo.png" alt="Logo" draggable="false" />
                     <h2>Kolehiyo Ng Subic</h2>

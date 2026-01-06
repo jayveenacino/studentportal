@@ -199,10 +199,7 @@ export default function Preregister() {
         <div className="body">
             {loading ? (
                 <div className="loading-screen">
-                    <div className="loading-content">
-                        <img src="./img/loading.gif" alt="" />
-                        <p>Loading... Please Wait</p>
-                    </div>
+                    <div className="spinner"></div>
                 </div>
             ) : (
                 <div className="adcontainer">
