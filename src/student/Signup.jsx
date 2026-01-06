@@ -21,7 +21,7 @@ const Signup = () => {
     });
 
     const [formData, setFormData] = useState({
-        register: "",
+        registerNumber: "",
         birthdate: "",
         phone: "",
         email: "",
@@ -29,19 +29,16 @@ const Signup = () => {
         confirmPassword: "",
     });
 
-    // Loading effect
     useEffect(() => {
         setTimeout(() => setLoading(false), 1500);
     }, []);
 
-    // Pre-registration check
     useEffect(() => {
         axios.get("http://localhost:2025/settings")
             .then(res => setPreRegisterOpen(res.data.preRegister))
             .catch(() => setPreRegisterOpen(false));
     }, []);
 
-    // Auto-login if user exists in localStorage
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
@@ -55,7 +52,6 @@ const Signup = () => {
         }
     }, [navigate, setUser]);
 
-    // Handle form input change (login & reset password)
     const handleChange = (e) => {
         const { name, value } = e.target;
 
@@ -71,7 +67,6 @@ const Signup = () => {
         }
     };
 
-    // Login submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -84,7 +79,6 @@ const Signup = () => {
                     showConfirmButton: false,
                     timer: 2000,
                 });
-
                 const user = response.data.student;
                 setUser(user);
                 localStorage.setItem("user", JSON.stringify(user));
@@ -100,62 +94,47 @@ const Signup = () => {
         }
     };
 
-    // Forgot Password submit
     const handleResetPassword = async (e) => {
         e.preventDefault();
+        const { registerNumber, email, phone, birthdate, password, confirmPassword } = formData;
 
-        const { register, email, phone, birthdate, password, confirmPassword } = formData;
-
-        if (!register || !email || !phone || !birthdate || !password || !confirmPassword) {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "All fields are required!",
-            });
+        if (!registerNumber || !email || !phone || !birthdate || !password || !confirmPassword) {
+            Swal.fire({ icon: "error", title: "Error", text: "All fields are required!" });
             return;
         }
 
         if (password !== confirmPassword) {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: "Passwords do not match!",
-            });
+            Swal.fire({ icon: "error", title: "Error", text: "Passwords do not match!" });
             return;
         }
 
-        try {
-            const response = await axios.post("http://localhost:2025/reset-password", {
-                register,
-                email,
-                phone,
-                birthdate,
-                password,
-                confirmPassword
-            });
+        // Ensure phone matches DB format: 639-123-4567
+        let formattedPhone = phone.replace(/\D/g, ""); // numeric only
+        if (!formattedPhone.startsWith("63")) formattedPhone = "63" + formattedPhone;
+        formattedPhone = formattedPhone.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
 
-            if (response.status === 200) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Success",
-                    text: response.data.message || "Password updated successfully!",
-                });
-                setReset(false);
-                setFormData({
-                    register: "",
-                    birthdate: "",
-                    phone: "",
-                    email: "",
-                    password: "",
-                    confirmPassword: "",
-                });
-            }
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Error",
-                text: error.response?.data?.message || "Failed to reset password",
+        const payload = {
+            registerNumber,
+            email,
+            phone: formattedPhone,
+            birthdate,
+            password
+        };
+
+        try {
+            const response = await axios.post("http://localhost:2025/reset-password", payload);
+            Swal.fire({ icon: "success", title: "Success", text: response.data.message || "Password updated successfully!" });
+            setReset(false);
+            setFormData({
+                registerNumber: "",
+                birthdate: "",
+                phone: "",
+                email: "",
+                password: "",
+                confirmPassword: "",
             });
+        } catch (error) {
+            Swal.fire({ icon: "error", title: "Error", text: error.response?.data?.message || "Failed to reset password" });
         }
     };
 
@@ -260,7 +239,7 @@ const Signup = () => {
                         <form className="forgot-reset-form" onSubmit={handleResetPassword}>
                             <div className="forgot-input-group">
                                 <label>Registration/KNSAT Number*</label>
-                                <input type="text" name="register" placeholder="Your registration Number" value={formData.register} onChange={handleChange} required />
+                                <input type="text" name="registerNumber" placeholder="Your registration Number" value={formData.registerNumber} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">

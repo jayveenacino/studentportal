@@ -306,10 +306,10 @@ export default function Enrollees() {
                     </thead>
                     <tbody>
                         {filteredEnrollees.map((enrollee, index) => (
-                            <tr key={enrollee.registerNumber}>
+                            <tr key={enrollee.registerNum}>
                                 <td>{index + 1}</td>
                                 <td>{formatFullName(enrollee)}</td>
-                                <td>{enrollee.registerNumber}</td>
+                                <td>{enrollee.registerNum}</td>
                                 <td>
                                     <span
                                         style={{ textDecoration: 'underline', cursor: 'pointer' }}

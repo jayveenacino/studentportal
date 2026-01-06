@@ -21,6 +21,7 @@ const chatRoutes = require("./routes/chatRoutes");
 
 require('dotenv').config();
 
+
 const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
@@ -37,68 +38,48 @@ app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
-
-// ---------------------- REGISTRATION ----------------------
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
         if (settings && !settings.preRegister) {
-            return res.status(403).json({
-                message: "Pre-registration is currently closed."
-            });
+            return res.status(403).json({ message: "Pre-registration is currently closed." });
+        }
+        const { firstname, lastname, email, password } = req.body;
+
+        if (!firstname || !lastname || !email || !password) {
+            return res.status(400).json({ message: "Missing required fields" });
         }
 
-        const existingUser = await StudentModel.findOne({
-            email: req.body.email
-        });
-
-        if (existingUser) {
-            return res.status(400).json({
-                message: "Email already registered."
-            });
+        let registerNum;
+        let exists = true;
+        while (exists) {
+            registerNum = `KNS${Math.floor(Math.random() * 100000).toString().padStart(5, '0')}`;
+            exists = await StudentModel.exists({ registerNum });
         }
 
-        const generateRegisterNumber = async () => {
-            const prefix = "KNS";
-            while (true) {
-                const random = Math.floor(100000 + Math.random() * 900000);
-                const registerNumber = `${prefix}${random}`;
-                const exists = await StudentModel.findOne({ registerNumber });
-                if (!exists) return registerNumber;
+        let student;
+        try {
+            student = await StudentModel.create({
+                ...req.body,
+                registerNum,
+                studentNumber: null,
+                domainEmail: null,
+                portalPassword: null
+            });
+        } catch (err) {
+            if (err.code === 11000 && err.keyPattern.email) {
+                return res.status(400).json({ message: "Email already exists" });
             }
-        };
+            throw err;
+        }
 
-        const registerNumber = await generateRegisterNumber();
-
-        const student = await StudentModel.create({
-            ...req.body,
-            registerNumber,    
-            studentNumber: null,
-            domainEmail: null,
-            portalPassword: null
-        });
-
-        res.status(201).json({
-            message: "Pre-registration successful",
-            student
-        });
+        res.status(201).json({ message: "Pre-registration successful", student });
 
     } catch (err) {
-        // 🔥 CLEAN duplicate error handling
-        if (err.code === 11000) {
-            return res.status(400).json({
-                message: "Student is already registered."
-            });
-        }
-
-        console.error("Registration error:", err);
-
-        res.status(500).json({
-            message: "Registration failed. Please try again."
-        });
+        console.error("REGISTER ERROR:", err);
+        res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
-
 
 // ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {

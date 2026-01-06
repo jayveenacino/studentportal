@@ -12,7 +12,7 @@ const messageSchema = new mongoose.Schema({
     },
     readByStudent: {
         type: Boolean,
-        default: false, // track if student has read
+        default: false, 
     },
     createdAt: {
         type: Date,
