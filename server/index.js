@@ -18,9 +18,7 @@ const studentByDomainRoute = require("./routes/studentByDomain");
 const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 
-
 require('dotenv').config();
-
 
 const app = express();
 app.use(cors());
@@ -37,23 +35,30 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 
-
 mongoose.connect("mongodb://127.0.0.1:27017/student");
 
+// ---------------------- REGISTRATION ----------------------
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
         if (settings && !settings.preRegister) {
-            return res.status(403).json({ message: "Pre-registration is currently closed." });
+            return res.status(403).json({
+                message: "Pre-registration is currently closed."
+            });
         }
 
-        const existingUser = await StudentModel.findOne({ email: req.body.email });
+        const existingUser = await StudentModel.findOne({
+            email: req.body.email
+        });
+
         if (existingUser) {
-            return res.status(400).json({ message: "Email already registered" });
+            return res.status(400).json({
+                message: "Email already registered."
+            });
         }
 
         const generateRegisterNumber = async () => {
-            const prefix = "kns";
+            const prefix = "KNS";
             while (true) {
                 const random = Math.floor(100000 + Math.random() * 900000);
                 const register = `${prefix}${random}`;
@@ -72,25 +77,75 @@ app.post('/register', async (req, res) => {
             portalPassword: null
         });
 
-        res.status(201).json({ message: "Pre-registration successful", student });
+        res.status(201).json({
+            message: "Pre-registration successful",
+            student
+        });
+
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        // 🔥 CLEAN duplicate error handling
+        if (err.code === 11000) {
+            return res.status(400).json({
+                message: "Student is already registered."
+            });
+        }
+
+        console.error("Registration error:", err);
+
+        res.status(500).json({
+            message: "Registration failed. Please try again."
+        });
     }
 });
 
+
+// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
     try {
         const student = await StudentModel.findOne({ email, password });
-
         if (!student) {
-            throw new Error("Invalid email or password");
+            return res.status(400).json({ error: "Invalid email or password" });
         }
 
         res.status(201).json({ message: "Account successfully logged in", student });
     } catch (err) {
         res.status(500).json({ message: "Error logging in", error: err.message });
+    }
+});
+
+// ---------------------- RESET PASSWORD ----------------------
+app.post('/reset-password', async (req, res) => {
+    const { register, email, phone, birthdate, password, confirmPassword } = req.body;
+
+    if (!register || !email || !phone || !birthdate || !password || !confirmPassword) {
+        return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (password !== confirmPassword) {
+        return res.status(400).json({ message: "Passwords do not match" });
+    }
+
+    try {
+        const student = await StudentModel.findOne({
+            register,
+            email,
+            phone,
+            birthdate
+        });
+
+        if (!student) {
+            return res.status(404).json({ message: "Student not found or information does not match" });
+        }
+
+        student.password = password;
+        await student.save();
+
+        res.status(200).json({ message: "Password updated successfully" });
+    } catch (error) {
+        console.error("Reset password error:", error);
+        res.status(500).json({ message: "Server error while resetting password", error: error.message });
     }
 });
 

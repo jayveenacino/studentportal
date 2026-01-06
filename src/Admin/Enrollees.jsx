@@ -10,9 +10,9 @@ export default function Enrollees() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [enlargedImage, setEnlargedImage] = useState(null);
 
-    const [courses, setCourses] = useState([]); 
-    const [selectedCourse, setSelectedCourse] = useState("All"); 
-    const [searchTerm, setSearchTerm] = useState(""); 
+    const [courses, setCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState("All");
+    const [searchTerm, setSearchTerm] = useState("");
 
     const formatFullName = (student) => {
         const { lastname, firstname, middlename } = student;
@@ -268,10 +268,10 @@ export default function Enrollees() {
                     </thead>
                     <tbody>
                         {filteredEnrollees.map((enrollee, index) => (
-                            <tr key={enrollee._id}>
+                            <tr key={enrollee.register}>
                                 <td>{index + 1}</td>
                                 <td>{formatFullName(enrollee)}</td>
-                                <td>{enrollee._id}</td>
+                                <td>{enrollee.register}</td>
                                 <td>
                                     <span
                                         style={{ textDecoration: 'underline', cursor: 'pointer' }}

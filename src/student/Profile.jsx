@@ -1072,7 +1072,7 @@ export default function Profile() {
                                 <td style={{ fontSize: "13px", width: "20%" }}>
                                     <strong>Registration Number</strong>
                                 </td>
-                                <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
+                                <td style={{ fontSize: "13px" }}>{user?.register || ""}</td>
                             </tr>
                             <tr>
                                 <td style={{ fontSize: "13px" }}>

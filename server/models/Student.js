@@ -3,14 +3,13 @@
     const StudentSchema = new mongoose.Schema({
 
         //!Profile
-        registerNumber: { type: String, unique: true },
+        register: { type: String, unique: true, required: true },
         firstname: String,
         middlename: String,
         lastname: String,
         extension: String,
         birthdate: String,
         phone: String,
-        register: String,
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
         conpassword: String,
