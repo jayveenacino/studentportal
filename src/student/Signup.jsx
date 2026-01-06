@@ -6,32 +6,22 @@ import useAdmin from "../Admin/useAdmin";
 
 const Signup = () => {
     const { setUser } = useAdmin();
+    const navigate = useNavigate();
+
+    // Login and Reset Password State
     const [showPassword, setShowPassword] = useState(false);
     const [newShowPassword, setNewShowPassword] = useState(false);
-    const navigate = useNavigate();
     const [reset, setReset] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [preRegisterOpen, setPreRegisterOpen] = useState(true); // default open
+    const [preRegisterOpen, setPreRegisterOpen] = useState(true);
 
-    useEffect(() => {
-        setTimeout(() => {
-            setLoading(false);
-        }, 1500);
-    }, [])
     const [loginForm, setLoginForm] = useState({
         email: "",
         password: "",
     });
 
-    useEffect(() => {
-        axios.get("http://localhost:2025/settings")
-            .then(res => {
-                setPreRegisterOpen(res.data.preRegister);
-            })
-            .catch(() => setPreRegisterOpen(false)); // if error assume closed
-    }, []);
-
     const [formData, setFormData] = useState({
+        register: "",
         birthdate: "",
         phone: "",
         email: "",
@@ -39,28 +29,19 @@ const Signup = () => {
         confirmPassword: "",
     });
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    // Loading effect
+    useEffect(() => {
+        setTimeout(() => setLoading(false), 1500);
+    }, []);
 
-        if (name === "phone") {
-            let numericValue = value.replace(/\D/g, "");
+    // Pre-registration check
+    useEffect(() => {
+        axios.get("http://localhost:2025/settings")
+            .then(res => setPreRegisterOpen(res.data.preRegister))
+            .catch(() => setPreRegisterOpen(false));
+    }, []);
 
-            if (numericValue.startsWith("0")) {
-                numericValue = numericValue.slice(1);
-            }
-
-            numericValue = numericValue.slice(0, 10);
-
-            let formattedPhone = numericValue
-                .replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3")
-                .replace(/^(\d{3})(\d{3})$/, "$1-$2");
-
-            setFormData({ ...formData, phone: formattedPhone });
-        } else {
-            setFormData({ ...formData, [name]: value });
-        }
-    };
-
+    // Auto-login if user exists in localStorage
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
         if (storedUser) {
@@ -74,6 +55,23 @@ const Signup = () => {
         }
     }, [navigate, setUser]);
 
+    // Handle form input change (login & reset password)
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        if (name === "phone") {
+            let numericValue = value.replace(/\D/g, "");
+            if (numericValue.startsWith("0")) numericValue = numericValue.slice(1);
+            numericValue = numericValue.slice(0, 10);
+            let formattedPhone = numericValue.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3")
+                .replace(/^(\d{3})(\d{3})$/, "$1-$2");
+            setFormData({ ...formData, phone: formattedPhone });
+        } else {
+            setFormData({ ...formData, [name]: value });
+        }
+    };
+
+    // Login submit
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
@@ -93,29 +91,98 @@ const Signup = () => {
                 setTimeout(() => navigate("/preregister"), 2000);
             }
         } catch (error) {
-            const errorMessage = error.response?.data?.error;
             Swal.fire({
                 icon: "error",
                 title: "Login Failed",
-                text: errorMessage,
+                text: error.response?.data?.error || "Login failed",
                 confirmButtonColor: "#d33",
             });
         }
     };
 
+    // Forgot Password submit
+    const handleResetPassword = async (e) => {
+        e.preventDefault();
+
+        const { register, email, phone, birthdate, password, confirmPassword } = formData;
+
+        if (!register || !email || !phone || !birthdate || !password || !confirmPassword) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "All fields are required!",
+            });
+            return;
+        }
+
+        if (password !== confirmPassword) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Passwords do not match!",
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post("http://localhost:2025/reset-password", {
+                register,
+                email,
+                phone,
+                birthdate,
+                password,
+                confirmPassword
+            });
+
+            if (response.status === 200) {
+                Swal.fire({
+                    icon: "success",
+                    title: "Success",
+                    text: response.data.message || "Password updated successfully!",
+                });
+                setReset(false);
+                setFormData({
+                    register: "",
+                    birthdate: "",
+                    phone: "",
+                    email: "",
+                    password: "",
+                    confirmPassword: "",
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: error.response?.data?.message || "Failed to reset password",
+            });
+        }
+    };
+
+    if (loading) return <div className="loading"></div>;
+
     return (
         <div className="container">
+            {/* Login Section */}
             <div className="login-section">
                 <div className="login-box">
                     <div className="logo-container">
                         <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
                     </div>
                     <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
-                    <p className="subtitle" style={{ fontSize: "10px", marginBottom: "20px", marginTop: "-px" }}>Office of the Student Welfare and Services</p>
-                    <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal </p>
+                    <p className="subtitle" style={{ fontSize: "10px" }}>Office of the Student Welfare and Services</p>
+                    <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal</p>
                     <hr />
+
                     <form onSubmit={handleSubmit}>
-                        <input onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))} value={loginForm.email} type="text" placeholder="Email" className="input" required />
+                        <input
+                            onChange={e => setLoginForm(p => ({ ...p, email: e.target.value }))}
+                            value={loginForm.email}
+                            type="text"
+                            placeholder="Email"
+                            className="input"
+                            required
+                        />
                         <div style={{ position: "relative", width: "100%" }}>
                             <input
                                 value={loginForm.password}
@@ -124,7 +191,7 @@ const Signup = () => {
                                 placeholder="Password"
                                 className="input"
                                 required
-                                style={{ paddingRight: "7px" }}
+                                style={{ paddingRight: "30px" }}
                             />
                             <i
                                 className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
@@ -140,14 +207,9 @@ const Signup = () => {
                                 }}
                             ></i>
                         </div>
-                        <div className="button-group">
-                            <button
-                                className="login-button"
-                                style={{ border: "none", backgroundColor: "#005bb5" }}
-                            >
-                                Login
-                            </button>
 
+                        <div className="button-group">
+                            <button className="login-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Login</button>
                             <button
                                 className="signup-button"
                                 style={{ border: "none", backgroundColor: "#005bb5" }}
@@ -167,10 +229,15 @@ const Signup = () => {
                             >
                                 Sign Up
                             </button>
-
                         </div>
 
-                        <p onClick={() => setReset(true)} className="forgot-password" style={{ fontSize: "11px" }}>Forgot Password?</p>
+                        <p
+                            onClick={() => setReset(true)}
+                            className="forgot-password"
+                            style={{ fontSize: "11px", cursor: "pointer" }}
+                        >
+                            Forgot Password?
+                        </p>
                     </form>
 
                     <hr />
@@ -181,6 +248,7 @@ const Signup = () => {
                 </div>
             </div>
 
+            {/* Forgot Password Modal */}
             {reset && (
                 <div className="forgot-reset">
                     <div className="forgot-resetbg">
@@ -189,93 +257,51 @@ const Signup = () => {
                             To recover your password, please fill out this form. Make sure the information you provide matches what we have on file.
                         </p>
 
-                        <form className="forgot-reset-form" action="">
+                        <form className="forgot-reset-form" onSubmit={handleResetPassword}>
                             <div className="forgot-input-group">
                                 <label>Registration/KNSAT Number*</label>
-                                <input type="text" placeholder="Your registration Number" required />
+                                <input type="text" name="register" placeholder="Your registration Number" value={formData.register} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">
-                                <label>Username/Email Address*</label>
-                                <input type="email" placeholder="Username/Email Address" required />
+                                <label>Email Address*</label>
+                                <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">
                                 <label>Mobile Number*</label>
-                                <input
-                                    type="text"
-                                    name="phone"
-                                    placeholder="+63 XXX-XXX-XXXX"
-                                    className="input-field"
-                                    value={formData.phone}
-                                    onChange={handleChange}
-                                />
+                                <input type="text" name="phone" placeholder="+63 XXX-XXX-XXXX" value={formData.phone} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">
                                 <label>Date of Birth*</label>
-                                <input
-                                    type="date"
-                                    name="birthdate"
-                                    className="input-field"
-                                    onChange={handleChange}
-                                    onFocus={(e) => e.target.placeholder = ""}
-                                    onBlur={(e) => e.target.placeholder = window.innerWidth <= 768 ? "MM/DD/YYYY" : ""}
-                                    placeholder={window.innerWidth <= 768 ? "MM/DD/YYYY" : ""}
-                                />
+                                <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">
                                 <label>New Password*</label>
                                 <div style={{ position: "relative", width: "100%" }}>
-                                    <input
-                                        type={newShowPassword ? "text" : "password"}
-                                        placeholder="Password"
-                                        className="input"
-                                        required
-                                        style={{ paddingRight: "30px" }}
-                                    />
+                                    <input type={newShowPassword ? "text" : "password"} name="password" placeholder="Password" value={formData.password} onChange={handleChange} style={{ paddingRight: "30px" }} required />
                                     <i
                                         className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
                                         onMouseDown={() => setNewShowPassword(true)}
                                         onMouseUp={() => setNewShowPassword(false)}
                                         onMouseLeave={() => setNewShowPassword(false)}
-                                        style={{
-                                            position: "absolute",
-                                            right: "10px",
-                                            top: "50%",
-                                            transform: "translateY(-93%)",
-                                            cursor: "pointer",
-                                            color: "#666",
-                                            fontSize: "16px"
-                                        }}
+                                        style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "#666", fontSize: "16px" }}
                                     ></i>
                                 </div>
                             </div>
-                            <div className="forgot-input-group" style={{ marginTop: "-20px" }}>
+
+                            <div className="forgot-input-group">
                                 <label>Confirm Password*</label>
                                 <div style={{ position: "relative", width: "100%" }}>
-                                    <input
-                                        type={newShowPassword ? "text" : "password"}
-                                        placeholder="Password"
-                                        className="input"
-                                        required
-                                        style={{ paddingRight: "30px" }}
-                                    />
+                                    <input type={newShowPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} style={{ paddingRight: "30px" }} required />
                                     <i
                                         className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
                                         onMouseDown={() => setNewShowPassword(true)}
                                         onMouseUp={() => setNewShowPassword(false)}
                                         onMouseLeave={() => setNewShowPassword(false)}
-                                        style={{
-                                            position: "absolute",
-                                            right: "10px",
-                                            top: "50%",
-                                            transform: "translateY(-93%)",
-                                            cursor: "pointer",
-                                            color: "#666",
-                                            fontSize: "16px"
-                                        }}
+                                        style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "#666", fontSize: "16px" }}
                                     ></i>
                                 </div>
                             </div>
@@ -285,10 +311,10 @@ const Signup = () => {
                                 <button type="submit" className="forgot-update-button">Update Password</button>
                             </div>
                         </form>
-
                     </div>
                 </div>
             )}
+
             {/* Right Section - Vision/Mission */}
             <div className="info-section">
                 <div className="school-branding">
@@ -303,7 +329,6 @@ const Signup = () => {
                 <p className="section-text">To develop globally competitive graduates to be active and responsible members of the community.</p>
                 <h2 className="section-title" style={{ color: "white" }}>GOAL</h2>
                 <p className="section-text">Kolehiyo ng Subic prepares students to succeed, fosters academic excellence through public education, delivers educational opportunities for students and educators to become globally competitive and active members of the community.</p>
-
             </div>
         </div>
     );
