@@ -9,10 +9,48 @@ export default function Enrollees() {
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [enlargedImage, setEnlargedImage] = useState(null);
+    const [courses, setCourses] = useState([]);
+    const [selectedCourse, setSelectedCourse] = useState("All");
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const [courses, setCourses] = useState([]); 
-    const [selectedCourse, setSelectedCourse] = useState("All"); 
-    const [searchTerm, setSearchTerm] = useState(""); 
+    const [openChat, setOpenChat] = useState(false);
+    const [chatStudent, setChatStudent] = useState(null);
+    const [messages, setMessages] = useState([]);
+    const [adminMessage, setAdminMessage] = useState("");
+
+    const openStudentChat = async (student) => {
+        setChatStudent(student);
+        setOpenChat(true);
+        setAdminMessage("");
+
+        try {
+            const res = await axios.get(
+                `http://localhost:2025/api/chats/${student._id}`
+            );
+            setMessages(res.data.messages);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const sendAdminMessage = async () => {
+        if (!adminMessage.trim()) return;
+
+        try {
+            const res = await axios.post(
+                `http://localhost:2025/api/chats/${chatStudent._id}`,
+                {
+                    sender: "admin",
+                    text: adminMessage,
+                }
+            );
+
+            setMessages(res.data.messages);
+            setAdminMessage("");
+        } catch (err) {
+            console.error(err);
+        }
+    };
 
     const formatFullName = (student) => {
         const { lastname, firstname, middlename } = student;
@@ -268,10 +306,10 @@ export default function Enrollees() {
                     </thead>
                     <tbody>
                         {filteredEnrollees.map((enrollee, index) => (
-                            <tr key={enrollee.register}>
+                            <tr key={enrollee.registerNumber}>
                                 <td>{index + 1}</td>
                                 <td>{formatFullName(enrollee)}</td>
-                                <td>{enrollee.register}</td>
+                                <td>{enrollee.registerNumber}</td>
                                 <td>
                                     <span
                                         style={{ textDecoration: 'underline', cursor: 'pointer' }}
