@@ -13,7 +13,6 @@ const Signup = () => {
     const [loading, setLoading] = useState(true);
     const [preRegisterOpen, setPreRegisterOpen] = useState(true); // default open
 
-
     useEffect(() => {
         setTimeout(() => {
             setLoading(false);
@@ -31,7 +30,6 @@ const Signup = () => {
             })
             .catch(() => setPreRegisterOpen(false)); // if error assume closed
     }, []);
-
 
     const [formData, setFormData] = useState({
         birthdate: "",

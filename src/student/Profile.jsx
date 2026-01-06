@@ -588,7 +588,7 @@ export default function Profile() {
         if (extension) updatedFields.extension = extension;
         if (birthplace) updatedFields.birthplace = birthplace;
         if (civil) updatedFields.civil = civil;
-        if (sex) updatedFields.sex = sex;
+        if (sex) updatedFields.sex = sex; 
         if (citizenship) updatedFields.citizenship = citizenship;
         if (religion) updatedFields.religion = religion;
         if (region) updatedFields.region = region;
@@ -1072,7 +1072,7 @@ export default function Profile() {
                                 <td style={{ fontSize: "13px", width: "20%" }}>
                                     <strong>Registration Number</strong>
                                 </td>
-                                <td style={{ fontSize: "13px" }}>{user?._id || ""}</td>
+                                <td style={{ fontSize: "13px" }}>{user?.register || ""}</td>
                             </tr>
                             <tr>
                                 <td style={{ fontSize: "13px" }}>

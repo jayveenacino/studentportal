@@ -3,7 +3,7 @@
     const StudentSchema = new mongoose.Schema({
 
         //!Profile
-        registerNumber: { type: String, unique: true },
+        register: { type: String, unique: true },
         firstname: String,
         middlename: String,
         lastname: String,
