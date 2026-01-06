@@ -588,7 +588,7 @@ export default function Profile() {
         if (extension) updatedFields.extension = extension;
         if (birthplace) updatedFields.birthplace = birthplace;
         if (civil) updatedFields.civil = civil;
-        if (sex) updatedFields.sex = sex;
+        if (sex) updatedFields.sex = sex; 
         if (citizenship) updatedFields.citizenship = citizenship;
         if (religion) updatedFields.religion = religion;
         if (region) updatedFields.region = region;

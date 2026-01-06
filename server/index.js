@@ -25,7 +25,6 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use("/", studentByDomainRoute);
-
 app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 app.use(acceptedStudentsRoutes);
