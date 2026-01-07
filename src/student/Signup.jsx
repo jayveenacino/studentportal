@@ -21,7 +21,7 @@ const Signup = () => {
     });
 
     const [formData, setFormData] = useState({
-        registerNumber: "",
+        registerNum: "",
         birthdate: "",
         phone: "",
         email: "",
@@ -96,9 +96,9 @@ const Signup = () => {
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
-        const { registerNumber, email, phone, birthdate, password, confirmPassword } = formData;
+        const { registerNum, email, phone, birthdate, password, confirmPassword } = formData;
 
-        if (!registerNumber || !email || !phone || !birthdate || !password || !confirmPassword) {
+        if (!registerNum || !email || !phone || !birthdate || !password || !confirmPassword) {
             Swal.fire({ icon: "error", title: "Error", text: "All fields are required!" });
             return;
         }
@@ -114,19 +114,21 @@ const Signup = () => {
         formattedPhone = formattedPhone.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
 
         const payload = {
-            registerNumber,
-            email,
+            registerNum,
+            email: email.trim().toLowerCase(),
             phone: formattedPhone,
             birthdate,
-            password
+            password,
+            confirmPassword,
         };
+
 
         try {
             const response = await axios.post("http://localhost:2025/reset-password", payload);
             Swal.fire({ icon: "success", title: "Success", text: response.data.message || "Password updated successfully!" });
             setReset(false);
             setFormData({
-                registerNumber: "",
+                registerNum: "",
                 birthdate: "",
                 phone: "",
                 email: "",
@@ -239,7 +241,7 @@ const Signup = () => {
                         <form className="forgot-reset-form" onSubmit={handleResetPassword}>
                             <div className="forgot-input-group">
                                 <label>Registration/KNSAT Number*</label>
-                                <input type="text" name="registerNumber" placeholder="Your registration Number" value={formData.registerNumber} onChange={handleChange} required />
+                                <input type="text" name="registerNum" placeholder="Your registration Number" value={formData.registerNum} onChange={handleChange} required />
                             </div>
 
                             <div className="forgot-input-group">

@@ -11,7 +11,7 @@ const StudentSchema = new mongoose.Schema({
     register: String, // optional, NOT unique
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true },
-    conpassword: String,
+    confirmpassword: String,
     studentNumber: { type: String, default: null },
     domainEmail: { type: String, default: null },
     portalPassword: { type: String, default: null },

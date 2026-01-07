@@ -99,9 +99,9 @@ app.post('/login', async (req, res) => {
 
 // ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
-    const { register, email, phone, birthdate, password, confirmPassword } = req.body;
+    const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
-    if (!register || !email || !phone || !birthdate || !password || !confirmPassword) {
+    if (!registerNum || !email || !phone || !birthdate || !password || !confirmPassword) {
         return res.status(400).json({ message: "All fields are required" });
     }
 
@@ -110,21 +110,27 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
+        // Normalize phone input for comparison (just digits)
+        const inputPhone = phone.replace(/\D/g, '').slice(-10);
+
+        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
-            register,
-            email,
-            phone,
+            registerNum: registerNum.trim(),
+            email: email.trim().toLowerCase(),
             birthdate
         });
 
-        if (!student) {
+        if (!student || student.phone.replace(/\D/g, '').slice(-10) !== inputPhone) {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
+        // Save password and update phone in proper format
         student.password = password;
+        student.phone = `${inputPhone.slice(0,3)}-${inputPhone.slice(3,6)}-${inputPhone.slice(6,10)}`;
+
         await student.save();
 
-        res.status(200).json({ message: "Password updated successfully" });
+        res.status(200).json({ message: "Password updated successfully", phone: student.phone });
     } catch (error) {
         console.error("Reset password error:", error);
         res.status(500).json({ message: "Server error while resetting password", error: error.message });
