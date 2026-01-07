@@ -17,9 +17,10 @@ import AdminDashboard from './Admin/Admindashboard';
 import Preregister from './student/Preregister';
 import PrivateRoute from './student/PrivateRoute';
 import { AdminContextProvider } from './Admin/useAdmin';
-import Student from './student/Student';	
+import Student from './student/Student';
 import StudentMain from './StudentPortalMain/StudentMain';
 import PresidentOffice from './HomePage/PresidentOffice';
+import NotFound from './pages/NotFound';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -48,7 +49,9 @@ const router = createBrowserRouter(
 					</PrivateRoute>
 				}
 			/>
-			<Route path="*" element={<Navigate to="/" />} />
+
+			<Route path="pages/NotFound" element={<NotFound />} />
+			<Route path="*" element={<Navigate to="/pages/NotFound" replace />} />
 		</Route>
 	)
 );
@@ -60,5 +63,3 @@ export default function App() {
 		</AdminContextProvider>
 	);
 }
-
-

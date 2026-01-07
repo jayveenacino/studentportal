@@ -70,7 +70,6 @@ router.delete('/api/students/:id/decline', async (req, res) => {
 });
 
 // ================= ACCEPT STUDENT =================
-// ================= ACCEPT STUDENT =================
 router.put('/api/students/:id/accept', async (req, res) => {
     try {
         const id = req.params.id;
@@ -147,15 +146,15 @@ router.put('/api/students/:id/accept', async (req, res) => {
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: 'jayveemadriaganacino@gmail.com',
-                pass: 'edni bnjc hcic ujad',
+                user: 'kolehiyongsubic.ph@gmail.com',
+                pass: 'tefd mezs vvxz jrjk',
             },
         });
 
         const mailOptions = {
-            from: `"KNS Admin" <jayveemadriaganacino@gmail.com>`,
+            from: `"Kolehiyo Ng Subic Admission" <kolehiyongsubic.ph@gmail.com>`,
             to: recipientEmail,
-            subject: 'KNS Pre-Registration Accepted',
+            subject: 'Kolehiyo Ng Subic Pre-Registration Accepted',
             html: `
                 <div style="text-align: center; font-family: Arial, sans-serif; padding: 20px;">
                     <img src="https://i.imgur.com/cV0u8i4.png" alt="KNS Logo" style="width: 100px; margin-bottom: 20px;" />
@@ -166,7 +165,7 @@ router.put('/api/students/:id/accept', async (req, res) => {
                     <p><b>School Domain:</b> ${domainEmail}<br/>
                     <b>Temporary Password:</b> <span style="color: #007bff;">${plainPassword}</span>
                     </p>
-                    <p>Login here: <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></p>
+                    <p>Login here: <a href="http://localhost:3000" target="_blank"> http://kolehiyongsubic.ph@edu.ph</a></p>
                     <p style="font-size: 14px; color: #555;">
                         Keep learning and growing.<br/>
                         — Kolehiyo ng Subic Admissions Team

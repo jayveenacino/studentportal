@@ -9,7 +9,7 @@ export default function Root() {
         "/signup",
         "/signup/create",
         "/login",
-        "/adminlogin",  
+        "/adminlogin",
         "/login/notice",
         "/admindashboard",
         "/preregister",
@@ -23,7 +23,8 @@ export default function Root() {
         "/body/signup",
         "/studentmain",
         "/signup/notice",
-        "/signup/create/notice"
+        "/signup/create/notice",
+        "/pages/NotFound"
     ]
 
     const shouldShowLayout = !hiddenPaths.includes(location.pathname)

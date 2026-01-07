@@ -25,44 +25,62 @@ function Dashboard() {
     const [notifCount, setNotifCount] = useState(0);
     const [openDropdown, setOpenDropdown] = useState(null);
     const [adminUsername, setAdminUsername] = useState("");
-    const storedAdmin = JSON.parse(localStorage.getItem("Admin"));
 
-    //  SECURITY FEATURE 1: Check if Admin is logged in
+    // Function to get Admin from localStorage
+    const getStoredAdmin = () => {
+        const stored = localStorage.getItem("Admin");
+        return stored ? JSON.parse(stored) : null;
+    };
+
+    // SECURITY FEATURE 1: Check if Admin is logged in
     useEffect(() => {
-        if (!storedAdmin || !storedAdmin.username) {
-            navigate("/auth/secure-access/admin-portal", { replace: true });
-        }
-    }, [navigate, storedAdmin]);
+        const checkAdmin = () => {
+            const storedAdmin = getStoredAdmin();
+            if (!storedAdmin || !storedAdmin.username) {
+                navigate("/auth/secure-access/admin-portal", { replace: true });
+            } else {
+                setAdminUsername(storedAdmin.username);
+            }
+        };
 
-    //  SECURITY FEATURE 2: Disable Back/Undo Navigation
+        checkAdmin();
+
+        // Listen for storage changes (in case admin logs in/out in another tab)
+        const handleStorageChange = () => checkAdmin();
+        window.addEventListener("storage", handleStorageChange);
+
+        return () => {
+            window.removeEventListener("storage", handleStorageChange);
+        };
+    }, [navigate]);
+
+    // SECURITY FEATURE 2: Disable Back/Undo Navigation
     useEffect(() => {
         window.history.pushState(null, "", window.location.href);
         const handleBack = () => {
             window.history.pushState(null, "", window.location.href);
         };
         window.addEventListener("popstate", handleBack);
-
-        return () => {
-            window.removeEventListener("popstate", handleBack);
-        };
+        return () => window.removeEventListener("popstate", handleBack);
     }, []);
 
-    //  SECURITY FEATURE 3: Disable Right Click
+    // SECURITY FEATURE 3: Disable Right Click
     useEffect(() => {
         const handleContextMenu = (e) => e.preventDefault();
         document.addEventListener("contextmenu", handleContextMenu);
         return () => document.removeEventListener("contextmenu", handleContextMenu);
     }, []);
 
-    // Set Admin Username if Logged In
+    // Set Admin Username if Logged In (update every 1 sec to avoid auto logout)
     useEffect(() => {
-        if (storedAdmin && storedAdmin.username) {
-            setAdminUsername(storedAdmin.username);
-        } else {
-            const storedUsername = localStorage.getItem("adminUsername");
-            if (storedUsername) setAdminUsername(storedUsername);
-        }
-    }, [storedAdmin]);
+        const interval = setInterval(() => {
+            const storedAdmin = getStoredAdmin();
+            if (storedAdmin && storedAdmin.username) {
+                setAdminUsername(storedAdmin.username);
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         document.title = "Kolehiyo Ng Subic - Admin Portal";
@@ -136,7 +154,6 @@ function Dashboard() {
                     <p>Loading... Please Wait</p>
                 </div>
             ) : (
-
                 <div className="adcontainer">
                     <div className="adnav">
                         <img className="adlogo" src="/img/knshdlogo.png" style={{ height: "45px" }} alt="Logo" />

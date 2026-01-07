@@ -1,33 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+
 const Nav = () => {
     const [menuOpen, setMenuOpen] = useState(false);
+    const [dropdownOpen, setDropdownOpen] = useState(null);
 
-    const toggleMenu = () => {
-        setMenuOpen(!menuOpen);
+    const toggleDropdown = (menu) => {
+        setDropdownOpen(dropdownOpen === menu ? null : menu);
     };
+
+    const handleClickOutside = (e) => {
+        if (!e.target.closest(".enuique-dropdown")) {
+            setDropdownOpen(null);
+        }
+    };
+
+    useEffect(() => {
+        document.addEventListener("click", handleClickOutside);
+        return () => document.removeEventListener("click", handleClickOutside);
+    }, []);
 
     return (
         <div className="NavWarp">
             <div className="nav-container">
                 <Link to="Home">
-                    <img
-                        className="navlogo"
-                        src="/img/knshdlogo.png"
-                        alt="KNS Logo"
-                        
-                    />
+                    <img className="navlogo" src="/img/knshdlogo.png" alt="KNS Logo" />
                 </Link>
-                <div
-                    className="nav-title"
-                >
+                <div className="nav-title">
                     <Link to="Home" style={{ textDecoration: "none" }}>
-                        <h1 >KOLEHIYO NG SUBIC</h1>
+                        <h1>KOLEHIYO NG SUBIC</h1>
                     </Link>
                     <Link to="Home" style={{ textDecoration: "none" }}>
                         <p>Educasyon Tungo sa Kaunlaran</p>
                     </Link>
-
                 </div>
 
                 <div
@@ -38,54 +43,108 @@ const Nav = () => {
                         justifyContent: "flex-end",
                         gap: "30px",
                         padding: "20px",
-                        marginLeft: "auto"
+                        marginLeft: "auto",
                     }}
                 >
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px", }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}
-                    >Home</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>About Us</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>Administration</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>Admission</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>Research and Extension</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>Campus Life</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>What's New?</Link>
-                    <Link style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => e.target.style.color = "orange"}
-                        onMouseLeave={(e) => e.target.style.color = "white"}>Contact Us</Link>
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        Home
+                    </Link>
+
+                    <div className="enuique-dropdown">
+                        <span
+                            style={{ color: "white", fontSize: "13px", cursor: "pointer" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleDropdown("about");
+                            }}
+                        >
+                            About Us
+                        </span>
+                        {dropdownOpen === "about" && (
+                            <div className="enuique-dropdown-menu">
+                                <Link to="/history">History</Link>
+                                <Link to="/mission">Mission & Vision</Link>
+                                <Link to="/team">Team</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="enuique-dropdown">
+                        <span
+                            style={{ color: "white", fontSize: "13px", cursor: "pointer" }}
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                toggleDropdown("administration");
+                            }}
+                        >
+                            Administration
+                        </span>
+                        {dropdownOpen === "administration" && (
+                            <div className="enuique-dropdown-menu">
+                                <Link to="/staff">Staff</Link>
+                                <Link to="/departments">Departments</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        Admission
+                    </Link>
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        Research and Extension
+                    </Link>
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        Campus Life
+                    </Link>
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        What's New?
+                    </Link>
+                    <Link
+                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
+                        onMouseEnter={(e) => (e.target.style.color = "orange")}
+                        onMouseLeave={(e) => (e.target.style.color = "white")}
+                    >
+                        Contact Us
+                    </Link>
                 </div>
+
                 <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
-                    <i class="fa-solid fa-bars"></i>
+                    <i className="fa-solid fa-bars"></i>
                 </div>
             </div>
 
-            {/* Mobile Menu */}
             <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
                 <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "16px" }}>Home</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>About Us</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Administration</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Admission</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Research and Extension</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Campus Life</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Whats New?</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px",marginTop:"14px" }}>Contact Us</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>About Us</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Administration</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Admission</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Research and Extension</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Campus Life</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Whats New?</Link>
+                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Contact Us</Link>
             </div>
         </div>
     );
 };
 
 export default Nav;
-
