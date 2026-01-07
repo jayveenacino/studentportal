@@ -406,7 +406,7 @@ export default function Enrollees() {
                         <div className="studentdetails-info-grid">
                             <div><strong>Name:</strong> {formatFullName(selectedStudent)}</div>
                             <div><strong>PRE-REG Password:</strong> {selectedStudent.password}</div>
-                            <div><strong>Scholarship Type:</strong> {selectedStudent.scholar}</div>
+                            <div><strong>Registration Number:</strong> {selectedStudent.registerNum}</div>
                             <div><strong>SHS Strand:</strong> {selectedStudent.strand}</div>
                             <div><strong>1st Course:</strong> {selectedStudent.selectedCourse}</div>
                             <div><strong>2nd Course:</strong> {selectedStudent.selectedSecCourse}</div>

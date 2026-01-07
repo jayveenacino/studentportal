@@ -150,7 +150,7 @@ export default function Welcome() {
 
                     <div className="chat-body">
                         {messages.length === 0 && (
-                            <p style={{ textAlign: "center", opacity: 0.6 }}>No messages yet</p>
+                            <p style={{ textAlign: "center", opacity: 0.6 , fontSize:"13px", marginTop:"150px"}}>No messages yet</p>
                         )}
                         {messages.map((msg, index) => (
                             <div key={index} className="chat-message admin">

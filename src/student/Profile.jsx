@@ -1065,7 +1065,7 @@ export default function Profile() {
                                 <td style={{ fontSize: "13px", width: "20%" }}>
                                     <strong>Registration Number</strong>
                                 </td>
-                                <td style={{ fontSize: "13px" }}>{user?.registerNumber || ""}</td>
+                                <td style={{ fontSize: "13px" }}>{user?.registerNum || ""}</td>
                             </tr>
                             <tr>
                                 <td style={{ fontSize: "13px" }}>
@@ -2290,7 +2290,7 @@ export default function Profile() {
                                                     placeholder="Ex. 2015"
                                                     value={elemYear || ""}
                                                     onChange={(e) => setElemYear(e.target.value)}
-                                                    type="text"
+                                                    type="number"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
@@ -2334,7 +2334,7 @@ export default function Profile() {
                                                     placeholder="Ex. 2020"
                                                     className={`persofom-input ${educErrors.highYear ? "error" : ""
                                                         }`}
-                                                    type="text"
+                                                    type="number"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
@@ -2421,7 +2421,7 @@ export default function Profile() {
                                                         }`}
                                                     value={lrn || ""}
                                                     onChange={(e) => setLrn(e.target.value)}
-                                                    type="text"
+                                                    type="number"
                                                     style={{ fontSize: "15px" }}
                                                     placeholder="LRN"
                                                 />

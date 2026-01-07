@@ -344,7 +344,8 @@
 }
 
 .export-btn {
-    padding: 8px 14px;
+    height: 36px;
+    width: 100%;
     background-color: #0a3d18;
     color: white;
     border: none;

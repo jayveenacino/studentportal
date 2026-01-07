@@ -82,7 +82,6 @@ export default function StudentEnrollees() {
                     ))}
                 </select>
 
-
             </div>
 
             <div className="enrollees-table-container">
