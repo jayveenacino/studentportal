@@ -346,10 +346,36 @@ table tbody tr td.status-stdash.not-enrolled-stdash {
     background: #bbb;
 }
 
+
 .clickable-status {
     cursor: pointer;
     text-decoration: underline;
 }
+
+.force-modal {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.force-modal .modal-content {
+    width: 400px;
+    text-align: center;
+}
+
+.force-modal input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.force-modal button {
+    width: 100%;
+    padding: 12px;
+    background: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
 
 @keyframes fadeIn {
     from {

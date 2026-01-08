@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import './studentmain.css/studentmain.css';
+import "./studentmain.css/studentmain.css";
 import ProfileEnlistment from "./ProfileEnlistment";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -19,19 +19,18 @@ export default function StudentMain() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showOldPass, setShowOldPass] = useState(false);
     const [showNewPass, setShowNewPass] = useState(false);
-    const [showConfirmPass, setShowConfirmPass] = useState(false);
 
     const navigate = useNavigate();
     const dropdownRef = useRef(null);
 
     const confirmLogout = () => {
         Swal.fire({
-            title: 'Are you sure?',
+            title: "Are you sure?",
             text: "Do you want to logout?",
-            icon: 'warning',
+            icon: "warning",
             showCancelButton: true,
-            confirmButtonText: 'Yes',
-            cancelButtonText: 'No'
+            confirmButtonText: "Yes",
+            cancelButtonText: "No",
         }).then((result) => {
             if (result.isConfirmed) {
                 localStorage.removeItem("acceptedStudent");
@@ -66,23 +65,19 @@ export default function StudentMain() {
     };
 
     useEffect(() => {
-        const storedStudent = localStorage.getItem("acceptedStudent");
-        if (storedStudent) {
-            try {
-                const parsed = JSON.parse(storedStudent);
-                setStudent(parsed);
-            } catch {
-                localStorage.removeItem("acceptedStudent");
+        const init = () => {
+            const storedStudent = localStorage.getItem("acceptedStudent");
+            if (!storedStudent) {
+                navigate("/login");
+                return;
             }
-        }
-        setLoading(false);
-    }, []);
-
-    useEffect(() => {
-        if (!loading && !student) {
-            navigate("/login");
-        }
-    }, [loading, student, navigate]);
+            setStudent(JSON.parse(storedStudent));
+            setTimeout(() => {
+                setLoading(false);
+            }, 600);
+        };
+        init();
+    }, [navigate]);
 
     useEffect(() => {
         const handleResize = () => {
@@ -110,7 +105,7 @@ export default function StudentMain() {
 
     useEffect(() => {
         const handleStorageChange = (e) => {
-            if (e.key === 'activeSession' && e.newValue === null) {
+            if (e.key === "activeSession" && e.newValue === null) {
                 navigate("/login");
             }
         };
@@ -119,8 +114,10 @@ export default function StudentMain() {
     }, [navigate]);
 
     useEffect(() => {
-        let timeout; const resetTimer = () => {
-            clearTimeout(timeout); const expiry = Date.now() + 10 * 60 * 1000;
+        let timeout;
+        const resetTimer = () => {
+            clearTimeout(timeout);
+            const expiry = Date.now() + 10 * 60 * 1000;
             localStorage.setItem("sessionExpiry", expiry);
             timeout = setTimeout(() => {
                 localStorage.removeItem("acceptedStudent");
@@ -130,13 +127,16 @@ export default function StudentMain() {
             }, 10 * 60 * 1000);
         };
         const events = ["mousemove", "keydown", "click"];
-        events.forEach(evt => window.addEventListener(evt, resetTimer)); resetTimer();
-        return () => { clearTimeout(timeout); events.forEach(evt => window.removeEventListener(evt, resetTimer)); };
+        events.forEach((evt) => window.addEventListener(evt, resetTimer));
+        resetTimer();
+        return () => {
+            clearTimeout(timeout);
+            events.forEach((evt) => window.removeEventListener(evt, resetTimer));
+        };
     }, [navigate]);
 
     const formatFullName = () => {
         if (!student) return "Student";
-
         if (student.fullName) {
             const parts = student.fullName.trim().split(" ");
             if (parts.length >= 3) {
@@ -147,18 +147,15 @@ export default function StudentMain() {
             }
             return capitalizeWords(student.fullName);
         }
-
         const firstname = student.firstname || student.firstName || "";
         const middlename = student.middlename || student.middleName || "";
         const lastname = student.lastname || student.lastName || "";
         const extension = student.extension || "";
-
         const formattedFirst = capitalize(firstname.trim());
         const formattedLast = capitalize(lastname.trim());
         const middleInitial = middlename.trim()
             ? `${middlename.trim().charAt(0).toUpperCase()}.`
             : "";
-
         return `${formattedFirst} ${middleInitial} ${formattedLast} ${extension}`.trim();
     };
 
@@ -166,165 +163,204 @@ export default function StudentMain() {
         str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
 
     const capitalizeWords = (str) =>
-        str
-            .toLowerCase()
-            .replace(/\b\w/g, (char) => char.toUpperCase());
-
-    if (loading) {
-        return (
-            <div className="loading-screen">
-                <div className="loading-content">
-                    <img src="./img/loading.gif" alt="Loading..." />
-                    <p>Loading... Please Wait</p>
-                </div>
-            </div>
-        );
-    }
+        str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
 
     return (
-        <div className="stud-page-layout">
-            {isMobile && sidebarVisible && <div className="sidebar-overlay show" onClick={handleOverlayClick}></div>}
-            
-            <div className="studmain-navbar">
-                
-                {isMobile && (
-                    <i
-                        className="fa-solid fa-bars stud-menu-toggle"
-                        onClick={() => setSidebarVisible(!sidebarVisible)}
-                    ></i>
-                )}
-                <div
-                    className="navbar-user"
-                    ref={dropdownRef}
-                    onMouseEnter={() => !isMobile && setIsOpen(true)}
-                    onMouseLeave={() => !isMobile && setIsOpen(false)}
-                    onClick={() => isMobile && setIsOpen(prev => !prev)}
-                    style={{ position: "relative", cursor: "pointer" }}
-                >
-                    <i className="fa-solid fa-user-circle"></i>
-                    <span className="studentname">{student ? formatFullName() : "Student"}</span>
-                    <i className="fa-solid fa-caret-down dropdown-icon"></i>
-                    {isOpen && (
-                        <div className="user-dropdown">
-                            <button className="dropdown-item" onClick={onChangePassword}>
-                                Change Password
-                            </button>
-                            <button className="dropdown-item" onClick={confirmLogout}>
-                                Logout
-                            </button>
+        <>
+            {loading ? (
+                <div className="loading-screen">
+                    <div className="spinner"></div>
+                    <p>Loading... Please Wait</p>
+                </div>
+            ) : (
+                <div className="stud-page-layout">
+                    {isMobile && sidebarVisible && (
+                        <div className="sidebar-overlay show" onClick={handleOverlayClick}></div>
+                    )}
+
+                    <div className="studmain-navbar">
+                        {isMobile && (
+                            <i
+                                className="fa-solid fa-bars stud-menu-toggle"
+                                onClick={() => setSidebarVisible(!sidebarVisible)}
+                            ></i>
+                        )}
+
+                        <div
+                            className="navbar-user"
+                            ref={dropdownRef}
+                            onMouseEnter={() => !isMobile && setIsOpen(true)}
+                            onMouseLeave={() => !isMobile && setIsOpen(false)}
+                            onClick={() => isMobile && setIsOpen((prev) => !prev)}
+                            style={{ position: "relative", cursor: "pointer" }}
+                        >
+                            <i className="fa-solid fa-user-circle"></i>
+                            <span className="studentname">
+                                {student ? formatFullName() : "Student"}
+                            </span>
+                            <i className="fa-solid fa-caret-down dropdown-icon"></i>
+                            {isOpen && (
+                                <div className="user-dropdown">
+                                    <button className="dropdown-item" onClick={onChangePassword}>
+                                        <i className="fa-solid fa-key" style={{ marginRight: "8px" }}></i>
+                                        Change Password
+                                    </button>
+                                    <button className="dropdown-item" onClick={confirmLogout}>
+                                        <i
+                                            className="fa-solid fa-right-from-bracket"
+                                            style={{ marginRight: "8px" }}
+                                        ></i>
+                                        Logout
+                                    </button>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                    {showPasswordModal && (
+                        <div className="unique-modal-overlay">
+                            <div className="unique-password-modal">
+                                <span
+                                    className="close-modal-btn"
+                                    onClick={() => setShowPasswordModal(false)}
+                                >
+                                    &times;
+                                </span>
+
+                                <h2 className="unique-modal-title">
+                                    <i className="fa-solid fa-key" style={{ marginRight: "8px" }}></i>
+                                    Change Password
+                                </h2>
+
+                                <p className="unique-modal-description">
+                                    All fields are required. Password must be at least eight (8)
+                                    characters or more
+                                </p>
+
+                                <label className="unique-modal-label">Old Password</label>
+                                <div className="unique-password-field">
+                                    <input
+                                        type={showOldPass ? "text" : "password"}
+                                        value={oldPassword}
+                                        onChange={(e) => setOldPassword(e.target.value)}
+                                        placeholder="Enter old password"
+                                    />
+                                    <i
+                                        className={`fa-solid ${
+                                            showOldPass ? "fa-eye-slash" : "fa-eye"
+                                        }`}
+                                        onMouseDown={() => setShowOldPass(true)}
+                                        onMouseUp={() => setShowOldPass(false)}
+                                        onMouseLeave={() => setShowOldPass(false)}
+                                    ></i>
+                                </div>
+
+                                <label className="unique-modal-label">New Password</label>
+                                <div className="unique-password-field">
+                                    <input
+                                        type={showNewPass ? "text" : "password"}
+                                        value={newPassword}
+                                        onChange={(e) => setNewPassword(e.target.value)}
+                                        placeholder="Enter new password"
+                                    />
+                                    <i
+                                        className={`fa-solid ${
+                                            showNewPass ? "fa-eye-slash" : "fa-eye"
+                                        }`}
+                                        onMouseDown={() => setShowNewPass(true)}
+                                        onMouseUp={() => setShowNewPass(false)}
+                                        onMouseLeave={() => setShowNewPass(false)}
+                                    ></i>
+                                </div>
+
+                                <label className="unique-modal-label">Confirm New Password</label>
+                                <div className="unique-password-field">
+                                    <input
+                                        type={showNewPass ? "text" : "password"}
+                                        value={confirmPassword}
+                                        onChange={(e) => setConfirmPassword(e.target.value)}
+                                        placeholder="Confirm new password"
+                                    />
+                                    <i
+                                        className={`fa-solid ${
+                                            showNewPass ? "fa-eye-slash" : "fa-eye"
+                                        }`}
+                                        onMouseDown={() => setShowNewPass(true)}
+                                        onMouseUp={() => setShowNewPass(false)}
+                                        onMouseLeave={() => setShowNewPass(false)}
+                                    ></i>
+                                </div>
+
+                                <div className="unique-modal-actions">
+                                    <button
+                                        type="submit"
+                                        className="unique-save-btn"
+                                        onClick={handlePasswordSubmit}
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     )}
-                </div>
-            </div>
 
-            {showPasswordModal && (
-                <div className="modal-overlay">
-                    <div className="password-modal">
-                        <h2>Change Password</h2>
-                        <form onSubmit={handlePasswordSubmit}>
-                            {/* Old Password */}
-                            <label>Old Password</label>
-                            <div className="password-field">
-                                <input
-                                    type={showOldPass ? "text" : "password"}
-                                    value={oldPassword}
-                                    onChange={(e) => setOldPassword(e.target.value)}
-                                    placeholder="Enter old password"
-                                />
-                                <i
-                                    className={`fa-solid ${showOldPass ? "fa-eye-slash" : "fa-eye"}`}
-                                    onClick={() => setShowOldPass(!showOldPass)}
-                                ></i>
-                            </div>
+                    <div
+                        className={`stud-sidebar university-style ${
+                            sidebarVisible ? "show" : "hide"
+                        }`}
+                    >
+                        <div className="stud-sidebar-header">
+                            <img src="./img/knshdlogo.png" alt="Logo" draggable="false" />
+                            <h2>Kolehiyo Ng Subic</h2>
+                            <p>Student Information System</p>
+                            <hr className="sidehr" />
+                        </div>
+                        <ul className="stud-sidebar-menu">
+                            <li onClick={() => setActiveSection("welcome")}>
+                                <i className="fa-solid fa-house"></i> Student Dashboard
+                            </li>
+                            <li onClick={() => setActiveSection("profile")}>
+                                <i className="fa-solid fa-id-card"></i> Profile/Enlistment
+                            </li>
+                            <li onClick={() => setActiveSection("schedule")}>
+                                <i className="fa-solid fa-calendar-alt"></i> Schedule
+                            </li>
+                            <li onClick={() => setActiveSection("upload")}>
+                                <i className="fa-solid fa-upload"></i> E-Form
+                            </li>
+                            <li onClick={() => setActiveSection("summary")}>
+                                <i className="fa-solid fa-graduation-cap"></i> Summary of Grades
+                            </li>
+                            <li onClick={() => setActiveSection("evaluation")}>
+                                <i className="fa-solid fa-file-alt"></i> Academic Evaluation
+                            </li>
+                            <li onClick={() => setActiveSection("term-grades")}>
+                                <i className="fa-solid fa-chart-line"></i> Term Grades
+                            </li>
+                            <li onClick={() => setActiveSection("faculty-eval")}>
+                                <i className="fa-solid fa-chalkboard-teacher"></i> Faculty Evaluation
+                            </li>
+                            <li onClick={() => setActiveSection("announcements")}>
+                                <i className="fa-solid fa-bullhorn"></i> Announcements
+                            </li>
+                        </ul>
+                    </div>
 
-                            {/* New Password */}
-                            <label>New Password</label>
-                            <div className="password-field">
-                                <input
-                                    type={showNewPass ? "text" : "password"}
-                                    value={newPassword}
-                                    onChange={(e) => setNewPassword(e.target.value)}
-                                    placeholder="Enter new password"
-                                />
-                                <i
-                                    className={`fa-solid ${showNewPass ? "fa-eye-slash" : "fa-eye"}`}
-                                    onClick={() => setShowNewPass(!showNewPass)}
-                                ></i>
-                            </div>
-
-                            {/* Confirm Password */}
-                            <label>Confirm New Password</label>
-                            <div className="password-field">
-                                <input
-                                    type={showConfirmPass ? "text" : "password"}
-                                    value={confirmPassword}
-                                    onChange={(e) => setConfirmPassword(e.target.value)}
-                                    placeholder="Confirm new password"
-                                />
-                                <i
-                                    className={`fa-solid ${showConfirmPass ? "fa-eye-slash" : "fa-eye"}`}
-                                    onClick={() => setShowConfirmPass(!showConfirmPass)}
-                                ></i>
-                            </div>
-
-                            <div className="modal-actions">
-                                <button type="submit" className="save-btn">Save</button>
-                            </div>
-                        </form>
-                        <i
-                            className="fa-solid fa-xmark close-modal"
-                            onClick={() => setShowPasswordModal(false)}
-                        ></i>
+                    <div className="stud-main">
+                        <div className="stud-content">
+                            {activeSection === "welcome" && (
+                                <StudentDashboard student={student} />
+                            )}
+                            {activeSection === "profile" && (
+                                <ProfileEnlistment student={student} />
+                            )}
+                            {activeSection === "announcements" && (
+                                <StudentAnnouncement student={student} />
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
-
-
-            <div className={`stud-sidebar university-style ${sidebarVisible ? "show" : "hide"}`}>
-                
-                <div className="stud-sidebar-header">
-                    <img src="./img/knshdlogo.png" alt="Logo" draggable="false" />
-                    <h2>Kolehiyo Ng Subic</h2>
-                    <p>Student Information System</p>
-                    <hr className="sidehr" />
-                </div>
-                <ul className="stud-sidebar-menu">
-                    <li onClick={() => setActiveSection("welcome")}>
-                        <i className="fa-solid fa-house"></i> Student Dashboard
-                    </li>
-                    <li onClick={() => setActiveSection("profile")}>
-                        <i className="fa-solid fa-id-card"></i> Profile/Enlistment
-                    </li>
-                    <li onClick={() => setActiveSection("schedule")}>
-                        <i className="fa-solid fa-calendar-alt"></i> Schedule
-                    </li>
-                    <li onClick={() => setActiveSection("upload")}>
-                        <i className="fa-solid fa-upload"></i> E-Form
-                    </li>
-                    <li onClick={() => setActiveSection("summary")}>
-                        <i className="fa-solid fa-graduation-cap"></i> Summary of Grades
-                    </li>
-                    <li onClick={() => setActiveSection("evaluation")}>
-                        <i className="fa-solid fa-file-alt"></i> Academic Evaluation
-                    </li>
-                    <li onClick={() => setActiveSection("term-grades")}>
-                        <i className="fa-solid fa-chart-line"></i> Term Grades
-                    </li>
-                    <li onClick={() => setActiveSection("faculty-eval")}>
-                        <i className="fa-solid fa-chalkboard-teacher"></i> Faculty Evaluation
-                    </li>
-                    <li onClick={() => setActiveSection("announcements")}>
-                        <i className="fa-solid fa-bullhorn"></i> Announcements
-                    </li>
-                </ul>
-            </div>
-            <div className="stud-main">
-                <div className="stud-content">
-                    {activeSection === "welcome" && <StudentDashboard student={student} />}
-                    {activeSection === "profile" && <ProfileEnlistment student={student} />}
-                    {activeSection === "announcements" && <StudentAnnouncement student={student} />}
-                </div>
-            </div>
-        </div>
+        </>
     );
 }

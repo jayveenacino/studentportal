@@ -57,14 +57,82 @@ router.get('/api/students', async (req, res) => {
     }
 });
 
-// ================= DECLINE STUDENT =================
+// ================= DECLINE STUDENT WITH EMAIL =================
 router.delete('/api/students/:id/decline', async (req, res) => {
     try {
-        const student = await Student.findByIdAndDelete(req.params.id);
-        if (!student) return res.status(404).json({ message: 'Student not found' });
+        const student = await Student.findById(req.params.id);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
 
-        res.json({ message: 'Student declined and removed from database.' });
+        const recipientEmail =
+            student.email || student.gmail || student.personalEmail;
+
+        if (!recipientEmail) {
+            return res.status(400).json({ message: 'No valid email found for this student' });
+        }
+
+        // ================= EMAIL SETUP =================
+        const transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: 'kolehiyongsubic.ph@gmail.com',
+                pass: 'tefd mezs vvxz jrjk',
+            },
+        });
+
+        const mailOptions = {
+            from: `"Kolehiyo Ng Subic Admission" <kolehiyongsubic.ph@gmail.com>`,
+            to: recipientEmail,
+            subject: 'Kolehiyo Ng Subic Pre-Registration Status',
+            html: `
+        <div style="text-align: center; font-family: Arial, sans-serif; padding: 20px;">
+            <img 
+                src="https://i.imgur.com/cV0u8i4.png" 
+                alt="KNS Logo" 
+                style="width: 100px; margin-bottom: 20px;" 
+            />
+
+            <hr>
+
+            <h2>
+                Hi ${student.firstname || ''} ${student.middlename || ''} ${student.lastname || ''},
+            </h2>
+
+            <p>
+                Thank you for your interest in <b>KOLEHIYO NG SUBIC</b>.
+            </p>
+
+            <p style="color: #c0392b;">
+                We regret to inform you that your pre-registration application has been
+                <b>declined</b>.
+            </p>
+
+            <p>
+                You may re-apply during the next enrollment period or contact the
+                admissions office for further guidance.
+            </p>
+
+            <p style="font-size: 14px; color: #555;">
+                We appreciate your effort and wish you the best in your academic journey.
+            </p>
+
+            <p style="font-size: 14px; color: #555;">
+                — Kolehiyo ng Subic Admissions Team
+            </p>
+        </div>
+    `,
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        // ================= DELETE AFTER EMAIL =================
+        await Student.findByIdAndDelete(req.params.id);
+
+        res.json({ message: 'Student declined and email sent successfully.' });
+
     } catch (err) {
+        console.error("Decline error:", err);
         res.status(500).json({ error: err.message });
     }
 });

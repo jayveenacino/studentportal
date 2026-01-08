@@ -170,7 +170,6 @@ export default function StudentDashboard() {
                 </div>
             </div>
 
-            {/* 🧩 Modal */}
             {showModal && (
                 <div className="modal-overlay" onClick={handleCloseModal}>
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>

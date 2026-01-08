@@ -102,7 +102,7 @@ export default function Enrollees() {
             title: 'Sending confirmation...',
             text: 'Please wait while we accept the student and send an email.',
             allowOutsideClick: false,
-            allowEscapeKey: false,
+            allowEscapeKey: false,  
             didOpen: () => {
                 Swal.showLoading();
             }

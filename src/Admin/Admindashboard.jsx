@@ -26,18 +26,16 @@ function Dashboard() {
     const [openDropdown, setOpenDropdown] = useState(null);
     const [adminUsername, setAdminUsername] = useState("");
 
-    // Function to get Admin from localStorage
     const getStoredAdmin = () => {
         const stored = localStorage.getItem("Admin");
         return stored ? JSON.parse(stored) : null;
     };
 
-    // SECURITY FEATURE 1: Check if Admin is logged in
     useEffect(() => {
         const checkAdmin = () => {
             const storedAdmin = getStoredAdmin();
             if (!storedAdmin || !storedAdmin.username) {
-                navigate("/auth/secure-access/admin-portal", { replace: true });
+                navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
             } else {
                 setAdminUsername(storedAdmin.username);
             }
@@ -45,7 +43,6 @@ function Dashboard() {
 
         checkAdmin();
 
-        // Listen for storage changes (in case admin logs in/out in another tab)
         const handleStorageChange = () => checkAdmin();
         window.addEventListener("storage", handleStorageChange);
 
@@ -54,7 +51,6 @@ function Dashboard() {
         };
     }, [navigate]);
 
-    // SECURITY FEATURE 2: Disable Back/Undo Navigation
     useEffect(() => {
         window.history.pushState(null, "", window.location.href);
         const handleBack = () => {
@@ -64,14 +60,12 @@ function Dashboard() {
         return () => window.removeEventListener("popstate", handleBack);
     }, []);
 
-    // SECURITY FEATURE 3: Disable Right Click
     useEffect(() => {
         const handleContextMenu = (e) => e.preventDefault();
         document.addEventListener("contextmenu", handleContextMenu);
         return () => document.removeEventListener("contextmenu", handleContextMenu);
     }, []);
 
-    // Set Admin Username if Logged In (update every 1 sec to avoid auto logout)
     useEffect(() => {
         const interval = setInterval(() => {
             const storedAdmin = getStoredAdmin();
