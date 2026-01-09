@@ -8,6 +8,8 @@ export default function Classrooms() {
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [search, setSearch] = useState('');
+
 
     const [newClassroom, setNewClassroom] = useState({
         room: "",
@@ -15,6 +17,13 @@ export default function Classrooms() {
         day: "",
         time: ""
     });
+
+    const filteredClassrooms = classrooms.filter(c =>
+        c.room.toLowerCase().includes(search.toLowerCase()) ||
+        c.subject.toLowerCase().includes(search.toLowerCase()) ||
+        c.day.toLowerCase().includes(search.toLowerCase()) ||
+        c.time.toLowerCase().includes(search.toLowerCase())
+    );
 
     /* ================= FETCH ================= */
 
@@ -116,11 +125,19 @@ export default function Classrooms() {
     return (
         <div className="classrooms-container">
             <div className="classrooms-header">
-                <h1>Classroom Manager</h1>
+                <h1>Classroom</h1>
                 <p>This is where you can manage classrooms.</p>
             </div>
 
             <div className="classrooms-controls">
+                <input
+                    type="text"
+                    placeholder="Search room, subject, day..."
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="classrooms-search"
+                />
+
                 <button
                     className="classrooms-add-btn"
                     onClick={() => {
@@ -128,7 +145,7 @@ export default function Classrooms() {
                         setShowModal(true);
                     }}
                 >
-                    + Add Classroom
+                    Add Classroom
                 </button>
             </div>
 
@@ -145,12 +162,14 @@ export default function Classrooms() {
                         </tr>
                     </thead>
                     <tbody>
-                        {classrooms.length === 0 ? (
+                        {filteredClassrooms.length === 0 ? (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>No classrooms found.</td>
+                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                    No classrooms found.
+                                </td>
                             </tr>
                         ) : (
-                            classrooms.map((c, index) => (
+                            filteredClassrooms.map((c, index) => (
                                 <tr key={c._id}>
                                     <td>{index + 1}</td>
                                     <td>{c.room}</td>

@@ -18,9 +18,9 @@ const studentByDomainRoute = require("./routes/studentByDomain");
 const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
+const subjectRoutes = require("./routes/subjects");
 
 require('dotenv').config();
-
 
 const app = express();
 app.use(cors());
@@ -36,6 +36,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
+app.use("/api/subjects", subjectRoutes);
 
 mongoose.connect("mongodb://127.0.0.1:27017/student");
 app.post('/register', async (req, res) => {

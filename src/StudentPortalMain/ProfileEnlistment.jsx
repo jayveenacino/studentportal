@@ -151,7 +151,6 @@ export default function ProfileEnlistment() {
                             <div className="studentpanelbar-content prolist-grid-2">
                                 <p><strong>Birthdate:</strong> {studentData.birthdate || "N/A"}</p>
                                 <p><strong>Sex:</strong> {studentData.sex || "N/A"}</p>
-                                <p><strong>Gender:</strong> {studentData.gender || "N/A"}</p>
                                 <p><strong>Civil Status:</strong> {studentData.civil || "N/A"}</p>
                                 <p><strong>Religion:</strong> {studentData.religion || "N/A"}</p>
                                 <p><strong>Citizenship:</strong> {studentData.citizenship || "N/A"}</p>

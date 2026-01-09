@@ -193,7 +193,7 @@ export default function StudentList() {
                             <div><strong>Name:</strong> {formatFullName(selectedStudent)}</div>
                             <div><strong>Student No:</strong> {selectedStudent.studentNumber}</div>
                             <div><strong>Domain Email:</strong> {selectedStudent.domainEmail}</div>
-                            <div><strong>Student Portal Pass:</strong> {selectedStudent.portalPassword}</div>
+                            <div><strong>Course:</strong> {selectedStudent.initialDept }</div>
                             <div><strong>Course:</strong> {selectedStudent.initialDept}</div> 
                             <div><strong>PRE-REG Password:</strong> {selectedStudent.preregisterPassword}</div>
                             <div><strong>Email:</strong> {selectedStudent.email}</div>
