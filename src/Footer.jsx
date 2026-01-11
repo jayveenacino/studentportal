@@ -36,9 +36,9 @@ export default function Footer() {
                 <div className="footer-section resources">
                     <div className="student-resources">
                         <h1 style={{ fontSize: "18px" }}>Student Resources</h1>
-                        <Link to="/login" style={{ textDecoration: "none" }} target="_blank">
+                        <Link to="/login" target='_blank' style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
                             <p
-                                style={{ transition: "color 0.3s ease", fontSize: "13px", color: "white", cursor: "pointer" }}
+                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
                                 onMouseEnter={(e) => (e.target.style.color = "orange")}
                                 onMouseLeave={(e) => (e.target.style.color = "white")}
                             >
@@ -46,46 +46,26 @@ export default function Footer() {
                             </p>
                         </Link>
 
-                        <Link to="signup" style={{ textDecoration: "None", }}>
-                            <a
-                                style={{
-                                    fontSize: "16px",
-                                    color: "white",
-                                    textDecoration: "none",
-                                    cursor: "pointer",
-                                }}
+                        <Link to="/signup" target='_blank' style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
+                            <p
+                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
+                                onMouseEnter={(e) => (e.target.style.color = "orange")}
+                                onMouseLeave={(e) => (e.target.style.color = "white")}
                             >
-                                <p
-                                    style={{
-                                        transition: "color 0.3s ease", fontSize: "13px"
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.color = "orange"}
-                                    onMouseLeave={(e) => e.target.style.color = "white"}
-                                >
-                                    KNS Admission
-                                </p>
-                            </a>
+                                KNS Admission
+                            </p>
                         </Link>
-                        <Link to="body" style={{ textDecoration: "None" }}>
-                            <a
-                                style={{
-                                    fontSize: "16px",
-                                    color: "white",
-                                    textDecoration: "none",
-                                    cursor: "pointer"
-                                }}
+
+                        <Link to="/body" style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
+                            <p
+                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
+                                onMouseEnter={(e) => (e.target.style.color = "orange")}
+                                onMouseLeave={(e) => (e.target.style.color = "white")}
                             >
-                                <p
-                                    style={{
-                                        transition: "color 0.3s ease", fontSize: "13px"
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.color = "orange"}
-                                    onMouseLeave={(e) => e.target.style.color = "white"}
-                                >
-                                    Register
-                                </p>
-                            </a>
+                                Register
+                            </p>
                         </Link>
+
                     </div>
                     <br />
                     <hr />
