@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const AcceptedStudent = require("../models/AcceptedStudent");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
+
 
 router.get("/api/acceptedstudents", async (req, res) => {
     try {
@@ -36,43 +37,48 @@ router.put("/api/acceptedstudents/:id/accept", async (req, res) => {
     }
 });
 
-router.put("/api/acceptedstudents/:id/change-password", async (req, res) => {
-    try {
-        const { newPassword } = req.body;
-        const studentId = req.params.id;
-
-        if (!newPassword) {
-            return res.status(400).json({ error: "New password is required." });
-        }
-
-        const student = await AcceptedStudent.findById(studentId);
-        if (!student) return res.status(404).json({ error: "Student not found." });
-
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(newPassword, salt);
-
-        student.portalPassword = hashedPassword;
-        student.isPasswordChanged = true;
-
-        const updated = await student.save();
-        res.json({ message: "Password updated successfully.", student: updated });
-    } catch (err) {
-        console.error("Error changing password:", err);
-        res.status(500).json({ error: "Server error." });
-    }
-});
-
 router.post("/api/acceptedstudents/login", async (req, res) => {
     try {
         const { studentNumber, portalPassword } = req.body;
         const student = await AcceptedStudent.findOne({ studentNumber });
 
         if (!student) return res.status(401).json({ message: "Student not found" });
-        if (student.portalPassword !== portalPassword) {
+        const isMatch = await bcrypt.compare(portalPassword, student.portalPassword);
+        if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password" });
         }
 
+
         return res.json({ student });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: "Server error" });
+    }
+});
+
+router.put("/api/acceptedstudents/:id/change-password", async (req, res) => {
+    try {
+        const { oldPassword, newPassword } = req.body;
+
+        if (!oldPassword || !newPassword) {
+            return res.status(400).json({ message: "Old and new password required" });
+        }
+
+        const student = await AcceptedStudent.findById(req.params.id);
+        if (!student) return res.status(404).json({ message: "Student not found" });
+
+        const isMatch = await bcrypt.compare(oldPassword, student.portalPassword);
+        if (!isMatch) {
+            return res.status(403).json({ message: "Old password is incorrect" });
+        }
+
+        const hash = await bcrypt.hash(newPassword, 10);
+        student.portalPassword = hash;
+        student.isPasswordChanged = true;
+        await student.save();
+
+        res.json({ message: "Password updated successfully" });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ message: "Server error" });

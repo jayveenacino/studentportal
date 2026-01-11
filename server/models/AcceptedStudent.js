@@ -41,7 +41,6 @@ const AcceptedStudentSchema = new mongoose.Schema({
     dateEnlisted: { type: Date, default: Date.now },
     dateEnrolled: { type: Date },
 
-    // 🆕 ADD THIS PART
     enrollmentHistory: [
         {
             academicYear: { type: String },

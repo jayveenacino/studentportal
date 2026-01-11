@@ -65,7 +65,7 @@ export default function Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        if (showModal) return; // Prevent login while modal is open
+        if (showModal) return;
 
         try {
             Swal.fire({

@@ -47,21 +47,56 @@ export default function StudentMain() {
         setIsOpen(false);
     };
 
-    const handlePasswordSubmit = (e) => {
+    const handlePasswordSubmit = async (e) => {
         e.preventDefault();
+
         if (!oldPassword || !newPassword || !confirmPassword) {
-            Swal.fire("Warning", "Please fill in all fields.", "warning");
+            Swal.fire("Error", "All fields are required", "error");
             return;
         }
+
+        if (newPassword.length < 8) {
+            Swal.fire("Error", "Password must be at least 8 characters", "error");
+            return;
+        }
+
         if (newPassword !== confirmPassword) {
-            Swal.fire("Error", "New passwords do not match!", "error");
+            Swal.fire("Error", "New password and confirm password do not match", "error");
             return;
         }
-        Swal.fire("Success", "Password changed successfully!", "success");
-        setShowPasswordModal(false);
-        setOldPassword("");
-        setNewPassword("");
-        setConfirmPassword("");
+
+        try {
+            const studentData = JSON.parse(localStorage.getItem("acceptedStudent"));
+            const studentId = studentData._id || studentData.id;
+
+            const res = await fetch(
+                `http://localhost:2025/api/acceptedstudents/${studentId}/change-password`,
+                {
+                    method: "PUT",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        oldPassword: oldPassword.trim(),
+                        newPassword: newPassword.trim()
+                    })
+                }
+            );
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                Swal.fire("Error", data.message, "error");
+                return;
+            }
+
+            Swal.fire("Success", "Password updated successfully", "success");
+            setShowPasswordModal(false);
+            setOldPassword("");
+            setNewPassword("");
+            setConfirmPassword("");
+
+        } catch (err) {
+            Swal.fire("Error", "Server connection failed", "error");
+        }
     };
 
     useEffect(() => {
@@ -246,9 +281,8 @@ export default function StudentMain() {
                                         placeholder="Enter old password"
                                     />
                                     <i
-                                        className={`fa-solid ${
-                                            showOldPass ? "fa-eye-slash" : "fa-eye"
-                                        }`}
+                                        className={`fa-solid ${showOldPass ? "fa-eye-slash" : "fa-eye"
+                                            }`}
                                         onMouseDown={() => setShowOldPass(true)}
                                         onMouseUp={() => setShowOldPass(false)}
                                         onMouseLeave={() => setShowOldPass(false)}
@@ -264,9 +298,8 @@ export default function StudentMain() {
                                         placeholder="Enter new password"
                                     />
                                     <i
-                                        className={`fa-solid ${
-                                            showNewPass ? "fa-eye-slash" : "fa-eye"
-                                        }`}
+                                        className={`fa-solid ${showNewPass ? "fa-eye-slash" : "fa-eye"
+                                            }`}
                                         onMouseDown={() => setShowNewPass(true)}
                                         onMouseUp={() => setShowNewPass(false)}
                                         onMouseLeave={() => setShowNewPass(false)}
@@ -282,9 +315,8 @@ export default function StudentMain() {
                                         placeholder="Confirm new password"
                                     />
                                     <i
-                                        className={`fa-solid ${
-                                            showNewPass ? "fa-eye-slash" : "fa-eye"
-                                        }`}
+                                        className={`fa-solid ${showNewPass ? "fa-eye-slash" : "fa-eye"
+                                            }`}
                                         onMouseDown={() => setShowNewPass(true)}
                                         onMouseUp={() => setShowNewPass(false)}
                                         onMouseLeave={() => setShowNewPass(false)}
@@ -305,9 +337,8 @@ export default function StudentMain() {
                     )}
 
                     <div
-                        className={`stud-sidebar university-style ${
-                            sidebarVisible ? "show" : "hide"
-                        }`}
+                        className={`stud-sidebar university-style ${sidebarVisible ? "show" : "hide"
+                            }`}
                     >
                         <div className="stud-sidebar-header">
                             <img src="./img/knshdlogo.png" alt="Logo" draggable="false" />
