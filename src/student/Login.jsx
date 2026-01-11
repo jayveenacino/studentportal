@@ -212,7 +212,7 @@ export default function Login() {
                                 alt="Kolehiyo Ng Subic"
                                 className="maiinlogo"
                                 style={{ cursor: "pointer" }}
-                                onClick={() => setShowModal(true)}  
+                                onClick={() => setShowModal(true)}
                             />
                         </div>
 
