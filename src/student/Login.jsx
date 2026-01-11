@@ -175,7 +175,7 @@ export default function Login() {
                         }}
                     >
                         <img
-                            src="/img/classs-shed.png"
+                            src="/img/class-shed.png"
                             alt="Class Shed"
                             style={{ width: "100%", height: "auto", display: "block" }}
                         />
