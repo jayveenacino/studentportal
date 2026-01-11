@@ -26,32 +26,31 @@ const router = createBrowserRouter(
 	createRoutesFromElements(
 		<Route element={<Root />}>
 			<Route index element={<Home />} />
-			<Route path="home" element={<Home />} />
-			<Route path="body" element={<Body />} />
-			<Route path="body/signup" element={<Signup />} />
-			<Route path="signup" element={<Signup />} />
-			<Route path="signup/create" element={<Create />} />
-			<Route path="signup/create/notice" element={<Notice />} />
-			<Route path="signup/notice" element={<Notice />} />
-			<Route path="login" element={<Login />} />
-			<Route path="login/notice" element={<Notice />} />
-			<Route path="preregister/notice" element={<Notice />} />
-			<Route path="auth/secure-access/admin-portal/login" element={<AdminLogin />} />
-			<Route path="auth/secure-access/admin-portal/admindashboard" element={<AdminDashboard />} />
-			<Route path="student" element={<Student />} />
-			<Route path="studentmain" element={<StudentMain />} />
-			<Route path="home/collegepresident" element={<PresidentOffice />} />
+			<Route path="/home" element={<Home />} />
+			<Route path="/body" element={<Body />} />
+			<Route path="/body/signup" element={<Signup />} />
+			<Route path="/signup" element={<Signup />} />
+			<Route path="/signup/create" element={<Create />} />
+			<Route path="/signup/create/notice" element={<Notice />} />
+			<Route path="/signup/notice" element={<Notice />} />
+			<Route path="/login" element={<Login />} />
+			<Route path="/login/notice" element={<Notice />} />
+			<Route path="/preregister/notice" element={<Notice />} />
+			<Route path="/auth/secure-access/admin-portal/login" element={<AdminLogin />} />
+			<Route path="/auth/secure-access/admin-portal/admindashboard" element={<AdminDashboard />} />
+			<Route path="/student" element={<Student />} />
+			<Route path="/studentmain" element={<StudentMain />} />
+			<Route path="/home/collegepresident" element={<PresidentOffice />} />
 			<Route
-				path="preregister"
+				path="/preregister"
 				element={
 					<PrivateRoute>
 						<Preregister />
 					</PrivateRoute>
 				}
 			/>
-
-			<Route path="pages/NotFound" element={<NotFound />} />
-			<Route path="*" element={<Navigate to="/pages/NotFound" replace />} />
+			<Route path="/pages/NotFound" element={<NotFound />} />
+			<Route path="*" element={<NotFound />} />
 		</Route>
 	)
 );

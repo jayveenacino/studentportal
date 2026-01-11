@@ -175,7 +175,7 @@ export default function Login() {
                         }}
                     >
                         <img
-                            src="public/img/classs shed.png"
+                            src="/img/classs-shed.png"
                             alt="Class Shed"
                             style={{ width: "100%", height: "auto", display: "block" }}
                         />
@@ -208,7 +208,7 @@ export default function Login() {
                     <div className="login-box">
                         <div className="logo-container">
                             <img
-                                src="public/img/knshdlogo.png"
+                                src="/img/knshdlogo.png"
                                 alt="Kolehiyo Ng Subic"
                                 className="maiinlogo"
                                 style={{ cursor: "pointer" }}
