@@ -36,26 +36,16 @@ export default function Footer() {
                 <div className="footer-section resources">
                     <div className="student-resources">
                         <h1 style={{ fontSize: "18px" }}>Student Resources</h1>
-                        <Link to="login" style={{ textDecoration: "None" }} target='_blank'>
-                            <a
-                                style={{
-                                    fontSize: "16px",
-                                    color: "white",
-                                    textDecoration: "none",
-                                    cursor: "pointer"
-                                }}
+                        <Link to="/login" style={{ textDecoration: "none" }} target="_blank">
+                            <p
+                                style={{ transition: "color 0.3s ease", fontSize: "13px", color: "white", cursor: "pointer" }}
+                                onMouseEnter={(e) => (e.target.style.color = "orange")}
+                                onMouseLeave={(e) => (e.target.style.color = "white")}
                             >
-                                <p
-                                    style={{
-                                        transition: "color 0.3s ease", fontSize: "13px"
-                                    }}
-                                    onMouseEnter={(e) => e.target.style.color = "orange"}
-                                    onMouseLeave={(e) => e.target.style.color = "white"}
-                                >
-                                    Student Portal
-                                </p>
-                            </a>
+                                Student Portal
+                            </p>
                         </Link>
+
                         <Link to="signup" style={{ textDecoration: "None", }}>
                             <a
                                 style={{
