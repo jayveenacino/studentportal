@@ -418,7 +418,6 @@ export default function Iupdocx() {
                                                 padding: '10px 20px',
                                                 cursor: 'pointer',
                                                 transition: 'background 0.3s, color 0.3s',
-                                                color: 'grey'
                                             }}
                                             onMouseOver={e => {
                                                 e.target.style.background = '#006666';
@@ -484,7 +483,7 @@ export default function Iupdocx() {
                                         />
                                     </div>
                                     <div className="button-container" style={{ marginTop: '20px' }}>
-                                        <button onClick={() => setBirthCertModalOpen(false)} style={{ background: 'transparent', color: '#006666', border: '1px solid #ffffffff', padding: '10px 20px', cursor: 'pointer', color: 'grey' }}>Close</button>
+                                        <button onClick={() => setBirthCertModalOpen(false)} style={{ background: 'transparent', color: '#006666', border: '1px solid #ffffffff', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
                                         <button onClick={birthCertHandleUpload} style={{ border: "1px solid #006666", background: "#006666", color: "white", padding: '10px 20px', cursor: 'pointer' }}>Submit</button>
                                     </div>
                                 </div>

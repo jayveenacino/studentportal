@@ -4,7 +4,7 @@ import './Admincss/studentlist.css';
 import Swal from 'sweetalert2';
 
 export default function StudentList() {
-    const [students, setStudents] = useState([]); 
+    const [students, setStudents] = useState([]);
     const [search, setSearch] = useState('');
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(5);
@@ -35,7 +35,7 @@ export default function StudentList() {
     const filtered = students.filter(s => {
         const full = `${s.lastname || ''} ${s.firstname || ''} ${s.middlename || ''}`.toLowerCase();
         const number = s.studentNumber?.toLowerCase() || '';
-        const dept = s.initialDept?.toLowerCase() || ''; 
+        const dept = s.initialDept?.toLowerCase() || '';
         return full.includes(search.toLowerCase()) || number.includes(search.toLowerCase()) || dept.includes(search.toLowerCase());
     });
 
@@ -103,7 +103,7 @@ export default function StudentList() {
                     onChange={e => setSearch(e.target.value)}
                     className="studentlist-search"
                 />
-                <button className="studentlist-add-btn">+ Add Student</button>
+                <button className="studentlist-add-btn">Add Student</button>
             </div>
 
             <div className="studentlist-table-container">
@@ -111,7 +111,7 @@ export default function StudentList() {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th style={{textAlign: "left"}}>Student Name</th>
+                            <th style={{ textAlign: "left" }}>Student Name</th>
                             <th>Student Number</th>
                             <th>Course</th>
                             <th>More Details</th>
@@ -127,7 +127,7 @@ export default function StudentList() {
                             current.map((s, i) => (
                                 <tr key={s._id}>
                                     <td>{indexOfFirst + i + 1}</td>
-                                    <td style={{textAlign: "left"}}>{formatFullName(s)}</td>
+                                    <td style={{ textAlign: "left" }}>{formatFullName(s)}</td>
                                     <td>{s.studentNumber || "N/A"}</td>
                                     <td>{s.initialDept || "N/A"}</td>
                                     <td>
@@ -192,12 +192,20 @@ export default function StudentList() {
                         <div className="student-details-grid">
                             <div><strong>Name:</strong> {formatFullName(selectedStudent)}</div>
                             <div><strong>Student No:</strong> {selectedStudent.studentNumber}</div>
-                            <div><strong>Domain Email:</strong> {selectedStudent.domainEmail}</div>
-                            <div><strong>Course:</strong> {selectedStudent.initialDept }</div>
-                            <div><strong>Course:</strong> {selectedStudent.initialDept}</div> 
-                            <div><strong>PRE-REG Password:</strong> {selectedStudent.preregisterPassword}</div>
-                            <div><strong>Email:</strong> {selectedStudent.email}</div>
+                            <div><strong>Course:</strong> {selectedStudent.initialDept}</div>
                             <div><strong>Year:</strong> {selectedStudent.yearLevel}</div>
+                            <div><strong>Email:</strong> {selectedStudent.email}</div>
+                            <div><strong>Domain Email:</strong> {selectedStudent.domainEmail}</div>
+                            <div>
+                                <strong>Portal Password:</strong>{" "}
+                                {selectedStudent.portalPassword
+                                    ? `${selectedStudent.portalPassword.slice(0, 12)}...${selectedStudent.portalPassword.slice(-8)}`
+                                    : ""}
+                            </div>
+
+                            <div><strong>PRE-REG Password:</strong> {selectedStudent.preregisterPassword}</div>
+
+
                         </div>
                     </div>
                 </div>

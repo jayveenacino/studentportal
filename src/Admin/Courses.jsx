@@ -131,7 +131,7 @@ export default function Courses() {
                     setNewCourse({ title: "", status: "Active", department: "", initialDept: "" });
                     setShowModal(true);
                 }}>
-                    + Add Course
+                    Add Course
                 </button>
             </div>
 

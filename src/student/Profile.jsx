@@ -3084,7 +3084,6 @@ export default function Profile() {
                                                                     padding: "10px 20px",
                                                                     cursor: "pointer",
                                                                     transition: "background 0.3s, color 0.3s",
-                                                                    color: "grey",
                                                                 }}
                                                                 onMouseOver={(e) => {
                                                                     e.target.style.background = "#006666";
@@ -3181,7 +3180,6 @@ export default function Profile() {
                                                                     border: "1px solid #ffffffff",
                                                                     padding: "10px 20px",
                                                                     cursor: "pointer",
-                                                                    color: "grey",
                                                                 }}
                                                             >
                                                                 Close

@@ -230,6 +230,7 @@ router.put('/api/students/:id/accept', async (req, res) => {
                     <h2>Hi ${student.firstname || ''} ${student.middlename || ''} ${student.lastname || ''},</h2>
                     <p>Your pre-registration has been <b>accepted</b>. <br> Welcome to <b>KOLEHIYO NG SUBIC</b>!</p>
                     <p>Here is your official school portal domain:</p>
+                    <p><b>Student Number:</b> ${studentNumber}</p>
                     <p><b>School Domain:</b> ${domainEmail}<br/>
                     <b>Temporary Password:</b> <span style="color: #007bff;">${plainPassword}</span>
                     </p>

@@ -62,7 +62,7 @@ export default function Footer() {
                                     fontSize: "16px",
                                     color: "white",
                                     textDecoration: "none",
-                                    cursor: "pointer", fontSize: "13px"
+                                    cursor: "pointer",
                                 }}
                             >
                                 <p
