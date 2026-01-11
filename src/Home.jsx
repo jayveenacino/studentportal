@@ -15,7 +15,7 @@ export default function Home() {
             title: "Oathtaking Ceremony of Newly Appointed",
             description:
                 "The Kolehiyo Ng Subic Family warmly congratulates Dr. Rosely H. Agustin as she took her oath as the Full Pledged College President of the institution. Dr. Rosely was known as one of the pioneers of KNS and signified her love for the college countless times by her dedication and hard work.",
-            image: "/img/college pres.png",
+            image: "/img/college-pres.png",
         },
     ];
 
@@ -34,7 +34,7 @@ export default function Home() {
     return (
         <div className="news-section">
             <div className="homediv">
-                <img className="home-header" src="../public/img/bghome.png" alt="" />
+                <img className="home-header" src="/img/bghome.png" alt="" />
                 <h2>Kolehiyo Ng Subic</h2>
             </div>
 
@@ -42,17 +42,17 @@ export default function Home() {
 
             <div className="image-row">
                 <Link to="home/collegepresident" target="blank_" className="image-item">
-                    <img src="/public/img/MaamRosely.png" alt="" />
+                    <img src="/img/MaamRosely.png" alt="" />
                     <p>Office of the College President</p>
                 </Link>
 
                 <a href="#" className="image-item">
-                    <img src="/public/img/MaamHas.png" alt="" />
+                    <img src="/img/MaamHas.png" alt="" />
                     <p>Office of Student Affairs</p>
                 </a>
 
                 <a href="#" className="image-item">
-                    <img src="/public/img/REG.png" alt="" />
+                    <img src="/img/REG.png" alt="" />
                     <p>College Registrar</p>
                 </a>
             </div>
