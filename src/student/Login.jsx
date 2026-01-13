@@ -305,7 +305,7 @@ export default function Login() {
                     </div>
                 }
             </div>
-            <div style={{ textAlign: "center", fontSize: "12px", padding: "10px", background: "#111", color: "#fff", position: "fixed", bottom: 0, width: "100%" }}>
+            <div className='login-footer' style={{ textAlign: "center", fontSize: "12px", padding: "10px", background: "#111", color: "#fff", position: "fixed", bottom: 0, width: "100%" }}>
                 © 2025 Kolehiyo Ng Subic. Management Information Systems Unit.
             </div>
         </div>

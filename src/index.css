@@ -567,7 +567,7 @@ body {
 .container {
     display: flex;
     flex-direction: column;
-    min-height: 90vh;
+    min-height: 100vh;
 }
 
 @media screen and (max-width: 768px) {
@@ -583,8 +583,7 @@ body {
 
     .modal-container img {
         width: 100% !important;
-        height: 100% !important;
-        overflow-y: hidden;
+        height: auto !important;
     }
 
     .modal-container .fa-xmark {
@@ -594,15 +593,19 @@ body {
         top: 10px !important;
         right: 10px !important;
     }
+
+    .details h2 {
+        font-size: 20px !important;
+        margin: 10px !important;
+    }
+
 }
 
 
 @media (min-width: 768px) {
     .container {
-        overflow-y: hidden;
+        flex-direction: row;
     }
-
-
 }
 
 
@@ -1104,5 +1107,4 @@ body {
     .forgot-reset-buttons {
         grid-column: span 1;
     }
-    
 }
