@@ -7,10 +7,11 @@ router.get('/', async (req, res) => {
         const departments = await Department.find().sort({ createdAt: -1 });
         res.json(departments);
     } catch (err) {
-        console.error("Department fetch error:", err);
+        console.error("ERROR fetching departments:", err);
         res.status(500).json({ message: 'Failed to fetch departments', error: err.message });
     }
 });
+
 
 router.get('/:id', async (req, res) => {
     try {
