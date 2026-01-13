@@ -7,6 +7,7 @@ const CourseModel = require('./models/Course');
 const CourseRoutes = require('./routes/courses');
 const studentRoutes = require('./routes/students');
 const backupRoutes = require("./routes/backupRoutes");
+const departmentRoutes = require('./routes/department');
 const AcceptedStudent = require("./models/AcceptedStudent");
 const acceptedStudentsRoutes = require("./routes/acceptedStudents");
 const Settings = require("./models/Settings");
@@ -18,7 +19,6 @@ const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
-const departmentRoutes = require('./routes/department');
 
 require('dotenv').config();
 
@@ -26,8 +26,6 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
-
-// ROUTES
 app.use("/", studentByDomainRoute);
 app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
@@ -39,38 +37,8 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
-app.use("/api/departments", departmentRoutes);
 
-// MONGODB CONNECTION FIX FOR VERCEL
-let cached = global.mongoose;
-if (!cached) cached = global.mongoose = { conn: null, promise: null };
-async function connectDB() {
-    if (cached.conn) return cached.conn;
-    if (!cached.promise) {
-        cached.promise = mongoose.connect(process.env.MONGODB_URI, {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        }).then(m => m);
-    }
-    cached.conn = await cached.promise;
-    return cached.conn;
-}
-
-// Wrap mongoose connection
-connectDB().then(() => console.log("MongoDB Atlas Connected"))
-.catch(err => console.error("MongoDB connection error:", err));
-
-app.get('/test-departments', async (req, res) => {
-    try {
-        const depts = await mongoose.model('Department').find();
-        res.json(depts);
-    } catch (err) {
-        console.error("Test route error:", err);
-        res.status(500).json({ error: err.message });
-    }
-});
-
-
+mongoose.connect("mongodb://127.0.0.1:27017/student");
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
@@ -114,6 +82,7 @@ app.post('/register', async (req, res) => {
     }
 });
 
+// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -129,6 +98,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
     const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
@@ -141,8 +111,10 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
+        // Normalize phone input for comparison (just digits)
         const inputPhone = phone.replace(/\D/g, '').slice(-10);
 
+        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
             registerNum: registerNum.trim(),
             email: email.trim().toLowerCase(),
@@ -153,8 +125,9 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
+        // Save password and update phone in proper format
         student.password = password;
-        student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
+        student.phone = `${inputPhone.slice(0,3)}-${inputPhone.slice(3,6)}-${inputPhone.slice(6,10)}`;
 
         await student.save();
 
@@ -169,25 +142,29 @@ app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
 
+        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
+        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,
-                    profileImage: "✔️",
+                    image,              // save new profile image (base64 or URL)
+                    profileImage: "✔️", // mark as uploaded
                 },
             },
-            { new: true, runValidators: true }
+            { new: true, runValidators: true } // return updated & validate schema
         );
 
+        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
+        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -234,6 +211,7 @@ app.post('/upload-id-image', async (req, res) => {
     }
 });
 
+// Upload Birth Certificate
 app.post('/upload-birth-cert', async (req, res) => {
     const { email, birthCertImage } = req.body;
 
@@ -264,6 +242,7 @@ app.post('/upload-birth-cert', async (req, res) => {
     }
 });
 
+// Upload Academic Records
 app.post('/upload-academic', async (req, res) => {
     const { email, academicImage } = req.body;
 
@@ -330,13 +309,14 @@ app.get('/get-upload-status/:email', async (req, res) => {
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
     try {
-        const student = await Student.findOne({ email });
+        const student = await Student.findOne({ email }); // fresh from DB
         if (!student) return res.status(404).json({ message: "User not found" });
         res.json({ student });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
