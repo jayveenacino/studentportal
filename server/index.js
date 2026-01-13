@@ -7,7 +7,6 @@ const CourseModel = require('./models/Course');
 const CourseRoutes = require('./routes/courses');
 const studentRoutes = require('./routes/students');
 const backupRoutes = require("./routes/backupRoutes");
-const departmentRoutes = require('./routes/department');
 const AcceptedStudent = require("./models/AcceptedStudent");
 const acceptedStudentsRoutes = require("./routes/acceptedStudents");
 const Settings = require("./models/Settings");
@@ -19,6 +18,7 @@ const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
+const departmentRoutes = require('./routes/department'); // <- department router
 
 require('dotenv').config();
 
@@ -26,6 +26,8 @@ const app = express();
 app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
+
+// ROUTES
 app.use("/", studentByDomainRoute);
 app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
@@ -37,8 +39,12 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
+app.use("/api/departments", departmentRoutes); // <- department route applied
 
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log("MongoDB Atlas Connected")).catch(err => console.error("MongoDB connection error:", err));
+// MONGODB CONNECTION
+mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+    .then(() => console.log("MongoDB Atlas Connected"))
+    .catch(err => console.error("MongoDB connection error:", err));
 
 app.post('/register', async (req, res) => {
     try {
@@ -123,7 +129,7 @@ app.post('/reset-password', async (req, res) => {
         }
 
         student.password = password;
-        student.phone = `${inputPhone.slice(0,3)}-${inputPhone.slice(3,6)}-${inputPhone.slice(6,10)}`;
+        student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
         await student.save();
 
