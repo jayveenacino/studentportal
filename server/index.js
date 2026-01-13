@@ -60,6 +60,17 @@ async function connectDB() {
 connectDB().then(() => console.log("MongoDB Atlas Connected"))
 .catch(err => console.error("MongoDB connection error:", err));
 
+app.get('/test-departments', async (req, res) => {
+    try {
+        const depts = await mongoose.model('Department').find();
+        res.json(depts);
+    } catch (err) {
+        console.error("Test route error:", err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
