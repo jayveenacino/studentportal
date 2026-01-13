@@ -1,0 +1,118 @@
+.enuique-footer {
+    background-color: var(--dark-green);
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 10px 20px;
+}
+
+.enuique-footer-container {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+
+.enuique-footer-section {
+    flex: 1;
+    padding: 20px;
+    min-width: 250px;
+}
+
+.enuique-footer-section h1 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #1ec041;
+}
+
+.enuique-footer-section p {
+    font-size: 13px;
+    margin: 5px 0;
+}
+
+.enuique-footer-section hr {
+    border: 0;
+    height: 1px;
+    background-color: #e7e7e7;
+    margin: 15px 0;
+}
+
+.enuique-student-resources p,
+.enuique-faculty-resources p {
+    cursor: pointer;
+    color: #fff;      
+    text-decoration: none; 
+    transition: color 0.3s ease;
+}
+
+.enuique-student-resources p:hover,
+.enuique-faculty-resources p:hover {
+    color: orange;  
+}
+
+.enuique-student-resources a {
+    color: #fff;           
+    text-decoration: none;   
+    transition: color 0.3s ease;
+}
+
+.enuique-social-icons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.enuique-social-btn {
+    background-color: transparent;
+    border: 1px solid #fff;
+    color: #fff;
+    padding: 8px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.enuique-social-btn:hover {
+    background-color: #1e8f1e;
+    color: #ffffff;
+    border-color: #1e8f1e;
+}
+
+.enuique-footer-logo img {
+    width: 240px;
+    opacity: 0.5;
+}
+
+.enuique-footer-bottom {
+    text-align: center;
+    margin-top: 25px;
+}
+
+.enuique-footer-bottom .enuique-highlight {
+    color: #00ff00;
+    font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .enuique-footer-container {
+        flex-direction: column;
+        align-items: center;
+        padding: 0 10px;
+    }
+
+    .enuique-footer-section {
+        text-align: center;
+        padding: 15px 0;
+    }
+
+    .enuique-social-icons {
+        justify-content: center;
+    }
+
+    .enuique-footer-logo img {
+        max-width: 80%;
+        height: auto;
+        margin: 0 auto;
+    }
+
+    .enuique-footer-bottom p {
+        font-size: 12px;
+    }
+}

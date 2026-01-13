@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import "./maincss/homepage.css";
 
 export default function Home() {
     const videoRef = useRef(null);
@@ -21,54 +22,48 @@ export default function Home() {
 
     useEffect(() => {
         const handleUserInteraction = () => {
-            if (videoRef.current) {
-                videoRef.current.play().catch((err) => console.log("Play failed:", err));
-            }
+            if (videoRef.current) videoRef.current.play().catch(() => { });
             window.removeEventListener("click", handleUserInteraction);
         };
-
         window.addEventListener("click", handleUserInteraction);
         return () => window.removeEventListener("click", handleUserInteraction);
     }, []);
 
     return (
-        <div className="news-section">
-            <div className="homediv">
-                <img className="home-header" src="/img/bghome.png" alt="" />
-                <h2>Kolehiyo Ng Subic</h2>
+        <div className="enuique-news-section">
+            <div className="enuique-home-header-wrap">
+                <img className="enuique-home-header" src="/img/bghome.png" alt="" />
             </div>
-
-            <hr style={{ background: "grey", marginBottom: "45px" }} />
-
-            <div className="image-row">
-                <Link to="home/collegepresident" target="blank_" className="image-item">
-                    <img src="/img/MaamRosely.png" alt="" />
+            <div className="enuique-image-row">
+                
+                <Link to="/home/collegepresident" className="enuique-image-item">
+                    <img src="/img/MaamRosely.png" alt="College President" />
                     <p>Office of the College President</p>
                 </Link>
 
-                <a href="#" className="image-item">
+                <a href="#" className="enuique-image-item">
                     <img src="/img/MaamHas.png" alt="" />
                     <p>Office of Student Affairs</p>
                 </a>
 
-                <a href="#" className="image-item">
+                <a href="#" className="enuique-image-item">
                     <img src="/img/REG.png" alt="" />
                     <p>College Registrar</p>
                 </a>
             </div>
 
-            <hr style={{ background: "grey", marginBottom: "45px" }} />
+            <hr className="enuique-divider" />
 
-            <h2 className="news-title">LATEST NEWS</h2>
+            <h2 className="enuique-news-title">LATEST NEWS</h2>
 
-            <div className="news-grid">
+            <div className="enuique-news-grid">
                 {newsArticles.map((article, index) => (
-                    <div className="news-card" key={index}>
-                        <img src={article.image} alt={article.title} className="news-image" />
-                        <div className="news-content">
-                            <h3 className="news-heading">{article.title}</h3>
-                            <p className="news-description">{article.description}</p>
-                            <button className="news-button">READ MORE...</button>
+                    <div className="enuique-news-card" key={index}>
+                        <img src={article.image} alt={article.title} className="enuique-news-image" />
+                        <div className="enuique-news-content">
+                            <h3 className="enuique-news-heading">{article.title}</h3>
+                            <p className="enuique-news-description">{article.description}</p>
+                            <button className="enuique-news-button">READ MORE...</button>
                         </div>
                     </div>
                 ))}

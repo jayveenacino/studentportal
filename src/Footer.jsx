@@ -1,102 +1,60 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import "./maincss/footer.css";
 
 export default function Footer() {
     return (
-        <div className="footer">
-            <div className="footer-container">
-                <div className="footer-section about">
-                    <h1 style={{ fontSize: "18px" }}>About KNS</h1>
-                    <p style={{ fontSize: "13px" }}>
-                        <span style={{ display: 'block', marginBottom: '10px' }}>
-                            Kolehiyo ng Subic, or known as KNS, is the first community college in the province of Zambales.
-                        </span>
-                        <span style={{ display: 'block', marginBottom: '10px' }}>
-                            Mayor Jeffrey D. Khonghun, the President Emeritus, is the acknowledged founder and father of the school.
-                        </span>
-                    </p>
+        <div className="enuique-footer">
+            <div className="enuique-footer-container">
+                <div className="enuique-footer-section about">
+                    <h1>Contact Us!</h1>
+                    <p><i className="fa-solid fa-phone"></i> (047) 232 4897</p>
+                    <p><i className="fa-solid fa-envelope"></i> Kolehiyongsubic01@gmail.com</p>
+                    <p><i className="fa-solid fa-location-dot"></i> 6GJ+WPX, Burgos St, Baraca, Subic, 2209 Zambales</p>
 
-                    <br />
                     <hr />
-                    <br />
-                    <h1 style={{ fontSize: "18px" }}>Contact Us!</h1>
-                    <p style={{ fontSize: "13px", }}><i className="fa-solid fa-phone" style={{ fontSize: "15px" }}></i> (047) 232 4897</p>
-                    <p style={{ fontSize: "13px" }}><i className="fa-solid fa-envelope" style={{ fontSize: "15px" }}></i> Kolehiyongsubic01@gmail.com</p>
-                    <p style={{ fontSize: "13px" }}><i className="fa-solid fa-location-dot" style={{ fontSize: "15px" }}></i> 6GJ+WPX, Burgos St, Baraca, Subic, 2209 Zambales</p>
-                    <br />
-                    <hr />
-                    <br />
-                    <p style={{ fontSize: "13px" }}>Citizen's Charter</p>
-                    <p style={{ fontSize: "13px" }}>Website Policy</p>
-                    <p style={{ fontSize: "13px" }}>Data Privacy Policy</p>
-                    <p style={{ fontSize: "13px" }}>Rights of Data Subjects </p>
-                    <p style={{ fontSize: "13px" }}>Responsibilities of Data Subjects</p>
+                    <p>Citizen's Charter</p>
+                    <p>Website Policy</p>
+                    <p>Data Privacy Policy</p>
+                    <p>Rights of Data Subjects</p>
+                    <p>Responsibilities of Data Subjects</p>
                 </div>
 
-                <div className="footer-section resources">
-                    <div className="student-resources">
-                        <h1 style={{ fontSize: "18px" }}>Student Resources</h1>
-                        <Link to="/login" target='_blank' style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
-                            <p
-                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
-                                onMouseEnter={(e) => (e.target.style.color = "orange")}
-                                onMouseLeave={(e) => (e.target.style.color = "white")}
-                            >
-                                Student Portal
-                            </p>
-                        </Link>
-
-                        <Link to="/signup" target='_blank' style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
-                            <p
-                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
-                                onMouseEnter={(e) => (e.target.style.color = "orange")}
-                                onMouseLeave={(e) => (e.target.style.color = "white")}
-                            >
-                                KNS Admission
-                            </p>
-                        </Link>
-
-                        <Link to="/body" style={{ textDecoration: "none", color: "white", cursor: "pointer" }}>
-                            <p
-                                style={{ transition: "color 0.3s ease", fontSize: "13px" }}
-                                onMouseEnter={(e) => (e.target.style.color = "orange")}
-                                onMouseLeave={(e) => (e.target.style.color = "white")}
-                            >
-                                Register
-                            </p>
-                        </Link>
-
+                <div className="enuique-footer-section resources">
+                    <div className="enuique-student-resources">
+                        <h1>Student Resources</h1>
+                        <Link to="/login" target='_blank'><p>Student Portal</p></Link>
+                        <Link to="/signup" target='_blank'><p>KNS Admission</p></Link>
+                        <Link to="/body"><p>Register</p></Link>
                     </div>
-                    <br />
                     <hr />
-                    <br />
-                    <div className="faculty-resources">
-                        <h1 style={{ fontSize: "18px" }}>Faculty Resources</h1>
-                        <p style={{ color: "grey", fontSize: "13px" }}>KNS Health Check</p>
-                        <p style={{ color: "grey", fontSize: "13px" }}>KNS Registrar</p>
-                        <p style={{ color: "grey", fontSize: "13px" }}>KNS Teachers Portal</p>
-                        <p style={{ color: "grey", fontSize: "13px" }}>KNS Deans Portal</p>
+                    <div className="enuique-faculty-resources">
+                        <h1>Faculty Resources</h1>
+                        <p>KNS Health Check</p>
+                        <p>KNS Registrar</p>
+                        <p>KNS Teachers Portal</p>
+                        <p>KNS Deans Portal</p>
                     </div>
                 </div>
-                <div className="footer-section social">
-                    <h1 style={{ fontSize: "18px" }}>Connect With Us!</h1>
-                    <div className="social-icons">
-                        <button className="social-btn"><i className="fa-brands fa-square-facebook" style={{ fontSize: "15px" }}></i> Facebook</button>
-                        <button className="social-btn"><i className="fa-brands fa-square-x-twitter" style={{ fontSize: "15px" }}></i> Twitter</button>
-                        <button className="social-btn"><i className="fa-brands fa-youtube" style={{ fontSize: "15px" }}></i> YouTube</button>
+
+                <div className="enuique-footer-section social">
+                    <h1>Connect With Us!</h1>
+                    <div className="enuique-social-icons">
+                        <button className="enuique-social-btn"> Facebook</button>
+                        <button className="enuique-social-btn"> Email</button>
+                        <button className="enuique-social-btn"> YouTube</button>
                     </div>
-                    <br />
-                    <br />
+
                     <hr />
-                    <div className="footer-logo">
+                    <div className="enuique-footer-logo">
                         <img src="/img/knshdlogo.png" alt="KNS LOGO" />
                     </div>
-
                 </div>
             </div>
-            <div className="footer-bottom" >
-                <p style={{ fontSize: "13px" }}>Copyright © 2025 <span className="" style={{ color: "#00ff00", fontWeight: "bold", fontSize: "13px" }}>Kolehiyo Ng Subic</span>. All rights reserved.</p>
+
+            <div className="enuique-footer-bottom">
+                <p>Copyright © 2025 <span className="enuique-highlight">Kolehiyo Ng Subic</span>. All rights reserved.</p>
             </div>
         </div>
-    );
+    )
 }

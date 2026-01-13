@@ -17,3 +17,28 @@
     margin-bottom: 10px;
 }
 
+.green-link {
+    color: green;
+    font-size: 1rem;
+    text-decoration: none; 
+    transition: color 0.2s ease, font-size 0.2s ease;
+}
+
+.green-link:hover,
+.green-link:active,
+.green-link:focus {
+    color: orange;
+    font-size: 1.03rem;
+}
+
+@media (max-width: 768px) {
+    .green-link {
+        font-size: 0.85rem; 
+    }
+
+    .green-link:hover,
+    .green-link:active,
+    .green-link:focus {
+        font-size: 0.9rem;
+    }
+}

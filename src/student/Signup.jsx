@@ -3,12 +3,12 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
+import "../student/student css/studentsignup.css";
 
 const Signup = () => {
     const { setUser } = useAdmin();
     const navigate = useNavigate();
 
-    // Login and Reset Password State
     const [showPassword, setShowPassword] = useState(false);
     const [newShowPassword, setNewShowPassword] = useState(false);
     const [reset, setReset] = useState(false);
@@ -108,8 +108,7 @@ const Signup = () => {
             return;
         }
 
-        // Ensure phone matches DB format: 639-123-4567
-        let formattedPhone = phone.replace(/\D/g, ""); // numeric only
+        let formattedPhone = phone.replace(/\D/g, ""); 
         if (!formattedPhone.startsWith("63")) formattedPhone = "63" + formattedPhone;
         formattedPhone = formattedPhone.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
 
@@ -121,7 +120,6 @@ const Signup = () => {
             password,
             confirmPassword,
         };
-
 
         try {
             const response = await axios.post("http://localhost:2025/reset-password", payload);
@@ -140,19 +138,36 @@ const Signup = () => {
         }
     };
 
-    if (loading) return <div className="loading"></div>;
+    useEffect(() => {
+    const preventScroll = (e) => e.preventDefault();
+
+    if (reset) {
+        document.body.classList.add("modal-open");
+        document.body.addEventListener("touchmove", preventScroll, { passive: false }); // disable scroll on body
+    } else {
+        document.body.classList.remove("modal-open");
+        document.body.removeEventListener("touchmove", preventScroll);
+    }
+
+    return () => {
+        document.body.classList.remove("modal-open");
+        document.body.removeEventListener("touchmove", preventScroll);
+    };
+}, [reset]);
+
+
+    if (loading) return <div className="signup-loading"></div>;
 
     return (
-        <div className="container">
-            {/* Login Section */}
-            <div className="login-section">
-                <div className="login-box">
-                    <div className="logo-container">
-                        <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="maiinlogo" />
+        <div className="signup-container">
+            <div className="signup-login-section">
+                <div className="signup-login-box">
+                    <div className="signup-logo-container">
+                        <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="signup-mainlogo" />
                     </div>
-                    <h2 className="title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
-                    <p className="subtitle" style={{ fontSize: "10px" }}>Office of the Student Welfare and Services</p>
-                    <p className="subtitle" style={{ fontSize: "10px" }}>Student Admission Portal</p>
+                    <h2 className="signup-title" style={{ fontSize: "15px" }}>KOLEHIYO NG SUBIC</h2>
+                    <p className="signup-subtitle" style={{ fontSize: "10px" }}>Office of the Student Welfare and Services</p>
+                    <p className="signup-subtitle" style={{ fontSize: "10px" }}>Student Admission Portal</p>
                     <hr />
 
                     <form onSubmit={handleSubmit}>
@@ -161,39 +176,27 @@ const Signup = () => {
                             value={loginForm.email}
                             type="text"
                             placeholder="Email"
-                            className="input"
+                            className="signup-input"
                             required
                         />
-                        <div style={{ position: "relative", width: "100%" }}>
+                        <div className="signup-input-wrapper-password">
                             <input
                                 value={loginForm.password}
                                 onChange={e => setLoginForm(p => ({ ...p, password: e.target.value }))}
                                 type={showPassword ? "text" : "password"}
                                 placeholder="Password"
-                                className="input"
-                                required
-                                style={{ paddingRight: "30px" }}
+                                className="signup-input"
                             />
                             <i
                                 className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
                                 onClick={() => setShowPassword(!showPassword)}
-                                style={{
-                                    position: "absolute",
-                                    right: "10px",
-                                    top: "35%",
-                                    transform: "translateY(-50%)",
-                                    cursor: "pointer",
-                                    color: "#666",
-                                    fontSize: "16px"
-                                }}
                             ></i>
                         </div>
 
-                        <div className="button-group">
-                            <button className="login-button" style={{ border: "none", backgroundColor: "#005bb5" }}>Login</button>
+                        <div className="signup-button-group">
+                            <button className="signup-login-button">Login</button>
                             <button
-                                className="signup-button"
-                                style={{ border: "none", backgroundColor: "#005bb5" }}
+                                className="signup-signup-button"
                                 onClick={(e) => {
                                     e.preventDefault();
                                     if (!preRegisterOpen) {
@@ -214,8 +217,7 @@ const Signup = () => {
 
                         <p
                             onClick={() => setReset(true)}
-                            className="forgot-password"
-                            style={{ fontSize: "11px", cursor: "pointer" }}
+                            className="signup-forgot-password"
                         >
                             Forgot Password?
                         </p>
@@ -229,87 +231,78 @@ const Signup = () => {
                 </div>
             </div>
 
-            {/* Forgot Password Modal */}
             {reset && (
-                <div className="forgot-reset">
-                    <div className="forgot-resetbg">
-                        <h2 className="forgot-reset-title">Forgot Password?</h2>
-                        <p className="forgot-reset-description">
+                <div className="signup-forgot-reset">
+                    <div className="signup-forgot-resetbg">
+                        <h2 className="signup-forgot-reset-title">Forgot Password?</h2>
+                        <p className="signup-forgot-reset-description">
                             To recover your password, please fill out this form. Make sure the information you provide matches what we have on file.
                         </p>
 
-                        <form className="forgot-reset-form" onSubmit={handleResetPassword}>
-                            <div className="forgot-input-group">
+                        <form className="signup-forgot-reset-form" onSubmit={handleResetPassword}>
+                            <div className="signup-forgot-input-group">
                                 <label>Registration/KNSAT Number*</label>
                                 <input type="text" name="registerNum" placeholder="Your registration Number" value={formData.registerNum} onChange={handleChange} required />
                             </div>
-
-                            <div className="forgot-input-group">
+                            <div className="signup-forgot-input-group">
                                 <label>Email Address*</label>
                                 <input type="email" name="email" placeholder="Email Address" value={formData.email} onChange={handleChange} required />
                             </div>
-
-                            <div className="forgot-input-group">
+                            <div className="signup-forgot-input-group">
                                 <label>Mobile Number*</label>
                                 <input type="text" name="phone" placeholder="+63 XXX-XXX-XXXX" value={formData.phone} onChange={handleChange} required />
                             </div>
-
-                            <div className="forgot-input-group">
+                            <div className="signup-forgot-input-group">
                                 <label>Date of Birth*</label>
                                 <input type="date" name="birthdate" value={formData.birthdate} onChange={handleChange} required />
                             </div>
-
-                            <div className="forgot-input-group">
+                            <div className="signup-forgot-input-group">
                                 <label>New Password*</label>
-                                <div style={{ position: "relative", width: "100%" }}>
-                                    <input type={newShowPassword ? "text" : "password"} name="password" placeholder="Password" value={formData.password} onChange={handleChange} style={{ paddingRight: "30px" }} required />
+                                <div className="signup-input-wrapper">
+                                    <input type={newShowPassword ? "text" : "password"} name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
                                     <i
                                         className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
                                         onMouseDown={() => setNewShowPassword(true)}
                                         onMouseUp={() => setNewShowPassword(false)}
                                         onMouseLeave={() => setNewShowPassword(false)}
-                                        style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "#666", fontSize: "16px" }}
                                     ></i>
                                 </div>
                             </div>
-
-                            <div className="forgot-input-group">
+                            <div className="signup-forgot-input-group">
                                 <label>Confirm Password*</label>
-                                <div style={{ position: "relative", width: "100%" }}>
-                                    <input type={newShowPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} style={{ paddingRight: "30px" }} required />
+                                <div className="signup-input-wrapper">
+                                    <input type={newShowPassword ? "text" : "password"} name="confirmPassword" placeholder="Confirm Password" value={formData.confirmPassword} onChange={handleChange} required />
                                     <i
                                         className={`fa-solid ${newShowPassword ? "fa-eye" : "fa-eye-slash"}`}
                                         onMouseDown={() => setNewShowPassword(true)}
                                         onMouseUp={() => setNewShowPassword(false)}
                                         onMouseLeave={() => setNewShowPassword(false)}
-                                        style={{ position: "absolute", right: "10px", top: "50%", transform: "translateY(-50%)", cursor: "pointer", color: "#666", fontSize: "16px" }}
                                     ></i>
                                 </div>
                             </div>
 
-                            <div className="forgot-reset-buttons">
-                                <button type="button" className="forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
-                                <button type="submit" className="forgot-update-button">Update Password</button>
+                            <div className="signup-forgot-reset-buttons">
+                                <button type="button" className="signup-forgot-cancel-button" onClick={() => setReset(false)}>Cancel</button>
+                                <button type="submit" className="signup-forgot-update-button">Update Password</button>
                             </div>
                         </form>
                     </div>
                 </div>
             )}
 
-            {/* Right Section - Vision/Mission */}
-            <div className="info-section">
-                <div className="school-branding">
-                    <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="school-logo" />
-                    <h2 className="school-name">KOLEHIYO NG SUBIC</h2>
-                    <p className="school-address">WFI Compound, Wawandue, Subic Zambales</p>
+            <div className="signup-info-section">
+                <div className="signup-school-branding">
+                    <img src="/img/knshdlogo.png" alt="Kolehiyo Ng Subic" className="signup-school-logo" />
+                    <h2 className="signup-school-name">KOLEHIYO NG SUBIC</h2>
+                    <p className="signup-school-address">WFI Compound, Wawandue, Subic Zambales</p>
                 </div>
 
-                <h2 className="section-title" style={{ color: "white" }}>VISION</h2>
-                <p className="section-text">Kolehiyo ng Subic uplifts the quality of life of the populace through effective and efficient education.</p>
-                <h2 className="section-title" style={{ color: "white" }}>MISSION</h2>
-                <p className="section-text">To develop globally competitive graduates to be active and responsible members of the community.</p>
-                <h2 className="section-title" style={{ color: "white" }}>GOAL</h2>
-                <p className="section-text">Kolehiyo ng Subic prepares students to succeed, fosters academic excellence through public education, delivers educational opportunities for students and educators to become globally competitive and active members of the community.</p>
+                <h2 className="signup-section-title">VISION</h2>
+                <p className="signup-section-text">Kolehiyo ng Subic uplifts the quality of life of the populace through effective and efficient education.</p>
+                <h2 className="signup-section-title">MISSION</h2>
+                <p className="signup-section-text">To develop globally competitive graduates to be active and responsible members of the community.</p>
+                <h2 className="signup-section-title">GOAL</h2>
+                <p className="signup-section-text">Kolehiyo ng Subic prepares students to succeed, fosters academic excellence through public education, delivers educational opportunities for students and educators to become globally competitive and active members of the community.</p>
             </div>
         </div>
     );

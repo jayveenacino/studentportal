@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import "./maincss/navbar.css";
 
 const Nav = () => {
     const [menuOpen, setMenuOpen] = useState(false);
     const [dropdownOpen, setDropdownOpen] = useState(null);
+    const [mobileDropdownOpen, setMobileDropdownOpen] = useState(null);
+
+    const location = useLocation();
 
     const toggleDropdown = (menu) => {
         setDropdownOpen(dropdownOpen === menu ? null : menu);
+    };
+
+    const toggleMobileDropdown = (menu) => {
+        setMobileDropdownOpen(mobileDropdownOpen === menu ? null : menu);
     };
 
     const handleClickOutside = (e) => {
@@ -16,54 +24,38 @@ const Nav = () => {
     };
 
     useEffect(() => {
+        setDropdownOpen(null);
+        setMobileDropdownOpen(null);
+        setMenuOpen(false);
+    }, [location.pathname]);
+
+    useEffect(() => {
         document.addEventListener("click", handleClickOutside);
         return () => document.removeEventListener("click", handleClickOutside);
     }, []);
 
     return (
-        <div className="NavWarp">
-            <div className="nav-container">
-                <Link to="Home">
-                    <img className="navlogo" src="/img/knshdlogo.png" alt="KNS Logo" />
-                </Link>
-                <div className="nav-title">
-                    <Link to="Home" style={{ textDecoration: "none" }}>
-                        <h1>KOLEHIYO NG SUBIC</h1>
+        <div className="enuique-navwarp">
+            <div className="enuique-nav-container">
+                <div className="enuique-nav-left">
+                    <Link to="Home">
+                        <img className="enuique-navlogo" src="/img/knshdlogo.png" alt="KNS Logo" />
                     </Link>
-                    <Link to="Home" style={{ textDecoration: "none" }}>
-                        <p>Educasyon Tungo sa Kaunlaran</p>
-                    </Link>
+                    <div className="enuique-nav-title">
+                        <Link to="Home" style={{ textDecoration: "none" }}>
+                            <h1>KOLEHIYO NG SUBIC</h1>
+                        </Link>
+                        <Link to="Home" style={{ textDecoration: "none" }}>
+                            <p>Educasyon Tungo sa Kaunlaran</p>
+                        </Link>
+                    </div>
                 </div>
 
-                <div
-                    className="navcontent"
-                    style={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "flex-end",
-                        gap: "30px",
-                        padding: "20px",
-                        marginLeft: "auto",
-                    }}
-                >
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        Home
-                    </Link>
+                <div className="enuique-navcontent">
+                    <Link to="/home">Home</Link>
 
                     <div className="enuique-dropdown">
-                        <span
-                            style={{ color: "white", fontSize: "13px", cursor: "pointer" }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                toggleDropdown("about");
-                            }}
-                        >
-                            About Us
-                        </span>
+                        <span onClick={(e) => { e.stopPropagation(); toggleDropdown("about"); }}>About Us</span>
                         {dropdownOpen === "about" && (
                             <div className="enuique-dropdown-menu">
                                 <Link to="/history">History</Link>
@@ -74,15 +66,7 @@ const Nav = () => {
                     </div>
 
                     <div className="enuique-dropdown">
-                        <span
-                            style={{ color: "white", fontSize: "13px", cursor: "pointer" }}
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                toggleDropdown("administration");
-                            }}
-                        >
-                            Administration
-                        </span>
+                        <span onClick={(e) => { e.stopPropagation(); toggleDropdown("administration"); }}>Administration</span>
                         {dropdownOpen === "administration" && (
                             <div className="enuique-dropdown-menu">
                                 <Link to="/staff">Staff</Link>
@@ -91,58 +75,50 @@ const Nav = () => {
                         )}
                     </div>
 
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        Admission
-                    </Link>
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        Research and Extension
-                    </Link>
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        Campus Life
-                    </Link>
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        What's New?
-                    </Link>
-                    <Link
-                        style={{ textDecoration: "none", color: "white", fontSize: "13px" }}
-                        onMouseEnter={(e) => (e.target.style.color = "orange")}
-                        onMouseLeave={(e) => (e.target.style.color = "white")}
-                    >
-                        Contact Us
-                    </Link>
+                    <Link to="/admission">Admission</Link>
+                    <Link to="/research">Research and Extension</Link>
+                    <Link to="/campus">Campus Life</Link>
+                    <Link to="/whatsnew">What's New?</Link>
+                    <Link to="/contact">Contact Us</Link>
                 </div>
 
-                <div className="menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
+                <div className="enuique-menu-btn" onClick={() => setMenuOpen(!menuOpen)}>
                     <i className="fa-solid fa-bars"></i>
                 </div>
             </div>
 
-            <div className={`mobile-menu ${menuOpen ? "open" : ""}`}>
-                <Link to="Home" style={{ textDecoration: "none", color: "white", fontSize: "16px" }}>Home</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>About Us</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Administration</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Admission</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Research and Extension</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Campus Life</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Whats New?</Link>
-                <Link style={{ textDecoration: "none", color: "white", fontSize: "16px", marginTop: "14px" }}>Contact Us</Link>
-            </div>
+            {menuOpen && (
+                <div className="enuique-mobile-dropdown-wrapper">
+                    <Link to="/home">Home</Link>
+
+                    <div className="enuique-mobile-dropdown">
+                        <span onClick={() => toggleMobileDropdown("about")}>About Us</span>
+                        {mobileDropdownOpen === "about" && (
+                            <div className="enuique-mobile-dropdown-menu">
+                                <Link to="/history">History</Link>
+                                <Link to="/mission">Mission & Vision</Link>
+                                <Link to="/team">Team</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <div className="enuique-mobile-dropdown">
+                        <span onClick={() => toggleMobileDropdown("administration")}>Administration</span>
+                        {mobileDropdownOpen === "administration" && (
+                            <div className="enuique-mobile-dropdown-menu">
+                                <Link to="/staff">Staff</Link>
+                                <Link to="/departments">Departments</Link>
+                            </div>
+                        )}
+                    </div>
+
+                    <Link to="/admission">Admission</Link>
+                    <Link to="/research">Research and Extension</Link>
+                    <Link to="/campus">Campus Life</Link>
+                    <Link to="/whatsnew">Whats New?</Link>
+                    <Link to="/contact">Contact Us</Link>
+                </div>
+            )}
         </div>
     );
 };

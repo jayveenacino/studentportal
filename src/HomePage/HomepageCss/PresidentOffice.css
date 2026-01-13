@@ -27,7 +27,6 @@
     text-align: center;
     line-height: 1.6;
     margin-bottom: 20px;
-    
 }
 
 .president-left h2 {
@@ -43,6 +42,9 @@
 
 .president-right {
     text-align: center;
+    flex: 1;
+    min-width: 250px;
+    margin-top: 20px;
 }
 
 .president-logo {
@@ -56,7 +58,7 @@
     padding: 15px 25px;
     border-radius: 6px;
     width: 230px;
-    margin: 0 auto;
+    margin: 0 auto 20px auto;
 }
 
 .contact-card h3 {
@@ -65,4 +67,47 @@
 
 .contact-card p {
     margin: 4px 0;
+}
+
+@media (max-width: 768px) {
+    .president-container {
+        flex-direction: column;
+        padding: 20px 15px;
+        align-items: center;
+    }
+
+    .president-left {
+        margin-right: 0;
+    }
+
+    .president-left h1 {
+        font-size: 22px;
+    }
+
+    .president-left h2 {
+        font-size: 16px;
+    }
+
+    .president-left p {
+        font-size: 14px;
+    }
+
+    .president-left ul {
+        margin-left: 15px;
+        font-size: 14px;
+    }
+
+    .president-right {
+        margin-top: 30px;
+    }
+
+    .president-logo {
+        width: 180px;
+    }
+
+    .contact-card {
+        width: 90%;
+        max-width: 250px;
+        padding: 12px 20px;
+    }
 }

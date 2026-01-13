@@ -3,25 +3,28 @@ import { Link } from 'react-router-dom';
 import "./student/student css/notice.css";
 
 export default function Body({ setPage }) {
-
     return (
-        <div style={{ pointerEvents: "none", userSelect: "none" }}>
-            <div className="details" >
+        <div>
+            <div className="details">
                 <h2 className="headtitle">
-                    Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) <br />
-                    First Semester A.Y 2025 - 2026
+                    Online Application For Kolehiyo Ng Subic Admission Test (KNSAT) 
                 </h2>
             </div>
+
             <img
                 className="imgnotice"
                 src="/img/Untitled-1.png"
                 alt=""
                 draggable="false"
-                style={{ margin: "0 auto", pointerEvents: "none", userSelect: "none" }}
+                style={{ margin: "0 auto" }}
             />
+
             <div className="info">
-                <h3 className='infoheader3'>PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.</h3>
+                <h3 className='infoheader3'>
+                    PLEASE BE ADVISED THAT ALL APPLICATIONS WILL BE SENT ONLINE.
+                </h3>
                 <h3 className='stepsheader'>Step 1: CREATE A PRE-REGISTRATION ACCOUNT </h3>
+
                 <div className='instructionsTB'>
                     <ul>
                         <li>
@@ -29,27 +32,10 @@ export default function Body({ setPage }) {
                             <Link
                                 to="signup"
                                 target="_blank"
-                                style={{ color: "green", pointerEvents: "auto", userSelect: "none" }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.color = "orange";
-                                    e.target.style.fontSize = "1.03rem";
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.color = "green";
-                                    e.target.style.fontSize = "1rem";
-                                }}
-                                onTouchStart={(e) => {
-                                    e.target.style.color = "orange";
-                                }}
-                                onTouchEnd={(e) => {
-                                    setTimeout(() => {
-                                        e.target.style.color = "green";
-                                    });
-                                }}
+                                className="green-link"
                             >
                                 ( localhost:30001/signup )
                             </Link>
-
                         </li>
                         <li>Click <strong>"Create Account"</strong></li>
                         <li>

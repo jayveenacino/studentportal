@@ -1,0 +1,300 @@
+.studentportal-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.studentportal-container-inner {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 9vh;
+    width: 100%;
+    background-color: #f3f4f6;
+}
+
+.studentportal-login-section {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background-color: #f3f4f6;
+    padding: 1.5rem;
+    width: 100%;
+}
+
+.studentportal-login-box {
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 2rem;
+    max-width: 300px;
+    width: 100%;
+}
+
+.studentportal-logo-container {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 1rem;
+}
+
+.studentportal-maiinlogo {
+    height: 80px;
+}
+
+.studentportal-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: bold;
+    margin-bottom: -5px;
+}
+
+.studentportal-subtitle {
+    text-align: center;
+    color: #6b7280;
+    font-size: 10px;
+    margin-bottom: 1.5rem;
+}
+
+.studentportal-input {
+    width: 95%;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.studentportal-button-group1 {
+    display: flex;
+    justify-content: center;
+}
+
+.studentportal-login-button1 {
+    background-color: #166534;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+}
+
+.studentportal-forgot-password {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #3b82f6;
+    margin-top: 1rem;
+    cursor: pointer;
+}
+
+.studentportal-modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.studentportal-modal-container {
+    position: relative;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 40%;
+    max-height: 90vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.studentportal-modal-container img {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+.studentportal-fa-xmark {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: red;
+    color: #fff;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    font-size: 18px;
+    z-index: 10000;
+}
+
+.studentportal-reset {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.studentportal-resetbg {
+    width: 500px;
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeIn 0.3s ease-in-out;
+}
+
+.studentportal-footer {
+    text-align: center;
+    font-size: 12px;
+    padding: 10px;
+    background: #111;
+    color: #fff;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+}
+
+.login-footer {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background: #111;
+    color: #fff;
+    text-align: center;
+    z-index: 9999;
+}
+
+.login-footer p {
+    margin: 0;
+    padding: 10px;
+    font-size: 10px;
+}
+
+.studentportal-forgot-password {
+    margin-top: 0.5rem;
+    font-size: 11px;
+    color: #3b82f6;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .studentportal-container {
+        position: fixed;
+        inset: 0;
+        height: 100dvh;
+        width: 100vw;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        background: #f3f4f6;
+    }
+
+    .studentportal-container-inner {
+        flex: 1;
+        overflow: hidden;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        padding-top: 10vh;
+    }
+
+    .studentportal-login-section {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        overflow: hidden;
+    }
+
+    .login-footer {
+        bottom: env(safe-area-inset-bottom);
+    }
+
+    .studentportal-modal-backdrop {
+        position: fixed;
+        inset: 0;
+        width: 100vw;
+        height: 100dvh;
+        background: rgba(0, 0, 0, 0.7);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        overflow: hidden;
+    }
+
+    .studentportal-modal-backdrop.modal-open {
+        overflow: hidden;
+    }
+
+    .studentportal-modal-container {
+        width: calc(100vw - 24px);
+        max-width: 100%;
+        max-height: calc(100dvh - 40px);
+        border-radius: 12px;
+        padding: 16px;
+        background: #fff;
+        overflow-y: auto;
+        overflow-x: hidden;
+        box-sizing: border-box;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .studentportal-reset {
+        width: 100vw;
+        height: 100dvh;
+        position: fixed;
+        top: 0;
+        left: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: rgba(0, 0, 0, 0.7);
+        z-index: 1000;
+        overflow: hidden;
+    }
+
+    .studentportal-resetbg {
+        width: calc(100vw - 24px);
+        max-width: 80%;
+        max-height: calc(100dvh - 40px);
+        background-color: white;
+        padding: 16px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        position: relative;
+        overflow-y: auto;
+        overflow-x: hidden;
+        -webkit-overflow-scrolling: touch; /* Smooth scroll on mobile */
+        animation: fadeIn 0.3s ease-in-out;
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
