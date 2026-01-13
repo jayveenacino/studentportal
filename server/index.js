@@ -18,7 +18,7 @@ const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
-const departmentRoutes = require('./routes/department'); // <- department router
+const departmentRoutes = require('./routes/department');
 
 require('dotenv').config();
 
@@ -39,12 +39,26 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
-app.use("/api/departments", departmentRoutes); // <- department route applied
+app.use("/api/departments", departmentRoutes);
 
-// MONGODB CONNECTION
-mongoose.connect(process.env.MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("MongoDB Atlas Connected"))
-    .catch(err => console.error("MongoDB connection error:", err));
+// MONGODB CONNECTION FIX FOR VERCEL
+let cached = global.mongoose;
+if (!cached) cached = global.mongoose = { conn: null, promise: null };
+async function connectDB() {
+    if (cached.conn) return cached.conn;
+    if (!cached.promise) {
+        cached.promise = mongoose.connect(process.env.MONGODB_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true
+        }).then(m => m);
+    }
+    cached.conn = await cached.promise;
+    return cached.conn;
+}
+
+// Wrap mongoose connection
+connectDB().then(() => console.log("MongoDB Atlas Connected"))
+.catch(err => console.error("MongoDB connection error:", err));
 
 app.post('/register', async (req, res) => {
     try {
