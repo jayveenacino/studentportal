@@ -238,22 +238,50 @@ export default function Iupdocx() {
     //!IMAGE
     const handleImageChange = (event) => {
         const file = event.target.files[0];
-        if (!file) {
-            Swal.fire({
-                title: 'Error!',
-                text: 'No file selected!',
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
+        if (!file) return;
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setImage(reader.result);
+            const img = new Image();
+            img.src = reader.result;
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                canvas.width = img.width;
+                canvas.height = img.height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0);
+
+                // Basic white background check (pixel sample)
+                const pixelData = ctx.getImageData(0, 0, 10, 10).data;
+                const isMostlyWhite = Array.from(pixelData)
+                    .filter((_, i) => i % 4 !== 3) // skip alpha
+                    .every(value => value > 200);
+                if (!isMostlyWhite) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Invalid Background',
+                        text: 'Image must have a white background',
+                    });
+                    return;
+                }
+
+                // Simple blur check (variance of Laplacian would be better in backend)
+                // For demo: just check width & height
+                if (img.width < 200 || img.height < 200) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Image Too Small',
+                        text: 'Please upload a higher resolution image',
+                    });
+                    return;
+                }
+
+                setImage(reader.result); // Acceptable image
+            };
         };
         reader.readAsDataURL(file);
     };
+
 
     const handleUpload = async () => {
         if (!image) {
@@ -483,7 +511,7 @@ export default function Iupdocx() {
                                         />
                                     </div>
                                     <div className="button-container" style={{ marginTop: '20px' }}>
-                                        <button onClick={() => setBirthCertModalOpen(false)} style={{ background: 'transparent', color: '#006666', border: '1px solid #ffffffff', padding: '10px 20px', cursor: 'pointer'}}>Close</button>
+                                        <button onClick={() => setBirthCertModalOpen(false)} style={{ background: 'transparent', color: '#006666', border: '1px solid #ffffffff', padding: '10px 20px', cursor: 'pointer' }}>Close</button>
                                         <button onClick={birthCertHandleUpload} style={{ border: "1px solid #006666", background: "#006666", color: "white", padding: '10px 20px', cursor: 'pointer' }}>Submit</button>
                                     </div>
                                 </div>

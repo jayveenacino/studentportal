@@ -207,7 +207,7 @@ export default function Preregister() {
                         <img className="adlogo" src="./img/knshdlogo.png" alt="Logo" draggable="false" style={{ pointerEvents: "none", userSelect: "none", height: "45px" }} />
                         <div className="prenav-text" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} >
                             <h1>Kolehiyo Ng Subic</h1>
-                            <p>Student Admission Portal v.0.3</p>
+                            <p>Student Admission Portal v.1</p>
                         </div>
                         <div className="dropdown">
                             <button className="dropbtn">

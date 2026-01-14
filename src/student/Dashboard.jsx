@@ -49,8 +49,8 @@ export default function Dashboard() {
                             </tr>
                             <tr>
                                 <td>Second Choice:</td>
-                                <td>{user?.selectedSecCourse || ""}</td>
-                                <td></td>
+                                <td >{user?.selectedSecCourse || ""}</td>
+                                <td style={{textAlign:"center"}}>Your Second Course</td>
                             </tr>
                         </tbody>
                     </table>
