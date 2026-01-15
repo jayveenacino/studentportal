@@ -1,44 +1,48 @@
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const StudentModel = require("./models/Student");
-const AdminData = require('./models/admin/admindata');
-const CourseModel = require('./models/Course');
-const CourseRoutes = require('./routes/courses');
-const studentRoutes = require('./routes/students');
-const backupRoutes = require("./routes/backupRoutes");
-const departmentRoutes = require('./routes/department');
-const AcceptedStudent = require("./models/AcceptedStudent");
-const acceptedStudentsRoutes = require("./routes/acceptedStudents");
-const Settings = require("./models/Settings");
-const adminRoutes = require("./routes/adminRoutes");
-const uploadRoutes = require("./routes/uploadRoutes");
-const Upload = require('./models/Upload');
-const studentByDomainRoute = require("./routes/studentByDomain");
-const semesterSettingsRoutes = require("./routes/semesterSettings");
-const classroomRoutes = require("./routes/classrooms");
-const chatRoutes = require("./routes/chatRoutes");
-const subjectRoutes = require("./routes/subjects");
+import express from "express";
+import mongoose from "mongoose";
+import cors from "cors";
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 
-require('dotenv').config();
+import StudentModel from "./models/Student.js";
+import AdminData from "./models/admin/admindata.js";
+import CourseModel from "./models/Course.js";
+import CourseRoutes from "./routes/courses.js";
+import studentRoutes from "./routes/students.js";
+import backupRoutes from "./routes/backupRoutes.js";
+import departmentRoutes from "./routes/department.js";
+import AcceptedStudent from "./models/AcceptedStudent.js";
+import acceptedStudentsRoutes from "./routes/acceptedStudents.js";
+import Settings from "./models/Settings.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import uploadRoutes from "./routes/uploadRoutes.js";
+import studentByDomainRoute from "./routes/studentByDomain.js";
+import semesterSettingsRoutes from "./routes/semesterSettings.js";
+import classroomRoutes from "./routes/classrooms.js";
+import chatRoutes from "./routes/chatRoutes.js";
+import subjectRoutes from "./routes/subjects.js";
+
+dotenv.config();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 app.use(cors());
-app.use(express.json({ limit: '100mb' }));
-app.use(express.urlencoded({ limit: '100mb', extended: true }));
-app.use("/", studentByDomainRoute);
-app.use("/api/backups", backupRoutes);
-app.use(studentRoutes);
-app.use(acceptedStudentsRoutes);
-app.use("/api", adminRoutes);
-app.use("/api/settings", semesterSettingsRoutes);
-app.use("/uploads", express.static("uploads"));
-app.use("/api/uploads", uploadRoutes);
-app.use("/api/classrooms", classroomRoutes);
-app.use("/api/chats", chatRoutes);
-app.use("/api/subjects", subjectRoutes);
+app.use(express.json({ limit: "100mb" }));
+app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
 mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB connected"))
+    .catch(err => console.error("MongoDB error:", err));
+;
+
+app.use(express.static(path.join(__dirname, "dist")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.post('/register', async (req, res) => {
     try {
@@ -128,7 +132,7 @@ app.post('/reset-password', async (req, res) => {
 
         // Save password and update phone in proper format
         student.password = password;
-        student.phone = `${inputPhone.slice(0,3)}-${inputPhone.slice(3,6)}-${inputPhone.slice(6,10)}`;
+        student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
         await student.save();
 
@@ -644,6 +648,8 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
     }
 });
 
-app.listen(2025, '0.0.0.0', () => {
-    console.log("Server’s awake and ready to roll!");
+const PORT = process.env.PORT || 2025;
+app.listen(PORT, "0.0.0.0", () => {
+  console.log("Server running on port", PORT);
 });
+
