@@ -38,7 +38,8 @@ app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
 
-mongoose.connect("mongodb://127.0.0.1:27017/student");
+mongoose.connect(process.env.MONGO_URI)
+
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();

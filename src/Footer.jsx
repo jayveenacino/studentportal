@@ -24,8 +24,8 @@ export default function Footer() {
                     <div className="enuique-student-resources">
                         <h1>Student Resources</h1>
                         <Link to="/login" target='_blank'><p>Student Portal</p></Link>
-                        <Link to="/signup" target='_blank'><p>KNS Admission</p></Link>
-                        <Link to="/body"><p>Register</p></Link>
+                        <Link to="/signup" target='_blank'><p>KNS Admission Portal</p></Link>
+                        <Link to="/body"><p>Register Admission</p></Link>
                     </div>
                     <hr />
                     <div className="enuique-faculty-resources">
