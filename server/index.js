@@ -34,14 +34,19 @@ app.use(express.json({ limit: "100mb" }));
 app.use(express.urlencoded({ extended: true, limit: "100mb" }));
 
 mongoose.connect(process.env.MONGO_URI)
-    .then(() => console.log("MongoDB connected"))
+    .then(() => {
+        console.log("MongoDB connected");
+        app.listen(PORT, "0.0.0.0", () => {
+            console.log(`Server running on port ${PORT}`);
+        });
+    })
     .catch(err => console.error("MongoDB error:", err));
-;
+
 
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "dist", "index.html"));
+    res.sendFile(path.join(__dirname, "dist", "index.html"));
 });
 
 app.post('/register', async (req, res) => {
@@ -649,7 +654,9 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
 });
 
 const PORT = process.env.PORT || 2025;
+
 app.listen(PORT, "0.0.0.0", () => {
-  console.log("Server running on port", PORT);
+    console.log(`Server running on port ${PORT}`);
 });
+;
 
