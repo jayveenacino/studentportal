@@ -6,7 +6,7 @@
 
 :root {
     --enuique-white: #fff;
-    --enuique-dark-green: #006400;
+    --enuique-dark-green: #0a3d14;
     --enuique-hover: orange;
 }
 
@@ -121,7 +121,7 @@
     z-index: 1500;
     box-shadow: 0 4px 10px rgba(0,0,0,0.3);
     padding: 10px 0;
-    border-radius: 8px;
+    border-radius: 5px;
 }
 
 .enuique-mobile-dropdown-wrapper a,
