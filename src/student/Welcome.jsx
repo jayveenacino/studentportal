@@ -149,7 +149,7 @@ export default function Welcome() {
             {openChat && (
                 <div className="chat-modal">
                     <div className="chat-header">
-                        <img className="chat-logo" src="/public/img/knshdlogo.png" alt="" />
+                        <img className="chat-logo" src="/img/knshdlogo.png" alt="" />
                         <span>Admissions Chat</span>
                         <button onClick={() => setOpenChat(false)}>✕</button>
                     </div>
