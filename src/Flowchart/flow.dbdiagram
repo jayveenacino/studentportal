@@ -5,40 +5,22 @@
   "detailLevel": "All",
   "tablePositions": [
     {
+      "name": "admin",
+      "schemaName": "public",
+      "x": 53.519706470544236,
+      "y": -76.60141297846884
+    },
+    {
       "name": "users",
       "schemaName": "public",
-      "x": 0,
-      "y": 50
+      "x": 312.40563322368416,
+      "y": -51.25399970095698
     },
     {
-      "name": "students",
+      "name": "subject",
       "schemaName": "public",
-      "x": 225.20190477946187,
-      "y": 56.07167264311258
-    },
-    {
-      "name": "admins",
-      "schemaName": "public",
-      "x": 507.9853515625,
-      "y": 50
-    },
-    {
-      "name": "departments",
-      "schemaName": "public",
-      "x": 726.11376953125,
-      "y": 50
-    },
-    {
-      "name": "courses",
-      "schemaName": "public",
-      "x": 0,
-      "y": 324
-    },
-    {
-      "name": "enrollments",
-      "schemaName": "public",
-      "x": 267.70361328125,
-      "y": 356
+      "x": 60.923641223086136,
+      "y": 30.243122009569362
     }
   ],
   "tableGroupCollapseStates": [],
@@ -46,15 +28,45 @@
   "referencePaths": [
     {
       "firstFieldNames": [
-        "_id"
+        "year"
       ],
-      "firstTableName": "users",
+      "firstTableName": "subject",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "user_id"
+        "yearlevel"
       ],
-      "secondTableName": "students",
+      "secondTableName": "users",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "semister"
+      ],
+      "firstTableName": "subject",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "semister"
+      ],
+      "secondTableName": "users",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "subjectName"
+      ],
+      "firstTableName": "subject",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "subject"
+      ],
+      "secondTableName": "users",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
@@ -63,58 +75,13 @@
       "firstFieldNames": [
         "_id"
       ],
-      "firstTableName": "users",
+      "firstTableName": "admin",
       "firstSchemaName": "public",
       "firstRelation": "1",
       "secondFieldNames": [
-        "user_id"
+        "subjectName"
       ],
-      "secondTableName": "admins",
-      "secondSchemaName": "public",
-      "secondRelation": "*",
-      "checkPoints": []
-    },
-    {
-      "firstFieldNames": [
-        "_id"
-      ],
-      "firstTableName": "departments",
-      "firstSchemaName": "public",
-      "firstRelation": "1",
-      "secondFieldNames": [
-        "department_id"
-      ],
-      "secondTableName": "courses",
-      "secondSchemaName": "public",
-      "secondRelation": "*",
-      "checkPoints": []
-    },
-    {
-      "firstFieldNames": [
-        "_id"
-      ],
-      "firstTableName": "students",
-      "firstSchemaName": "public",
-      "firstRelation": "1",
-      "secondFieldNames": [
-        "student_id"
-      ],
-      "secondTableName": "enrollments",
-      "secondSchemaName": "public",
-      "secondRelation": "*",
-      "checkPoints": []
-    },
-    {
-      "firstFieldNames": [
-        "_id"
-      ],
-      "firstTableName": "courses",
-      "firstSchemaName": "public",
-      "firstRelation": "1",
-      "secondFieldNames": [
-        "course_id"
-      ],
-      "secondTableName": "enrollments",
+      "secondTableName": "subject",
       "secondSchemaName": "public",
       "secondRelation": "*",
       "checkPoints": []
