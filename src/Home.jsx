@@ -38,12 +38,12 @@ export default function Home() {
                 
                 <Link to="/home/collegepresident" className="enuique-image-item">
                     <img src="/img/MaamRosely.png" alt="College President" />
-                    <p>Office of the College President</p>
+                    <p>College President</p>
                 </Link>
 
                 <a href="#" className="enuique-image-item">
                     <img src="/img/MaamHas.png" alt="" />
-                    <p>Office of Student Affairs</p>
+                    <p>Student Affairs</p>
                 </a>
 
                 <a href="#" className="enuique-image-item">
