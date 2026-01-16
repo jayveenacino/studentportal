@@ -20,7 +20,7 @@ export default function Departments() {
     }, []);
 
     const fetchDepartments = () => {
-        axios.get("http://localhost:2025/api/departments")
+        axios.get(import.meta.env.VITE_API_URL + "/api/departments")
             .then(res => setDepartments(res.data))
             .catch(err => console.error("Failed to fetch departments:", err));
     };
@@ -61,13 +61,8 @@ export default function Departments() {
                     text: 'Department updated successfully.'
                 });
             } else {
-                const res = await axios.post(
-                    "http://localhost:2025/api/departments",
-                    newDept
-                );
-
-                setDepartments(prev => [res.data, ...prev]);
-
+                const res = await axios.post("http://localhost:2025/api/departments", newDept);
+                setDepartments([res.data, ...departments]);
                 Swal.fire({
                     icon: 'success',
                     title: 'Added!',

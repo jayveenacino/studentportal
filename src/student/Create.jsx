@@ -86,7 +86,7 @@ export default function Create() {
         }
 
         try {
-            const response = await axios.post("http://localhost:2025/register", formData);
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/register", formData);
 
             if (response.status === 201) {
                 Swal.fire({

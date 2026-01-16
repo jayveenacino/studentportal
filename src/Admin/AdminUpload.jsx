@@ -22,7 +22,7 @@ export default function AdminUpload() {
 
     const fetchUploads = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/uploads");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/uploads");
             setUploads(res.data);
         } catch (err) {
             console.error("Failed to fetch uploads:", err);
@@ -71,7 +71,7 @@ export default function AdminUpload() {
 
         setLoading(true);
         try {
-            const res = await axios.post("http://localhost:2025/api/uploads", formData, {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/uploads", formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             Swal.fire("Success", res.data.message, "success");
@@ -166,9 +166,9 @@ export default function AdminUpload() {
                         <tr>
                             <th>#</th>
                             <th>Preview</th>
-                            <th  style={{textAlign: "center"}}>Title</th>
+                            <th style={{ textAlign: "center" }}>Title</th>
                             <th>Caption</th>
-                            <th style={{textAlign: "center"}}>Date</th>
+                            <th style={{ textAlign: "center" }}>Date</th>
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
                     </thead>
@@ -186,7 +186,7 @@ export default function AdminUpload() {
                                             />
                                         )}
                                     </td>
-                                    <td  style={{textAlign: "center"}}>{u.title || "-"}</td>
+                                    <td style={{ textAlign: "center" }}>{u.title || "-"}</td>
                                     <td className="adminupload-caption-cell">
                                         <div
                                             className="caption-scroll"
@@ -198,7 +198,7 @@ export default function AdminUpload() {
                                             See More
                                         </div>
                                     </td>
-                                    <td  style={{textAlign: "center"}}>{new Date(u.date).toLocaleString()}</td>
+                                    <td style={{ textAlign: "center" }}>{new Date(u.date).toLocaleString()}</td>
                                     <td style={{ textAlign: "right" }}>
                                         <button
                                             className="adminupload-action-btn edit"

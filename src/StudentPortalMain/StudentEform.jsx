@@ -24,7 +24,7 @@ export default function ProfileEformPage() {
                 );
                 setStudentData(studentRes.data);
 
-                const settingsRes = await axios.get("http://localhost:2025/settings/");
+                const settingsRes = await axios.get(import.meta.env.VITE_API_URL + "/settings/");
                 const settingsArray = Array.isArray(settingsRes.data) ? settingsRes.data : [settingsRes.data];
                 setSettings(settingsArray);
 

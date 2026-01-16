@@ -10,7 +10,7 @@ export default function Dashboard() {
     const { user, setUser } = useAdmin()
 
     useEffect(() => {
-        axios.get("http://localhost:2025/api/courses")
+        axios.get(import.meta.env.VITE_API_URL + "/api/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error("Course fetch error:", err));
     }, []);
@@ -19,7 +19,7 @@ export default function Dashboard() {
         user?.selectedCourse &&
         user?.firstName &&
         user?.lastName &&
-        user?.birthDate; 
+        user?.birthDate;
 
     return (
         <div>
@@ -45,12 +45,12 @@ export default function Dashboard() {
                             <tr>
                                 <td>First Choice:</td>
                                 <td style={{ width: "35%" }}>{user?.selectedCourse || ""}</td>
-                                <td style={{textAlign:"center"}}>Your Final Course</td>
+                                <td style={{ textAlign: "center" }}>Your Final Course</td>
                             </tr>
                             <tr>
                                 <td>Second Choice:</td>
                                 <td >{user?.selectedSecCourse || ""}</td>
-                                <td style={{textAlign:"center"}}>Your Second Course</td>
+                                <td style={{ textAlign: "center" }}>Your Second Course</td>
                             </tr>
                         </tbody>
                     </table>

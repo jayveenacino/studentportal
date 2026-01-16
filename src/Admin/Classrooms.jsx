@@ -29,7 +29,7 @@ export default function Classrooms() {
 
     const fetchClassrooms = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/classrooms");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/classrooms");
             setClassrooms(res.data);
         } catch (err) {
             console.error("Fetch classrooms error:", err);
@@ -60,7 +60,7 @@ export default function Classrooms() {
                 Swal.fire("Updated", "Classroom updated successfully.", "success");
             } else {
                 await axios.post(
-                    "http://localhost:2025/api/classrooms",
+                    import.meta.env.VITE_API_URL + "/api/classrooms",
                     newClassroom
                 );
                 Swal.fire("Added", "Classroom added successfully.", "success");

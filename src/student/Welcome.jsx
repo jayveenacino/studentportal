@@ -43,7 +43,7 @@ export default function Welcome() {
     };
 
     useEffect(() => {
-        axios.get("http://localhost:2025/api/courses")
+        axios.get(import.meta.env.VITE_API_URL + "/api/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error("Course fetch error:", err));
 
@@ -150,7 +150,7 @@ export default function Welcome() {
 
                     <div className="chat-body">
                         {messages.length === 0 && (
-                            <p style={{ textAlign: "center", opacity: 0.6 , fontSize:"13px", marginTop:"150px"}}>No messages yet</p>
+                            <p style={{ textAlign: "center", opacity: 0.6, fontSize: "13px", marginTop: "150px" }}>No messages yet</p>
                         )}
                         {messages.map((msg, index) => (
                             <div key={index} className="chat-message admin">

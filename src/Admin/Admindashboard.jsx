@@ -92,7 +92,7 @@ function Dashboard() {
     useEffect(() => {
         const fetchEnrolleesCount = async () => {
             try {
-                const res = await axios.get("http://localhost:2025/api/enrollees");
+                const res = await axios.get(import.meta.env.VITE_API_URL + "/api/enrollees");
                 setNotifCount(res.data.length);
             } catch (err) {
                 console.error("Failed to fetch enrollees count:", err);

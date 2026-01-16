@@ -59,7 +59,7 @@ export default function Login() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/api/adminlogin", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/adminlogin", {
                 emailOrUsername,
                 password,
             });

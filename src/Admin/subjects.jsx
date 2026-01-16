@@ -22,7 +22,7 @@ const Subjects = () => {
 
     const fetchSubjects = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/subjects");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/subjects");
             setSubjects(res.data);
         } catch (err) {
             console.error("Fetch subjects error:", err);
@@ -31,7 +31,7 @@ const Subjects = () => {
 
     const fetchCourses = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/courses");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/courses");
             setCourses(res.data);
         } catch (err) {
             console.error("Fetch courses error:", err);
@@ -67,7 +67,7 @@ const Subjects = () => {
                 await axios.put(`http://localhost:2025/api/subjects/${editId}`, newSubject);
                 Swal.fire("Updated", "Subject updated successfully.", "success");
             } else {
-                await axios.post("http://localhost:2025/api/subjects", newSubject);
+                await axios.post(import.meta.env.VITE_API_URL + "/api/subjects", newSubject);
                 Swal.fire("Added", "Subject added successfully.", "success");
             }
             resetForm();
