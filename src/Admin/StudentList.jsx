@@ -15,7 +15,7 @@ export default function StudentList() {
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:2025/api/acceptedstudents")
+        axios.get(import.meta.env.VITE_API_URL + "/api/acceptedstudents")
             .then(res => setStudents(res.data))
             .catch(err => console.error("Error fetching accepted students:", err));
     }, []);
@@ -23,7 +23,7 @@ export default function StudentList() {
     useEffect(() => {
         const fetchCourses = async () => {
             try {
-                const res = await axios.get("http://localhost:2025/api/courses");
+                const res = await axios.get(import.meta.env.VITE_API_URL + "/api/courses");
                 setCourses(res.data);
             } catch (err) {
                 console.error("Error fetching courses:", err);

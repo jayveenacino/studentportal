@@ -21,13 +21,13 @@ export default function Courses() {
     }, []);
 
     const fetchCourses = () => {
-        axios.get("http://localhost:2025/api/courses")
+        axios.get(import.meta.env.VITE_API_URL + "/api/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error("Fetch error:", err));
     };
 
     const fetchDepartments = () => {
-        axios.get("http://localhost:2025/api/departments")
+        axios.get(import.meta.env.VITE_API_URL + "/api/departments")
             .then(res => setDepartments(res.data))
             .catch(err => console.error("Department fetch error:", err));
     };
@@ -55,7 +55,7 @@ export default function Courses() {
                 await axios.put(`http://localhost:2025/api/courses/${editId}`, newCourse);
                 Swal.fire("Updated", "Course updated successfully.", "success");
             } else {
-                const res = await axios.post("http://localhost:2025/api/courses", newCourse);
+                const res = await axios.post(import.meta.env.VITE_API_URL + "/api/courses", newCourse);
                 setCourses([res.data, ...courses]);
                 Swal.fire("Added", "Course added successfully.", "success");
             }

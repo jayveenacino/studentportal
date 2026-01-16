@@ -12,14 +12,14 @@ export default function Semester() {
 
     useEffect(() => {
         // Fetch global settings (pre-register)
-        axios.get("http://localhost:2025/settings").then((res) => {
+        axios.get(import.meta.env.VITE_API_URL + "/settings").then((res) => {
             setPreRegister(res.data.preRegister);
             setSelectedSem("1st"); // default for first load
             setOriginalSem(res.data.activeSemester || "1st");
         });
 
         // Fetch department list
-        axios.get("http://localhost:2025/api/departments")
+        axios.get(import.meta.env.VITE_API_URL + "/api/departments")
             .then(async (res) => {
                 setDepartments(res.data);
                 if (res.data.length > 0) {
@@ -44,7 +44,7 @@ export default function Semester() {
     const handleToggle = async () => {
         const newVal = !preRegister;
         setPreRegister(newVal);
-        await axios.post("http://localhost:2025/settings", {
+        await axios.post(import.meta.env.VITE_API_URL + "/settings", {
             preRegister: newVal,
             activeSemester: originalSem,
         });
@@ -66,7 +66,7 @@ export default function Semester() {
             });
 
         try {
-            await axios.post("http://localhost:2025/api/settings", {
+            await axios.post(import.meta.env.VITE_API_URL + "/api/settings", {
                 department: selectedDept,
                 activeSemester: selectedSem,
                 preRegister,

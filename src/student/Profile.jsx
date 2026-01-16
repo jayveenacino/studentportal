@@ -15,7 +15,7 @@ export default function Profile() {
 
     useEffect(() => {
         axios
-            .get("http://localhost:2025/api/courses")
+            .get(import.meta.env.VITE_API_URL + "/api/courses")
             .then((res) => setCourses(res.data))
             .catch((err) => console.error("Course fetch error:", err));
     }, []);
@@ -93,7 +93,7 @@ export default function Profile() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/upload-id-image", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-id-image", {
                 email: user.email,
                 idimage: idimage,
             });
@@ -137,7 +137,7 @@ export default function Profile() {
 
         try {
             const res = await axios.post(
-                "http://localhost:2025/upload-birthcert-image",
+                import.meta.env.VITE_API_URL + "/upload-birthcert-image",
                 {
                     email: user.email,
                     birthCertImage,
@@ -183,7 +183,7 @@ export default function Profile() {
 
         try {
             const res = await axios.post(
-                "http://localhost:2025/upload-goodmoral-image",
+                import.meta.env.VITE_API_URL + "/upload-goodmoral-image",
                 {
                     email: user.email,
                     goodMoralImage,
@@ -229,7 +229,7 @@ export default function Profile() {
 
         try {
             const res = await axios.post(
-                "http://localhost:2025/upload-academic-image",
+                import.meta.env.VITE_API_URL + "/upload-academic-image",
                 {
                     email: user.email,
                     academicImage,
@@ -357,7 +357,7 @@ export default function Profile() {
             return;
         }
         try {
-            const response = await axios.post("http://localhost:2025/upload", {
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/upload", {
                 email: user.email,
                 image,
             });
@@ -398,7 +398,7 @@ export default function Profile() {
             if (!email) return;
 
             try {
-                const res = await axios.get("http://localhost:2025/getuser", {
+                const res = await axios.get(import.meta.env.VITE_API_URL + "/getuser", {
                     params: { email },
                 });
 
@@ -601,7 +601,7 @@ export default function Profile() {
         updatedFields.disabilityDetails = disabilityDetails || "";
 
         try {
-            const response = await axios.put("http://localhost:2025/update-profile", {
+            const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
                 email: user.email,
                 ...updatedFields,
             });
@@ -765,7 +765,7 @@ export default function Profile() {
         if (achivements) updatedFields.achivements = achivements;
 
         try {
-            const response = await axios.put("http://localhost:2025/update-profile", {
+            const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
                 email: user.email,
                 ...updatedFields,
             });
@@ -906,7 +906,7 @@ export default function Profile() {
         if (fatExt) updatedFields.fatExt = fatExt;
 
         try {
-            const response = await axios.put("http://localhost:2025/update-profile", {
+            const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
                 email: user.email,
                 ...updatedFields,
             });

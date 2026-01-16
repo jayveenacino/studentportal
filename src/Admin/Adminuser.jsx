@@ -20,7 +20,7 @@ export default function Adminuser() {
 
     const fetchUsers = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/adminusers");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/adminusers");
             setUsers(res.data);
         } catch (err) {
             console.error("Failed to fetch admin users:", err);
@@ -35,7 +35,7 @@ export default function Adminuser() {
     const handleAddUser = async () => {
         setLoading(true);
         try {
-            const res = await axios.post("http://localhost:2025/api/adminusers", formData);
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/adminusers", formData);
             Swal.fire("Success", res.data.message, "success");
             setShowModal(false);
             setFormData({ username: "", email: "", password: "", role: "ADMIN" });

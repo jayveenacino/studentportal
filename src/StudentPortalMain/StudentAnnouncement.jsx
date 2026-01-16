@@ -12,7 +12,7 @@ export default function StudentAnnouncement() {
 
     const fetchAnnouncements = async () => {
         try {
-            const res = await axios.get("http://localhost:2025/api/uploads");
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/uploads");
             const data = Array.isArray(res.data) ? res.data : [];
             setAnnouncements(data);
             if (data.length > 0) setSelectedAnnouncement(data[0]);

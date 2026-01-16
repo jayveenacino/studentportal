@@ -34,7 +34,7 @@ const Signup = () => {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:2025/settings")
+        axios.get(import.meta.env.VITE_API_URL + "/settings")
             .then(res => setPreRegisterOpen(res.data.preRegister))
             .catch(() => setPreRegisterOpen(false));
     }, []);
@@ -70,7 +70,7 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://localhost:2025/login", loginForm);
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/login", loginForm);
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
@@ -108,7 +108,7 @@ const Signup = () => {
             return;
         }
 
-        let formattedPhone = phone.replace(/\D/g, ""); 
+        let formattedPhone = phone.replace(/\D/g, "");
         if (!formattedPhone.startsWith("63")) formattedPhone = "63" + formattedPhone;
         formattedPhone = formattedPhone.replace(/^(\d{3})(\d{3})(\d{4})$/, "$1-$2-$3");
 
@@ -122,7 +122,7 @@ const Signup = () => {
         };
 
         try {
-            const response = await axios.post("http://localhost:2025/reset-password", payload);
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/reset-password", payload);
             Swal.fire({ icon: "success", title: "Success", text: response.data.message || "Password updated successfully!" });
             setReset(false);
             setFormData({
@@ -139,21 +139,21 @@ const Signup = () => {
     };
 
     useEffect(() => {
-    const preventScroll = (e) => e.preventDefault();
+        const preventScroll = (e) => e.preventDefault();
 
-    if (reset) {
-        document.body.classList.add("modal-open");
-        document.body.addEventListener("touchmove", preventScroll, { passive: false }); // disable scroll on body
-    } else {
-        document.body.classList.remove("modal-open");
-        document.body.removeEventListener("touchmove", preventScroll);
-    }
+        if (reset) {
+            document.body.classList.add("modal-open");
+            document.body.addEventListener("touchmove", preventScroll, { passive: false }); // disable scroll on body
+        } else {
+            document.body.classList.remove("modal-open");
+            document.body.removeEventListener("touchmove", preventScroll);
+        }
 
-    return () => {
-        document.body.classList.remove("modal-open");
-        document.body.removeEventListener("touchmove", preventScroll);
-    };
-}, [reset]);
+        return () => {
+            document.body.classList.remove("modal-open");
+            document.body.removeEventListener("touchmove", preventScroll);
+        };
+    }, [reset]);
 
 
     if (loading) return <div className="signup-loading"></div>;

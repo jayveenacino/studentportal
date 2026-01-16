@@ -13,7 +13,7 @@ export default function StudentEnrollees() {
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:2025/students")
+        axios.get(import.meta.env.VITE_API_URL + "/students")
             .then(res => {
                 setStudents(res.data);
                 setFilteredStudents(res.data);
@@ -22,7 +22,7 @@ export default function StudentEnrollees() {
     }, []);
 
     useEffect(() => {
-        axios.get("http://localhost:2025/courses")
+        axios.get(import.meta.env.VITE_API_URL + "/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error(err));
     }, []);

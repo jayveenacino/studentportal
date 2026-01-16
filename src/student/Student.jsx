@@ -179,7 +179,7 @@ export default function Preregister() {
             if (!email) return;
 
             try {
-                const res = await axios.get("http://localhost:2025/getuser", {
+                const res = await axios.get(import.meta.env.VITE_API_URL + "/getuser", {
                     params: { email }
                 });
 

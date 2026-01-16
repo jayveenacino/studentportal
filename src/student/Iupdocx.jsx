@@ -11,7 +11,7 @@ export default function Iupdocx() {
     const [courses, setCourses] = useState([]);
 
     useEffect(() => {
-        axios.get("http://localhost:2025/api/courses")
+        axios.get(import.meta.env.VITE_API_URL + "/api/courses")
             .then(res => setCourses(res.data))
             .catch(err => console.error("Course fetch error:", err));
     }, []);
@@ -76,7 +76,7 @@ export default function Iupdocx() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/upload-id-image", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-id-image", {
                 email: user.email,
                 idimage: idimage
             });
@@ -119,7 +119,7 @@ export default function Iupdocx() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/upload-birthcert-image", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-birthcert-image", {
                 email: user.email,
                 birthCertImage
             });
@@ -162,7 +162,7 @@ export default function Iupdocx() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/upload-goodmoral-image", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-goodmoral-image", {
                 email: user.email,
                 goodMoralImage
             });
@@ -205,7 +205,7 @@ export default function Iupdocx() {
         }
 
         try {
-            const res = await axios.post("http://localhost:2025/upload-academic-image", {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-academic-image", {
                 email: user.email,
                 academicImage
             });
@@ -305,7 +305,7 @@ export default function Iupdocx() {
         }
 
         try {
-            const response = await axios.post("http://localhost:2025/upload", {
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/upload", {
                 email: user.email,
                 image
             });
