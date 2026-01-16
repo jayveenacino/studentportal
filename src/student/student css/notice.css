@@ -1,5 +1,5 @@
 .notice-container {
-    max-width: 100%;
+    max-width: 1100px;
     margin: 10px auto;
     padding: 20px;
     background-color: #f9f9f9;
@@ -17,28 +17,44 @@
     margin-bottom: 10px;
 }
 
-.green-link {
-    color: green;
-    font-size: 1rem;
-    text-decoration: none; 
-    transition: color 0.2s ease, font-size 0.2s ease;
-}
-
-.green-link:hover,
-.green-link:active,
-.green-link:focus {
-    color: orange;
-    font-size: 1.03rem;
-}
-
 @media (max-width: 768px) {
-    .green-link {
-        font-size: 0.85rem; 
+    .notice-container {
+        padding: 15px;
     }
 
-    .green-link:hover,
-    .green-link:active,
-    .green-link:focus {
-        font-size: 0.9rem;
+    .notice-container .logonotice {
+        width: 70px;
+    }
+
+    .notice-container p,
+    .notice-container ul,
+    .notice-container li,
+    .notice-container > div {
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .notice-container ul {
+        padding-left: 18px;
+    }
+
+    .notice-container li {
+        font-size: 13px !important;
+        line-height: 1.5;
+    }
+
+    .notice-container p {
+        font-size: 13px !important;
+        line-height: 1.6;
+    }
+
+    .notice-container h6 {
+        font-size: 11px;
+        padding: 0 10px;
+        text-align: center;
+    }
+
+    hr {
+        margin: 15px 0;
     }
 }
