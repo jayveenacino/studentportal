@@ -45,15 +45,29 @@ export default function Departments() {
 
         try {
             if (editMode) {
-                await axios.put(`http://localhost:2025/api/departments/${editId}`, newDept);
+                const res = await axios.put(
+                    `http://localhost:2025/api/departments/${editId}`,
+                    newDept
+                );
+
+                // update UI instantly
+                setDepartments(prev =>
+                    prev.map(d => d._id === editId ? res.data : d)
+                );
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Updated!',
                     text: 'Department updated successfully.'
                 });
             } else {
-                const res = await axios.post("http://localhost:2025/api/departments", newDept);
-                setDepartments([res.data, ...departments]);
+                const res = await axios.post(
+                    "http://localhost:2025/api/departments",
+                    newDept
+                );
+
+                setDepartments(prev => [res.data, ...prev]);
+
                 Swal.fire({
                     icon: 'success',
                     title: 'Added!',
@@ -61,14 +75,14 @@ export default function Departments() {
                 });
             }
 
-            fetchDepartments();
+            // reset modal
             setNewDept({ name: "", head: "", status: "Active" });
             setEditMode(false);
             setEditId(null);
             setShowModal(false);
 
         } catch (err) {
-            console.error("Error saving department:", err);
+            console.error("Save error:", err);
             Swal.fire({
                 icon: 'error',
                 title: 'Failed',
@@ -77,14 +91,54 @@ export default function Departments() {
         }
     };
 
+
     const handleEdit = dept => {
-        setNewDept({ name: dept.name, head: dept.head, status: dept.status });
+        setNewDept({
+            name: dept.name,
+            head: dept.head,
+            status: dept.status
+        });
         setEditId(dept._id);
         setEditMode(true);
         setShowModal(true);
     };
 
-    const handleDelete = id => alert(`Delete department ${id}`);
+
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
+            title: 'Are you sure?',
+            text: "This department will be permanently deleted!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (!result.isConfirmed) return;
+
+        try {
+            await axios.delete(`http://localhost:2025/api/departments/${id}`);
+
+            // update UI immediately
+            setDepartments(prev => prev.filter(d => d._id !== id));
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Deleted!',
+                text: 'Department has been deleted.'
+            });
+        } catch (err) {
+            console.error("Delete failed:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Failed',
+                text: 'Could not delete department.'
+            });
+        }
+    };
+
 
     return (
         <div className="departments-container">

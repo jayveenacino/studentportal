@@ -234,7 +234,7 @@ router.put('/api/students/:id/accept', async (req, res) => {
                     <p><b>School Domain:</b> ${domainEmail}<br/>
                     <b>Temporary Password:</b> <span style="color: #007bff;">${plainPassword}</span>
                     </p>
-                    <p>Login here: <a href="http://localhost:3000" target="_blank"> http://kolehiyongsubic.ph@edu.ph</a></p>
+                    <p>Login here: <a href="http://localhost:3000" target="_blank"> https://kolehiyongsubic.vercel.app/login</a></p>
                     <p style="font-size: 14px; color: #555;">
                         Keep learning and growing.<br/>
                         — Kolehiyo ng Subic Admissions Team

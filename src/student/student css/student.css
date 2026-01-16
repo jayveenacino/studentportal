@@ -1611,8 +1611,8 @@
 }
 
 .chat-message p {
-    font-size: 12px; 
-    margin: 0; 
+    font-size: 12px;
+    margin: 0;
     line-height: 1.4;
 }
 
@@ -1625,3 +1625,4 @@
     height: 40px;
     border-radius: 50%;
 }
+

@@ -57,7 +57,7 @@ export default function Welcome() {
                     <h2>Kolehiyo Ng Subic Student Admission Portal</h2>
                     <p>Welcome, {user?.firstname || ""} {user?.middlename || ""} {user?.lastname || ""} {user?.extension || ""}</p>
                 </div>
-                <img src="public/img/knshdlogo.png" alt="Illustration" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
+                <img src="/public/img/knshdlogo.png" alt="Illustration" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
             </div>
             <div className="premainad">
                 <div className="addatails">
