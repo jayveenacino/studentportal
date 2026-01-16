@@ -1,0 +1,48 @@
+Table users {
+  _id ObjectId [pk]
+  name string
+  email string [unique]
+  password string
+  role string // admin | student
+  createdAt datetime
+}
+
+Table students {
+  _id ObjectId [pk]
+  user_id ObjectId [ref: > users._id]
+  studentNo string [unique]
+  department string
+  yearLevel string
+  status string
+  createdAt datetime
+}
+
+Table admins {
+  _id ObjectId [pk]
+  user_id ObjectId [ref: > users._id]
+  role string
+}
+
+Table departments {
+  _id ObjectId [pk]
+  name string
+  activeSemester string
+  preRegister boolean
+  createdAt datetime
+}
+
+Table courses {
+  _id ObjectId [pk]
+  department_id ObjectId [ref: > departments._id]
+  courseCode string
+  courseName string
+  units int
+}
+
+Table enrollments {
+  _id ObjectId [pk]
+  student_id ObjectId [ref: > students._id]
+  course_id ObjectId [ref: > courses._id]
+  semester string
+  schoolYear string
+}

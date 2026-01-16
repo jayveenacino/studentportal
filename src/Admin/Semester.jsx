@@ -175,8 +175,8 @@ export default function Semester() {
                                         {sem === "1st"
                                             ? "1st Semester"
                                             : sem === "2nd"
-                                            ? "2nd Semester"
-                                            : "Summer Class"}
+                                                ? "2nd Semester"
+                                                : "Summer Class"}
                                     </span>
                                 </label>
                             ))}

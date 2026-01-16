@@ -1,0 +1,123 @@
+{
+  "version": "1.0.0",
+  "darkMode": true,
+  "gridEnabling": false,
+  "detailLevel": "All",
+  "tablePositions": [
+    {
+      "name": "users",
+      "schemaName": "public",
+      "x": 0,
+      "y": 50
+    },
+    {
+      "name": "students",
+      "schemaName": "public",
+      "x": 225.20190477946187,
+      "y": 56.07167264311258
+    },
+    {
+      "name": "admins",
+      "schemaName": "public",
+      "x": 507.9853515625,
+      "y": 50
+    },
+    {
+      "name": "departments",
+      "schemaName": "public",
+      "x": 726.11376953125,
+      "y": 50
+    },
+    {
+      "name": "courses",
+      "schemaName": "public",
+      "x": 0,
+      "y": 324
+    },
+    {
+      "name": "enrollments",
+      "schemaName": "public",
+      "x": 267.70361328125,
+      "y": 356
+    }
+  ],
+  "tableGroupCollapseStates": [],
+  "stickyNoteLayouts": [],
+  "referencePaths": [
+    {
+      "firstFieldNames": [
+        "_id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_id"
+      ],
+      "secondTableName": "students",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "_id"
+      ],
+      "firstTableName": "users",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "user_id"
+      ],
+      "secondTableName": "admins",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "_id"
+      ],
+      "firstTableName": "departments",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "department_id"
+      ],
+      "secondTableName": "courses",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "_id"
+      ],
+      "firstTableName": "students",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "student_id"
+      ],
+      "secondTableName": "enrollments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    },
+    {
+      "firstFieldNames": [
+        "_id"
+      ],
+      "firstTableName": "courses",
+      "firstSchemaName": "public",
+      "firstRelation": "1",
+      "secondFieldNames": [
+        "course_id"
+      ],
+      "secondTableName": "enrollments",
+      "secondSchemaName": "public",
+      "secondRelation": "*",
+      "checkPoints": []
+    }
+  ]
+}
