@@ -969,7 +969,7 @@ export default function Profile() {
                     <p>View / Edit personal information</p>
                 </div>
                 <img
-                    src="public/img/knshdlogo.png"
+                    src="/img/knshdlogo.png"
                     alt="Illustration"
                     draggable="false"
                     style={{ pointerEvents: "none", userSelect: "none" }}

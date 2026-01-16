@@ -28,7 +28,12 @@ export default function Dashboard() {
                     <h2>Dashboard</h2>
                     <p>View metrics and other information</p>
                 </div>
-                <img src="public/img/knshdlogo.png" alt="Illustration" draggable="false" style={{ pointerEvents: "none", userSelect: "none" }} />
+                <img
+                    src="/img/knshdlogo.png"
+                    alt="Illustration"
+                    draggable="false"
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                />
             </div>
             <div className="predash">
                 <div className="predashtab">
