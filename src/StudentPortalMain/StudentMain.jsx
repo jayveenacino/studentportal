@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import StudentDashboard from "./StudentDashboard";
 import StudentAnnouncement from "./StudentAnnouncement";
+import StudentEform from "./StudentEform";
 
 export default function StudentMain() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -200,6 +201,8 @@ export default function StudentMain() {
     const capitalizeWords = (str) =>
         str.toLowerCase().replace(/\b\w/g, (char) => char.toUpperCase());
 
+    useEffect(() => { document.title = "Kolehiyo Ng Subic - Student"; }, []);
+
     return (
         <>
             {loading ? (
@@ -384,6 +387,9 @@ export default function StudentMain() {
                             )}
                             {activeSection === "profile" && (
                                 <ProfileEnlistment student={student} />
+                            )}
+                            {activeSection === "upload" && (
+                                <StudentEform student={student} />
                             )}
                             {activeSection === "announcements" && (
                                 <StudentAnnouncement student={student} />

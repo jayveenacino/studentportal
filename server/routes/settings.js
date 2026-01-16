@@ -3,7 +3,6 @@ const router = express.Router();
 const Settings = require("../models/Settings");
 const AcceptedStudent = require("../models/AcceptedStudent");
 
-// ✅ Get all department settings
 router.get("/", async (req, res) => {
     try {
         const settings = await Settings.find();
@@ -13,7 +12,6 @@ router.get("/", async (req, res) => {
     }
 });
 
-// ✅ Get settings by department
 router.get("/:department", async (req, res) => {
     try {
         const { department } = req.params;
@@ -34,7 +32,6 @@ router.post("/", async (req, res) => {
         const currentYear = new Date().getFullYear();
         const academicYear = `${currentYear}/${currentYear + 1}`;
 
-        // Create a new settings record each time
         const newSetting = new Settings({
             department,
             academicYear,
