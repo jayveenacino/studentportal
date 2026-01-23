@@ -1190,7 +1190,7 @@ export default function Profile() {
                                             <p
                                                 style={
                                                     window.innerWidth <= 768
-                                                        ? { fontSize: "10px" }
+                                                        ? { fontSize: "10px", marginTop: "-14px"}
                                                         : {
                                                             marginBottom: "20px",
                                                             fontSize: "12px",
