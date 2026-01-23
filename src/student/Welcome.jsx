@@ -78,7 +78,7 @@ export default function Welcome() {
                     <p style={{ marginLeft: "20px" }}> • You have 10 working days upon registration to accomplish all of the required documents otherwise your account will be moved to the archived list. </p>
                     <p>Need help or have questions about your application?
                         Our dedicated Admission Team is here to support you every step of the way! Whether you're unsure about the requirements, deadlines, or the application process itself, don’t hesitate to get in touch with us at &nbsp;
-                        <strong style={{ fontSize: "14px", color: "darkgreen" }}>@kolehiyongsubic01@gmail.com</strong>
+                        <strong style={{ fontSize: "14px", color: "darkgreen" }}>kolehiyongsubic.ph@gmail.com</strong>
                     </p>
                     <p>
                         We understand that starting your college journey can feel overwhelming—but you’re not alone. We’re here to guide you, answer your concerns, and make the process as smooth as possible.

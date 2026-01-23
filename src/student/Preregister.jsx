@@ -20,7 +20,7 @@ export default function Preregister() {
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     useEffect(() => {
-        document.title = "KNS Student Admission";
+        document.title = "Kolehiyo Ng Subic - Student Admission";
     }, []);
 
 

@@ -2346,7 +2346,7 @@ export default function Profile() {
                                 "3"
                             )}
                         </span>
-                        <h2 style={{ fontSize: "12px" }}>EDUCATION</h2>
+                        <h2 style={{ fontSize: "12px" }}>EDUCATION INFORMATION</h2>
                     </div>
 
                     {fillsection === "education" && (
@@ -2360,28 +2360,43 @@ export default function Profile() {
                                     }}
                                 >
                                     <div className="uploads" style={{ marginBottom: "1rem" }}>
-                                        <h4 style={{ color: "#333" }}>
+                                        <h4
+                                            style={
+                                                window.innerWidth <= 768
+                                                    ? { fontSize: "13px" }
+                                                    : { color: "#333" }
+                                            }>
                                             Select a Program to Enroll
                                         </h4>
                                         <p
-                                            style={{
-                                                marginBottom: "20px",
-                                                fontSize: "12px",
-                                                fontStyle: "italic",
-                                                marginTop: "10px",
-                                                color: "orange",
-                                            }}
-                                        >
+                                            style={
+                                                window.innerWidth <= 768
+                                                    ? { color: "orange", fontSize: "12px",marginTop: "-14px" }
+                                                    : {
+                                                        marginBottom: "20px",
+                                                        fontSize: "12px",
+                                                        fontStyle: "italic",
+                                                        marginTop: "10px",
+                                                        color: "orange",
+                                                    }
+                                            }>
                                             Please choose wisely. Once you have selected a program you
                                             will not be able to change it once you have confirmed your
                                             enlistment
                                             <hr style={{ background: "grey" }} />
                                         </p>
-                                        <div style={{ display: "flex", gap: "1rem" }}>
-                                            {/* First Choice */}
+                                        <div
+                                            style={{
+                                                display: "flex",
+                                                gap: "1rem",
+                                                flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                            }}
+                                        >
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "50%" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                }}
                                             >
                                                 <label>First Choice *</label>
                                                 <select
@@ -2394,8 +2409,7 @@ export default function Profile() {
                                                             (course) => course.title === selectedCourseTitle
                                                         );
                                                         setInitialDept(
-                                                            selectedCourseObj?.initialDept ||
-                                                            "No department available"
+                                                            selectedCourseObj?.initialDept || "No department available"
                                                         );
                                                     }}
                                                 >
@@ -2404,34 +2418,30 @@ export default function Profile() {
                                                     </option>
                                                     {courses.map((course) => (
                                                         <option key={course._id} value={course.title}>
-                                                            {course.title} -{" "}
-                                                            {course.initialDept || "No department available"}
+                                                            {course.title} - {course.initialDept || "No department available"}
                                                         </option>
                                                     ))}
                                                 </select>
                                             </div>
 
-                                            {/* Second Choice */}
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "50%" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                }}
                                             >
                                                 <label>Second Choice *</label>
                                                 <select
                                                     className="persofom-input"
-                                                    value={
-                                                        selectedSecCourse || user?.selectedSecCourse || ""
-                                                    }
+                                                    value={selectedSecCourse || user?.selectedSecCourse || ""}
                                                     onChange={(e) => {
                                                         const selectedSecCourseTitle = e.target.value;
-                                                        setSelectedSecCourse(selectedSecCourseTitle); // Set the selected second choice course
+                                                        setSelectedSecCourse(selectedSecCourseTitle);
                                                         const selectedSecCourseObj = courses.find(
-                                                            (course) =>
-                                                                course.title === selectedSecCourseTitle
+                                                            (course) => course.title === selectedSecCourseTitle
                                                         );
                                                         setInitialSecDept(
-                                                            selectedSecCourseObj?.initialDept ||
-                                                            "No department available"
+                                                            selectedSecCourseObj?.initialDept || "No department available"
                                                         );
                                                     }}
                                                 >
@@ -2440,8 +2450,7 @@ export default function Profile() {
                                                     </option>
                                                     {courses.map((course) => (
                                                         <option key={course._id} value={course.title}>
-                                                            {course.title} -{" "}
-                                                            {course.initialDept || "No department available"}
+                                                            {course.title} - {course.initialDept || "No department available"}
                                                         </option>
                                                     ))}
                                                 </select>
@@ -2867,7 +2876,7 @@ export default function Profile() {
                                 "4"
                             )}
                         </span>
-                        <h2 style={{ fontSize: "12px" }}>FAMILY</h2>
+                        <h2 style={{ fontSize: "12px" }}>FAMILY INFORMATION</h2>
                     </div>
 
                     {fillsection === "family" && (
