@@ -1135,8 +1135,9 @@ export default function Profile() {
                                     }}
                                     style={{
                                         padding: window.innerWidth <= 768 ? "4px 8px" : "8px 16px",
-                                        fontSize: window.innerWidth <= 768 ? "12px" : "16px",
+                                        fontSize: window.innerWidth <= 768 ? "12px" : "12px",
                                         borderRadius: "4px",
+
                                     }}
                                 >
                                     <i className="fa-solid fa-forward-step"></i> Accept and Continue
@@ -2176,9 +2177,9 @@ export default function Profile() {
                                     className="smalltitle"
                                     style={{
                                         width: window.innerWidth <= 768 ? "100%" : "auto",
-                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "1 px",
                                         marginRight: window.innerWidth <= 768 ? "0" : "auto",
-                                        textAlign: window.innerWidth <= 768 ? "left" : "center",
+                                        textAlign: window.innerWidth <= 768 ? "left" : "left",
                                     }}
                                 >
                                     <h2
@@ -2191,32 +2192,36 @@ export default function Profile() {
                                     </h2>
                                 </div>
 
-
                                 <div
                                     style={{
                                         display: "flex",
-                                        flexDirection: window.innerWidth <= 768 ? "column" : "column",
+                                        flexDirection: "column",
                                         gap: window.innerWidth <= 768 ? "8px" : "15px",
+                                        alignItems: window.innerWidth <= 768 ? "center" : "flex-start",
+                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "0",
+                                        marginRight: window.innerWidth <= 768 ? "20px" : "0",
                                     }}
                                 >
+
+
                                     <div
                                         style={{
                                             display: "flex",
-                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                            flexDirection: "row",
                                             gap: window.innerWidth <= 768 ? "8px" : "20px",
-                                            alignItems: window.innerWidth <= 768 ? "flex-start" : "center",
+                                            alignItems: "center",
+
                                         }}
                                     >
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "25%",
+                                                width: window.innerWidth <= 768 ? "50%" : "25%",
                                             }}
                                         >
                                             <label
                                                 style={{
                                                     fontSize: window.innerWidth <= 768 ? "12px" : "11px",
-                                                    marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
                                                     color: "orange",
                                                 }}
                                             >
@@ -2225,9 +2230,8 @@ export default function Profile() {
                                             <select
                                                 className="persofom-input"
                                                 style={{
-                                                    marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
-                                                    marginTop: window.innerWidth <= 768 ? "10px" : "auto",
-                                                    marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                                    width: "100%",
+                                                    marginTop: "6px",
                                                 }}
                                                 onChange={(e) => handleDisabilityChange(e)}
                                             >
@@ -2235,29 +2239,26 @@ export default function Profile() {
                                                 <option value="Yes">Yes</option>
                                             </select>
                                         </div>
+
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
-                                                marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
-                                                marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
-                                                width: window.innerWidth <= 768 ? "100%" : "85%",
+                                                width: window.innerWidth <= 768 ? "50%" : "75%",
                                             }}
                                         >
-                                            <label style={{
-                                                fontSize: window.innerWidth <= 768 ? "12px" : "11px"
-
-                                            }}>
+                                            <label
+                                                style={{
+                                                    fontSize: window.innerWidth <= 768 ? "12px" : "11px",
+                                                }}
+                                            >
                                                 Disability Category
                                             </label>
                                             <select
-                                                style={{
-                                                    marginLeft: window.innerWidth <= 768 ? "0px" : "auto",
-                                                    marginTop: window.innerWidth <= 768 ? "10px" : "auto",
-                                                    marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
-                                                    width: window.innerWidth <= 768 ? "100%" : "85%",
-                                                }}
                                                 className="persofom-input"
+                                                style={{
+                                                    width: "100%",
+                                                    marginTop: "6px",
+                                                }}
                                                 disabled={isDisabled}
                                                 value={disabilityCategory || user?.disabilityCategory || ""}
                                                 onChange={(e) => setDisabilityCategory(e.target.value)}
@@ -2276,9 +2277,11 @@ export default function Profile() {
                                                 <option>Speech Impairment</option>
                                                 <option>Cancer</option>
                                                 <option>Rare Disease</option>
+                                                <option>Others Disease</option>
                                             </select>
                                         </div>
                                     </div>
+
                                     <div
                                         className="persofom-group name"
                                         style={{
@@ -2311,9 +2314,10 @@ export default function Profile() {
                                 <div
                                     className="unibtn"
                                     style={{
-                                        marginLeft: window.innerWidth <= 768 ? "45%" : "auto",
-                                        marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
+                                        marginLeft: window.innerWidth <= 768 ? "40%" : "auto",
+                                        marginTop: window.innerWidth <= 768 ? "-5px" : "20px",
                                         marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                        width: window.innerWidth <= 768 ? "55%" : "100%",
                                     }}
                                 >
                                     <button type="submit" onClick={handleUpdateProfile}>
