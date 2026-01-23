@@ -1123,9 +1123,9 @@ export default function Profile() {
                             <div
                                 className="unibtn"
                                 style={{
-                                    marginTop: "9px",
-                                    marginBottom: "20px",
-                                    marginRight: "20px",
+                                    marginTop: window.innerWidth <= 768 ? "5px" : "9px",
+                                    marginBottom: window.innerWidth <= 768 ? "10px" : "20px",
+                                    marginRight: window.innerWidth <= 768 ? "5px" : "20px",
                                 }}
                             >
                                 <button
@@ -1133,11 +1133,17 @@ export default function Profile() {
                                         e.stopPropagation();
                                         setFillsection("personal");
                                     }}
+                                    style={{
+                                        padding: window.innerWidth <= 768 ? "4px 8px" : "8px 16px", 
+                                        fontSize: window.innerWidth <= 768 ? "12px" : "16px",   
+                                        borderRadius: "4px",                     
+                                    }}
                                 >
-                                    <i className="fa-solid fa-forward-step"></i> Accept and
-                                    Continue
+                                    <i className="fa-solid fa-forward-step"></i> Accept and Continue
                                 </button>
                             </div>
+
+
                         </>
                     )}
                 </div>
@@ -1190,7 +1196,7 @@ export default function Profile() {
                                             <p
                                                 style={
                                                     window.innerWidth <= 768
-                                                        ? { fontSize: "10px", marginTop: "-14px"}
+                                                        ? { fontSize: "10px", marginTop: "-14px" }
                                                         : {
                                                             marginBottom: "20px",
                                                             fontSize: "12px",
@@ -1201,17 +1207,31 @@ export default function Profile() {
                                                 }
                                             >
                                                 This helps us keep your records accurate and up-to-date!
-                                                <hr style={{ background: "grey" }} />
+                                                <hr style={
+                                                    window.innerWidth <= 768
+                                                        ? { marginTop: "10px", }
+                                                        : { background: "gray" }
+                                                } />
                                             </p>
 
                                             <div
-                                                style={{
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    gap: "3rem",
-                                                    width: "100%",
-                                                    justifyContent: "center",
-                                                }}
+                                                style={
+                                                    window.innerWidth <= 768
+                                                        ? {
+                                                            display: "flex",
+                                                            flexDirection: "column",
+                                                            gap: "1rem",
+                                                            width: "95%",
+                                                            justifyContent: "center",
+                                                        }
+                                                        : {
+                                                            display: "flex",
+                                                            flexDirection: "row",
+                                                            gap: "3rem",
+                                                            width: "100%",
+                                                            justifyContent: "center",
+                                                        }
+                                                }
                                             >
                                                 <div className="persofom-group" style={{}}>
                                                     <label>Personal Email Address*</label>
@@ -1238,27 +1258,33 @@ export default function Profile() {
                                                 </div>
                                             </div>
                                         </div>
-                                        <div style={{ marginTop: "15px" }}>
-                                            <div className="persofom-group name-container">
+                                        <div
+                                            style={{
+                                                marginTop: window.innerWidth <= 768 ? "5px" : "15px",
+                                            }}
+                                        >
+                                            <div
+                                                className="persofom-group name-container"
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                                    gap: window.innerWidth <= 768 ? "0.5rem" : "1.5rem",
+                                                    flexWrap: "wrap",
+                                                }}
+                                            >
                                                 {/* First Name */}
-                                                <div className="persofom-group name">
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
                                                     <label>First Name*</label>
                                                     <div className="persofom-input-container">
-                                                        <div
-                                                            className="persofom-input"
-                                                            style={{ background: "white" }}
-                                                        >
+                                                        <div className="persofom-input" style={{ background: "white" }}>
                                                             {user?.firstname || ""}
                                                         </div>
-                                                        <i
-                                                            className="lock-icon fa fa-lock"
-                                                            title="This field is locked"
-                                                        ></i>
+                                                        <i className="lock-icon fa fa-lock" title="This field is locked"></i>
                                                     </div>
                                                 </div>
 
                                                 {/* Middle Name */}
-                                                <div className="persofom-group name">
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
                                                     <label>Middle Name</label>
                                                     <input
                                                         className="persofom-input"
@@ -1269,24 +1295,18 @@ export default function Profile() {
                                                 </div>
 
                                                 {/* Last Name */}
-                                                <div className="persofom-group name">
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
                                                     <label>Last Name*</label>
                                                     <div className="persofom-input-container">
-                                                        <div
-                                                            className="persofom-input"
-                                                            style={{ background: "white" }}
-                                                        >
+                                                        <div className="persofom-input" style={{ background: "white" }}>
                                                             {user?.lastname || ""}
                                                         </div>
-                                                        <i
-                                                            className="lock-icon fa fa-lock"
-                                                            title="This field is locked"
-                                                        ></i>
+                                                        <i className="lock-icon fa fa-lock" title="This field is locked"></i>
                                                     </div>
                                                 </div>
 
                                                 {/* Extension Name */}
-                                                <div className="persofom-group ext">
+                                                <div className="persofom-group ext" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "auto" }}>
                                                     <label>Ext Name</label>
                                                     <select
                                                         className="persofom-input"
@@ -1294,9 +1314,7 @@ export default function Profile() {
                                                         onChange={(e) => {
                                                             const selectedValue = e.target.value;
                                                             setExtension(selectedValue);
-                                                            if (selectedValue === "") {
-                                                                setExtension("");
-                                                            }
+                                                            if (selectedValue === "") setExtension("");
                                                         }}
                                                     >
                                                         <option value="" disabled hidden>
@@ -1312,6 +1330,7 @@ export default function Profile() {
                                                 </div>
                                             </div>
                                         </div>
+
                                     </div>
 
                                     <form
