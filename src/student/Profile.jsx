@@ -1134,9 +1134,9 @@ export default function Profile() {
                                         setFillsection("personal");
                                     }}
                                     style={{
-                                        padding: window.innerWidth <= 768 ? "4px 8px" : "8px 16px", 
-                                        fontSize: window.innerWidth <= 768 ? "12px" : "16px",   
-                                        borderRadius: "4px",                     
+                                        padding: window.innerWidth <= 768 ? "4px 8px" : "8px 16px",
+                                        fontSize: window.innerWidth <= 768 ? "12px" : "16px",
+                                        borderRadius: "4px",
                                     }}
                                 >
                                     <i className="fa-solid fa-forward-step"></i> Accept and Continue
@@ -1336,10 +1336,20 @@ export default function Profile() {
                                     <form
                                         onSubmit={handleUpdateProfile}
                                         className="persofom-grid"
+                                        style={{
+                                            display: "flex",
+                                            flexWrap: "wrap",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                            gap: window.innerWidth <= 768 ? "8px" : "15px",
+                                        }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "10%", marginRight: "15px" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "95%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Birthdate*</label>
                                             <div className="persofom-input-container">
@@ -1354,7 +1364,11 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "15    %", marginRight: "12px" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "95%" : "15%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "12px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Birth place*</label>
                                             <div className="persofom-input-container">
@@ -1366,14 +1380,20 @@ export default function Profile() {
                                                     onChange={(e) => setBirthplace(e.target.value)}
                                                     style={{
                                                         borderColor: formErrors.birthplace ? "red" : "",
-                                                        fontSize: "15px",
+                                                        fontSize: window.innerWidth <= 768 ? "14px" : "15px",
+                                                        padding: window.innerWidth <= 768 ? "6px 8px" : "8px 12px",
                                                     }}
                                                 />
                                             </div>
                                         </div>
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "10%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                marginLeft: window.innerWidth <= 768 ? "0" : "20px",
+                                            }}
                                         >
                                             <label>Civil Status</label>
                                             <select
@@ -1394,7 +1414,11 @@ export default function Profile() {
 
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "10%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Gender</label>
                                             <select
@@ -1412,7 +1436,11 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "14%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Citizenship*</label>
                                             <select
@@ -1435,7 +1463,11 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "15%", marginRight: "12px" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "95%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Religion *</label>
                                             <div className="persofom-input-container">
@@ -1458,7 +1490,11 @@ export default function Profile() {
                                         {/* Region */}
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "23.4%", marginTop: "-15px" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Region*</label>
                                             <select
@@ -1477,7 +1513,11 @@ export default function Profile() {
                                         {/* Province */}
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "23.4%", marginTop: "-15px" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                            }}
                                         >
                                             <label>Province*</label>
                                             <select
@@ -1496,7 +1536,11 @@ export default function Profile() {
                                         {province === "Zambales" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>City/Municipality*</label>
                                                 <select
@@ -1530,7 +1574,11 @@ export default function Profile() {
                                         {city === "Botolan" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
