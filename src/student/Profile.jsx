@@ -2371,7 +2371,7 @@ export default function Profile() {
                                         <p
                                             style={
                                                 window.innerWidth <= 768
-                                                    ? { color: "orange", fontSize: "12px",marginTop: "-14px" }
+                                                    ? { color: "orange", fontSize: "12px", marginTop: "-14px" }
                                                     : {
                                                         marginBottom: "20px",
                                                         fontSize: "12px",
@@ -2462,20 +2462,24 @@ export default function Profile() {
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "2rem",
-                                            width: "100%",
+                                            gap: "1rem",
                                             margin: "20px",
+                                            flexDirection: "row",
+                                            width: "100%",
+                                            marginLeft: window.innerWidth <= 768 ? "-5px" : "20px",
+                                            marginBottom: window.innerWidth <= 768 ? "10px" : "20px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "77%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "55%" : "77%",
+                                            }}
                                         >
                                             <label>Elementary School *</label>
                                             <div className="persofom-input-container">
                                                 <input
-                                                    className={`persofom-input ${educErrors.elementary ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.elementary ? "error" : ""}`}
                                                     value={elementary || ""}
                                                     onChange={(e) => setElementary(e.target.value)}
                                                     placeholder="Elementary School Graduated"
@@ -2486,13 +2490,15 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "13%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "30%" : "13%",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "15px",
+                                            }}
                                         >
                                             <label>Year Graduated *</label>
                                             <div className="persofom-input-container">
                                                 <input
-                                                    className={`persofom-input ${educErrors.elemYear ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.elemYear ? "error" : ""}`}
                                                     placeholder="Ex. 2015"
                                                     value={elemYear || ""}
                                                     onChange={(e) => setElemYear(e.target.value)}
@@ -2502,26 +2508,31 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "2rem",
-                                            width: "100%",
+                                            gap: "1rem",
                                             margin: "20px",
-                                            marginTop: "-10px",
+                                            flexDirection: "row",
+                                            width: "100%",
+                                            marginLeft: window.innerWidth <= 768 ? "-5px" : "20px",
+                                            marginBottom: window.innerWidth <= 768 ? "10px" : "20px",
+                                            marginTop: window.innerWidth <= 768 ? "5px" : "-10px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "77%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "55%" : "77%",
+                                            }}
                                         >
                                             <label>SHS/HS Graduated *</label>
                                             <div className="persofom-input-container">
                                                 <input
                                                     onChange={(e) => setHighschool(e.target.value)}
                                                     placeholder="School where you graduated SHS / HS"
-                                                    className={`persofom-input ${educErrors.highschool ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.highschool ? "error" : ""}`}
                                                     value={highschool || ""}
                                                     type="text"
                                                     style={{ fontSize: "15px" }}
@@ -2530,7 +2541,10 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "13%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "30%" : "13%",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "15px",
+                                            }}
                                         >
                                             <label>Year Graduated *</label>
                                             <div className="persofom-input-container">
@@ -2538,30 +2552,34 @@ export default function Profile() {
                                                     value={highYear || ""}
                                                     onChange={(e) => setHighYear(e.target.value)}
                                                     placeholder="Ex. 2020"
-                                                    className={`persofom-input ${educErrors.highYear ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.highYear ? "error" : ""}`}
                                                     type="number"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         style={{
                                             display: "flex",
                                             gap: "1rem",
                                             margin: "20px",
                                             marginTop: "-10px",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                         }}
                                     >
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "20%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                marginTop: window.innerWidth <= 768 ? "20px" : "0",
+                                                marginLeft: window.innerWidth <= 768 ? "-10px" : "0",
+                                            }}
                                         >
                                             <label>School type of SHS/HS *</label>
                                             <select
-                                                className={`persofom-input ${educErrors.schoolType ? "error" : ""
-                                                    }`}
+                                                className={`persofom-input ${educErrors.schoolType ? "error" : ""}`}
                                                 value={schoolType || user?.schoolType || ""}
                                                 onChange={(e) => setSchoolType(e.target.value)}
                                             >
@@ -2572,59 +2590,54 @@ export default function Profile() {
                                                 <option value="private">Private School</option>
                                             </select>
                                         </div>
+
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "60%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                marginTop: window.innerWidth <= 768 ? "-10px" : "0",
+                                                marginLeft: window.innerWidth <= 768 ? "-10px" : "0",
+                                            }}
                                         >
                                             <label>SHS Strand *</label>
                                             <select
-                                                className={`persofom-input ${educErrors.strand ? "error" : ""
-                                                    }`}
+                                                className={`persofom-input ${educErrors.strand ? "error" : ""}`}
                                                 value={strand || user?.strand || ""}
                                                 onChange={(e) => setStrand(e.target.value)}
                                             >
                                                 <option value="" disabled selected>
                                                     Select One
                                                 </option>
-                                                <option value="ABM">
-                                                    Accountancy, Business, and Management (ABM)
-                                                </option>
-                                                <option value="GAS">
-                                                    General Academic Strand (GAS)
-                                                </option>
-                                                <option value="HUMSS">
-                                                    Humanities and Social Sciences (HUMSS)
-                                                </option>
+                                                <option value="ABM">Accountancy, Business, and Management (ABM)</option>
+                                                <option value="GAS">General Academic Strand (GAS)</option>
+                                                <option value="HUMSS">Humanities and Social Sciences (HUMSS)</option>
                                                 <option value="STEM">
-                                                    Science, Technology, Engineering, and Mathematics
-                                                    (STEM)
+                                                    Science, Technology, Engineering, and Mathematics (STEM)
                                                 </option>
                                                 <option value="AFA">Agri-Fishery Arts (TVL-AFA)</option>
                                                 <option value="HE">Home Economics (TVL-HE)</option>
                                                 <option value="IA">Industrial Arts (TVL-IA)</option>
-                                                <option value="ICT">
-                                                    Information and Communication Technology (TVL-ICT)
-                                                </option>
-                                                <option value="MS">
-                                                    Maritime Specialization (TVL-MS)
-                                                </option>
+                                                <option value="ICT">Information and Communication Technology (TVL-ICT)</option>
+                                                <option value="MS">Maritime Specialization (TVL-MS)</option>
                                                 <option value="SMAW">
                                                     Shielded Metal Arc Welding (TVL-SMAW) (TVL-MS)
                                                 </option>
-                                                <option value="NONE">
-                                                    Did Not Take Senior High School Program
-                                                </option>
+                                                <option value="NONE">Did Not Take Senior High School Program</option>
                                             </select>
                                         </div>
+
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "13%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "95%" : "24%",
+                                                marginTop: window.innerWidth <= 768 ? "-10px" : "0",
+                                                marginLeft: window.innerWidth <= 768 ? "-10px" : "0",
+                                            }}
                                         >
                                             <label>High School LRN *</label>
                                             <div className="persofom-input-container">
                                                 <input
-                                                    className={`persofom-input ${educErrors.lrn ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.lrn ? "error" : ""}`}
                                                     value={lrn || ""}
                                                     onChange={(e) => setLrn(e.target.value)}
                                                     type="number"
@@ -2634,28 +2647,32 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         className="persofom-group name"
-                                        style={{ width: "93%", margin: "20px", marginTop: "-10px" }}
+                                        style={{
+                                            width: window.innerWidth <= 768 ? "100%" : "93%",
+                                            margin: "20px",
+                                            marginTop: "-10px",
+                                        }}
                                     >
                                         <label style={{ fontSize: "11px" }}>
                                             Achivements / Honors *
                                         </label>
                                         <div className="persofom-input-container">
                                             <textarea
-                                                className={`persofom-input ${educErrors.honor ? "error" : ""
-                                                    }`}
+                                                className={`persofom-input ${educErrors.honor ? "error" : ""}`}
                                                 value={honor || ""}
                                                 onChange={(e) => setHonor(e.target.value)}
                                                 style={{
-                                                    width: "100%",
-                                                    minHeight: "50px",
-                                                    resize: "vertical",
-                                                    fontSize: "11px",
+                                                    width: window.innerWidth <= 768 ? "88%" : "100%",
+                                                    marginTop: window.innerWidth <= 768 ? "5px" : "0",
+                                                    marginLeft: window.innerWidth <= 768 ? "-15px" : "0",
                                                 }}
                                             />
                                         </div>
                                     </div>
+
                                     <hr />
                                     <h4
                                         style={{
