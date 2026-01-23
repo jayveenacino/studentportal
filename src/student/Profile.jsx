@@ -1177,17 +1177,28 @@ export default function Profile() {
                                         style={{ marginBottom: "1rem", width: "100%" }}
                                     >
                                         <div>
-                                            <h4 style={{ color: "#333" }}>
-                                                Complete your personal information!{" "}
+                                            <h4
+                                                style={
+                                                    window.innerWidth <= 768
+                                                        ? { fontSize: "13px" }
+                                                        : {}
+                                                }
+                                            >
+                                                Complete your personal information!
                                             </h4>
+
                                             <p
-                                                style={{
-                                                    marginBottom: "20px",
-                                                    fontSize: "12px",
-                                                    fontStyle: "italic",
-                                                    marginTop: "10px",
-                                                    color: "orange",
-                                                }}
+                                                style={
+                                                    window.innerWidth <= 768
+                                                        ? { fontSize: "10px" }
+                                                        : {
+                                                            marginBottom: "20px",
+                                                            fontSize: "12px",
+                                                            fontStyle: "italic",
+                                                            marginTop: "10px",
+                                                            color: "orange",
+                                                        }
+                                                }
                                             >
                                                 This helps us keep your records accurate and up-to-date!
                                                 <hr style={{ background: "grey" }} />
