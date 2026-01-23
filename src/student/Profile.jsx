@@ -1492,7 +1492,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                width: window.innerWidth <= 768 ? "100%" : "22%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
@@ -1515,7 +1515,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                width: window.innerWidth <= 768 ? "100%" : "20%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
@@ -1538,7 +1538,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1576,7 +1576,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1630,7 +1630,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1669,7 +1669,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1706,7 +1706,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1743,7 +1743,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1778,7 +1778,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1819,7 +1819,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1872,7 +1872,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1919,7 +1919,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1967,7 +1967,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2004,7 +2004,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2043,7 +2043,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2077,7 +2077,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2119,7 +2119,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
