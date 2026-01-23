@@ -1628,7 +1628,11 @@ export default function Profile() {
                                         {city === "Candelaria" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1663,7 +1667,11 @@ export default function Profile() {
                                         {city === "Castillejos" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1696,7 +1704,11 @@ export default function Profile() {
                                         {city === "Iba" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1729,7 +1741,11 @@ export default function Profile() {
                                         {city === "Masinloc" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1760,7 +1776,11 @@ export default function Profile() {
                                         {city === "Palauig" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1797,7 +1817,11 @@ export default function Profile() {
                                         {city === "Cabangan" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1846,7 +1870,11 @@ export default function Profile() {
                                         {city === "Subic" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1889,7 +1917,11 @@ export default function Profile() {
                                         {city === "Olongapo" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1933,7 +1965,11 @@ export default function Profile() {
                                         {city === "San-Antonio" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -1966,7 +2002,11 @@ export default function Profile() {
                                         {city === "San-Narciso" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -2001,7 +2041,11 @@ export default function Profile() {
                                         {city === "San-Felipe" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -2031,7 +2075,11 @@ export default function Profile() {
                                         {city === "San-Marcelino" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -2069,7 +2117,11 @@ export default function Profile() {
                                         {city === "Santa-Cruz" && (
                                             <div
                                                 className="persofom-group ext"
-                                                style={{ width: "23.4%", marginTop: "-15px" }}
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                    marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                    marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
+                                                }}
                                             >
                                                 <label>Barangay *</label>
                                                 <select
@@ -2112,35 +2164,71 @@ export default function Profile() {
                                     </form>
                                 </div>
 
-                                <hr style={{ marginTop: "20px", marginBottom: "20px" }} />
-                                <div className="smalltitle">
-                                    <h2 style={{ fontSize: "12px", color: "green" }}>
+                                <hr
+                                    style={{
+                                        marginTop: window.innerWidth <= 768 ? "10px" : "20px",
+                                        marginBottom: window.innerWidth <= 768 ? "20px" : "20px",
+                                        marginLeft: window.innerWidth <= 768 ? "-50px" : "0",
+                                    }}
+
+                                />
+                                <div
+                                    className="smalltitle"
+                                    style={{
+                                        width: window.innerWidth <= 768 ? "100%" : "auto",
+                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                        marginRight: window.innerWidth <= 768 ? "0" : "auto",
+                                        textAlign: window.innerWidth <= 768 ? "left" : "center",
+                                    }}
+                                >
+                                    <h2
+                                        style={{
+                                            fontSize: window.innerWidth <= 768 ? "14px" : "12px",
+                                            color: "green",
+                                        }}
+                                    >
                                         Personal Disability Information
                                     </h2>
                                 </div>
+
+
                                 <div
                                     style={{
                                         display: "flex",
-                                        flexDirection: "column",
-                                        gap: "15px",
+                                        flexDirection: window.innerWidth <= 768 ? "column" : "column",
+                                        gap: window.innerWidth <= 768 ? "8px" : "15px",
                                     }}
                                 >
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "20px",
-                                            alignItems: "center",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                            gap: window.innerWidth <= 768 ? "8px" : "20px",
+                                            alignItems: window.innerWidth <= 768 ? "flex-start" : "center",
                                         }}
                                     >
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "25%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "25%",
+                                            }}
                                         >
-                                            <label style={{ fontSize: "11px", color: "orange" }}>
+                                            <label
+                                                style={{
+                                                    fontSize: window.innerWidth <= 768 ? "12px" : "11px",
+                                                    marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                                    color: "orange",
+                                                }}
+                                            >
                                                 Disability person?
                                             </label>
                                             <select
                                                 className="persofom-input"
+                                                style={{
+                                                    marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                                    marginTop: window.innerWidth <= 768 ? "10px" : "auto",
+                                                    marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                                }}
                                                 onChange={(e) => handleDisabilityChange(e)}
                                             >
                                                 <option value="No">No</option>
@@ -2149,17 +2237,29 @@ export default function Profile() {
                                         </div>
                                         <div
                                             className="persofom-group ext"
-                                            style={{ width: "85%" }}
+                                            style={{
+                                                marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                                marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
+                                                marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                                width: window.innerWidth <= 768 ? "100%" : "85%",
+                                            }}
                                         >
-                                            <label style={{ fontSize: "11px" }}>
+                                            <label style={{
+                                                fontSize: window.innerWidth <= 768 ? "12px" : "11px"
+
+                                            }}>
                                                 Disability Category
                                             </label>
                                             <select
+                                                style={{
+                                                    marginLeft: window.innerWidth <= 768 ? "0px" : "auto",
+                                                    marginTop: window.innerWidth <= 768 ? "10px" : "auto",
+                                                    marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                                    width: window.innerWidth <= 768 ? "100%" : "85%",
+                                                }}
                                                 className="persofom-input"
                                                 disabled={isDisabled}
-                                                value={
-                                                    disabilityCategory || user?.disabilityCategory || ""
-                                                }
+                                                value={disabilityCategory || user?.disabilityCategory || ""}
                                                 onChange={(e) => setDisabilityCategory(e.target.value)}
                                             >
                                                 <option value="" disabled hidden>
@@ -2181,9 +2281,14 @@ export default function Profile() {
                                     </div>
                                     <div
                                         className="persofom-group name"
-                                        style={{ width: "100%" }}
+                                        style={{
+                                            marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                            marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                            width: window.innerWidth <= 768 ? "95%" : "100%",
+                                        }}
                                     >
-                                        <label style={{ fontSize: "11px" }}>
+                                        <label style={{ fontSize: window.innerWidth <= 768 ? "12px" : "11px" }}>
                                             Disability Details*
                                         </label>
                                         <div className="persofom-input-container">
@@ -2197,18 +2302,25 @@ export default function Profile() {
                                                     width: "100%",
                                                     minHeight: "50px",
                                                     resize: "vertical",
-                                                    fontSize: "11px",
+                                                    fontSize: window.innerWidth <= 768 ? "12px" : "11px",
                                                 }}
                                             />
                                         </div>
                                     </div>
                                 </div>
-                                <div className="unibtn" style={{ marginTop: "20px" }}>
+                                <div
+                                    className="unibtn"
+                                    style={{
+                                        marginLeft: window.innerWidth <= 768 ? "45%" : "auto",
+                                        marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
+                                        marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                    }}
+                                >
                                     <button type="submit" onClick={handleUpdateProfile}>
-                                        <i className="fa-solid fa-download"></i> Save and Proceed to
-                                        Next Step
+                                        <i className="fa-solid fa-download"></i> Save and Proceed
                                     </button>
                                 </div>
+
                             </div>
                         </>
                     )}

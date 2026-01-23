@@ -33,7 +33,7 @@ export default function Data() {
                                 color: "green",
                             }}
                         >
-                            @kolehiyongsubic01@gmail.com
+                            kolehiyongsubic.ph@gmail.com
                         </strong>
                     </Link>
                     . By clicking the <strong>"Accept and Continue"</strong> button, I acknowledge
