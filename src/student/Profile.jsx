@@ -955,8 +955,6 @@ export default function Profile() {
         });
     };
 
-
-
     return (
         <div>
             <div className="premaintab">
@@ -1168,7 +1166,12 @@ export default function Profile() {
                                 className={`persofom-container ${fillSection === "personal" ? "show" : ""
                                     }`}
                             >
-                                <div className="persofom-grid">
+                                <div className="persofom-grid" style={
+                                    window.innerWidth <= 768
+                                        ? { marginBottom: "1rem", width: "100%", padding: "0.5rem", marginTop: "-28px", marginLeft: "-30px" }
+                                        : { marginBottom: "1rem", width: "100%" }
+                                }
+                                >
                                     <div
                                         className="uploads"
                                         style={{ marginBottom: "1rem", width: "100%" }}

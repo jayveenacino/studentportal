@@ -21,7 +21,7 @@ const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
 const morgan = require("morgan");
 
-require('dotenv').config();
+require('dotenv').config({ quiet: true });
 
 const app = express();
 app.use(cors());

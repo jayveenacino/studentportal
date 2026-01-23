@@ -43,6 +43,7 @@ export default function Preregister() {
 
     const handleLogout = (event) => {
         event.preventDefault();
+            title: "Are you sure?",
         localStorage.clear();
         sessionStorage.clear();
         setUser({});
@@ -52,7 +53,6 @@ export default function Preregister() {
     const handleLogoutClick = (event) => {
         event.stopPropagation();
         Swal.fire({
-            title: "Are you sure?",
             text: "You will be logged out!",
             icon: "question",
             showCancelButton: true,
