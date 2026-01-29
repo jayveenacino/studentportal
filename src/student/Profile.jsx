@@ -56,7 +56,9 @@ export default function Profile() {
     useEffect(() => {
         if (user?.email) {
             axios
-                .get(`http://localhost:2025/get-upload-status/${user.email}`)
+                .get(
+                    `${import.meta.env.VITE_API_URL}/get-upload-status/${user.email}`
+                )
                 .then((res) => {
                     setUploadStatus({
                         profileImage: res.data.profileImage ? "✔️" : "❌",
@@ -66,7 +68,7 @@ export default function Profile() {
                         academic: res.data.academic ? "✔️" : "❌",
                     });
                 })
-                .catch((err) => console.error("Status fetch failed", err));
+                .catch(() => { });
         }
     }, [user]);
 
@@ -121,6 +123,99 @@ export default function Profile() {
                 confirmButtonColor: "#006666",
             });
         }
+    };
+
+    //!IMAGE
+    const handleImageChange = (event) => {
+        const file = event.target.files[0];
+        if (!file) {
+            Swal.fire({
+                title: "Error!",
+                text: "No file selected!",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        if (!file.type.startsWith("image/")) {
+            Swal.fire({
+                title: "Invalid File!",
+                text: "Please upload an image file (.png, .jpg, .jpeg).",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        const maxSize = 2 * 1024 * 1024;
+        if (file.size > maxSize) {
+            Swal.fire({
+                title: "File Too Large!",
+                text: "Image must be 2MB or less.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            setImage(reader.result);
+        };
+        reader.readAsDataURL(file);
+    };
+
+    const handleUpload = async () => {
+        if (!image) {
+            Swal.fire({
+                title: "Error!",
+                text: "Image is missing! Please select an image.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        if (!user.email) {
+            Swal.fire({
+                title: "Error!",
+                text: "Email is missing! Please log in.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+        try {
+            const response = await axios.post(import.meta.env.VITE_API_URL + "/upload", {
+                email: user.email,
+                image,
+            });
+
+            const updatedUser = response.data.student;
+
+            // ✅ update state + localStorage
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
+            setProfilepfp(false);
+
+            Swal.fire({
+                title: "Success!",
+                text: "Image uploaded successfully!",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+        } catch (error) {
+            console.error("Upload error:", error);
+            Swal.fire({
+                title: "Error!",
+                text: error.response?.data?.message || "Failed to upload image.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
+
     };
 
     //! BIRTH CERT
@@ -295,98 +390,7 @@ export default function Profile() {
         }
     };
 
-    //!IMAGE
-    const handleImageChange = (event) => {
-        const file = event.target.files[0];
-        if (!file) {
-            Swal.fire({
-                title: "Error!",
-                text: "No file selected!",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
 
-        if (!file.type.startsWith("image/")) {
-            Swal.fire({
-                title: "Invalid File!",
-                text: "Please upload an image file (.png, .jpg, .jpeg).",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
-
-        const maxSize = 2 * 1024 * 1024;
-        if (file.size > maxSize) {
-            Swal.fire({
-                title: "File Too Large!",
-                text: "Image must be 2MB or less.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
-
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setImage(reader.result);
-        };
-        reader.readAsDataURL(file);
-    };
-
-    const handleUpload = async () => {
-        if (!image) {
-            Swal.fire({
-                title: "Error!",
-                text: "Image is missing! Please select an image.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
-
-        if (!user.email) {
-            Swal.fire({
-                title: "Error!",
-                text: "Email is missing! Please log in.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return;
-        }
-        try {
-            const response = await axios.post(import.meta.env.VITE_API_URL + "/upload", {
-                email: user.email,
-                image,
-            });
-
-            const updatedUser = response.data.student;
-
-            // ✅ update state + localStorage
-            setUser(updatedUser);
-            localStorage.setItem("user", JSON.stringify(updatedUser));
-
-            setProfilepfp(false);
-
-            Swal.fire({
-                title: "Success!",
-                text: "Image uploaded successfully!",
-                icon: "success",
-                confirmButtonText: "OK",
-            });
-        } catch (error) {
-            console.error("Upload error:", error);
-            Swal.fire({
-                title: "Error!",
-                text: error.response?.data?.message || "Failed to upload image.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-        }
-
-    };
     useEffect(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
@@ -2664,6 +2668,7 @@ export default function Profile() {
                                                 className={`persofom-input ${educErrors.honor ? "error" : ""}`}
                                                 value={honor || ""}
                                                 onChange={(e) => setHonor(e.target.value)}
+                                                placeholder="Describe your honor here..."
                                                 style={{
                                                     width: window.innerWidth <= 768 ? "88%" : "100%",
                                                     marginTop: window.innerWidth <= 768 ? "5px" : "0",
@@ -2687,15 +2692,17 @@ export default function Profile() {
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "2rem",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
+                                            gap: "2rem",
                                             margin: "20px",
-                                            marginTop: "-10px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "50%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                            }}
                                         >
                                             <label>College *</label>
                                             <div className="persofom-input-container">
@@ -2703,60 +2710,76 @@ export default function Profile() {
                                                     onChange={(e) => setCollege(e.target.value)}
                                                     value={college || ""}
                                                     placeholder="College / University Graduated"
-                                                    className={`persofom-input ${educErrors.college ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.college ? "error" : ""}`}
                                                     type="text"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
                                         </div>
+
                                         <div
-                                            className="persofom-group name"
-                                            style={{ width: "22%" }}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                gap: "2rem",
+                                                width: "100%",
+                                                flexWrap: window.innerWidth <= 768 ? "wrap" : "unset",
+                                            }}
                                         >
-                                            <label>Course / Program *</label>
-                                            <div className="persofom-input-container">
-                                                <input
-                                                    placeholder="Ex. BSCS, BSEd, BSHM, BSBA"
-                                                    value={course || ""}
-                                                    onChange={(e) => setCourse(e.target.value)}
-                                                    className={`persofom-input ${educErrors.course ? "error" : ""
-                                                        }`}
-                                                    type="text"
-                                                    style={{ fontSize: "15px" }}
-                                                />
+                                            <div
+                                                className="persofom-group name"
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "40%" : "22%",
+                                                }}
+                                            >
+                                                <label>Course / Program *</label>
+                                                <div className="persofom-input-container">
+                                                    <input
+                                                        placeholder="Ex. BSCS, BSEd, BSHM, BSBA"
+                                                        value={course || ""}
+                                                        onChange={(e) => setCourse(e.target.value)}
+                                                        className={`persofom-input ${educErrors.course ? "error" : ""}`}
+                                                        type="text"
+                                                        style={{ fontSize: "15px" }}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div
-                                            className="persofom-group name"
-                                            style={{ width: "15%" }}
-                                        >
-                                            <label>Year Graduated *</label>
-                                            <div className="persofom-input-container">
-                                                <input
-                                                    placeholder="Ex. 2015"
-                                                    value={year || ""}
-                                                    onChange={(e) => setYear(e.target.value)}
-                                                    className={`persofom-input ${educErrors.year ? "error" : ""
-                                                        }`}
-                                                    type="text"
-                                                    style={{ fontSize: "15px" }}
-                                                />
+
+                                            <div
+                                                className="persofom-group name"
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "30%" : "15%",
+                                                }}
+                                            >
+                                                <label>Year Graduated *</label>
+                                                <div className="persofom-input-container">
+                                                    <input
+                                                        placeholder="Ex. 2015"
+                                                        value={year || ""}
+                                                        onChange={(e) => setYear(e.target.value)}
+                                                        className={`persofom-input ${educErrors.year ? "error" : ""}`}
+                                                        type="text"
+                                                        style={{ fontSize: "15px" }}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "2rem",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
+                                            gap: "2rem",
                                             margin: "20px",
-                                            marginTop: "-10px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "50%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                            }}
                                         >
                                             <label>Technical / Vocational School *</label>
                                             <div className="persofom-input-container">
@@ -2764,60 +2787,76 @@ export default function Profile() {
                                                     placeholder="College / University Graduated"
                                                     value={technical || ""}
                                                     onChange={(e) => setTechnical(e.target.value)}
-                                                    className={`persofom-input ${educErrors.technical ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.technical ? "error" : ""}`}
                                                     type="text"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
                                         </div>
+
                                         <div
-                                            className="persofom-group name"
-                                            style={{ width: "22%" }}
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                gap: "2rem",
+                                                width: "100%",
+                                                flexWrap: window.innerWidth <= 768 ? "wrap" : "unset",
+                                            }}
                                         >
-                                            <label>Course / Program *</label>
-                                            <div className="persofom-input-container">
-                                                <input
-                                                    placeholder="Ex. Computer System Service"
-                                                    value={program || ""}
-                                                    onChange={(e) => setProgram(e.target.value)}
-                                                    className={`persofom-input ${educErrors.program ? "error" : ""
-                                                        }`}
-                                                    type="text"
-                                                    style={{ fontSize: "15px" }}
-                                                />
+                                            <div
+                                                className="persofom-group name"
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "40%" : "22%",
+                                                }}
+                                            >
+                                                <label>Course / Program *</label>
+                                                <div className="persofom-input-container">
+                                                    <input
+                                                        placeholder="Ex. Computer System Service"
+                                                        value={program || ""}
+                                                        onChange={(e) => setProgram(e.target.value)}
+                                                        className={`persofom-input ${educErrors.program ? "error" : ""}`}
+                                                        type="text"
+                                                        style={{ fontSize: "15px" }}
+                                                    />
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div
-                                            className="persofom-group name"
-                                            style={{ width: "15%" }}
-                                        >
-                                            <label>Year Completed *</label>
-                                            <div className="persofom-input-container">
-                                                <input
-                                                    placeholder="Ex. 2015"
-                                                    value={yearCom || ""}
-                                                    onChange={(e) => setYearCom(e.target.value)}
-                                                    className={`persofom-input ${educErrors.yearCom ? "error" : ""
-                                                        }`}
-                                                    type="text"
-                                                    style={{ fontSize: "15px" }}
-                                                />
+
+                                            <div
+                                                className="persofom-group name"
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "30%" : "15%",
+                                                }}
+                                            >
+                                                <label>Year Completed *</label>
+                                                <div className="persofom-input-container">
+                                                    <input
+                                                        placeholder="Ex. 2015"
+                                                        value={yearCom || ""}
+                                                        onChange={(e) => setYearCom(e.target.value)}
+                                                        className={`persofom-input ${educErrors.yearCom ? "error" : ""}`}
+                                                        type="text"
+                                                        style={{ fontSize: "15px" }}
+                                                    />
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         style={{
                                             display: "flex",
-                                            gap: "2rem",
+                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
+                                            gap: "2rem",
                                             margin: "20px",
-                                            marginTop: "-10px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "50%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                            }}
                                         >
                                             <label>National Certificate *</label>
                                             <div className="persofom-input-container">
@@ -2825,25 +2864,24 @@ export default function Profile() {
                                                     placeholder="Ex. Computer System Servicing, Animation"
                                                     value={certificate || ""}
                                                     onChange={(e) => setCertificate(e.target.value)}
-                                                    className={`persofom-input ${educErrors.certificate ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.certificate ? "error" : ""}`}
                                                     type="text"
                                                     style={{ fontSize: "15px" }}
                                                 />
                                             </div>
                                         </div>
+
                                         <div
                                             className="persofom-group name"
-                                            style={{ width: "22%" }}
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "40%" : "22%",
+                                                marginTop: window.innerWidth <= 768 ? "10px" : "0",
+                                            }}
                                         >
                                             <label>NC Level *</label>
-                                            <div
-                                                className="persofom-group ext"
-                                                style={{ width: "190%" }}
-                                            >
+                                            <div className="persofom-group ext" style={{ width: "100%" }}>
                                                 <select
-                                                    className={`persofom-input ${educErrors.achivements ? "error" : ""
-                                                        }`}
+                                                    className={`persofom-input ${educErrors.achivements ? "error" : ""}`}
                                                     value={achivements || user?.achivements || ""}
                                                     onChange={(e) => setAchivments(e.target.value)}
                                                 >
@@ -2858,6 +2896,7 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div
                                         className="unibtn"
                                         style={{
