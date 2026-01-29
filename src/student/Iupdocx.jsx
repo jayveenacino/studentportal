@@ -38,17 +38,20 @@ export default function Iupdocx() {
 
     useEffect(() => {
         if (user?.email) {
-            axios.get(`http://localhost:2025/get-upload-status/${user.email}`)
-                .then(res => {
+            axios
+                .get(
+                    `${import.meta.env.VITE_API_URL}/get-upload-status/${user.email}`
+                )
+                .then((res) => {
                     setUploadStatus({
-                        profileImage: res.data.profileImage ? '✔️' : '❌',
-                        validId: res.data.validId ? '✔️' : '❌',
-                        birthCert: res.data.birthCert ? '✔️' : '❌',
-                        goodMoral: res.data.goodMoral ? '✔️' : '❌',
-                        academic: res.data.academic ? '✔️' : '❌',
+                        profileImage: res.data.profileImage ? "✔️" : "❌",
+                        validId: res.data.validId ? "✔️" : "❌",
+                        birthCert: res.data.birthCert ? "✔️" : "❌",
+                        goodMoral: res.data.goodMoral ? "✔️" : "❌",
+                        academic: res.data.academic ? "✔️" : "❌",
                     });
                 })
-                .catch(err => console.error("Status fetch failed", err));
+                .catch(() => { });
         }
     }, [user]);
 
