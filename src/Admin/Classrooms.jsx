@@ -5,11 +5,14 @@ import "./Admincss/classrooms.css";
 
 export default function Classrooms() {
     const [classrooms, setClassrooms] = useState([]);
+    const [subjects, setSubjects] = useState([]);
+    const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [search, setSearch] = useState('');
 
+    const perPage = 5;
 
     const [newClassroom, setNewClassroom] = useState({
         room: "",
@@ -18,27 +21,33 @@ export default function Classrooms() {
         time: ""
     });
 
-    const filteredClassrooms = classrooms.filter(c =>
-        c.room.toLowerCase().includes(search.toLowerCase()) ||
-        c.subject.toLowerCase().includes(search.toLowerCase()) ||
-        c.day.toLowerCase().includes(search.toLowerCase()) ||
-        c.time.toLowerCase().includes(search.toLowerCase())
+    const filtered = classrooms.filter(
+        c =>
+            c.room.toLowerCase().includes(search.toLowerCase()) ||
+            c.subject.toLowerCase().includes(search.toLowerCase())
     );
+    const pageCount = Math.ceil(filtered.length / perPage);
+    const start = (currentPage - 1) * perPage;
+    const current = filtered.slice(start, start + perPage);
 
     /* ================= FETCH ================= */
 
     const fetchClassrooms = async () => {
-        try {
-            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/classrooms");
-            setClassrooms(res.data);
-        } catch (err) {
-            console.error("Fetch classrooms error:", err);
-        }
+        axios.get(import.meta.env.VITE_API_URL + "/api/classrooms")
+            .then(res => setClassrooms(res.data))
+            .catch(err => console.error("Fetch error:", err));
+    };
+    const fetchSubjects = () => {
+        axios.get(import.meta.env.VITE_API_URL + "/api/subjects")
+            .then(res => setSubjects(res.data))
+            .catch(err => console.error("Subject fetch error:", err));
     };
 
     useEffect(() => {
         fetchClassrooms();
+        fetchSubjects();
     }, []);
+
 
     /* ================= SUBMIT ================= */
 
@@ -99,7 +108,7 @@ export default function Classrooms() {
         setShowModal(true);
     };
 
-    const handleDelete = async id => {
+    const handleDelete = async (_id) => {
         const confirm = await Swal.fire({
             title: "Are you sure?",
             text: "This will delete the classroom permanently.",
@@ -110,7 +119,7 @@ export default function Classrooms() {
         });
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:2025/api/classrooms/${id}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/classrooms/${_id}`);
                 Swal.fire("Deleted", "Classroom deleted successfully.", "success");
                 fetchClassrooms();
             } catch (err) {
@@ -153,30 +162,30 @@ export default function Classrooms() {
                 <table className="classrooms-table">
                     <thead>
                         <tr>
-                            <th>#</th>
-                            <th>Room</th>
-                            <th>Subject</th>
-                            <th>Day</th>
-                            <th>Time</th>
-                            <th>Actions</th>
+                            <th scope="col">#</th>
+                            <th scope="col">Room</th>
+                            <th scope="col">Subject</th>
+                            <th scope="col">Day</th>
+                            <th scope="col">Timer</th>
+                            <th scope="col" style={{ textAlign: "center", paddingRight: "10px" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredClassrooms.length === 0 ? (
+                        {current.length === 0 ? (
                             <tr>
                                 <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
                                     No classrooms found.
                                 </td>
                             </tr>
                         ) : (
-                            filteredClassrooms.map((c, index) => (
+                            current.map((c, index) => (
                                 <tr key={c._id}>
                                     <td>{index + 1}</td>
                                     <td>{c.room}</td>
                                     <td>{c.subject}</td>
                                     <td>{c.day}</td>
                                     <td>{c.time}</td>
-                                    <td>
+                                    <td style={{ textAlign: "center" }}>
                                         <button className="action-btn edit" onClick={() => handleEdit(c)}>Edit</button>
                                         <button className="action-btn delete" onClick={() => handleDelete(c._id)}>Delete</button>
                                     </td>
@@ -186,6 +195,21 @@ export default function Classrooms() {
                     </tbody>
                 </table>
             </div>
+
+            {pageCount > 1 && (
+                <div className="pagination-controls">
+                    {Array.from({ length: pageCount }, (_, idx) => (
+                        <button
+                            key={idx}
+                            className={`pagination-btn ${currentPage === idx + 1 ? "active" : ""}`}
+                            onClick={() => setCurrentPage(idx + 1)}
+                        >
+                            {idx + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
+
 
             {showModal && (
                 <div className="modal">
@@ -206,9 +230,7 @@ export default function Classrooms() {
                             }
                         />
 
-                        <input
-                            type="text"
-                            placeholder="Subject"
+                        <select
                             value={newClassroom.subject}
                             onChange={(e) =>
                                 setNewClassroom({
@@ -216,7 +238,12 @@ export default function Classrooms() {
                                     subject: e.target.value
                                 })
                             }
-                        />
+                        >
+                            <option value="" disabled>Select Subject</option>
+                            {subjects.map(sub => (
+                                <option key={sub._id} value={sub.name}>{sub.name}</option>
+                            ))}
+                        </select>
 
                         <select
                             type="text"

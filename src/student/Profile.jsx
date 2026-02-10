@@ -1252,7 +1252,7 @@ export default function Profile() {
                                                         {user?.email || ""}
                                                     </div>
                                                 </div>
-                                                <div className="persofom-group" style={{}}>
+                                                <div className="persofom-group" style={{ width: window.innerWidth <= 768 ? "auto" : "20%", }}>
                                                     <label>Mobile Number*</label>
                                                     <input
                                                         type="text"
@@ -1278,7 +1278,7 @@ export default function Profile() {
                                                 }}
                                             >
                                                 {/* First Name */}
-                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>First Name*</label>
                                                     <div className="persofom-input-container">
                                                         <div className="persofom-input" style={{ background: "white" }}>
@@ -1289,7 +1289,7 @@ export default function Profile() {
                                                 </div>
 
                                                 {/* Middle Name */}
-                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>Middle Name</label>
                                                     <input
                                                         className="persofom-input"
@@ -1300,7 +1300,7 @@ export default function Profile() {
                                                 </div>
 
                                                 {/* Last Name */}
-                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 auto" }}>
+                                                <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>Last Name*</label>
                                                     <div className="persofom-input-container">
                                                         <div className="persofom-input" style={{ background: "white" }}>
@@ -1311,7 +1311,7 @@ export default function Profile() {
                                                 </div>
 
                                                 {/* Extension Name */}
-                                                <div className="persofom-group ext" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "auto" }}>
+                                                <div className="persofom-group ext" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : ".20px" }}>
                                                     <label>Ext Name</label>
                                                     <select
                                                         className="persofom-input"
@@ -1344,15 +1344,17 @@ export default function Profile() {
                                         style={{
                                             display: "flex",
                                             flexWrap: "wrap",
-                                            flexDirection: window.innerWidth <= 768 ? "column" : "row",
-                                            gap: window.innerWidth <= 768 ? "8px" : "15px",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "0",
+                                            flexDirection: window.innerWidth <= 768 ? "row" : "row",
+                                            gap: window.innerWidth <= 768 ? "10px" : "10px",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "95%" : "10%",
-                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                width: window.innerWidth <= 768 ? "35%" : "13%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "-5px",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "0",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
                                         >
@@ -1370,8 +1372,9 @@ export default function Profile() {
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "95%" : "15%",
+                                                width: window.innerWidth <= 768 ? "45%" : "20%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "12px",
+                                                marginLeft: window.innerWidth <= 768 ? "15px" : "25px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
                                         >
@@ -1394,10 +1397,10 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "10%",
-                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                width: window.innerWidth <= 768 ? "40%" : "13%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "10px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
-                                                marginLeft: window.innerWidth <= 768 ? "0" : "20px",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "15px",
                                             }}
                                         >
                                             <label>Civil Status</label>
@@ -1420,7 +1423,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                width: window.innerWidth <= 768 ? "50%" : "10%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
@@ -1442,8 +1445,9 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "10%",
+                                                width: window.innerWidth <= 768 ? "40%" : "10%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "-10px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
                                         >
@@ -1469,8 +1473,9 @@ export default function Profile() {
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "95%" : "10%",
+                                                width: window.innerWidth <= 768 ? "45%" : "15%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginLeft: window.innerWidth <= 768 ? "0" : "-10px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
                                         >
@@ -1496,7 +1501,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "22%",
+                                                width: window.innerWidth <= 768 ? "98%" : "24%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
@@ -1519,7 +1524,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                width: window.innerWidth <= 768 ? "98%" : "20%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                 marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                             }}
@@ -1542,7 +1547,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "23%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1580,7 +1585,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1634,7 +1639,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1673,7 +1678,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1710,7 +1715,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1747,7 +1752,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1782,7 +1787,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1823,7 +1828,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1876,7 +1881,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1923,7 +1928,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -1971,7 +1976,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2008,7 +2013,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2047,7 +2052,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2081,7 +2086,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2123,7 +2128,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group ext"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "100%" : "20%",
+                                                    width: window.innerWidth <= 768 ? "98%" : "20%",
                                                     marginRight: window.innerWidth <= 768 ? "0" : "15px",
                                                     marginBottom: window.innerWidth <= 768 ? "8px" : "15px",
                                                 }}
@@ -2171,9 +2176,10 @@ export default function Profile() {
 
                                 <hr
                                     style={{
+                                        width: window.innerWidth <= 768 ? "98%" : "auto",
                                         marginTop: window.innerWidth <= 768 ? "10px" : "20px",
                                         marginBottom: window.innerWidth <= 768 ? "20px" : "20px",
-                                        marginLeft: window.innerWidth <= 768 ? "-50px" : "0",
+                                        marginLeft: window.innerWidth <= 768 ? "-15px" : "0",
                                     }}
 
                                 />
@@ -2181,9 +2187,11 @@ export default function Profile() {
                                     className="smalltitle"
                                     style={{
                                         width: window.innerWidth <= 768 ? "100%" : "auto",
-                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "1 px",
+                                        marginBottom: window.innerWidth <= 768 ? "5px" : "15px",
+                                        marginLeft: window.innerWidth <= 768 ? "-15px" : "1px",
                                         marginRight: window.innerWidth <= 768 ? "0" : "auto",
                                         textAlign: window.innerWidth <= 768 ? "left" : "left",
+
                                     }}
                                 >
                                     <h2
@@ -2200,9 +2208,9 @@ export default function Profile() {
                                     style={{
                                         display: "flex",
                                         flexDirection: "column",
-                                        gap: window.innerWidth <= 768 ? "8px" : "15px",
+                                        gap: window.innerWidth <= 768 ? "25px" : "15px",
                                         alignItems: window.innerWidth <= 768 ? "center" : "flex-start",
-                                        marginLeft: window.innerWidth <= 768 ? "-20px" : "0",
+                                        marginLeft: window.innerWidth <= 768 ? "-15px" : "0",
                                         marginRight: window.innerWidth <= 768 ? "20px" : "0",
                                     }}
                                 >
@@ -2212,7 +2220,7 @@ export default function Profile() {
                                         style={{
                                             display: "flex",
                                             flexDirection: "row",
-                                            gap: window.innerWidth <= 768 ? "8px" : "20px",
+                                            gap: window.innerWidth <= 768 ? "20px" : "20px",
                                             alignItems: "center",
 
                                         }}
@@ -2220,16 +2228,16 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "50%" : "25%",
+                                                width: window.innerWidth <= 768 ? "50%" : "30%",
                                             }}
                                         >
                                             <label
                                                 style={{
-                                                    fontSize: window.innerWidth <= 768 ? "12px" : "11px",
+                                                    fontSize: window.innerWidth <= 768 ? "12px" : "12px",
                                                     color: "orange",
                                                 }}
                                             >
-                                                Disability person?
+                                                Is a Disabled Person?
                                             </label>
                                             <select
                                                 className="persofom-input"
@@ -2247,12 +2255,13 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "50%" : "75%",
+                                                width: window.innerWidth <= 768 ? "80%" : "75%",
+                                                marginRight: window.innerWidth <= 768 ? "10px" : "0",
                                             }}
                                         >
                                             <label
                                                 style={{
-                                                    fontSize: window.innerWidth <= 768 ? "12px" : "11px",
+                                                    fontSize: window.innerWidth <= 768 ? "12px" : "12px",
                                                 }}
                                             >
                                                 Disability Category
@@ -2281,7 +2290,7 @@ export default function Profile() {
                                                 <option>Speech Impairment</option>
                                                 <option>Cancer</option>
                                                 <option>Rare Disease</option>
-                                                <option>Others Disease</option>
+                                                <option>Other Disease</option>
                                             </select>
                                         </div>
                                     </div>
@@ -2289,10 +2298,10 @@ export default function Profile() {
                                     <div
                                         className="persofom-group name"
                                         style={{
-                                            marginLeft: window.innerWidth <= 768 ? "-20px" : "auto",
+                                            marginLeft: window.innerWidth <= 768 ? "-25px" : "-1px",
                                             marginTop: window.innerWidth <= 768 ? "-5px" : "auto",
                                             marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
-                                            width: window.innerWidth <= 768 ? "95%" : "100%",
+                                            width: window.innerWidth <= 768 ? "93%" : "98%",
                                         }}
                                     >
                                         <label style={{ fontSize: window.innerWidth <= 768 ? "12px" : "11px" }}>
@@ -2318,10 +2327,10 @@ export default function Profile() {
                                 <div
                                     className="unibtn"
                                     style={{
-                                        marginLeft: window.innerWidth <= 768 ? "40%" : "auto",
-                                        marginTop: window.innerWidth <= 768 ? "-5px" : "20px",
+                                        marginLeft: window.innerWidth <= 768 ? "42%" : "auto",
+                                        marginTop: window.innerWidth <= 768 ? "10px" : "40px",
                                         marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
-                                        width: window.innerWidth <= 768 ? "55%" : "100%",
+                                        width: window.innerWidth <= 768 ? "50%" : "100%",
                                     }}
                                 >
                                     <button type="submit" onClick={handleUpdateProfile}>
@@ -2598,7 +2607,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                width: window.innerWidth <= 768 ? "100%" : "49%",
                                                 marginTop: window.innerWidth <= 768 ? "-10px" : "0",
                                                 marginLeft: window.innerWidth <= 768 ? "-10px" : "0",
                                             }}
@@ -2695,13 +2704,15 @@ export default function Profile() {
                                             flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
                                             gap: "2rem",
-                                            margin: "20px",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "20px",
+                                            marginTop: window.innerWidth <= 768 ? "-5px" : "-5px",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                width: window.innerWidth <= 768 ? "86%" : "110%",
                                             }}
                                         >
                                             <label>College *</label>
@@ -2723,13 +2734,14 @@ export default function Profile() {
                                                 flexDirection: "row",
                                                 gap: "2rem",
                                                 width: "100%",
+                                                marginTop: window.innerWidth <= 768 ? "-10px" : "auto",
                                                 flexWrap: window.innerWidth <= 768 ? "wrap" : "unset",
                                             }}
                                         >
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "40%" : "22%",
+                                                    width: window.innerWidth <= 768 ? "45%" : "50%",
                                                 }}
                                             >
                                                 <label>Course / Program *</label>
@@ -2748,7 +2760,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "30%" : "15%",
+                                                    width: window.innerWidth <= 768 ? "32%" : "25%",
                                                 }}
                                             >
                                                 <label>Year Graduated *</label>
@@ -2772,13 +2784,15 @@ export default function Profile() {
                                             flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
                                             gap: "2rem",
-                                            margin: "20px",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "20px",
+                                            marginTop: window.innerWidth <= 768 ? "15px" : "15px",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                width: window.innerWidth <= 768 ? "86%" : "110%",
                                             }}
                                         >
                                             <label>Technical / Vocational School *</label>
@@ -2800,13 +2814,14 @@ export default function Profile() {
                                                 flexDirection: "row",
                                                 gap: "2rem",
                                                 width: "100%",
+                                                marginTop: window.innerWidth <= 768 ? "-10px" : "auto",
                                                 flexWrap: window.innerWidth <= 768 ? "wrap" : "unset",
                                             }}
                                         >
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "40%" : "22%",
+                                                    width: window.innerWidth <= 768 ? "45%" : "50%",
                                                 }}
                                             >
                                                 <label>Course / Program *</label>
@@ -2825,7 +2840,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "30%" : "15%",
+                                                    width: window.innerWidth <= 768 ? "33%" : "25%",
                                                 }}
                                             >
                                                 <label>Year Completed *</label>
@@ -2849,13 +2864,15 @@ export default function Profile() {
                                             flexDirection: window.innerWidth <= 768 ? "column" : "row",
                                             width: "100%",
                                             gap: "2rem",
-                                            margin: "20px",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "20px",
+                                            marginTop: window.innerWidth <= 768 ? "15px" : "15px",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
                                         }}
                                     >
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "100%" : "50%",
+                                                width: window.innerWidth <= 768 ? "86%" : "50%",
                                             }}
                                         >
                                             <label>National Certificate *</label>
@@ -2874,12 +2891,12 @@ export default function Profile() {
                                         <div
                                             className="persofom-group name"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "40%" : "22%",
-                                                marginTop: window.innerWidth <= 768 ? "10px" : "0",
+                                                width: window.innerWidth <= 768 ? "100%" : "45%",
+                                                marginTop: window.innerWidth <= 768 ? "-15px" : "0",
                                             }}
                                         >
                                             <label>NC Level *</label>
-                                            <div className="persofom-group ext" style={{ width: "100%" }}>
+                                            <div className="persofom-group ext" style={{ width: "90%" }}>
                                                 <select
                                                     className={`persofom-input ${educErrors.achivements ? "error" : ""}`}
                                                     value={achivements || user?.achivements || ""}
@@ -2900,9 +2917,10 @@ export default function Profile() {
                                     <div
                                         className="unibtn"
                                         style={{
-                                            marginTop: "20px",
-                                            marginRight: "25px",
-                                            paddingBottom: "20px",
+                                            marginLeft: window.innerWidth <= 768 ? "28%" : "-40px",
+                                            marginTop: window.innerWidth <= 768 ? "10px" : "40px",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "20px",
+                                            width: window.innerWidth <= 768 ? "65%" : "100%",
                                         }}
                                     >
                                         <button type="submit" onClick={handleUpdateEduct}>
@@ -2969,14 +2987,30 @@ export default function Profile() {
                                     </div>
                                     <hr />
                                     <div style={{ marginTop: "15px" }}>
-                                        <h4 style={{ color: "#333", marginLeft: "25px" }}>
+                                        <h4
+                                            style={{
+                                                color: "green",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "26px",
+                                                marginTop: window.innerWidth <= 768 ? "-10px" : "-5px",
+                                            }}>
                                             Father's Information
                                         </h4>
-                                        <hr />
-                                        <div className="persofom-group name-container">
+                                        <div className="persofom-group name-container"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                                gap: window.innerWidth <= 768 ? "0.5rem" : "1.5rem",
+                                                marginTop: window.innerWidth <= 768 ? "20px" : "10px",
+                                                flexWrap: "wrap",
+                                            }}
+                                        >
                                             <div className="persofom-group name">
                                                 <label>First Name*</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
                                                     <input
                                                         className={`persofom-input ${familyErrors.fatName ? "error" : ""
                                                             }`}
@@ -2988,17 +3022,27 @@ export default function Profile() {
                                             </div>
                                             <div className="persofom-group name">
                                                 <label>Middle Name</label>
-                                                <input
-                                                    className={`persofom-input ${familyErrors.fatMidName ? "error" : ""
-                                                        }`}
-                                                    value={fatMidName || ""}
-                                                    onChange={(e) => setFatMidName(e.target.value)}
-                                                    type="text"
-                                                />
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
+                                                    <input
+                                                        className={`persofom-input ${familyErrors.fatMidName ? "error" : ""
+                                                            }`}
+                                                        value={fatMidName || ""}
+                                                        onChange={(e) => setFatMidName(e.target.value)}
+                                                        type="text"
+                                                    />
+                                                </div>
                                             </div>
                                             <div className="persofom-group name">
                                                 <label>Last Name*</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
                                                     <input
                                                         className={`persofom-input ${familyErrors.fatLastName ? "error" : ""
                                                             }`}
@@ -3008,7 +3052,11 @@ export default function Profile() {
                                                     />
                                                 </div>
                                             </div>
-                                            <div className="persofom-group ext">
+                                            <div className="persofom-group ext"
+                                                style={{
+                                                    width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                }}
+                                            >
                                                 <label>Ext Name</label>
                                                 <select
                                                     className="persofom-input"
@@ -3034,15 +3082,32 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+                                    <hr style={{ marginTop: "30px", marginBottom: "-5px" }} />
                                     <div style={{ marginTop: "15px" }}>
-                                        <h4 style={{ color: "#333", marginLeft: "25px" }}>
+                                        <h4
+                                            style={{
+                                                color: "green",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "26px",
+                                                marginTop: window.innerWidth <= 768 ? "10px" : "5px",
+                                            }}>
                                             Mother's Information
                                         </h4>
-                                        <hr />
-                                        <div className="persofom-group name-container">
+                                        <div className="persofom-group name-container"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                                marginTop: window.innerWidth <= 768 ? "20px" : "10px",
+                                                gap: window.innerWidth <= 768 ? "0.5rem" : "1.5rem",
+                                                flexWrap: "wrap",
+                                            }}
+                                        >
                                             <div className="persofom-group name">
                                                 <label>First Name*</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
                                                     <input
                                                         className={`persofom-input ${familyErrors.motName ? "error" : ""
                                                             }`}
@@ -3054,17 +3119,27 @@ export default function Profile() {
                                             </div>
                                             <div className="persofom-group name">
                                                 <label>Middle Name</label>
-                                                <input
-                                                    className={`persofom-input ${familyErrors.motMidName ? "error" : ""
-                                                        }`}
-                                                    value={motMidName || ""}
-                                                    onChange={(e) => setMotMidName(e.target.value)}
-                                                    type="text"
-                                                />
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
+                                                    <input
+                                                        className={`persofom-input ${familyErrors.motMidName ? "error" : ""
+                                                            }`}
+                                                        value={motMidName || ""}
+                                                        onChange={(e) => setMotMidName(e.target.value)}
+                                                        type="text"
+                                                    />
+                                                </div>
                                             </div>
                                             <div className="persofom-group name">
                                                 <label>Last Name*</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
+                                                    }}
+                                                >
                                                     <input
                                                         className={`persofom-input ${familyErrors.motLastName ? "error" : ""
                                                             }`}
@@ -3076,14 +3151,25 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+                                    <hr style={{ marginTop: "30px", marginBottom: "-5px" }} />
                                     <div style={{ marginTop: "15px" }}>
-                                        <h4 style={{ color: "orange", marginLeft: "25px" }}>
+                                        <h4 style={{
+                                            color: "green",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "26px",
+                                            marginTop: window.innerWidth <= 768 ? "10px" : "10px",
+                                        }}>
                                             Brothers and Sisters
                                         </h4>
-                                        <hr />
-                                        <div className="persofom-group name-container">
+                                        <div className="persofom-group name-container"
+                                            style={{
+                                                width: window.innerWidth <= 768 ? "85%" : "95%",
+                                                marginRight: window.innerWidth <= 768 ? "0" : "15px",
+                                                marginLeft: window.innerWidth <= 768 ? "20px" : "25px",
+                                                marginTop: window.innerWidth <= 768 ? "10px" : "10px",
+                                            }}
+                                        >
                                             <div className="persofom-group name">
-                                                <label>Number of Brother *</label>
+                                                <label>Number of Brother/s *</label>
                                                 <div className="persofom-input-container">
                                                     <input
                                                         className={`persofom-input ${familyErrors.broNum ? "error" : ""
@@ -3095,7 +3181,7 @@ export default function Profile() {
                                                 </div>
                                             </div>
                                             <div className="persofom-group name">
-                                                <label>Number of Sister *</label>
+                                                <label>Number of Sister/s *</label>
                                                 <input
                                                     className={`persofom-input ${familyErrors.sisNum ? "error" : ""
                                                         }`}
@@ -3106,18 +3192,35 @@ export default function Profile() {
                                             </div>
                                         </div>
                                     </div>
+                                    <hr style={{ marginTop: "30px", marginBottom: "-5px" }} />
                                     <div style={{ marginTop: "15px" }}>
-                                        <h4 style={{ color: "green", marginLeft: "25px" }}>
+                                        <h4 style={{
+                                            color: "green",
+                                            marginLeft: window.innerWidth <= 768 ? "10px" : "26px",
+                                            marginTop: window.innerWidth <= 768 ? "10px" : "10px",
+                                        }}>
                                             Guardian's Profile
                                         </h4>
-                                        <hr />
-                                        <div className="persofom-group name-container">
+                                        <div className="persofom-group name-container"
+                                            style={{
+                                                display: "flex",
+                                                flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                                width: "100%",
+                                                gap: "1rem",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "25px",
+                                                marginTop: window.innerWidth <= 768 ? "10px" : "10px",
+                                                marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                            }}
+                                        >
                                             <div className="persofom-group name">
                                                 <label>Guardian Name *</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "90%" : "710px",
+                                                    }}
+                                                >
                                                     <input
                                                         placeholder="Ex. Juan M. Dela Cruz Jr"
-                                                        style={{ width: "700px" }}
                                                         className={`persofom-input ${familyErrors.guarName ? "error" : ""
                                                             }`}
                                                         value={guarName || ""}
@@ -3128,7 +3231,11 @@ export default function Profile() {
                                             </div>
                                             <div className="persofom-group name">
                                                 <label>Relationship *</label>
-                                                <div className="persofom-input-container">
+                                                <div className="persofom-input-container"
+                                                    style={{
+                                                        width: window.innerWidth <= 768 ? "90%" : "80%",
+                                                    }}
+                                                >
                                                     <input
                                                         placeholder="Mother, Father, Sister, ect"
                                                         className={`persofom-input ${familyErrors.guarRelationship ? "error" : ""
@@ -3141,51 +3248,66 @@ export default function Profile() {
                                                     />
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div
-                                            className="persofom-group name-container"
-                                            style={{ marginTop: "15px", marginBottom: "20px" }}
-                                        >
-                                            <div className="persofom-group name">
-                                                <label>
-                                                    Guardian Address (House No. Street, Barangay,
-                                                    City/municipality) *
-                                                </label>
-                                                <div className="persofom-input-container">
-                                                    <input
-                                                        placeholder="Ex. WFI Compound, Wawandue, Subic Zambales"
-                                                        style={{ width: "420px" }}
-                                                        className={`persofom-input ${familyErrors.guarAddress ? "error" : ""
-                                                            }`}
-                                                        value={guarAddress || ""}
-                                                        onChange={(e) => setGuarAddress(e.target.value)}
-                                                        type="text"
-                                                    />
+                                            <div
+                                                style={{
+                                                    display: "flex",
+                                                    flexDirection: window.innerWidth <= 768 ? "column" : "row",
+                                                    width: "100%",
+                                                    gap: "1rem",
+                                                    marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                                }}
+                                            >
+                                                <div className="persofom-group name">
+                                                    <label>
+                                                        Guardian's Address (House No. Street, Barangay, City) *
+                                                    </label>
+                                                    <div className="persofom-input-container"
+                                                        style={{
+                                                            width: window.innerWidth <= 768 ? "90%" : "400px",
+                                                        }}
+                                                    >
+                                                        <input
+                                                            placeholder="Ex. WFI Compound, Wawandue, Subic Zambales"
+                                                            className={`persofom-input ${familyErrors.guarAddress ? "error" : ""
+                                                                }`}
+                                                            value={guarAddress || ""}
+                                                            onChange={(e) => setGuarAddress(e.target.value)}
+                                                            type="text"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="persofom-group name">
-                                                <label>Guardian's Email Address *</label>
-                                                <div className="persofom-input-container">
-                                                    <input
-                                                        placeholder="Guardians Email (Optional)"
-                                                        className={`persofom-input`}
-                                                        value={guarEmail || ""}
-                                                        onChange={(e) => setGuarEmail(e.target.value)}
-                                                        type="text"
-                                                    />
+                                                <div className="persofom-group name">
+                                                    <label>Guardian's Email Address *</label>
+                                                    <div className="persofom-input-container"
+                                                        style={{
+                                                            width: window.innerWidth <= 768 ? "90%" : "100%",
+                                                        }}
+                                                    >
+                                                        <input
+                                                            placeholder="Guardians Email (Optional)"
+                                                            className={`persofom-input`}
+                                                            value={guarEmail || ""}
+                                                            onChange={(e) => setGuarEmail(e.target.value)}
+                                                            type="text"
+                                                        />
+                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div className="persofom-group name">
-                                                <label>Mobile Number *</label>
-                                                <div className="persofom-input-container">
-                                                    <input
-                                                        placeholder="+63 xxx-xxxx-xxx"
-                                                        className={`persofom-input ${familyErrors.guarTel ? "error" : ""
-                                                            }`}
-                                                        value={guarTel || ""}
-                                                        onChange={(e) => setGuarTel(e.target.value)}
-                                                        type="text"
-                                                    />
+                                                <div className="persofom-group name">
+                                                    <label>Mobile Number *</label>
+                                                    <div className="persofom-input-container"
+                                                        style={{
+                                                            width: window.innerWidth <= 768 ? "90%" : "80%",
+                                                        }}
+                                                    >
+                                                        <input
+                                                            placeholder="+63 xxx-xxxx-xxx"
+                                                            className={`persofom-input ${familyErrors.guarTel ? "error" : ""
+                                                                }`}
+                                                            value={guarTel || ""}
+                                                            onChange={(e) => setGuarTel(e.target.value)}
+                                                            type="text"
+                                                        />
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -3193,9 +3315,10 @@ export default function Profile() {
                                     <div
                                         className="unibtn"
                                         style={{
-                                            marginTop: "16px",
-                                            marginRight: "25px",
-                                            paddingBottom: "20px",
+                                            marginLeft: window.innerWidth <= 768 ? "28%" : "-30px",
+                                            marginTop: window.innerWidth <= 768 ? "10px" : "50px",
+                                            marginBottom: window.innerWidth <= 768 ? "5px" : "20px",
+                                            width: window.innerWidth <= 768 ? "65%" : "100%",
                                         }}
                                     >
                                         <button type="submit" onClick={handleUpdateFamily}>
