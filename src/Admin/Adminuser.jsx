@@ -186,6 +186,7 @@ export default function Adminuser() {
                         >
                             <option value="ADMIN">ADMIN</option>
                             <option value="REGISTRAR">REGISTRAR</option>
+                            <option value="ENCODER">ENCODER</option>
                         </select>
 
                         <div className="adminuser-modal-buttons">

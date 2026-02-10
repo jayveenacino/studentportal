@@ -14,6 +14,7 @@ const Signup = () => {
     const [reset, setReset] = useState(false);
     const [loading, setLoading] = useState(true);
     const [preRegisterOpen, setPreRegisterOpen] = useState(true);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const [loginForm, setLoginForm] = useState({
         email: "",
@@ -69,20 +70,42 @@ const Signup = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+
+        if (isSubmitting) return;
+        setIsSubmitting(true);
+
+        Swal.fire({
+            title: "Logging in...",
+            text: "Please wait",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            },
+        });
+
         try {
-            const response = await axios.post(import.meta.env.VITE_API_URL + "/login", loginForm);
+            const response = await axios.post(
+                import.meta.env.VITE_API_URL + "/login",
+                loginForm,
+                { timeout: 10000 }
+            );
+
             if (response.status === 201) {
                 Swal.fire({
                     icon: "success",
                     title: "Logged In!",
-                    text: "You successfully logged in. Redirecting...",
+                    text: "Redirecting...",
                     showConfirmButton: false,
-                    timer: 2000,
+                    allowOutsideClick: false,
+                    timer: 1500,
                 });
+
                 const user = response.data.student;
                 setUser(user);
                 localStorage.setItem("user", JSON.stringify(user));
-                setTimeout(() => navigate("/preregister"), 2000);
+
+                setTimeout(() => navigate("/preregister"), 1500);
             }
         } catch (error) {
             Swal.fire({
@@ -91,8 +114,11 @@ const Signup = () => {
                 text: error.response?.data?.error || "Login failed",
                 confirmButtonColor: "#d33",
             });
+        } finally {
+            setIsSubmitting(false);
         }
     };
+
 
     const handleResetPassword = async (e) => {
         e.preventDefault();
@@ -143,7 +169,7 @@ const Signup = () => {
 
         if (reset) {
             document.body.classList.add("modal-open");
-            document.body.addEventListener("touchmove", preventScroll, { passive: false }); // disable scroll on body
+            document.body.addEventListener("touchmove", preventScroll, { passive: false });
         } else {
             document.body.classList.remove("modal-open");
             document.body.removeEventListener("touchmove", preventScroll);
@@ -194,7 +220,17 @@ const Signup = () => {
                         </div>
 
                         <div className="signup-button-group">
-                            <button className="signup-login-button">Login</button>
+                            <button
+                                className="signup-login-button"
+                                disabled={isSubmitting}
+                                style={{
+                                    opacity: isSubmitting ? 0.6 : 1,
+                                    cursor: isSubmitting ? "not-allowed" : "pointer",
+                                }}
+                            >
+                                {isSubmitting ? "Logging in..." : "Login"}
+                            </button>
+
                             <button
                                 className="signup-signup-button"
                                 onClick={(e) => {
