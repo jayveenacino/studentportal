@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./student css/create.css";
@@ -25,6 +25,10 @@ export default function Create() {
         password: "",
         confirmPassword: "",
     });
+
+    useEffect(() => {
+        document.title = "Kolehiyo Ng Subic - Create Account"
+    })
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -61,6 +65,31 @@ export default function Create() {
         e.preventDefault();
         setLoading(true);
 
+        // --- NEW MIDDLE NAME VALIDATION ---
+        // This regex checks if the middlename is just 1 letter or 1 letter plus a dot (e.g., "M" or "M.")
+        const initialRegex = /^[A-Za-z]\.?$/;
+        if (formData.middlename.trim() !== "" && initialRegex.test(formData.middlename.trim())) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid Middle Name",
+                text: "Please enter your full middle name, not just initials (e.g., 'Manalo' instead of 'M.').",
+                confirmButtonColor: "#3085d6",
+            });
+            setLoading(false);
+            return;
+        }
+        // ----------------------------------
+
+        Swal.fire({
+            title: "PLEASE WAIT",
+            text: "Creating your account...",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+
         const bannedList = [
             "123", "1234", "12345", "123456", "password", "password123",
             "username", "user", "user123", "admin", "test", "qwerty",
@@ -71,6 +100,7 @@ export default function Create() {
         const passwordCheck = formData.password.toLowerCase();
 
         if (bannedList.some(item => usernameCheck.includes(item) || passwordCheck.includes(item))) {
+            Swal.close();
             Swal.fire({
                 toast: true,
                 icon: "error",
@@ -86,18 +116,20 @@ export default function Create() {
         }
 
         try {
-            const response = await axios.post(import.meta.env.VITE_API_URL + "/register", formData);
+            const response = await axios.post(
+                import.meta.env.VITE_API_URL + "/register",
+                formData
+            );
 
             if (response.status === 201) {
+                Swal.close();
+
                 Swal.fire({
-                    toast: true,
                     icon: "success",
                     title: "Account Created!",
-                    text: "Your account has been successfully created. Redirecting...",
-                    position: "top-end",
-                    showConfirmButton: false,
+                    text: "Redirecting to main page...",
                     timer: 2000,
-                    timerProgressBar: true
+                    showConfirmButton: false
                 });
 
                 localStorage.setItem("user", JSON.stringify(response.data.student));
@@ -108,7 +140,10 @@ export default function Create() {
                 }, 2000);
             }
         } catch (error) {
-            const errorMessage = error.response?.data?.message || "Failed to create an account.";
+            Swal.close();
+
+            const errorMessage =
+                error.response?.data?.message || "Failed to create an account.";
             const existingUser = error.response?.data?.existingUser;
 
             if (existingUser) {
@@ -117,29 +152,18 @@ export default function Create() {
                     existingUser.middlename !== formData.middlename ||
                     existingUser.lastname !== formData.lastname;
 
-                if (nameMismatch) {
-                    Swal.fire({
-                        toast: true,
-                        icon: "error",
-                        title: "Name Mismatch Detected",
-                        text: "The email or phone number is already registered with a different name.",
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true
-                    });
-                } else {
-                    Swal.fire({
-                        toast: true,
-                        icon: "warning",
-                        title: "Already Registered",
-                        text: "This email or phone is already registered with the same name.",
-                        position: "top-end",
-                        showConfirmButton: false,
-                        timer: 4000,
-                        timerProgressBar: true
-                    });
-                }
+                Swal.fire({
+                    toast: true,
+                    icon: nameMismatch ? "error" : "warning",
+                    title: nameMismatch ? "Name Mismatch Detected" : "Already Registered",
+                    text: nameMismatch
+                        ? "The email or phone number is already registered with a different name."
+                        : "This email or phone is already registered with the same name.",
+                    position: "top-end",
+                    showConfirmButton: false,
+                    timer: 4000,
+                    timerProgressBar: true
+                });
             } else {
                 Swal.fire({
                     toast: true,
@@ -153,8 +177,10 @@ export default function Create() {
                 });
             }
         }
+
         setLoading(false);
     };
+
 
     return (
         <div className="signincontainer">

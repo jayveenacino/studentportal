@@ -12,10 +12,10 @@ export default function Login() {
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
 
-    // ✅ Redirect immediately if already logged in
+    // ✅ Redirect immediately if already logged in (Check sessionStorage)
     useEffect(() => {
-        const storedAdmin = JSON.parse(localStorage.getItem("Admin"));
-        if (storedAdmin && storedAdmin.email) {
+        const storedAdmin = JSON.parse(sessionStorage.getItem("Admin"));
+        if (storedAdmin && (storedAdmin.email || storedAdmin.username)) {
             navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
         }
     }, [navigate]);
@@ -24,7 +24,7 @@ export default function Login() {
         e.preventDefault();
 
         if (
-            emailOrUsername === "knsadmincsd@gmail.com" &&
+            emailOrUsername === "kolehiyongsubic.ph@gmail.com" &&
             password === "kolehiyongsubiccsd2002"
         ) {
             const defaultAdmin = {
@@ -34,7 +34,7 @@ export default function Login() {
             };
 
             setAdmin(defaultAdmin);
-            localStorage.setItem("Admin", JSON.stringify(defaultAdmin));
+            sessionStorage.setItem("Admin", JSON.stringify(defaultAdmin));
 
             await Swal.fire({
                 toast: true,
@@ -65,7 +65,7 @@ export default function Login() {
             });
 
             setAdmin(res.data.admin);
-            localStorage.setItem("Admin", JSON.stringify(res.data.admin));
+            sessionStorage.setItem("Admin", JSON.stringify(res.data.admin));
 
             await Swal.fire({
                 toast: true,

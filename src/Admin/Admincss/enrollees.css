@@ -345,15 +345,21 @@
 
 .export-btn {
     height: 36px;
-    width: 100%;
+    padding: 0 16px;
     background-color: #0a3d18;
     color: white;
     border: none;
     border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
-
+    white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 8px;
+    margin-left: -60px;
 }
+
 
 .export-btn:hover {
     background-color: #45a049;

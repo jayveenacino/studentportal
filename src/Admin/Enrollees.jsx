@@ -1,18 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import axios from 'axios';
 import './Admincss/enrollees.css';
 import Swal from 'sweetalert2';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFileExport } from '@fortawesome/free-solid-svg-icons';
 import * as XLSX from "xlsx";
+
+const API = import.meta.env.VITE_API_URL;
 
 export default function Enrollees() {
     const [enrollees, setEnrollees] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isModalLoading, setIsModalLoading] = useState(false); // New state for modal trigger
     const [enlargedImage, setEnlargedImage] = useState(null);
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState("All");
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const perPage = 5;
+    const [loadingUserData, setLoadingUserData] = useState(true);
     const [openChat, setOpenChat] = useState(false);
     const [chatStudent, setChatStudent] = useState(null);
     const [messages, setMessages] = useState([]);
@@ -24,9 +33,7 @@ export default function Enrollees() {
         setAdminMessage("");
 
         try {
-            const res = await axios.get(
-                `http://localhost:2025/api/chats/${student._id}`
-            );
+            const res = await axios.get(`${API}/api/chats/${student._id}`);
             setMessages(res.data.messages);
         } catch (err) {
             console.error(err);
@@ -38,7 +45,7 @@ export default function Enrollees() {
 
         try {
             const res = await axios.post(
-                `http://localhost:2025/api/chats/${chatStudent._id}`,
+                `${API}/api/chats/${chatStudent._id}`,
                 {
                     sender: "admin",
                     text: adminMessage,
@@ -63,8 +70,9 @@ export default function Enrollees() {
     }, []);
 
     const fetchEnrollees = async () => {
+        setLoadingUserData(true);
         try {
-            const res = await axios.get('http://localhost:2025/api/enrollees');
+            const res = await axios.get(`${API}/api/enrollees`);
             setEnrollees(res.data);
 
             const uniqueCourses = [
@@ -73,17 +81,25 @@ export default function Enrollees() {
             setCourses(uniqueCourses);
         } catch (error) {
             console.error("Failed to fetch students:", error);
+        } finally {
+            setLoadingUserData(false);
+            setIsLoading(false);
         }
     };
 
-    const filteredEnrollees = enrollees.filter(e => {
-        const matchesCourse =
-            selectedCourse === "All" || e.initialDept === selectedCourse;
-        const matchesSearch =
-            formatFullName(e).toLowerCase().includes(searchTerm.toLowerCase()) ||
-            e._id.toLowerCase().includes(searchTerm.toLowerCase());
-        return matchesCourse && matchesSearch;
-    });
+    const filteredEnrollees = useMemo(() => {
+        return enrollees.filter(e => {
+            const matchesCourse = selectedCourse === "All" || e.initialDept === selectedCourse;
+            const matchesSearch =
+                formatFullName(e).toLowerCase().includes(searchTerm.toLowerCase()) ||
+                e._id.toLowerCase().includes(searchTerm.toLowerCase());
+            return matchesCourse && matchesSearch;
+        });
+    }, [enrollees, selectedCourse, searchTerm]);
+
+    const pageCount = Math.ceil(filteredEnrollees.length / perPage);
+    const start = (currentPage - 1) * perPage;
+    const currentItems = filteredEnrollees.slice(start, start + perPage);
 
     const handleAccept = async (id) => {
         const student = enrollees.find(s => s._id === id);
@@ -102,14 +118,14 @@ export default function Enrollees() {
             title: 'Sending confirmation...',
             text: 'Please wait while we accept the student and send an email.',
             allowOutsideClick: false,
-            allowEscapeKey: false,  
+            allowEscapeKey: false,
             didOpen: () => {
                 Swal.showLoading();
             }
         });
 
         try {
-            await axios.put(`http://localhost:2025/api/students/${id}/accept`);
+            await axios.put(`${API}/api/students/${id}/accept`);
 
             Swal.fire({
                 icon: 'success',
@@ -150,7 +166,7 @@ export default function Enrollees() {
             });
 
             try {
-                await axios.delete(`http://localhost:2025/api/students/${id}/decline`);
+                await axios.delete(`${API}/api/students/${id}/decline`);
                 Swal.fire({
                     icon: 'success',
                     title: 'Student Declined',
@@ -169,12 +185,16 @@ export default function Enrollees() {
     };
 
     const openModal = async (studentId) => {
+        setIsModalLoading(true); // Start small loader
         try {
-            const res = await axios.get(`http://localhost:2025/api/students/${studentId}`);
+            const res = await axios.get(`${API}/api/students/${studentId}`);
             setSelectedStudent(res.data);
             setIsModalOpen(true);
         } catch (error) {
             console.error("Failed to fetch student details:", error);
+            Swal.fire("Error", "Could not fetch student documents.", "error");
+        } finally {
+            setIsModalLoading(false); // Stop small loader
         }
     };
 
@@ -258,7 +278,52 @@ export default function Enrollees() {
     };
 
     return (
-        <div className="enrollees-container">
+        <div className="enrollees-container" style={{ position: 'relative' }}>
+            {/* Global Loader */}
+            {loadingUserData && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Pre-Register Data
+                    </p>
+                </div>
+            )}
+
+            {/* Small Modal Fetching Loader */}
+            {isModalLoading && (
+                <div style={{
+                    position: "fixed",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    zIndex: 1000,
+                    background: "rgba(0,0,0,0.7)",
+                    padding: "20px",
+                    borderRadius: "10px",
+                    color: "white",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center"
+                }}>
+                    <div className="spinner" style={{ width: "30px", height: "30px", borderTopColor: "#fff" }} />
+                    <p style={{ marginTop: "10px", fontSize: "14px" }}>Fetching Docs...</p>
+                </div>
+            )}
+
             <div className="enrollees-header">
                 <h1>Pre-Register List</h1>
                 <p>Manage and review all current enrollees here.</p>
@@ -270,13 +335,19 @@ export default function Enrollees() {
                     className="enrollees-search"
                     placeholder="Search enrollees..."
                     value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
+                    onChange={(e) => {
+                        setSearchTerm(e.target.value);
+                        setCurrentPage(1);
+                    }}
                 />
 
                 <select
                     className="course-filter"
                     value={selectedCourse}
-                    onChange={(e) => setSelectedCourse(e.target.value)}
+                    onChange={(e) => {
+                        setSelectedCourse(e.target.value);
+                        setCurrentPage(1);
+                    }}
                 >
                     <option value="All">All Courses</option>
                     {courses.map((course, idx) => (
@@ -287,11 +358,12 @@ export default function Enrollees() {
                 </select>
 
                 <button className="export-btn" onClick={handleExport}>
+                    <FontAwesomeIcon icon={faFileExport} style={{ marginRight: '8px' }} />
                     Export List
                 </button>
+
             </div>
 
-            {/* student list table */}
             <div className="enrollees-table-container">
                 <table className="enrollees-table">
                     <thead>
@@ -305,14 +377,14 @@ export default function Enrollees() {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredEnrollees.map((enrollee, index) => (
+                        {currentItems.map((enrollee, index) => (
                             <tr key={enrollee.registerNum}>
-                                <td>{index + 1}</td>
+                                <td>{start + index + 1}</td>
                                 <td>{formatFullName(enrollee)}</td>
                                 <td>{enrollee.registerNum}</td>
                                 <td>
                                     <span
-                                        style={{ textDecoration: 'underline', cursor: 'pointer' }}
+                                        style={{ textDecoration: 'underline', cursor: 'pointer', color: '#036600', fontWeight: 'bold' }}
                                         onClick={() => openModal(enrollee._id)}
                                     >
                                         See Uploads
@@ -324,42 +396,53 @@ export default function Enrollees() {
                                     <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>Delete</button>
                                     <button className="action-btn chat" onClick={() => openStudentChat(enrollee)}>Chat</button>
                                 </td>
-
                             </tr>
                         ))}
-                        {filteredEnrollees.length === 0 && (
+                        {!loadingUserData && currentItems.length === 0 && (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: 'center' }}>No enrollees found.</td>
+                                <td colSpan="6" style={{ textAlign: 'center', padding: "20px" }}>No enrollees found.</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
+
+                {!loadingUserData && pageCount > 1 && (
+                    <div className="pagination-controls">
+                        {Array.from({ length: pageCount }, (_, idx) => (
+                            <button
+                                key={idx}
+                                className={`pagination-btn ${currentPage === idx + 1 ? "active" : ""}`}
+                                onClick={() => setCurrentPage(idx + 1)}
+                            >
+                                {idx + 1}
+                            </button>
+                        ))}
+                    </div>
+                )}
             </div>
 
+            {/* Rest of the Modals (Chat, Student Details, Enlarged Image) remain same */}
             {openChat && chatStudent && (
                 <div className="admin-chat-wrapper" onClick={() => setOpenChat(false)}>
                     <div className="admin-chat-modal" onClick={(e) => e.stopPropagation()}>
-
                         <div className="admin-chat-header">
                             <div className="admin-chat-user">
                                 <img
                                     className="admin-chat-avatar"
-                                    src={chatStudent.image || "/public/img/knshdlogo.png"}
+                                    src={chatStudent.image || "/img/knshdlogo.png"}
                                     alt={`${chatStudent.firstname} ${chatStudent.lastname}`}
                                 />
                                 <span className="admin-chat-username">
                                     {chatStudent.firstname} {chatStudent.middlename || ""} {chatStudent.lastname}
                                 </span>
                             </div>
-
                             <button className="admin-chat-close" onClick={() => setOpenChat(false)}>✕</button>
                         </div>
 
                         <div className="admin-chat-body">
-
                             <div className="admin-chat-profile">
                                 <img
-                                    src={chatStudent.image || "/public/img/knshdlogo.png"}
+                                    src={chatStudent.image || "/img/knshdlogo.png"}
                                     alt={`${chatStudent.firstname} ${chatStudent.lastname}`}
                                     className="admin-chat-profile-img"
                                 />
@@ -367,7 +450,6 @@ export default function Enrollees() {
                                     {chatStudent.firstname} {chatStudent.middlename || ""} {chatStudent.lastname}
                                 </p>
                             </div>
-
                             {messages.map((msg, index) => (
                                 <div
                                     key={index}
@@ -376,7 +458,6 @@ export default function Enrollees() {
                                     <p>{msg.text}</p>
                                 </div>
                             ))}
-
                         </div>
 
                         <div className="admin-chat-input-wrapper">
@@ -393,7 +474,6 @@ export default function Enrollees() {
                                 Send
                             </button>
                         </div>
-
                     </div>
                 </div>
             )}
@@ -402,7 +482,6 @@ export default function Enrollees() {
                 <div className="studentdetails-modal-wrapper" onClick={closeModal}>
                     <div className="studentdetails-modal" onClick={(e) => e.stopPropagation()}>
                         <h2 className="studentdetails-title">Student Details</h2>
-
                         <div className="studentdetails-info-grid">
                             <div><strong>Name:</strong> {formatFullName(selectedStudent)}</div>
                             <div><strong>PRE-REG Password:</strong> {selectedStudent.password}</div>
@@ -416,51 +495,31 @@ export default function Enrollees() {
                         <div className="studentdetails-docs-grid">
                             {selectedStudent.image && (
                                 <div className="studentdetails-doc-item">
-                                    <img
-                                        src={selectedStudent.image}
-                                        alt="Profile Picture"
-                                        onClick={() => handleImageClick(selectedStudent.image)}
-                                    />
+                                    <img src={selectedStudent.image} alt="Profile" onClick={() => handleImageClick(selectedStudent.image)} />
                                     <p>Profile Picture</p>
                                 </div>
                             )}
                             {selectedStudent.idimage && (
                                 <div className="studentdetails-doc-item">
-                                    <img
-                                        src={selectedStudent.idimage}
-                                        alt="SHS ID"
-                                        onClick={() => handleImageClick(selectedStudent.idimage)}
-                                    />
+                                    <img src={selectedStudent.idimage} alt="ID" onClick={() => handleImageClick(selectedStudent.idimage)} />
                                     <p>SHS ID</p>
                                 </div>
                             )}
                             {selectedStudent.birthCertImage && (
                                 <div className="studentdetails-doc-item">
-                                    <img
-                                        src={selectedStudent.birthCertImage}
-                                        alt="Birth Certificate"
-                                        onClick={() => handleImageClick(selectedStudent.birthCertImage)}
-                                    />
+                                    <img src={selectedStudent.birthCertImage} alt="Birth" onClick={() => handleImageClick(selectedStudent.birthCertImage)} />
                                     <p>Birth Cert</p>
                                 </div>
                             )}
                             {selectedStudent.goodMoralImage && (
                                 <div className="studentdetails-doc-item">
-                                    <img
-                                        src={selectedStudent.goodMoralImage}
-                                        alt="Good Moral"
-                                        onClick={() => handleImageClick(selectedStudent.goodMoralImage)}
-                                    />
+                                    <img src={selectedStudent.goodMoralImage} alt="Moral" onClick={() => handleImageClick(selectedStudent.goodMoralImage)} />
                                     <p>Good Moral</p>
                                 </div>
                             )}
                             {selectedStudent.academicImage && selectedStudent.academicImage !== "❌" && (
                                 <div className="studentdetails-doc-item">
-                                    <img
-                                        src={selectedStudent.academicImage}
-                                        alt="Academic"
-                                        onClick={() => handleImageClick(selectedStudent.academicImage)}
-                                    />
+                                    <img src={selectedStudent.academicImage} alt="Academic" onClick={() => handleImageClick(selectedStudent.academicImage)} />
                                     <p>Academic Records</p>
                                 </div>
                             )}
@@ -469,7 +528,6 @@ export default function Enrollees() {
                 </div>
             )}
 
-            {/* enlarged image preview */}
             {enlargedImage && (
                 <div className="enlarged-image-modal">
                     <div className="enlarged-image-content">

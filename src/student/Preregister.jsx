@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react"; // Removed unused 'use'
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +18,14 @@ export default function Preregister() {
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [showNewPassword, setShowNewPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    // FEATURE: Auto-close sidebar on mobile only
+    const handleSectionChange = (section) => {
+        setActiveSection(section);
+        if (window.innerWidth <= 768) {
+            setSidebarVisible(false);
+        }
+    };
 
     useEffect(() => {
         document.title = "Kolehiyo Ng Subic - Student Admission";
@@ -319,11 +327,11 @@ export default function Preregister() {
                     </div>
                     <div className={`preside ${sidebarVisible ? 'show' : 'hide'}`}>
                         <ul>
-                            <li><a href="#" onClick={() => setActiveSection("welcome")}><i className="fa-solid fa-hand"></i> Welcome</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("dashboard")}><i className="fa-solid fa-table-columns"></i> Dashboard</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("profile")}><i className="fa-solid fa-user"></i> Profile</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("upload")}><i className="fa-solid fa-upload"></i> Uploads</a></li>
-                            <li><a href="#" onClick={() => setActiveSection("announcement")}><i className="fa-solid fa-triangle-exclamation"></i> Announcement</a></li>
+                            <li><a href="#" onClick={() => handleSectionChange("welcome")}><i className="fa-solid fa-hand"></i> Welcome</a></li>
+                            <li><a href="#" onClick={() => handleSectionChange("dashboard")}><i className="fa-solid fa-table-columns"></i> Dashboard</a></li>
+                            <li><a href="#" onClick={() => handleSectionChange("profile")}><i className="fa-solid fa-user"></i> Profile</a></li>
+                            <li><a href="#" onClick={() => handleSectionChange("upload")}><i className="fa-solid fa-upload"></i> Uploads</a></li>
+                            <li><a href="#" onClick={() => handleSectionChange("announcement")}><i className="fa-solid fa-triangle-exclamation"></i> Announcement</a></li>
                         </ul>
                     </div>
 
@@ -353,7 +361,5 @@ export default function Preregister() {
             }
 
         </div >
-
-
     );
 }

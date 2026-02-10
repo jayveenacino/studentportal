@@ -32,7 +32,7 @@ export default function Home() {
     return (
         <div className="enuique-news-section">
             <div className="enuique-home-header-wrap">
-                <img className="enuique-home-header" src="/img/bghome.png" alt="" />
+                <img className="enuique-home-header" src="/img/KNSBG.png" alt="" />
             </div>
             <div className="enuique-image-row">
                 

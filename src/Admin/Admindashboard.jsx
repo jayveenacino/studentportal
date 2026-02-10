@@ -26,8 +26,9 @@ function Dashboard() {
     const [openDropdown, setOpenDropdown] = useState(null);
     const [adminUsername, setAdminUsername] = useState("");
 
+    // FIXED: Changed from localStorage to sessionStorage for auto-logout on tab close
     const getStoredAdmin = () => {
-        const stored = localStorage.getItem("Admin");
+        const stored = sessionStorage.getItem("Admin");
         return stored ? JSON.parse(stored) : null;
     };
 
@@ -35,7 +36,8 @@ function Dashboard() {
         const checkAdmin = () => {
             const storedAdmin = getStoredAdmin();
             if (!storedAdmin || !storedAdmin.username) {
-                navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
+                // Redirect to login if session is empty (tab was closed/reopened)
+                navigate("/auth/secure-access/admin-portal/login", { replace: true });
             } else {
                 setAdminUsername(storedAdmin.username);
             }
@@ -43,6 +45,7 @@ function Dashboard() {
 
         checkAdmin();
 
+        // Listen for storage changes (still useful if they log out in another tab)
         const handleStorageChange = () => checkAdmin();
         window.addEventListener("storage", handleStorageChange);
 
@@ -104,7 +107,8 @@ function Dashboard() {
     }, []);
 
     const handleLogout = (event) => {
-        event.preventDefault();
+        if (event) event.preventDefault();
+        // FIXED: Clear both for maximum security
         localStorage.clear();
         sessionStorage.clear();
         setTimeout(() => {
@@ -177,39 +181,35 @@ function Dashboard() {
 
                     <div className={`adside ${sidebarVisible ? 'show' : 'hide'}`}>
                         <ul>
-                            <ul>
-                                <li>
-                                    <a href="#" onClick={() => toggleDropdown("dashboard")}>
-                                        <i className="fa-solid fa-house" style={{ marginLeft: "-2px" }}></i> Dashboard
-                                        <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
-                                    </a>
-                                    {openDropdown === "dashboard" && (
-                                        <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
-                                            <li><a href="#" onClick={() => handleMenuClick("overview")}><i className="fa-solid fa-chart-pie"></i> Overview</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("uploads")}><i className="fa-solid fa-bullhorn "></i> Announcements</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("announcements")}><i className="fa-solid fa-upload"></i> Uploadings</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("statistics")}><i className="fa-solid fa-chart-line"></i> Statistics</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("settings")}><i className="fa-solid fa-gear"></i> Dashboard Settings</a></li>
-                                        </ul>
-                                    )}
-                                </li>
-                            </ul>
+                            <li>
+                                <a href="#" onClick={() => toggleDropdown("dashboard")}>
+                                    <i className="fa-solid fa-house" style={{ marginLeft: "-2px" }}></i> Dashboard
+                                    <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
+                                </a>
+                                {openDropdown === "dashboard" && (
+                                    <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
+                                        <li><a href="#" onClick={() => handleMenuClick("overview")}><i className="fa-solid fa-chart-pie"></i> Overview</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("uploads")}><i className="fa-solid fa-bullhorn "></i> Announcements</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("announcements")}><i className="fa-solid fa-upload"></i> Uploadings</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("statistics")}><i className="fa-solid fa-chart-line"></i> Statistics</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("settings")}><i className="fa-solid fa-gear"></i> Dashboard Settings</a></li>
+                                    </ul>
+                                )}
+                            </li>
 
-                            <ul>
-                                <li>
-                                    <a href="#" onClick={() => toggleDropdown("enrollees")}>
-                                        <i className="fa-solid fa-calendar"></i> Enrollees
-                                        <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
-                                    </a>
-                                    {openDropdown === "enrollees" && (
-                                        <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
-                                            <li><a href="#" onClick={() => handleMenuClick("enrollees")}><i className="fa-solid fa-user-plus"></i> Pre Registered</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("accepted")}><i className="fa-solid fa-user-check"></i> Enrollees</a></li>
-                                            <li><a href="#" onClick={() => handleMenuClick("pending")}><i className="fa-solid fa-hourglass-half"></i> Pending Approval</a></li>
-                                        </ul>
-                                    )}
-                                </li>
-                            </ul>
+                            <li>
+                                <a href="#" onClick={() => toggleDropdown("enrollees")}>
+                                    <i className="fa-solid fa-calendar"></i> Enrollees
+                                    <i className="fa-solid fa-caret-down" style={{ marginLeft: "5px" }}></i>
+                                </a>
+                                {openDropdown === "enrollees" && (
+                                    <ul style={{ listStyle: "none", paddingLeft: "20px" }}>
+                                        <li><a href="#" onClick={() => handleMenuClick("enrollees")}><i className="fa-solid fa-user-plus"></i> Pre Registered</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("accepted")}><i className="fa-solid fa-user-check"></i> Enrollees</a></li>
+                                        <li><a href="#" onClick={() => handleMenuClick("pending")}><i className="fa-solid fa-hourglass-half"></i> Pending Approval</a></li>
+                                    </ul>
+                                )}
+                            </li>
 
                             <li><a href="#" onClick={() => handleMenuClick("subjects")}><i className="fa-solid fa-book"></i> Subjects</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("departments")}><i className="fa-solid fa-building"></i> Department</a></li>

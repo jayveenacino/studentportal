@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
@@ -9,6 +9,8 @@ export default function Iupdocx() {
     const [profilepfp, setProfilepfp] = useState(false);
     const [fillsection, setFillsection] = useState("data");
     const [courses, setCourses] = useState([]);
+
+    const [loadingUserData, setLoadingUserData] = useState(true);
 
     useEffect(() => {
         axios.get(import.meta.env.VITE_API_URL + "/api/courses")
@@ -50,8 +52,9 @@ export default function Iupdocx() {
                         goodMoral: res.data.goodMoral ? "✔️" : "❌",
                         academic: res.data.academic ? "✔️" : "❌",
                     });
+                    setLoadingUserData(false);
                 })
-                .catch(() => { });
+                .catch(() => setLoadingUserData(false));
         }
     }, [user]);
 
@@ -254,11 +257,11 @@ export default function Iupdocx() {
                 const ctx = canvas.getContext("2d");
                 ctx.drawImage(img, 0, 0);
 
-                // Basic white background check (pixel sample)
                 const pixelData = ctx.getImageData(0, 0, 10, 10).data;
                 const isMostlyWhite = Array.from(pixelData)
-                    .filter((_, i) => i % 4 !== 3) // skip alpha
+                    .filter((_, i) => i % 4 !== 3)
                     .every(value => value > 200);
+
                 if (!isMostlyWhite) {
                     Swal.fire({
                         icon: 'error',
@@ -268,8 +271,6 @@ export default function Iupdocx() {
                     return;
                 }
 
-                // Simple blur check (variance of Laplacian would be better in backend)
-                // For demo: just check width & height
                 if (img.width < 200 || img.height < 200) {
                     Swal.fire({
                         icon: 'error',
@@ -279,7 +280,7 @@ export default function Iupdocx() {
                     return;
                 }
 
-                setImage(reader.result); // Acceptable image
+                setImage(reader.result);
             };
         };
         reader.readAsDataURL(file);
@@ -332,8 +333,60 @@ export default function Iupdocx() {
             });
         }
     };
+
+    useEffect(() => {
+        const lockScroll = () => {
+            // Apply to both html and body for mobile compatibility and to prevent any 
+            // "bounce" scrolling on iOS when overflow is hidden
+            document.documentElement.style.overflow = "hidden";
+            document.body.style.overflow = "hidden";
+            // Prevents "bounce" scrolling on mobile when overflow is hidden
+            document.body.style.position = "fixed";
+            document.body.style.width = "100%";
+        };
+
+        const unlockScroll = () => {
+            document.documentElement.style.overflow = "";
+            document.body.style.overflow = "";
+            document.body.style.position = "";
+            document.body.style.width = "";
+        };
+
+        if (loadingUserData) {
+            lockScroll();
+        } else {
+            unlockScroll();
+        }
+
+        return () => unlockScroll();
+    }, [loadingUserData]);
+    
+
     return (
         <div className="mainpreprofile">
+            {loadingUserData && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.85)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 100, 
+                        flexDirection: "column",
+                        pointerEvents: "all"
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading user data...
+                    </p>
+                </div>
+            )}
             <div className="uploads">
                 <h1>PLEASE READ!</h1>
                 <p style={{ marginBottom: "20px", fontSize: "15px" }}>Here are the documents you'll need for admission. Please make sure to upload everything that's required so we can get started on processing your application.</p>
