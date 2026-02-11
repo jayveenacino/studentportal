@@ -257,14 +257,12 @@ export default function Preregister() {
                                     />
                                     <i
                                         className={`fa-solid fa-eye${showCurrentPassword ? '' : '-slash'}`}
-                                        onMouseDown={() => setShowCurrentPassword(true)}
-                                        onMouseUp={() => setShowCurrentPassword(false)}
-                                        onMouseLeave={() => setShowCurrentPassword(false)}
+                                        onClick={() => setShowCurrentPassword(prev => !prev)}
                                         style={{
                                             cursor: 'pointer',
                                             position: 'absolute',
                                             right: '37px',
-                                            top: '37.4%',
+                                            top: window.innerWidth <= 768 ? "33.7%" : "36.8%",
                                             transform: 'translateY(-50%)',
                                         }}
                                     ></i>
@@ -278,15 +276,12 @@ export default function Preregister() {
                                     />
                                     <i
                                         className={`fa-solid fa-eye${showNewPassword ? '' : '-slash'}`}
-                                        onMouseDown={() => setShowNewPassword(true)}
-                                        onMouseUp={() => setShowNewPassword(false)}
-                                        onMouseLeave={() => setShowNewPassword(false)}
-
+                                        onClick={() => setShowNewPassword(prev => !prev)}
                                         style={{
                                             cursor: 'pointer',
                                             position: 'absolute',
                                             right: '37px',
-                                            top: '52.4%',
+                                            top: window.innerWidth <= 768 ? "46.7%" : "52.4%",
                                             transform: 'translateY(-50%)',
                                         }}
                                     ></i>
@@ -300,14 +295,12 @@ export default function Preregister() {
                                     />
                                     <i
                                         className={`fa-solid fa-eye${showConfirmPassword ? '' : '-slash'}`}
-                                        onMouseDown={() => setShowConfirmPassword(true)}
-                                        onMouseUp={() => setShowConfirmPassword(false)}
-                                        onMouseLeave={() => setShowConfirmPassword(false)}
+                                        onClick={() => setShowConfirmPassword(prev => !prev)}
                                         style={{
                                             cursor: 'pointer',
                                             position: 'absolute',
                                             right: '37px',
-                                            top: '67.4%',
+                                            top: window.innerWidth <= 768 ? "60.7%" : "67.4%",
                                             transform: 'translateY(-50%)',
                                         }}
                                     ></i>

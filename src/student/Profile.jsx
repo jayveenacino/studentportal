@@ -1192,7 +1192,7 @@ export default function Profile() {
                                                 style={
                                                     window.innerWidth <= 768
                                                         ? { fontSize: "13px" }
-                                                        : {}
+                                                        : { color: "#333" }
                                                 }
                                             >
                                                 Complete your personal information!
@@ -1201,13 +1201,12 @@ export default function Profile() {
                                             <p
                                                 style={
                                                     window.innerWidth <= 768
-                                                        ? { fontSize: "10px", marginTop: "-14px" }
+                                                        ? { fontSize: "12px", marginTop: "-14px" }
                                                         : {
                                                             marginBottom: "20px",
                                                             fontSize: "12px",
-                                                            fontStyle: "italic",
                                                             marginTop: "10px",
-                                                            color: "orange",
+                                                            color: "green",
                                                         }
                                                 }
                                             >
@@ -2228,7 +2227,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "50%" : "30%",
+                                                width: window.innerWidth <= 768 ? "60%" : "30%",
                                             }}
                                         >
                                             <label
@@ -2255,7 +2254,7 @@ export default function Profile() {
                                         <div
                                             className="persofom-group ext"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "80%" : "75%",
+                                                width: window.innerWidth <= 768 ? "70%" : "75%",
                                                 marginRight: window.innerWidth <= 768 ? "10px" : "0",
                                             }}
                                         >
@@ -2327,10 +2326,10 @@ export default function Profile() {
                                 <div
                                     className="unibtn"
                                     style={{
-                                        marginLeft: window.innerWidth <= 768 ? "42%" : "auto",
+                                        marginLeft: window.innerWidth <= 768 ? "31%" : "auto",
                                         marginTop: window.innerWidth <= 768 ? "10px" : "40px",
                                         marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
-                                        width: window.innerWidth <= 768 ? "50%" : "100%",
+                                        width: window.innerWidth <= 768 ? "60%" : "100%",
                                     }}
                                 >
                                     <button type="submit" onClick={handleUpdateProfile}>
@@ -2384,13 +2383,12 @@ export default function Profile() {
                                         <p
                                             style={
                                                 window.innerWidth <= 768
-                                                    ? { color: "orange", fontSize: "12px", marginTop: "-14px" }
+                                                    ? { color: "green", fontSize: "12px", marginTop: "-14px" }
                                                     : {
                                                         marginBottom: "20px",
                                                         fontSize: "12px",
-                                                        fontStyle: "italic",
                                                         marginTop: "10px",
-                                                        color: "orange",
+                                                        color: "green",
                                                     }
                                             }>
                                             Please choose wisely. Once you have selected a program you
@@ -2760,7 +2758,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "32%" : "25%",
+                                                    width: window.innerWidth <= 768 ? "30%" : "25%",
                                                 }}
                                             >
                                                 <label>Year Graduated *</label>
@@ -2840,7 +2838,7 @@ export default function Profile() {
                                             <div
                                                 className="persofom-group name"
                                                 style={{
-                                                    width: window.innerWidth <= 768 ? "33%" : "25%",
+                                                    width: window.innerWidth <= 768 ? "30%" : "25%",
                                                 }}
                                             >
                                                 <label>Year Completed *</label>
@@ -2917,10 +2915,10 @@ export default function Profile() {
                                     <div
                                         className="unibtn"
                                         style={{
-                                            marginLeft: window.innerWidth <= 768 ? "28%" : "-40px",
+                                            marginLeft: window.innerWidth <= 768 ? "18%" : "-40px",
                                             marginTop: window.innerWidth <= 768 ? "10px" : "40px",
                                             marginBottom: window.innerWidth <= 768 ? "5px" : "20px",
-                                            width: window.innerWidth <= 768 ? "65%" : "100%",
+                                            width: window.innerWidth <= 768 ? "75%" : "100%",
                                         }}
                                     >
                                         <button type="submit" onClick={handleUpdateEduct}>
@@ -2968,15 +2966,12 @@ export default function Profile() {
                                         <p
                                             style={{
                                                 marginBottom: "20px",
-                                                fontSize: "12px",
-                                                fontStyle: "italic",
+                                                fontSize: "13px",
                                                 marginTop: "10px",
-                                                color: "orange",
+                                                color: "green",
                                             }}
                                         >
-                                            Please provide your family details below. This helps us
-                                            understand your background and ensure proper support when
-                                            needed.
+                                            Please provide your family details below.
                                             <hr style={{ background: "grey" }} />
                                         </p>
                                         <h4 style={{ color: "#333", fontSize: "12px" }}>
@@ -3162,14 +3157,14 @@ export default function Profile() {
                                         </h4>
                                         <div className="persofom-group name-container"
                                             style={{
-                                                width: window.innerWidth <= 768 ? "85%" : "95%",
+                                                width: window.innerWidth <= 768 ? "86%" : "95%",
                                                 marginRight: window.innerWidth <= 768 ? "0" : "15px",
-                                                marginLeft: window.innerWidth <= 768 ? "20px" : "25px",
+                                                marginLeft: window.innerWidth <= 768 ? "10px" : "25px",
                                                 marginTop: window.innerWidth <= 768 ? "10px" : "10px",
                                             }}
                                         >
                                             <div className="persofom-group name">
-                                                <label>Number of Brother/s *</label>
+                                                <label>Number of Brother/s</label>
                                                 <div className="persofom-input-container">
                                                     <input
                                                         className={`persofom-input ${familyErrors.broNum ? "error" : ""
@@ -3181,7 +3176,7 @@ export default function Profile() {
                                                 </div>
                                             </div>
                                             <div className="persofom-group name">
-                                                <label>Number of Sister/s *</label>
+                                                <label>Number of Sister/s</label>
                                                 <input
                                                     className={`persofom-input ${familyErrors.sisNum ? "error" : ""
                                                         }`}
@@ -3205,7 +3200,6 @@ export default function Profile() {
                                             style={{
                                                 display: "flex",
                                                 flexDirection: window.innerWidth <= 768 ? "column" : "row",
-                                                width: "100%",
                                                 gap: "1rem",
                                                 marginLeft: window.innerWidth <= 768 ? "10px" : "25px",
                                                 marginTop: window.innerWidth <= 768 ? "10px" : "10px",
@@ -3216,7 +3210,7 @@ export default function Profile() {
                                                 <label>Guardian Name *</label>
                                                 <div className="persofom-input-container"
                                                     style={{
-                                                        width: window.innerWidth <= 768 ? "90%" : "710px",
+                                                        width: window.innerWidth <= 768 ? "95%" : "710px",
                                                     }}
                                                 >
                                                     <input
@@ -3233,7 +3227,7 @@ export default function Profile() {
                                                 <label>Relationship *</label>
                                                 <div className="persofom-input-container"
                                                     style={{
-                                                        width: window.innerWidth <= 768 ? "90%" : "80%",
+                                                        width: window.innerWidth <= 768 ? "95%" : "100%",
                                                     }}
                                                 >
                                                     <input
@@ -3263,7 +3257,7 @@ export default function Profile() {
                                                     </label>
                                                     <div className="persofom-input-container"
                                                         style={{
-                                                            width: window.innerWidth <= 768 ? "90%" : "400px",
+                                                            width: window.innerWidth <= 768 ? "95%" : "450px",
                                                         }}
                                                     >
                                                         <input
@@ -3280,7 +3274,7 @@ export default function Profile() {
                                                     <label>Guardian's Email Address *</label>
                                                     <div className="persofom-input-container"
                                                         style={{
-                                                            width: window.innerWidth <= 768 ? "90%" : "100%",
+                                                            width: window.innerWidth <= 768 ? "95%" : "100%",
                                                         }}
                                                     >
                                                         <input
@@ -3296,7 +3290,7 @@ export default function Profile() {
                                                     <label>Mobile Number *</label>
                                                     <div className="persofom-input-container"
                                                         style={{
-                                                            width: window.innerWidth <= 768 ? "90%" : "80%",
+                                                            width: window.innerWidth <= 768 ? "95%" : "100%",
                                                         }}
                                                     >
                                                         <input
@@ -3315,10 +3309,10 @@ export default function Profile() {
                                     <div
                                         className="unibtn"
                                         style={{
-                                            marginLeft: window.innerWidth <= 768 ? "28%" : "-30px",
+                                            marginLeft: window.innerWidth <= 768 ? "18%" : "-30px",
                                             marginTop: window.innerWidth <= 768 ? "10px" : "50px",
                                             marginBottom: window.innerWidth <= 768 ? "5px" : "20px",
-                                            width: window.innerWidth <= 768 ? "65%" : "100%",
+                                            width: window.innerWidth <= 768 ? "75%" : "100%",
                                         }}
                                     >
                                         <button type="submit" onClick={handleUpdateFamily}>
@@ -3803,17 +3797,22 @@ export default function Profile() {
                                         marginTop: "10px",
                                     }}
                                 >
-                                    Thank you for filling out the form! The next step is to upload
+                                    Thank you for filling out the Admission Form! The next step is to upload
                                     the remaining images or scanned copies of the required
-                                    documents. Just click the button below to complete your
-                                    enlistment. Please note that your exam schedule will be
-                                    provided by the admission office once your enlistment is
-                                    finalized.
+                                    documents. If you are done uploading your requirements, Just click the button below to complete your
+                                    enlistment. Please regularly check your email for updates on your application status.
                                 </p>
 
-                                <div className="unibtn">
+                                <div className="unibtn"
+                                    style={{
+                                        marginLeft: window.innerWidth <= 768 ? "38%" : "auto",
+                                        marginTop: window.innerWidth <= 768 ? "10px" : "40px",
+                                        marginBottom: window.innerWidth <= 768 ? "5px" : "auto",
+                                        width: window.innerWidth <= 768 ? "60%" : "100%",
+                                    }}
+                                >
                                     <button onClick={handleFinalize}>
-                                        <i className="fa-solid fa-forward-step"></i> Finalized
+                                        <i className="fa-solid fa-forward-step"></i> Finalize
                                         Enlistment
                                     </button>
                                 </div>

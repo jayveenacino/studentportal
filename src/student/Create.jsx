@@ -337,9 +337,8 @@ export default function Create() {
                                     />
                                     <i
                                         className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
-                                        onMouseDown={() => setShowPasswords(true)}
-                                        onMouseUp={() => setShowPasswords(false)}
-                                        onMouseLeave={() => setShowPasswords(false)}
+                                        onClick={() => setShowPasswords(prev => !prev)}
+
                                     ></i>
                                 </div>
 
@@ -355,9 +354,8 @@ export default function Create() {
                                     />
                                     <i
                                         className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
-                                        onMouseDown={() => setShowPasswords(true)}
-                                        onMouseUp={() => setShowPasswords(false)}
-                                        onMouseLeave={() => setShowPasswords(false)}
+                                        onClick={() => setShowPasswords(prev => !prev)}
+
                                     ></i>
                                 </div>
                             </div>
