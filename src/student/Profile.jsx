@@ -1206,7 +1206,7 @@ export default function Profile() {
                                                             marginBottom: "20px",
                                                             fontSize: "12px",
                                                             marginTop: "10px",
-                                                            color: "green",
+                                                            color: "orange",
                                                         }
                                                 }
                                             >
@@ -2388,7 +2388,7 @@ export default function Profile() {
                                                         marginBottom: "20px",
                                                         fontSize: "12px",
                                                         marginTop: "10px",
-                                                        color: "green",
+                                                        color: "orange",
                                                     }
                                             }>
                                             Please choose wisely. Once you have selected a program you
@@ -2968,7 +2968,7 @@ export default function Profile() {
                                                 marginBottom: "20px",
                                                 fontSize: "13px",
                                                 marginTop: "10px",
-                                                color: "green",
+                                                color: "orange",
                                             }}
                                         >
                                             Please provide your family details below.

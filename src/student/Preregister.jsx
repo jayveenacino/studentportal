@@ -8,6 +8,8 @@ import Dashboard from './Dashboard';
 import Profile from './Profile';
 import Upload from "./Upload";
 import Announcement from "./Announcement";
+import "./student css/preregister.css";
+
 
 export default function Preregister() {
     const { user, setUser } = useAdmin()
@@ -140,43 +142,40 @@ export default function Preregister() {
         }
 
         try {
-            const response = await fetch('http://localhost:2025/change-password', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: user.email,
-                    currentPassword,
-                    newPassword,
-                }),
-            });
+            const res = await axios.post(
+                import.meta.env.VITE_API_URL + "/change-password",
+                { email: user.email, currentPassword, newPassword },
+                { headers: { "Content-Type": "application/json" } }
+            );
 
-            const data = await response.json();
-
-            if (response.ok) {
+            if (res.data.success) {
                 Swal.fire({
-                    icon: 'success',
-                    title: 'Password Updated',
-                    text: 'Your password has been updated successfully.',
-                }).then(() => {
-                    window.location.reload();
-                });
+                    icon: "success",
+                    title: "Password Updated",
+                    text: "Your password has been updated successfully.",
+                }).then(() => window.location.reload());
                 setForgot(false);
             } else {
                 Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: data.message,
+                    icon: "error",
+                    title: "Error",
+                    text: res.data.message,
                 });
             }
-        } catch (error) {
-            console.error('Error changing password:', error);
-            Swal.fire({
-                icon: 'error',
-                title: 'Something went wrong',
-                text: 'Please try again later.',
-            });
+        } catch (err) {
+            if (err.response && err.response.status === 400) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'Your current password is incorrect.',
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Something went wrong',
+                    text: 'Please try again later.',
+                });
+            }
         }
     };
 
@@ -246,64 +245,51 @@ export default function Preregister() {
                                         To change your password, please enter your current password followed by your new password.
                                     </p>
                                     <hr />
+                                    <div className="input-wrapper">
+                                        <input
+                                            className="preforgot-input"
+                                            type={showCurrentPassword ? "text" : "password"}
+                                            placeholder="Current Password*"
+                                            id="currentPassword"
+                                            value={currentPassword}
+                                            onChange={(e) => setCurrentPassword(e.target.value)}
+                                        />
+                                        <i
+                                            className={`fas ${showCurrentPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                            onClick={() => setShowCurrentPassword(prev => !prev)}
+                                        ></i>
+                                    </div>
 
-                                    <input
-                                        className="preforgot-input"
-                                        id="currentPassword"
-                                        type={showCurrentPassword ? 'text' : 'password'}
-                                        placeholder="Current Password*"
-                                        value={currentPassword}
-                                        onChange={(e) => setCurrentPassword(e.target.value)}
-                                    />
-                                    <i
-                                        className={`fa-solid fa-eye${showCurrentPassword ? '' : '-slash'}`}
-                                        onClick={() => setShowCurrentPassword(prev => !prev)}
-                                        style={{
-                                            cursor: 'pointer',
-                                            position: 'absolute',
-                                            right: '37px',
-                                            top: window.innerWidth <= 768 ? "33.7%" : "36.8%",
-                                            transform: 'translateY(-50%)',
-                                        }}
-                                    ></i>
-                                    <input
-                                        className="preforgot-input"
-                                        id="newPassword"
-                                        type={showNewPassword ? 'text' : 'password'}
-                                        placeholder="New Password*"
-                                        value={newPassword}
-                                        onChange={(e) => setNewPassword(e.target.value)}
-                                    />
-                                    <i
-                                        className={`fa-solid fa-eye${showNewPassword ? '' : '-slash'}`}
-                                        onClick={() => setShowNewPassword(prev => !prev)}
-                                        style={{
-                                            cursor: 'pointer',
-                                            position: 'absolute',
-                                            right: '37px',
-                                            top: window.innerWidth <= 768 ? "46.7%" : "52.4%",
-                                            transform: 'translateY(-50%)',
-                                        }}
-                                    ></i>
-                                    <input
-                                        className="preforgot-input"
-                                        id="confirmPassword"
-                                        type={showConfirmPassword ? 'text' : 'password'}
-                                        placeholder="Confirm Password*"
-                                        value={confirmPassword}
-                                        onChange={(e) => setConfirmPassword(e.target.value)}
-                                    />
-                                    <i
-                                        className={`fa-solid fa-eye${showConfirmPassword ? '' : '-slash'}`}
-                                        onClick={() => setShowConfirmPassword(prev => !prev)}
-                                        style={{
-                                            cursor: 'pointer',
-                                            position: 'absolute',
-                                            right: '37px',
-                                            top: window.innerWidth <= 768 ? "60.7%" : "67.4%",
-                                            transform: 'translateY(-50%)',
-                                        }}
-                                    ></i>
+                                    <div className="input-wrapper">
+                                        <input
+                                            className="preforgot-input"
+                                            type={showNewPassword ? "text" : "password"}
+                                            placeholder="New Password*"
+                                            id="newPassword"
+                                            value={newPassword}
+                                            onChange={(e) => setNewPassword(e.target.value)}
+                                        />
+                                        <i
+                                            className={`fas ${showNewPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                            onClick={() => setShowNewPassword(prev => !prev)}
+                                        ></i>
+                                    </div>
+
+                                    <div className="input-wrapper">
+                                        <input
+                                            className="preforgot-input"
+                                            type={showConfirmPassword ? "text" : "password"}
+                                            placeholder="Confirm Password*"
+                                            id="confirmPassword"
+                                            value={confirmPassword}
+                                            onChange={(e) => setConfirmPassword(e.target.value)}
+                                        />
+                                        <i
+                                            className={`fas ${showConfirmPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                            onClick={() => setShowConfirmPassword(prev => !prev)}
+                                        ></i>
+                                    </div>
+
                                     <div className="button-container">
                                         <button style={{ border: "none" }} onClick={hideModal}>Cancel</button>
                                         <button
