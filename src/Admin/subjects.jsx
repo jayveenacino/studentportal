@@ -5,6 +5,7 @@ import "./Admincss/subjects.css";
 
 const Subjects = () => {
     const [subjects, setSubjects] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [search, setSearch] = useState("");
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
@@ -18,7 +19,14 @@ const Subjects = () => {
         yearLevel: ""
     });
 
-    const [courses, setCourses] = useState([]);
+    // --- PAGINATION STATES ---
+    const [currentPage, setCurrentPage] = useState(1);
+    const perPage = 5;
+
+    useEffect(() => {
+        fetchSubjects();
+        fetchCourses();
+    }, []);
 
     const fetchSubjects = async () => {
         try {
@@ -38,24 +46,18 @@ const Subjects = () => {
         }
     };
 
-    useEffect(() => {
-        fetchSubjects();
-        fetchCourses();
-    }, []);
-
-    const filteredSubjects = subjects.filter((s) =>
+    const filtered = subjects.filter((s) =>
         s.code?.toLowerCase().includes(search.toLowerCase()) ||
         s.name?.toLowerCase().includes(search.toLowerCase()) ||
-        courses.find((c) => c.initialDept === s.department)?.initialDept.toLowerCase().includes(search.toLowerCase()) ||
         s.department?.toLowerCase().includes(search.toLowerCase())
     );
 
-    const resetForm = () => {
-        setNewSubject({ code: "", name: "", department: "", units: "", semester: "", yearLevel: "" });
-        setEditMode(false);
-        setEditId(null);
-        setShowModal(false);
-    };
+    // --- PAGINATION LOGIC (Matched to Courses) ---
+    const pageCount = Math.ceil(filtered.length / perPage);
+    const start = (currentPage - 1) * perPage;
+    const currentItems = filtered.slice(start, start + perPage);
+
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleSubmit = async () => {
         if (!newSubject.code || !newSubject.name || !newSubject.department) {
@@ -63,18 +65,19 @@ const Subjects = () => {
         }
 
         try {
+            const url = `${import.meta.env.VITE_API_URL}/api/subjects`;
             if (editMode && editId) {
-                await axios.put(`http://localhost:2025/api/subjects/${editId}`, newSubject);
+                await axios.put(`${url}/${editId}`, newSubject);
                 Swal.fire("Updated", "Subject updated successfully.", "success");
             } else {
-                await axios.post(import.meta.env.VITE_API_URL + "/api/subjects", newSubject);
+                await axios.post(url, newSubject);
                 Swal.fire("Added", "Subject added successfully.", "success");
             }
-            resetForm();
             fetchSubjects();
+            resetForm();
         } catch (err) {
             console.error(err);
-            Swal.fire("Error", err.response?.data?.error || err.message, "error");
+            Swal.fire("Error", err.response?.data?.error || "Something went wrong.", "error");
         }
     };
 
@@ -104,7 +107,7 @@ const Subjects = () => {
 
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:2025/api/subjects/${id}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/subjects/${id}`);
                 Swal.fire("Deleted", "Subject deleted successfully.", "success");
                 fetchSubjects();
             } catch (err) {
@@ -114,11 +117,18 @@ const Subjects = () => {
         }
     };
 
+    const resetForm = () => {
+        setNewSubject({ code: "", name: "", department: "", units: "", semester: "", yearLevel: "" });
+        setEditMode(false);
+        setEditId(null);
+        setShowModal(false);
+    };
+
     return (
         <div className="subjects-container">
             <div className="subjects-header">
                 <h1>Subjects</h1>
-                <p>This is where you can manage available subjects.</p>
+                <p>Manage the list of academic subjects here.</p>
             </div>
 
             <div className="subjects-controls">
@@ -126,7 +136,10 @@ const Subjects = () => {
                     type="text"
                     placeholder="Search Code, Subject, Department..."
                     value={search}
-                    onChange={(e) => setSearch(e.target.value)}
+                    onChange={(e) => {
+                        setSearch(e.target.value);
+                        setCurrentPage(1); // Reset to page 1 on search
+                    }}
                     className="subjects-search"
                 />
                 <button className="subjects-add-btn" onClick={() => setShowModal(true)}>
@@ -138,43 +151,60 @@ const Subjects = () => {
                 <table className="subjects-table">
                     <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Code</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Units</th>
-                            <th scope="col">Semester</th>
-                            <th scope="col">Year Level</th>
-                            <th scope="col">Course</th>
-                            <th scope="col" style={{ textAlign: "right", paddingRight: "20px" }}>Actions</th>
+                            <th>#</th>
+                            <th>Code</th>
+                            <th>Subject</th>
+                            <th>Units</th>
+                            <th>Semester</th>
+                            <th>Year Level</th>
+                            <th>Course</th>
+                            <th style={{ textAlign: "right", paddingRight: "20px" }}>Actions</th>
                         </tr>
                     </thead>
 
                     <tbody>
-                        {filteredSubjects.length === 0 ? (
-                            <tr>
-                                <td colSpan="8" style={{ textAlign: "center" }}>No subjects found.</td>
+                        {currentItems.map((s, index) => (
+                            <tr key={s._id}>
+                                <td>{start + index + 1}</td>
+                                <td>{s.code}</td>
+                                <td className="subject-name">{s.name}</td>
+                                <td>{s.units || "-"}</td>
+                                <td>{s.semester || "-"}</td>
+                                <td>{s.yearLevel || "-"}</td>
+                                <td>{s.department}</td>
+                                <td style={{ textAlign: "right", paddingRight: "20px" }}>
+                                    <button className="action-btn edit" onClick={() => handleEdit(s)}>Edit</button>
+                                    <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
+                                </td>
                             </tr>
-                        ) : (
-                            filteredSubjects.map((s, index) => (
-                                <tr key={s._id}>
-                                    <td>{index + 1}</td>
-                                    <td>{s.code}</td>
-                                    <td className="subject-name">{s.name}</td>
-                                    <td>{s.units || "-"}</td>
-                                    <td>{s.semester || "-"}</td>
-                                    <td>{s.yearLevel || "-"}</td>
-                                    <td>{courses.find((c) => c.initialDept === s.department)?.initialDept || s.department}</td>
-                                    <td style={{ textAlign: "right", paddingRight: "20px" }}>
-                                        <button className="action-btn edit" onClick={() => handleEdit(s)}>Edit</button>
-                                        <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
-                                    </td>
-                                </tr>
-                            ))
+                        ))}
+                        {currentItems.length === 0 && (
+                            <tr>
+                                <td colSpan="8" style={{ textAlign: "center", padding: "20px" }}>No subjects found.</td>
+                            </tr>
                         )}
                     </tbody>
                 </table>
             </div>
 
+            {/* --- PAGINATION CONTROLS (Matched to Courses) --- */}
+            {pageCount > 1 && (
+                <div className="pagination-controls">
+                    
+                    
+                    {Array.from({ length: pageCount }, (_, idx) => (
+                        <button 
+                            key={idx} 
+                            onClick={() => paginate(idx + 1)}
+                            className={`pagination-btn ${currentPage === idx + 1 ? "active" : ""}`}
+                        >
+                            {idx + 1}
+                        </button>
+                    ))}
+                </div>
+            )}
+
+            {/* Modal Logic */}
             {showModal && (
                 <div className="modal">
                     <div className="modal-content">
@@ -225,7 +255,7 @@ const Subjects = () => {
                             <option value="3rd Year">3rd Year</option>
                             <option value="4th Year">4th Year</option>
                         </select>
-                        <div className="modal-buttons" style={{ marginTop: "1px" }}>
+                        <div className="modal-buttons" style={{ marginTop: "10px" }}>
                             <button onClick={handleSubmit}>Save</button>
                             <button onClick={resetForm}>Cancel</button>
                         </div>
