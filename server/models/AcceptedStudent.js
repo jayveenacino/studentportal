@@ -18,11 +18,14 @@ const AcceptedStudentSchema = new mongoose.Schema({
     portalPassword: { type: String, required: true },
     yearLevel: { type: String, default: "1ST YEAR" },
     status: { type: String, default: "Accepted" },
+    image: { type: String, required: true },
+    birthCertImage: { type: String },
+    goodMoralImage: { type: String },
+    academicImage: { type: String },
 
-    //pag bago accept lang to boi
     isPasswordChanged: {
         type: Boolean,
-        default: false 
+        default: false
     },
 
     acceptedAt: { type: Date, default: Date.now },

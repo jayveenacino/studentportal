@@ -3,7 +3,6 @@ const router = express.Router();
 const AcceptedStudent = require("../models/AcceptedStudent");
 const bcrypt = require("bcryptjs");
 
-
 router.get("/api/acceptedstudents", async (req, res) => {
     try {
         const students = await AcceptedStudent.find();

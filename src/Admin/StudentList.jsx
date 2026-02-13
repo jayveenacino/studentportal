@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import './Admincss/studentlist.css';
+import "./Admincss/studenttwo.css";
 import Swal from 'sweetalert2';
 
 export default function StudentList() {
@@ -9,15 +10,34 @@ export default function StudentList() {
     const [currentPage, setCurrentPage] = useState(1);
     const [perPage] = useState(5);
     const [selectedStudent, setSelectedStudent] = useState(null);
-    const [showDetailsModal, setShowDetailsModal] = useState(false);
+    const [showDetailsPage, setShowDetailsPage] = useState(false);
     const [showEditModal, setShowEditModal] = useState(false);
     const [editedStudent, setEditedStudent] = useState({});
     const [courses, setCourses] = useState([]);
+    const [loadingUserData, setLoadingUserData] = useState(true);
+    const [activeTab, setActiveTab] = useState("contacts");
+
 
     useEffect(() => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/acceptedstudents")
-            .then(res => setStudents(res.data))
-            .catch(err => console.error("Error fetching accepted students:", err));
+        const fetchStudents = async () => {
+            setLoadingUserData(true);
+            try {
+                const acceptedRes = await axios.get(import.meta.env.VITE_API_URL + "/api/acceptedstudents");
+                const acceptedIds = acceptedRes.data.map(a => a.studentNumber);
+                const allRes = await axios.get(import.meta.env.VITE_API_URL + "/api/students");
+                const filtered = allRes.data.filter(s => acceptedIds.includes(s.studentNumber));
+                const merged = filtered.map(student => {
+                    const accepted = acceptedRes.data.find(a => a.studentNumber === student.studentNumber);
+                    return { ...student, ...accepted, yearLevel: accepted.yearLevel || student.yearLevel };
+                });
+                setStudents(merged);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingUserData(false);
+            }
+        };
+        fetchStudents();
     }, []);
 
     useEffect(() => {
@@ -26,7 +46,7 @@ export default function StudentList() {
                 const res = await axios.get(import.meta.env.VITE_API_URL + "/api/courses");
                 setCourses(res.data);
             } catch (err) {
-                console.error("Error fetching courses:", err);
+                console.error(err);
             }
         };
         fetchCourses();
@@ -47,16 +67,14 @@ export default function StudentList() {
     const formatFullName = (student) => {
         if (!student) return '';
         const { lastname, firstname, middlename, extension } = student;
-
         const format = (str) => str ? str.charAt(0).toUpperCase() + str.slice(1).toLowerCase() : "";
-
         let name = `${format(firstname)} ${middlename ? format(middlename) + ' ' : ''}${format(lastname)}`;
         if (extension) name += ` ${extension.toUpperCase()}`;
         return name;
     };
 
-    const handleDelete = (id) => {
-        Swal.fire({
+    const handleDelete = async (id) => {
+        const result = await Swal.fire({
             title: 'Are you sure?',
             text: "This action will permanently delete the student record!",
             icon: 'warning',
@@ -64,32 +82,164 @@ export default function StudentList() {
             confirmButtonColor: '#d33',
             cancelButtonColor: '#3085d6',
             confirmButtonText: 'Yes, delete it!'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                axios.delete(`http://localhost:2025/api/acceptedstudents/${id}`)
-                    .then(() => {
-                        setStudents(prevStudents => prevStudents.filter(s => s._id !== id));
-
-                        Swal.fire(
-                            'Deleted!',
-                            'The student has been removed.',
-                            'success'
-                        );
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        Swal.fire(
-                            'Error!',
-                            'Failed to delete student.',
-                            'error'
-                        );
-                    });
-            }
         });
+
+        if (result.isConfirmed) {
+            try {
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/acceptedstudents/${id}`);
+                setStudents(prev => prev.filter(s => s._id !== id));
+                Swal.fire('Deleted!', 'The student has been removed.', 'success');
+            } catch (err) {
+                console.error(err);
+                Swal.fire('Error!', 'Failed to delete student.', 'error');
+            }
+        }
     };
 
     return (
-        <div className="studentlist-container">
+        <div className="studentlist-container" style={{ position: 'relative', minHeight: '100vh' }}>
+            {loadingUserData && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Accepted Students...
+                    </p>
+                </div>
+            )}
+
+            {showDetailsPage && selectedStudent && (
+                <div className="vcs-full-page-view">
+                    <button className="vcs-close-page-btn" onClick={() => setShowDetailsPage(false)}>×</button>
+                    <div className="vcs-inner-content">
+                        <div className="vcs-header-banner">
+                            <div className="vcs-profile-card">
+                                <div className="vcs-avatar-wrapper">
+                                    {selectedStudent.image ? (
+                                        <img
+                                            src={selectedStudent.image}
+                                            alt="Profile"
+                                            className="vcs-avatar-img"
+                                            onError={(e) => {
+                                                e.target.onerror = null;
+                                                e.target.src = "https://placehold.co/150?text=Invalid+Data";
+                                            }}
+                                        />
+                                    ) : (
+                                        <img
+                                            src="https://placehold.co/150?text=No+Image"
+                                            alt="Default"
+                                            className="vcs-avatar-img"
+                                        />
+                                    )}
+                                </div>
+                                <div className="vcs-profile-info">
+                                    <h1 className="vcs-name">{formatFullName(selectedStudent)}</h1>
+                                    <span className="vcs-student-number">Student Number: {selectedStudent.studentNumber}</span>
+                                    <span className="vcs-badge">{selectedStudent.yearLevel || "N/A"}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="vcs-stats-container">
+                            <div className="vcs-stats-grid">
+                                <StatCard icon="🎓" title="Course" count={selectedStudent.initialDept} color="indigo" />
+                                <StatCard icon="📧" title="Personal Email" count={selectedStudent.email} color="red" />
+                                <StatCard icon="🌐" title="Domain Email" count={selectedStudent.domainEmail} color="orange" />
+                                <StatCard icon="🔑" title="Portal Password"
+                                    count={selectedStudent.portalPassword ? `${selectedStudent.portalPassword.slice(0, 8)}...` : "N/A"}
+                                    color="green"
+                                />
+                                <StatCard icon="📝" title="Pre-Reg Password" count={selectedStudent.password || "N/A"} color="blue" />
+                            </div>
+                        </div>
+                        <div className="vcs-tabs-container">
+                            <div className="vcs-tabs-header">
+                                <button
+                                    className={`vcs-tab-btn ${activeTab === "contacts" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("contacts")}
+                                >
+                                    Contacts
+                                </button>
+
+                                <button
+                                    className={`vcs-tab-btn ${activeTab === "biography" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("biography")}
+                                >
+                                    Biography
+                                </button>
+                            </div>
+
+                            <div className="vcs-tab-content">
+
+                                {activeTab === "contacts" && (
+                                    <>
+                                        <div className="vcs-contact-item">
+                                            <span className="vcs-contact-icon">📍</span>
+                                            <span>
+                                                {selectedStudent.barangay || "N/A"}, {selectedStudent.city || "N/A"}, {selectedStudent.province || "N/A"}
+                                            </span>
+                                        </div>
+
+                                        <div className="vcs-contact-item">
+                                            <span className="vcs-contact-icon">📞</span>
+                                            <span>
+                                                {selectedStudent.phone || "N/A"}
+                                            </span>
+                                        </div>
+
+                                        <div className="vcs-contact-item">
+                                            <span className="vcs-contact-icon">✉</span>
+                                            <span>
+                                                {selectedStudent.email}
+                                            </span>
+                                        </div>
+                                    </>
+                                )}
+
+                                {activeTab === "biography" && (
+                                    <div className="vcs-biography-content">
+                                        <h3>Student Biography</h3>
+                                        <p>
+                                            {formatFullName(selectedStudent)} is currently enrolled in the
+                                            <strong> {selectedStudent.initialDept || "N/A"} </strong>
+                                            program as a <strong>{selectedStudent.yearLevel || "N/A"}</strong>.
+                                        </p>
+
+                                        <p>
+                                            This student is officially accepted and registered in the system.
+                                            Below are the registered academic and portal credentials recorded
+                                            in the database.
+                                        </p>
+
+                                        <ul>
+                                            <li><strong>Student Number:</strong> {selectedStudent.studentNumber}</li>
+                                            <li><strong>Email:</strong> {selectedStudent.email || "N/A"}</li>
+                                            <li><strong>Domain Email:</strong> {selectedStudent.domainEmail || "N/A"}</li>
+                                        </ul>
+                                    </div>
+                                )}
+
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
+            )}
+
             <div className="studentlist-header">
                 <h1>Accepted Student List</h1>
                 <p>Browse and manage accepted student accounts</p>
@@ -118,11 +268,9 @@ export default function StudentList() {
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody >
+                    <tbody>
                         {current.length === 0 ? (
-                            <tr>
-                                <td colSpan="6">No students found</td>
-                            </tr>
+                            <tr><td colSpan="6">No students found</td></tr>
                         ) : (
                             current.map((s, i) => (
                                 <tr key={s._id}>
@@ -135,30 +283,18 @@ export default function StudentList() {
                                             className="studentlist-more-details"
                                             onClick={() => {
                                                 setSelectedStudent(s);
-                                                setShowDetailsModal(true);
+                                                setShowDetailsPage(true);
                                             }}
                                             style={{ cursor: "pointer", color: "#0a3d18", fontWeight: "bold" }}
-                                        >
-                                            View
-                                        </span>
+                                        >View</span>
                                     </td>
                                     <td>
-                                        <button
-                                            className="action-btn confirm"
-                                            onClick={() => {
-                                                setSelectedStudent(s);
-                                                setEditedStudent(s);
-                                                setShowEditModal(true);
-                                            }}
-                                        >
-                                            Edit
-                                        </button>
-                                        <button
-                                            className="action-btn delete"
-                                            onClick={() => handleDelete(s._id)}
-                                        >
-                                            Delete
-                                        </button>
+                                        <button className="action-btn confirm" onClick={() => {
+                                            setSelectedStudent(s);
+                                            setEditedStudent(s);
+                                            setShowEditModal(true);
+                                        }}>Edit</button>
+                                        <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
                                     </td>
                                 </tr>
                             ))
@@ -167,7 +303,6 @@ export default function StudentList() {
                 </table>
             </div>
 
-            {/* 📌 Pagination */}
             {totalPages > 1 && (
                 <div className="pagination-controls">
                     {Array.from({ length: totalPages }, (_, i) => (
@@ -175,60 +310,21 @@ export default function StudentList() {
                             key={i}
                             className={`pagination-btn ${currentPage === i + 1 ? "active" : ""}`}
                             onClick={() => setCurrentPage(i + 1)}
-                        >
-                            {i + 1}
-                        </button>
+                        >{i + 1}</button>
                     ))}
                 </div>
             )}
 
-            {/* 📌 Details Modal */}
-            {showDetailsModal && selectedStudent && (
-                <div className="student-details-modal-backdrop">
-                    <div className="student-details-modal-content">
-                        <button className="student-details-close-btn" onClick={() => setShowDetailsModal(false)}>×</button>
-                        <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Student Details</h2>
-
-                        <div className="student-details-grid">
-                            <div><strong>Name:</strong> {formatFullName(selectedStudent)}</div>
-                            <div><strong>Student No:</strong> {selectedStudent.studentNumber}</div>
-                            <div><strong>Course:</strong> {selectedStudent.initialDept}</div>
-                            <div><strong>Year:</strong> {selectedStudent.yearLevel}</div>
-                            <div><strong>Email:</strong> {selectedStudent.email}</div>
-                            <div><strong>Domain Email:</strong> {selectedStudent.domainEmail}</div>
-                            <div>
-                                <strong>Portal Password:</strong>{" "}
-                                {selectedStudent.portalPassword
-                                    ? `${selectedStudent.portalPassword.slice(0, 12)}...${selectedStudent.portalPassword.slice(-8)}`
-                                    : ""}
-                            </div>
-
-                            <div><strong>PRE-REG Password:</strong> {selectedStudent.preregisterPassword}</div>
-
-
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 📌 Edit Modal */}
             {showEditModal && selectedStudent && (
                 <div className="studentlist-edit-backdrop">
                     <div className="studentlist-edit-content" style={{ width: '600px' }}>
                         <button className="studentlist-close-btn" onClick={() => setShowEditModal(false)}>×</button>
                         <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Edit Student</h2>
-
                         <form className="studentlist-edit-grid">
                             <div>
                                 <label><strong>Full Name:</strong></label>
-                                <input
-                                    type="text"
-                                    value={formatFullName(selectedStudent)}
-                                    disabled
-                                    style={{ width: "100%" }}
-                                />
+                                <input type="text" value={formatFullName(selectedStudent)} disabled style={{ width: "100%" }} />
                             </div>
-
                             <div>
                                 <label><strong>Course:</strong></label>
                                 <select
@@ -237,13 +333,10 @@ export default function StudentList() {
                                     style={{ width: "100%" }}
                                 >
                                     {courses.map(course => (
-                                        <option key={course._id} value={course.initialDept}>
-                                            {course.initialDept}
-                                        </option>
+                                        <option key={course._id} value={course.initialDept}>{course.initialDept}</option>
                                     ))}
                                 </select>
                             </div>
-
                             <div>
                                 <label><strong>School Year:</strong></label>
                                 <select
@@ -258,7 +351,6 @@ export default function StudentList() {
                                     <option value="4TH YEAR">4th Year</option>
                                 </select>
                             </div>
-
                             <div>
                                 <label><strong>User Email:</strong></label>
                                 <input
@@ -268,7 +360,6 @@ export default function StudentList() {
                                     style={{ width: "100%" }}
                                 />
                             </div>
-
                             <div>
                                 <label><strong>Pre Register Password:</strong></label>
                                 <input
@@ -278,7 +369,6 @@ export default function StudentList() {
                                     style={{ width: "100%" }}
                                 />
                             </div>
-
                             <div>
                                 <label><strong>Student Portal Password:</strong></label>
                                 <input
@@ -288,36 +378,20 @@ export default function StudentList() {
                                     style={{ width: "100%" }}
                                 />
                             </div>
-
                             <div style={{ gridColumn: '1 / -1', textAlign: 'center', marginTop: '20px' }}>
                                 <button
                                     type="button"
                                     className="action-btn confirm"
                                     onClick={() => {
-                                        axios.put(`http://localhost:2025/api/acceptedstudents/${selectedStudent._id}`, editedStudent)
+                                        axios.put(`${import.meta.env.VITE_API_URL}/api/acceptedstudents/${selectedStudent._id}`, editedStudent)
                                             .then(res => {
                                                 setStudents(prev => prev.map(s => s._id === selectedStudent._id ? res.data : s));
                                                 setShowEditModal(false);
-                                                Swal.fire({
-                                                    icon: 'success',
-                                                    title: 'Success',
-                                                    text: 'Student information updated successfully!',
-                                                    confirmButtonColor: '#3085d6'
-                                                });
+                                                Swal.fire({ icon: 'success', title: 'Success', text: 'Student updated!' });
                                             })
-                                            .catch(error => {
-                                                console.error(error);
-                                                Swal.fire({
-                                                    icon: 'error',
-                                                    title: 'Error',
-                                                    text: 'Failed to update student. Please try again.',
-                                                    confirmButtonColor: '#d33'
-                                                });
-                                            });
+                                            .catch(err => Swal.fire({ icon: 'error', title: 'Error', text: 'Update failed!' }));
                                     }}
-                                >
-                                    Save Changes
-                                </button>
+                                >Save Changes</button>
                             </div>
                         </form>
                     </div>
@@ -326,3 +400,13 @@ export default function StudentList() {
         </div>
     );
 }
+
+const StatCard = ({ icon, title, count, color }) => (
+    <div className="vcs-stat-card">
+        <div className={`vcs-icon-box vcs-icon-${color}`}>{icon}</div>
+        <div className="vcs-stat-content">
+            <p className={`vcs-stat-title vcs-text-${color}`}>{title}</p>
+            <h2 className="vcs-stat-number">{count || "N/A"}</h2>
+        </div>
+    </div>
+);
