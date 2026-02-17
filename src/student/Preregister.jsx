@@ -256,7 +256,11 @@ export default function Preregister() {
                                         />
                                         <i
                                             className={`fas ${showCurrentPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
-                                            onClick={() => setShowCurrentPassword(prev => !prev)}
+                                            onMouseDown={() => setShowCurrentPassword(true)}
+                                            onMouseUp={() => setShowCurrentPassword(false)}
+                                            onMouseLeave={() => setShowCurrentPassword(false)}
+                                            onTouchStart={() => setShowCurrentPassword(true)}
+                                            onTouchEnd={() => setShowCurrentPassword(false)}
                                         ></i>
                                     </div>
 
@@ -271,7 +275,11 @@ export default function Preregister() {
                                         />
                                         <i
                                             className={`fas ${showNewPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
-                                            onClick={() => setShowNewPassword(prev => !prev)}
+                                            onMouseDown={() => setShowNewPassword(true)}
+                                            onMouseUp={() => setShowNewPassword(false)}
+                                            onMouseLeave={() => setShowNewPassword(false)}
+                                            onTouchStart={() => setShowNewPassword(true)}
+                                            onTouchEnd={() => setShowNewPassword(false)}
                                         ></i>
                                     </div>
 
@@ -286,7 +294,11 @@ export default function Preregister() {
                                         />
                                         <i
                                             className={`fas ${showConfirmPassword ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
-                                            onClick={() => setShowConfirmPassword(prev => !prev)}
+                                            onMouseDown={() => setShowConfirmPassword(true)}
+                                            onMouseUp={() => setShowConfirmPassword(false)}
+                                            onMouseLeave={() => setShowConfirmPassword(false)}
+                                            onTouchStart={() => setShowConfirmPassword(true)}
+                                            onTouchEnd={() => setShowConfirmPassword(false)}
                                         ></i>
                                     </div>
 
