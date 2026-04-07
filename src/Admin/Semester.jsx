@@ -27,7 +27,7 @@ export default function Semester() {
                     setSelectedDept(firstDept);
                     // Load that department’s semester
                     try {
-                        const deptRes = await axios.get(`http://localhost:2025/api/settings/${firstDept}`);
+                        const deptRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/settings/${firstDept}`);
                         if (deptRes.data) {
                             setSelectedSem(deptRes.data.activeSemester || "1st");
                         } else {
@@ -94,7 +94,7 @@ export default function Semester() {
         setSelectedDept(dept);
 
         try {
-            const res = await axios.get(`http://localhost:2025/api/settings/${dept}`);
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/settings/${dept}`);
             if (res.data) {
                 setSelectedSem(res.data.activeSemester || "1st");
                 setPreRegister(res.data.preRegister || false);

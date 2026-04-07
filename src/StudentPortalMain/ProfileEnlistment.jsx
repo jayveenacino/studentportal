@@ -27,7 +27,7 @@ export default function ProfileEnlistment() {
         const fetchStudentData = async () => {
             try {
                 const res = await axios.get(
-                    `http://localhost:2025/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
+                    `${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
                 );
                 setStudentData(res.data);
             } catch (err) {

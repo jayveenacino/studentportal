@@ -46,7 +46,7 @@ export default function Departments() {
         try {
             if (editMode) {
                 const res = await axios.put(
-                    `http://localhost:2025/api/departments/${editId}`,
+                    `${import.meta.env.VITE_API_URL}/api/departments/${editId}`,
                     newDept
                 );
 
@@ -61,7 +61,7 @@ export default function Departments() {
                     text: 'Department updated successfully.'
                 });
             } else {
-                const res = await axios.post("http://localhost:2025/api/departments", newDept);
+                const res = await axios.post("${import.meta.env.VITE_API_URL}/api/departments", newDept);
                 setDepartments([res.data, ...departments]);
                 Swal.fire({
                     icon: 'success',
@@ -114,7 +114,7 @@ export default function Departments() {
         if (!result.isConfirmed) return;
 
         try {
-            await axios.delete(`http://localhost:2025/api/departments/${id}`);
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/departments/${id}`);
 
             // update UI immediately
             setDepartments(prev => prev.filter(d => d._id !== id));

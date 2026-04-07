@@ -44,7 +44,7 @@ export default function BackupRestore() {
     //     }).then(async (result) => {
     //         if (result.isConfirmed) {
     //             try {
-    //                 await axios.post(`http://localhost:2025/api/backups/restore/${filename}`);
+    //                 await axios.post(`${import.meta.env.VITE_API_URL}/api/backups/restore/${filename}`);
     //                 Swal.fire("Restored!", "Database restored successfully.", "success");
     //             } catch (err) {
     //                 console.error(err);
@@ -55,7 +55,7 @@ export default function BackupRestore() {
     // };
 
     // const handleDownload = (filename) => {
-    //     window.open(`http://localhost:2025/api/backups/download/${filename}`, "_blank");
+    //     window.open(`${import.meta.env.VITE_API_URL}/api/backups/download/${filename}`, "_blank");
     // };
 
     // const handleDelete = async (filename) => {
@@ -68,7 +68,7 @@ export default function BackupRestore() {
     //     }).then(async (result) => {
     //         if (result.isConfirmed) {
     //             try {
-    //                 await axios.delete(`http://localhost:2025/api/backups/${filename}`);
+    //                 await axios.delete(`${import.meta.env.VITE_API_URL}/api/backups/${filename}`);
     //                 Swal.fire("Deleted!", "Backup removed.", "success");
     //                 fetchBackups();
     //             } catch (err) {

@@ -90,7 +90,7 @@ export default function AdminUpload() {
         setCurrentEdit(upload);
         setTitle(upload.title || "");
         setCaption(upload.caption || "");
-        setPreviewUrl(`http://localhost:2025/uploads/${upload.filename}`);
+        setPreviewUrl(`${import.meta.env.VITE_API_URL}/uploads/${upload.filename}`);
     };
 
     const handleUpdate = async () => {
@@ -106,7 +106,7 @@ export default function AdminUpload() {
 
         setLoading(true);
         try {
-            await axios.put(`http://localhost:2025/api/uploads/${currentEdit._id}`, formData, {
+            await axios.put(`${import.meta.env.VITE_API_URL}/api/uploads/${currentEdit._id}`, formData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
             Swal.fire("Success", "Announcement updated successfully.", "success");
@@ -130,7 +130,7 @@ export default function AdminUpload() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:2025/api/uploads/${filename}`);
+                    await axios.delete(`${import.meta.env.VITE_API_URL}/api/uploads/${filename}`);
                     Swal.fire("Deleted!", "Announcement removed.", "success");
                     fetchUploads();
                 } catch (err) {
@@ -180,7 +180,7 @@ export default function AdminUpload() {
                                     <td>
                                         {u.filename && (
                                             <img
-                                                src={`http://localhost:2025/uploads/${u.filename}`}
+                                                src={`${import.meta.env.VITE_API_URL}/uploads/${u.filename}`}
                                                 alt="preview"
                                                 className="adminupload-preview"
                                             />

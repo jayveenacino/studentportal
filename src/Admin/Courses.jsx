@@ -52,7 +52,7 @@ export default function Courses() {
 
         try {
             if (editMode) {
-                await axios.put(`http://localhost:2025/api/courses/${editId}`, newCourse);
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/courses/${editId}`, newCourse);
                 Swal.fire("Updated", "Course updated successfully.", "success");
             } else {
                 const res = await axios.post(import.meta.env.VITE_API_URL + "/api/courses", newCourse);
@@ -92,7 +92,7 @@ export default function Courses() {
 
         if (confirm.isConfirmed) {
             try {
-                await axios.delete(`http://localhost:2025/api/courses/${id}`);
+                await axios.delete(`${import.meta.env.VITE_API_URL}/api/courses/${id}`);
                 Swal.fire("Deleted", "Course deleted successfully.", "success");
                 fetchCourses();
             } catch (err) {

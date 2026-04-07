@@ -526,7 +526,7 @@ export default function Profile() {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:2025/get-profile?email=${user.email}`
+                    `${import.meta.env.VITE_API_URL}/get-profile?email=${user.email}`
                 );
                 const profileData = response.data;
 
@@ -672,7 +672,7 @@ export default function Profile() {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:2025/get-profile?email=${user.email}`
+                    `${import.meta.env.VITE_API_URL}/get-profile?email=${user.email}`
                 );
                 const profileData = response.data;
 
@@ -831,7 +831,7 @@ export default function Profile() {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:2025/get-profile?email=${user.email}`
+                    `${import.meta.env.VITE_API_URL}/get-profile?email=${user.email}`
                 );
                 const profileData = response.data;
 

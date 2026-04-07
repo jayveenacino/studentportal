@@ -39,7 +39,7 @@ export default function StudentDashboard() {
 
         const email = parsed.domainEmail;
 
-        fetch(`http://localhost:2025/api/enrollment-status/${email}`)
+        fetch(`${import.meta.env.VITE_API_URL}/api/enrollment-status/${email}`)
             .then((res) => res.json())
             .then((data) => {
                 if (Array.isArray(data)) {

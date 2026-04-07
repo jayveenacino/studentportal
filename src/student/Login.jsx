@@ -64,7 +64,7 @@ export default function Login() {
 
             const identifier = data.student.domainEmail || data.student.studentNumber;
             try {
-                const res2 = await fetch(`http://localhost:2025/api/student/original/${identifier}`);
+                const res2 = await fetch(`${import.meta.env.VITE_API_URL}/api/student/original/${identifier}`);
                 if (res2.ok) {
                     const studentRecord = await res2.json();
                     localStorage.setItem("originalStudent", JSON.stringify(studentRecord));

@@ -57,7 +57,7 @@ export default function Adminuser() {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    await axios.delete(`http://localhost:2025/api/adminusers/${id}`);
+                    await axios.delete(`${import.meta.env.VITE_API_URL}/api/adminusers/${id}`);
                     Swal.fire("Deleted!", "Admin user removed.", "success");
                     fetchUsers();
                 } catch (err) {
@@ -78,7 +78,7 @@ export default function Adminuser() {
 
         if (newUsername && newUsername !== user.username) {
             try {
-                await axios.put(`http://localhost:2025/api/adminusers/${user._id}`, {
+                await axios.put(`${import.meta.env.VITE_API_URL}/api/adminusers/${user._id}`, {
                     username: newUsername,
                 });
                 Swal.fire("Updated!", "Admin user updated successfully.", "success");
