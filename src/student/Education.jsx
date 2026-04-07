@@ -24,7 +24,7 @@ export default function Education() {
     const [program, setProgram] = useState(user?.program || '');
     const [yearCom, setYearCom] = useState(user?.yearCom || '');
     const [achivements, setAchivments] = useState(user?.achivements || '');
-    
+
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -32,7 +32,7 @@ export default function Education() {
 
             try {
                 const response = await axios.get(
-                    `http://localhost:2025/get-profile?email=${user.email}`
+                    `${import.meta.env.VITE_API_URL}/get-profile?email=${user.email}`
                 )
                 const profileData = response.data;
 
@@ -123,18 +123,18 @@ export default function Education() {
         if (strand) updatedFields.strand = strand;
         if (lrn) updatedFields.lrn = lrn;
         if (honor) updatedFields.honor = honor;
-        if (college) updatedFields.college =college;
-        if (course) updatedFields.course =course;
-        if (year) updatedFields.year =year;
-        if (technical) updatedFields.technical =technical;
-        if (program) updatedFields.program =program;
-        if (yearCom) updatedFields.yearCom =yearCom;
-        if (certificate) updatedFields.certificate =certificate;
-        if (achivements) updatedFields.achivements =achivements;
+        if (college) updatedFields.college = college;
+        if (course) updatedFields.course = course;
+        if (year) updatedFields.year = year;
+        if (technical) updatedFields.technical = technical;
+        if (program) updatedFields.program = program;
+        if (yearCom) updatedFields.yearCom = yearCom;
+        if (certificate) updatedFields.certificate = certificate;
+        if (achivements) updatedFields.achivements = achivements;
 
 
         try {
-            const response = await axios.put('http://localhost:2025/update-profile', {
+            const response = await axios.put('${import.meta.env.VITE_API_URL}/update-profile', {
                 email: user.email,
                 ...updatedFields,
             });

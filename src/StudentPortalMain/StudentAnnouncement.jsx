@@ -34,7 +34,7 @@ export default function StudentAnnouncement() {
                         <>
                             {selectedAnnouncement.filename ? (
                                 <img
-                                    src={`http://localhost:2025/uploads/${selectedAnnouncement.filename}`}
+                                    src={`${import.meta.env.VITE_API_URL}/uploads/${selectedAnnouncement.filename}`}
                                     alt={selectedAnnouncement.title || "No Title"}
                                     className="announcement-image"
                                 />
@@ -75,7 +75,7 @@ export default function StudentAnnouncement() {
                                 <div className="announcement-small-img">
                                     {item.filename ? (
                                         <img
-                                            src={`http://localhost:2025/uploads/${item.filename}`}
+                                            src={`${import.meta.env.VITE_API_URL}/uploads/${item.filename}`}
                                             alt={item.title || "No Title"}
                                         />
                                     ) : (

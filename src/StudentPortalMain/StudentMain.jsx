@@ -71,7 +71,7 @@ export default function StudentMain() {
             const studentId = studentData._id || studentData.id;
 
             const res = await fetch(
-                `http://localhost:2025/api/acceptedstudents/${studentId}/change-password`,
+                `${import.meta.env.VITE_API_URL}/api/acceptedstudents/${studentId}/change-password`,
                 {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },

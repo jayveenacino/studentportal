@@ -63,7 +63,7 @@ export default function Classrooms() {
         try {
             if (editMode && editId) {
                 await axios.put(
-                    `http://localhost:2025/api/classrooms/${editId}`,
+                    `${import.meta.env.VITE_API_URL}/api/classrooms/${editId}`,
                     newClassroom
                 );
                 Swal.fire("Updated", "Classroom updated successfully.", "success");

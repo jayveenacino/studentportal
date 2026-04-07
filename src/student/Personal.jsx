@@ -89,7 +89,7 @@ export default function Personal() {
 
 			try {
 				const response = await axios.get(
-					`http://localhost:2025/get-profile?email=${user.email}`
+					`${import.meta.env.VITE_API_URL}/get-profile?email=${user.email}`
 				);
 				const profileData = response.data;
 
@@ -192,7 +192,7 @@ export default function Personal() {
 		if (disabilityDetails) updatedFields.disabilityDetails = disabilityDetails;
 
 		try {
-			const response = await axios.put('http://localhost:2025/update-profile', {
+			const response = await axios.put('${import.meta.env.VITE_API_URL}/update-profile', {
 				email: user.email,
 				...updatedFields,
 			});
@@ -486,7 +486,7 @@ export default function Personal() {
 							<option value="" disabled selected>Select One</option>
 							<option value="Zambales">ZAMBALES</option>
 							<option value="Zambales">OLONGAPO</option>
-						
+
 						</select>
 					</div>
 					{province === 'Zambales' && (

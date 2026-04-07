@@ -43,8 +43,8 @@ export default function Preregister() {
 
     const handleLogout = (event) => {
         event.preventDefault();
-            title: "Are you sure?",
-        localStorage.clear();
+        title: "Are you sure?",
+            localStorage.clear();
         sessionStorage.clear();
         setUser({});
         navigate('/signup');
@@ -133,7 +133,7 @@ export default function Preregister() {
         }
 
         try {
-            const response = await fetch('http://localhost:2025/change-password', {
+            const response = await fetch('${import.meta.env.VITE_API_URL}/change-password', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
