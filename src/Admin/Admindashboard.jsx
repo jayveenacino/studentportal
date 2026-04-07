@@ -14,6 +14,7 @@ import AdminUpload from "./AdminUpload";
 import StudentEnrollees from "./StudentEnrollees";
 import Classrooms from "./Classrooms";
 import Subjects from "./subjects";
+import Report from "./Report";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -238,6 +239,7 @@ function Dashboard() {
                         {activeSection === "backuprestore" && <BackupRestore />}
                         {activeSection === "classrooms" && <Classrooms />}
                         {activeSection === "subjects" && <Subjects />}
+                        {activeSection === "report" && <Report />}
                     </div>
                 </div>
             )}

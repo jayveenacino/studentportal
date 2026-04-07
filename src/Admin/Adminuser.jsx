@@ -102,7 +102,7 @@ export default function Adminuser() {
                     onClick={() => setShowModal(true)}
                     disabled={loading}
                 >
-                    + Add Admin User
+                    Add User
                 </button>
             </div>
 
@@ -187,6 +187,7 @@ export default function Adminuser() {
                             <option value="ADMIN">ADMIN</option>
                             <option value="REGISTRAR">REGISTRAR</option>
                             <option value="ENCODER">ENCODER</option>
+                            <option value="EVALUATOR">EVALUATOR</option>
                         </select>
 
                         <div className="adminuser-modal-buttons">

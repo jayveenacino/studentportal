@@ -15,7 +15,8 @@ export default function StudentList() {
     const [editedStudent, setEditedStudent] = useState({});
     const [courses, setCourses] = useState([]);
     const [loadingUserData, setLoadingUserData] = useState(true);
-    const [activeTab, setActiveTab] = useState("contacts");
+    const [activeTab, setActiveTab] = useState("info");
+    const [previewImage, setPreviewImage] = useState(null);
 
 
     useEffect(() => {
@@ -168,10 +169,17 @@ export default function StudentList() {
                         <div className="vcs-tabs-container">
                             <div className="vcs-tabs-header">
                                 <button
-                                    className={`vcs-tab-btn ${activeTab === "contacts" ? "active" : ""}`}
-                                    onClick={() => setActiveTab("contacts")}
+                                    className={`vcs-tab-btn ${activeTab === "info" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("info")}
                                 >
-                                    Contacts
+                                    Info
+                                </button>
+
+                                <button
+                                    className={`vcs-tab-btn ${activeTab === "documents" ? "active" : ""}`}
+                                    onClick={() => setActiveTab("documents")}
+                                >
+                                    Documents
                                 </button>
 
                                 <button
@@ -184,29 +192,54 @@ export default function StudentList() {
 
                             <div className="vcs-tab-content">
 
-                                {activeTab === "contacts" && (
-                                    <>
-                                        <div className="vcs-contact-item">
-                                            <span className="vcs-contact-icon">📍</span>
-                                            <span>
-                                                {selectedStudent.barangay || "N/A"}, {selectedStudent.city || "N/A"}, {selectedStudent.province || "N/A"}
-                                            </span>
+                                {activeTab === "info" && (
+                                    <div className="vcs-info-grid">
+                                        <div><strong>Student Number:</strong> {selectedStudent.studentNumber}</div>
+                                        <div><strong>Full Name:</strong> {selectedStudent.fullName}</div>
+                                        <div><strong>Email:</strong> {selectedStudent.email}</div>
+                                        <div><strong>Contact Number:</strong> {selectedStudent.phone}</div>
+                                    </div>
+                                )}
+
+                                {activeTab === "documents" && (
+                                    <div className="vcs-documents-grid">
+                                        <div className="vcs-doc-item">
+                                            <p><strong>Valid ID</strong></p>
+                                            {selectedStudent.idimage ? (
+                                                <img src={selectedStudent.idimage} alt="Valid ID" className="vcs-doc-img" onClick={() => setPreviewImage(selectedStudent.idimage)} />
+                                            ) : <span className="vcs-no-doc">Not Submitted</span>}
                                         </div>
 
-                                        <div className="vcs-contact-item">
-                                            <span className="vcs-contact-icon">📞</span>
-                                            <span>
-                                                {selectedStudent.phone || "N/A"}
-                                            </span>
+                                        <div className="vcs-doc-item">
+                                            <p><strong>Birth Certificate</strong></p>
+                                            {selectedStudent.birthCertImage ? (
+                                                <img src={selectedStudent.birthCertImage} alt="Birth Certificate" className="vcs-doc-img" onClick={() => setPreviewImage(selectedStudent.birthCertImage)} />
+                                            ) : <span className="vcs-no-doc">Not Submitted</span>}
                                         </div>
 
-                                        <div className="vcs-contact-item">
-                                            <span className="vcs-contact-icon">✉</span>
-                                            <span>
-                                                {selectedStudent.email}
-                                            </span>
+                                        <div className="vcs-doc-item">
+                                            <p><strong>Good Moral</strong></p>
+                                            {selectedStudent.goodMoralImage ? (
+                                                <img src={selectedStudent.goodMoralImage} alt="Good Moral" className="vcs-doc-img" onClick={() => setPreviewImage(selectedStudent.goodMoralImage)} />
+                                            ) : <span className="vcs-no-doc">Not Submitted</span>}
                                         </div>
-                                    </>
+
+                                        <div className="vcs-doc-item">
+                                            <p><strong>Academic Records</strong></p>
+                                            {selectedStudent.academicImage ? (
+                                                <img src={selectedStudent.academicImage} alt="Academic" className="vcs-doc-img" onClick={() => setPreviewImage(selectedStudent.academicImage)} />
+                                            ) : <span className="vcs-no-doc">Not Submitted</span>}
+                                        </div>
+                                    </div>
+                                )}
+
+                                {previewImage && (
+                                    <div className="vcs-image-modal-overlay" onClick={() => setPreviewImage(null)}>
+                                        <div className="vcs-image-modal-content" onClick={(e) => e.stopPropagation()}>
+                                            <button className="vcs-image-modal-close" onClick={() => setPreviewImage(null)}>×</button>
+                                            <img src={previewImage} alt="Preview" className="vcs-full-img" />
+                                        </div>
+                                    </div>
                                 )}
 
                                 {activeTab === "biography" && (

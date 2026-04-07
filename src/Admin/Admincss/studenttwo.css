@@ -198,13 +198,13 @@
 }
 
 .vcs-tab-btn.active {
-    background: #1d4ed8;
+    background: #083614;
     color: #fff;
-    border-color: #1d4ed8;
+    border-color: #083614;
 }
 
 .vcs-tab-btn:hover {
-    background: #2563eb;
+    background: #125825;
     color: #fff;
 }
 
@@ -245,4 +245,123 @@
 
 .vcs-biography-content li {
     margin-bottom: 5px;
+}
+
+.vcs-documents-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+    padding: 10px;
+    justify-content: center;
+}
+
+.vcs-doc-item {
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.vcs-doc-item p {
+    margin-bottom: 15px;
+    color: #333;
+    text-align: center;
+    font-weight: bold;
+}
+
+.vcs-doc-img {
+    width: 100%;
+    max-width: 180px;
+    height: 180px;
+    object-fit: contain;
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    transition: transform 0.2s;
+}
+
+.vcs-doc-img:hover {
+    transform: scale(1.03);
+}
+
+.vcs-image-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: flex-start; 
+    justify-content: center;
+    z-index: 10000;
+    overflow-y: auto; 
+}
+
+.vcs-image-modal-content {
+    position: relative;
+    display: inline-flex;
+    margin-top: 140px; 
+}
+
+.vcs-image-modal-close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    transform: translate(50%, -50%);
+    background: #ff4d4d;
+    color: white;
+    border: 2px solid white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    line-height: 1;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.vcs-image-modal-close:hover {
+    background: #cc0000;
+    transform: translate(50%, -50%) scale(1.1);
+}
+
+.vcs-image-modal-content {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 90vw;
+    max-height: 90vh;
+    line-height: 0; 
+}
+
+.vcs-full-img {
+    max-width: 60vw; 
+    max-height: 70vh;
+    width: auto;
+    height: auto;
+    display: block;
+    margin: auto;
+    border-radius: 8px;
+    object-fit: contain;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+}
+
+.vcs-no-doc {
+    color: #999;
+    font-size: 0.9rem;
+    display: block;
+    padding: 20px 0;
+    text-align: center;
 }

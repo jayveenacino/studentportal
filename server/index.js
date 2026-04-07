@@ -20,6 +20,7 @@ const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
 const morgan = require("morgan");
+const Log = require('./models/Log');
 
 require('dotenv').config({ quiet: true });
 
@@ -29,7 +30,6 @@ app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(morgan('tiny'))
 app.use("/", studentByDomainRoute);
-// app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 app.use(acceptedStudentsRoutes);
 app.use("/api", adminRoutes);
@@ -39,6 +39,34 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
+
+app.get('/api/logs', async (req, res) => {
+    try {
+        const logs = await Log.find().sort({ date: -1 });
+        res.json(logs);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.post('/api/logs', async (req, res) => {
+    try {
+        const newLog = new Log({
+            user: req.body.user,
+            userId: req.body.userId,
+            action: req.body.action,
+            type: req.body.type,
+            details: req.body.details,
+            portal: req.body.portal,
+            ipAddress: req.ip,
+            userAgent: req.headers['user-agent']
+        });
+        await newLog.save();
+        res.status(201).json(newLog);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB")
@@ -89,7 +117,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -105,7 +132,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
     const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
@@ -118,10 +144,7 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
-        // Normalize phone input for comparison (just digits)
         const inputPhone = phone.replace(/\D/g, '').slice(-10);
-
-        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
             registerNum: registerNum.trim(),
             email: email.trim().toLowerCase(),
@@ -132,7 +155,6 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
-        // Save password and update phone in proper format
         student.password = password;
         student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
@@ -148,30 +170,25 @@ app.post('/reset-password', async (req, res) => {
 app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
-
-        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
-        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,              // save new profile image (base64 or URL)
-                    profileImage: "✔️", // mark as uploaded
+                    image,
+                    profileImage: "✔️",
                 },
             },
-            { new: true, runValidators: true } // return updated & validate schema
+            { new: true, runValidators: true }
         );
 
-        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
-        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -218,7 +235,6 @@ app.post('/upload-id-image', async (req, res) => {
     }
 });
 
-// Upload Birth Certificate
 app.post('/upload-birth-cert', async (req, res) => {
     const { email, birthCertImage } = req.body;
 
@@ -249,7 +265,6 @@ app.post('/upload-birth-cert', async (req, res) => {
     }
 });
 
-// Upload Academic Records
 app.post('/upload-academic', async (req, res) => {
     const { email, academicImage } = req.body;
 
@@ -316,14 +331,13 @@ app.get('/get-upload-status/:email', async (req, res) => {
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
     try {
-        const student = await Student.findOne({ email }); // fresh from DB
+        const student = await Student.findOne({ email });
         if (!student) return res.status(404).json({ message: "User not found" });
         res.json({ student });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
@@ -650,6 +664,10 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
     }
 });
 
+app.get('/api/test', (req, res) => {
+    res.json({ message: 'API is working', timestamp: new Date() });
+});
+
 app.listen(2025, '0.0.0.0', () => {
-    console.log("Server’s awake and ready to roll!");
+    console.log("Server's awake and ready to roll!");
 });

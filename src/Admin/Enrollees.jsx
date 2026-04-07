@@ -358,7 +358,7 @@ export default function Enrollees() {
                 </select>
 
                 <button className="export-btn" onClick={handleExport}>
-                    <FontAwesomeIcon icon={faFileExport} style={{ marginRight: '8px' }} />
+                    <FontAwesomeIcon icon={faFileExport} />
                     Export List
                 </button>
 
