@@ -238,6 +238,7 @@ function Dashboard() {
                         {activeSection === "backuprestore" && <BackupRestore />}
                         {activeSection === "classrooms" && <Classrooms />}
                         {activeSection === "subjects" && <Subjects />}
+                        {activeSection === "report" && <Report />}
                     </div>
                 </div>
             )}

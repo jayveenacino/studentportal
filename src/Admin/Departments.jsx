@@ -61,7 +61,7 @@ export default function Departments() {
                     text: 'Department updated successfully.'
                 });
             } else {
-                const res = await axios.post("${import.meta.env.VITE_API_URL}/api/departments", newDept);
+                const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/departments`, newDept);
                 setDepartments([res.data, ...departments]);
                 Swal.fire({
                     icon: 'success',
