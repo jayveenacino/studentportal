@@ -4,28 +4,15 @@ import useAdmin from './useAdmin';
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import './Admincss/admin.css';
-import { logAction } from '../utils/logger';
 
 export default function Login() {
     const { admin, setAdmin, adminLoaded } = useAdmin();
     const [showPassword, setShowPassword] = useState(false);
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [isMobile, setIsMobile] = useState(false);
     const navigate = useNavigate();
 
-    useEffect(() => {
-        const checkMobile = () => {
-            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-            const mobileRegex = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Mobile|mobile|CriOS/i;
-            const isMobileDevice = mobileRegex.test(userAgent) || window.innerWidth < 768;
-            setIsMobile(isMobileDevice);
-        };
-        checkMobile();
-        window.addEventListener('resize', checkMobile);
-        return () => window.removeEventListener('resize', checkMobile);
-    }, []);
-
+    // ✅ Redirect immediately if already logged in (Check sessionStorage)
     useEffect(() => {
         const storedAdmin = JSON.parse(sessionStorage.getItem("Admin"));
         if (storedAdmin && (storedAdmin.email || storedAdmin.username)) {
@@ -48,8 +35,6 @@ export default function Login() {
 
             setAdmin(defaultAdmin);
             sessionStorage.setItem("Admin", JSON.stringify(defaultAdmin));
-
-            await logAction("Login", "login", "", "Admin Portal");
 
             await Swal.fire({
                 toast: true,
@@ -81,8 +66,6 @@ export default function Login() {
 
             setAdmin(res.data.admin);
             sessionStorage.setItem("Admin", JSON.stringify(res.data.admin));
-
-            await logAction("Login", "login", "", "Admin Portal");
 
             await Swal.fire({
                 toast: true,
@@ -116,50 +99,6 @@ export default function Login() {
             });
         }
     };
-
-    if (isMobile) {
-        return (
-            <div style={{
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                width: '100vw',
-                height: '100vh',
-                backgroundColor: '#111',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                zIndex: 9999,
-                padding: '20px',
-                boxSizing: 'border-box'
-            }}>
-                <div style={{
-                    fontSize: '48px',
-                    marginBottom: '30px'
-                }}>📱🚫</div>
-                <h1 style={{
-                    color: '#fff',
-                    fontSize: '24px',
-                    textAlign: 'center',
-                    margin: '0 0 20px 0',
-                    fontFamily: 'Arial, sans-serif',
-                    textTransform: 'uppercase',
-                    letterSpacing: '2px'
-                }}>
-                    THIS PAGE CAN'T BE ACCESSED THROUGH MOBILE
-                </h1>
-                <p style={{
-                    color: '#888',
-                    fontSize: '14px',
-                    textAlign: 'center',
-                    fontFamily: 'Arial, sans-serif'
-                }}>
-                    Please use a desktop or laptop device to access this portal.
-                </p>
-            </div>
-        );
-    }
 
     return (
         <div>
