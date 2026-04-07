@@ -34,7 +34,7 @@ export default function Body({ setPage }) {
                                 target="_blank"
                                 className="green-link"
                             >
-                                ( localhost:30001/signup )
+                                ( https://kolehiyongsubic.vercel.app/body/signup )
                             </Link>
                         </li>
                         <li>Click <strong>"Create Account"</strong></li>
