@@ -1,4 +1,3 @@
-/* Container & fonts */
 .subjects-container {
     padding: 100px 32px;
     background-color: #f8f9fa;
@@ -9,8 +8,6 @@
     overflow-x: hidden;
 }
 
-
-/* Header */
 .subjects-container h1 {
     font-size: 2rem;
     color: #0a3d18;
@@ -22,7 +19,6 @@
     margin-bottom: 20px;
 }
 
-/* Search + Add controls */
 .subjects-controls {
     display: flex;
     justify-content: space-between;
@@ -70,4 +66,140 @@
 .subjects-table th {
     background-color: #0a3d18;
     color: white;
+}
+
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.compact-modal {
+    background-color: white;
+    padding: 28px;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 700px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.compact-modal h2 {
+    margin: 0 0 20px 0;
+    color: #0a3d18;
+    font-size: 1.5rem;
+}
+
+.bento-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, auto);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.bento-item {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.bento-item label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #0a3d18;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.bento-item input,
+.bento-item select {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    background-color: #f8f9fa;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.bento-item input:focus,
+.bento-item select:focus {
+    outline: none;
+    border-color: #0a3d18;
+    background-color: white;
+}
+
+.bento-code {
+    grid-column: 1;
+    grid-row: 1;
+}
+
+.bento-name {
+    grid-column: 2 / 4;
+    grid-row: 1;
+}
+
+.bento-course {
+    grid-column: 1;
+    grid-row: 2;
+}
+
+.bento-units {
+    grid-column: 2;
+    grid-row: 2;
+}
+
+.bento-semester {
+    grid-column: 3;
+    grid-row: 2;
+}
+
+.bento-year {
+    grid-column: 1;
+    grid-row: 3;
+}
+
+.bento-price {
+    grid-column: 2;
+    grid-row: 3;
+}
+
+.modal-buttons {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.modal-buttons button {
+    padding: 10px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.modal-buttons button:first-child {
+    background-color: #0a3d18;
+    color: white;
+}
+
+.modal-buttons button:first-child:hover {
+    background-color: #097129;
+}
+
+.modal-buttons button:last-child {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.modal-buttons button:last-child:hover {
+    background-color: #d0d0d0;
 }
