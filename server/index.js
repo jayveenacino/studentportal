@@ -40,12 +40,6 @@ app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
 
-mongoose.connect(process.env.MONGODB_URI).then(() => {
-    console.log("Connected to MongoDB")
-}).catch((err) => {
-    console.error("Error connecting to MongoDB:", err);
-})
-
 app.post('/register', async (req, res) => {
     try {
         const settings = await Settings.findOne();
@@ -650,6 +644,11 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
     }
 });
 
-app.listen(2025, '0.0.0.0', () => {
-    console.log("Server’s awake and ready to roll!");
-});
+mongoose.connect(process.env.MONGODB_URI).then(() => {
+    console.log("Connected to MongoDB")
+    app.listen(2025, '0.0.0.0', () => {
+        console.log("Server’s awake and ready to roll!");
+    });
+}).catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+})
