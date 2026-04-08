@@ -10,9 +10,24 @@ export default function Login() {
     const [showPassword, setShowPassword] = useState(false);
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
+    const [isMobile, setIsMobile] = useState(false);
     const navigate = useNavigate();
 
-    // ✅ Redirect immediately if already logged in (Check sessionStorage)
+    useEffect(() => {
+        const checkMobile = () => {
+            const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+            const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
+            
+            if (mobileRegex.test(userAgent.toLowerCase()) || window.innerWidth < 768) {
+                setIsMobile(true);
+            }
+        };
+        
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        return () => window.removeEventListener('resize', checkMobile);
+    }, []);
+
     useEffect(() => {
         const storedAdmin = JSON.parse(sessionStorage.getItem("Admin"));
         if (storedAdmin && (storedAdmin.email || storedAdmin.username)) {
@@ -29,7 +44,7 @@ export default function Login() {
         ) {
             const defaultAdmin = {
                 email: "knsadmincsd@gmail.com",
-                username: "KNS Admin",
+                username: "SuperAdmin",
                 role: "Super Admin",
             };
 
@@ -99,6 +114,40 @@ export default function Login() {
             });
         }
     };
+
+    if (isMobile) {
+        return (
+            <div style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+                height: "100vh",
+                background: "#0a3d18",
+                color: "white",
+                textAlign: "center",
+                padding: "20px"
+            }}>
+                <div style={{
+                    background: "white",
+                    color: "#0a3d18",
+                    borderRadius: "50%",
+                    width: "80px",
+                    height: "80px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    marginBottom: "20px"
+                }}>
+                    <i className="fa-solid fa-mobile-screen" style={{ fontSize: "40px" }}></i>
+                </div>
+                <h1 style={{ fontSize: "24px", marginBottom: "15px" }}>THIS PAGE IS NOT AVAILABLE</h1>
+                <p style={{ fontSize: "14px", maxWidth: "300px", lineHeight: "1.6" }}>
+                    The Admin Portal is only accessible on desktop or laptop devices. Please use a computer to access this page.
+                </p>
+            </div>
+        );
+    }
 
     return (
         <div>

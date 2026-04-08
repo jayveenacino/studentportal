@@ -19,7 +19,9 @@ const semesterSettingsRoutes = require("./routes/semesterSettings");
 const classroomRoutes = require("./routes/classrooms");
 const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
+const instructorRoutes = require('./routes/instructors');
 const morgan = require("morgan");
+
 
 require('dotenv').config({ quiet: true });
 
@@ -39,6 +41,7 @@ app.use("/api/uploads", uploadRoutes);
 app.use("/api/classrooms", classroomRoutes);
 app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
+app.use('/api/instructors', instructorRoutes);
 
 app.post('/register', async (req, res) => {
     try {
