@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
@@ -22,6 +22,24 @@ export default function Profile() {
     const [isUploadingBirthCert, setIsUploadingBirthCert] = useState(false);
     const [isUploadingGoodMoral, setIsUploadingGoodMoral] = useState(false);
     const [isUploadingAcademic, setIsUploadingAcademic] = useState(false);
+
+    const [cropperOpen, setCropperOpen] = useState(false);
+    const [cropImage, setCropImage] = useState(null);
+    const [image, setImage] = useState(null);
+    const cropContainerRef = useRef(null);
+    const [cropState, setCropState] = useState({
+        x: 0,
+        y: 0,
+        size: 200,
+        isDragging: false,
+        isResizing: false,
+        resizeHandle: null,
+        startX: 0,
+        startY: 0,
+        startCrop: null
+    });
+    const imageRef = useRef(null);
+    const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
     useEffect(() => {
         axios
@@ -62,7 +80,6 @@ export default function Profile() {
     const [goodMoralModalOpen, setGoodMoralModalOpen] = useState(false);
     const [academicModalOpen, setAcademicModalOpen] = useState(false);
 
-    const [image, setImage] = useState(null);
     const [idimage, setIdImage] = useState(null);
     const [birthCertImage, setBirthCertImage] = useState(null);
     const [goodMoralImage, setGoodMoralImage] = useState(null);
@@ -152,6 +169,37 @@ export default function Profile() {
         }
     };
 
+    const getCroppedImg = async (imageSrc, pixelCrop) => {
+        const image = await createImage(imageSrc);
+        const canvas = document.createElement("canvas");
+        canvas.width = pixelCrop.width;
+        canvas.height = pixelCrop.height;
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(
+            image,
+            pixelCrop.x,
+            pixelCrop.y,
+            pixelCrop.width,
+            pixelCrop.height,
+            0,
+            0,
+            pixelCrop.width,
+            pixelCrop.height
+        );
+
+        return canvas.toDataURL("image/jpeg");
+    };
+
+    const createImage = (url) =>
+        new Promise((resolve, reject) => {
+            const image = new Image();
+            image.addEventListener("load", () => resolve(image));
+            image.addEventListener("error", (error) => reject(error));
+            image.setAttribute("crossOrigin", "anonymous");
+            image.src = url;
+        });
+
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (!file) {
@@ -187,13 +235,191 @@ export default function Profile() {
 
         const reader = new FileReader();
         reader.onloadend = () => {
-            setImage(reader.result);
+            setCropImage(reader.result);
+            setCropperOpen(true);
+            setCropState({
+                x: 50,
+                y: 50,
+                size: 200,
+                isDragging: false,
+                isResizing: false,
+                resizeHandle: null,
+                startX: 0,
+                startY: 0,
+                startCrop: null
+            });
         };
         reader.readAsDataURL(file);
     };
 
+    const handleMouseDown = (e, handle) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const rect = cropContainerRef.current.getBoundingClientRect();
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+
+        if (handle) {
+            setCropState(prev => ({
+                ...prev,
+                isResizing: true,
+                resizeHandle: handle,
+                startX: clientX,
+                startY: clientY,
+                startCrop: { x: prev.x, y: prev.y, size: prev.size }
+            }));
+        } else {
+            setCropState(prev => ({
+                ...prev,
+                isDragging: true,
+                startX: clientX - prev.x,
+                startY: clientY - prev.y
+            }));
+        }
+    };
+
+    const handleMouseMove = (e) => {
+        if (!cropState.isDragging && !cropState.isResizing) return;
+
+        const clientX = e.clientX || (e.touches && e.touches[0].clientX);
+        const clientY = e.clientY || (e.touches && e.touches[0].clientY);
+        const containerRect = cropContainerRef.current.getBoundingClientRect();
+        const imgWidth = imageSize.width;
+        const imgHeight = imageSize.height;
+
+        if (cropState.isDragging) {
+            let newX = clientX - cropState.startX;
+            let newY = clientY - cropState.startY;
+
+            newX = Math.max(0, Math.min(newX, imgWidth - cropState.size));
+            newY = Math.max(0, Math.min(newY, imgHeight - cropState.size));
+
+            setCropState(prev => ({ ...prev, x: newX, y: newY }));
+        } else if (cropState.isResizing) {
+            const deltaX = clientX - cropState.startX;
+            const deltaY = clientY - cropState.startY;
+            let newCrop = { ...cropState.startCrop };
+            const minSize = 50;
+
+            switch (cropState.resizeHandle) {
+                case 'se':
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, deltaY), imgWidth - cropState.startCrop.x, imgHeight - cropState.startCrop.y));
+                    break;
+                case 'sw':
+                    const newSizeSW = Math.max(minSize, Math.min(cropState.startCrop.size - Math.max(deltaX, deltaY), cropState.startCrop.x + cropState.startCrop.size - minSize, cropState.startCrop.y + cropState.startCrop.size - minSize, imgHeight - cropState.startCrop.y));
+                    newCrop.x = Math.max(0, Math.min(cropState.startCrop.x + (cropState.startCrop.size - newSizeSW), cropState.startCrop.x + cropState.startCrop.size - minSize));
+                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y, imgHeight - newSizeSW));
+                    newCrop.size = newSizeSW;
+                    break;
+                case 'ne':
+                    const newSizeNE = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, -deltaY), imgWidth - cropState.startCrop.x, cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y + (cropState.startCrop.size - newSizeNE), cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.size = newSizeNE;
+                    break;
+                case 'nw':
+                    const newSizeNW = Math.max(minSize, Math.min(cropState.startCrop.size - Math.max(deltaX, deltaY), cropState.startCrop.x + cropState.startCrop.size - minSize, cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.x = Math.max(0, Math.min(cropState.startCrop.x + (cropState.startCrop.size - newSizeNW), cropState.startCrop.x + cropState.startCrop.size - minSize));
+                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y + (cropState.startCrop.size - newSizeNW), cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.size = newSizeNW;
+                    break;
+                case 'n':
+                    const newSizeN = Math.max(minSize, Math.min(cropState.startCrop.size - deltaY, cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y + (cropState.startCrop.size - newSizeN), cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    newCrop.size = newSizeN;
+                    break;
+                case 's':
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaY, imgHeight - cropState.startCrop.y));
+                    break;
+                case 'e':
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaX, imgWidth - cropState.startCrop.x));
+                    break;
+                case 'w':
+                    const newSizeW = Math.max(minSize, Math.min(cropState.startCrop.size - deltaX, cropState.startCrop.x + cropState.startCrop.size - minSize));
+                    newCrop.x = Math.max(0, Math.min(cropState.startCrop.x + (cropState.startCrop.size - newSizeW), cropState.startCrop.x + cropState.startCrop.size - minSize));
+                    newCrop.size = newSizeW;
+                    break;
+            }
+            setCropState(prev => ({ ...prev, ...newCrop }));
+        }
+    };
+
+    const handleMouseUp = () => {
+        setCropState(prev => ({
+            ...prev,
+            isDragging: false,
+            isResizing: false,
+            resizeHandle: null
+        }));
+    };
+
+    useEffect(() => {
+        if (cropState.isDragging || cropState.isResizing) {
+            window.addEventListener('mousemove', handleMouseMove);
+            window.addEventListener('mouseup', handleMouseUp);
+            window.addEventListener('touchmove', handleMouseMove);
+            window.addEventListener('touchend', handleMouseUp);
+            return () => {
+                window.removeEventListener('mousemove', handleMouseMove);
+                window.removeEventListener('mouseup', handleMouseUp);
+                window.removeEventListener('touchmove', handleMouseMove);
+                window.removeEventListener('touchend', handleMouseUp);
+            };
+        }
+    }, [cropState.isDragging, cropState.isResizing]);
+
+    const handleCrop = async () => {
+        try {
+            const scaleX = imageRef.current.naturalWidth / imageSize.width;
+            const scaleY = imageRef.current.naturalHeight / imageSize.height;
+
+            const pixelCrop = {
+                x: cropState.x * scaleX,
+                y: cropState.y * scaleY,
+                width: cropState.size * scaleX,
+                height: cropState.size * scaleY
+            };
+
+            const croppedImg = await getCroppedImg(cropImage, pixelCrop);
+            setImage(croppedImg);
+            setCropperOpen(false);
+        } catch (e) {
+            console.error(e);
+        }
+    };
+
+    const handleImageLoad = (e) => {
+        const img = e.target;
+        const containerWidth = 300;
+        const containerHeight = 300;
+        const aspectRatio = img.naturalWidth / img.naturalHeight;
+
+        let width, height;
+        if (aspectRatio > 1) {
+            width = containerWidth;
+            height = containerWidth / aspectRatio;
+        } else {
+            height = containerHeight;
+            width = containerHeight * aspectRatio;
+        }
+
+        setImageSize({ width, height });
+        const initialSize = Math.min(200, width, height);
+        setCropState(prev => ({
+            ...prev,
+            x: (width - initialSize) / 2,
+            y: (height - initialSize) / 2,
+            size: initialSize
+        }));
+    };
+
     const handleUpload = async () => {
         if (isUploadingProfile) return;
+
+        if (cropperOpen && cropImage) {
+            await handleCrop();
+            return;
+        }
+
         if (!image) {
             Swal.fire({
                 title: "Error!",
@@ -227,6 +453,8 @@ export default function Profile() {
             localStorage.setItem("user", JSON.stringify(updatedUser));
 
             setProfilepfp(false);
+            setCropImage(null);
+            setImage(null);
 
             Swal.fire({
                 title: "Success!",
@@ -1064,6 +1292,88 @@ export default function Profile() {
         });
     };
 
+    const renderCropper = () => {
+        if (!cropperOpen || !cropImage) return null;
+
+        return (
+            <div style={{
+                width: "300px",
+                height: "300px",
+                position: "relative",
+                background: "#f0f0f0",
+                overflow: "hidden",
+                margin: "10px 0"
+            }}>
+                <img
+                    ref={imageRef}
+                    src={cropImage}
+                    alt="Crop"
+                    style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        transform: "translate(-50%, -50%)",
+                        maxWidth: "300px",
+                        maxHeight: "300px",
+                        display: "block"
+                    }}
+                    onLoad={handleImageLoad}
+                    draggable={false}
+                />
+                <div
+                    ref={cropContainerRef}
+                    style={{
+                        position: "absolute",
+                        left: "50%",
+                        top: "50%",
+                        transform: "translate(-50%, -50%)",
+                        width: imageSize.width,
+                        height: imageSize.height
+                    }}
+                >
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: cropState.x,
+                            top: cropState.y,
+                            width: cropState.size,
+                            height: cropState.size,
+                            border: "1px solid #292929",
+                            background: "rgba(0, 102, 102, 0.1)",
+                            cursor: cropState.isDragging ? "grabbing" : "grab",
+                            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)"
+                        }}
+                        onMouseDown={(e) => handleMouseDown(e, null)}
+                        onTouchStart={(e) => handleMouseDown(e, null)}
+                    >
+                        {['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'].map((handle) => (
+                            <div
+                                key={handle}
+                                style={{
+                                    position: "absolute",
+                                    width:  "8px",
+                                    height:  "8px",
+                                    background: "#3a3939",
+                                    border: "1px solid white",
+                                    cursor: handle.includes('n') && handle.includes('w') ? 'nw-resize' :
+                                        handle.includes('n') && handle.includes('e') ? 'ne-resize' :
+                                            handle.includes('s') && handle.includes('w') ? 'sw-resize' :
+                                                handle.includes('s') && handle.includes('e') ? 'se-resize' :
+                                                    handle === 'n' || handle === 's' ? 'ns-resize' :
+                                                        'ew-resize',
+                                    top: handle.includes('n') ? '-7px' : handle.includes('s') ? 'calc(100% - 5px)' : 'calc(50% - 6px)',
+                                    left: handle.includes('w') ? '-7px' : handle.includes('e') ? 'calc(100% - 5px)' : 'calc(50% - 6px)'
+                                }}
+                                onMouseDown={(e) => handleMouseDown(e, handle)}
+                                onTouchStart={(e) => handleMouseDown(e, handle)}
+                            />
+                        ))}
+                    </div>
+                </div>
+            </div>
+        );
+    };
+
     return (
         <div>
             <div className="premaintab">
@@ -1117,7 +1427,8 @@ export default function Profile() {
                                         accept="image/*"
                                         onChange={handleImageChange}
                                     />
-                                    {image && (
+                                    {renderCropper()}
+                                    {image && !cropperOpen && (
                                         <div
                                             style={{
                                                 width: "150px",
@@ -1145,22 +1456,27 @@ export default function Profile() {
                                 <div className="button-container" style={{ marginTop: "20px" }}>
                                     <button
                                         style={{ border: "none" }}
-                                        onClick={() => setProfilepfp(false)}
+                                        onClick={() => {
+                                            setProfilepfp(false);
+                                            setCropperOpen(false);
+                                            setCropImage(null);
+                                            setImage(null);
+                                        }}
                                     >
                                         Cancel
                                     </button>
                                     <button
                                         onClick={handleUpload}
-                                        disabled={isUploadingProfile}
+                                        disabled={isUploadingProfile || (!image && !cropperOpen)}
                                         style={{
                                             border: "1px solid #006666",
-                                            background: isUploadingProfile ? "#ccc" : "#006666",
+                                            background: isUploadingProfile || (!image && !cropperOpen) ? "#ccc" : "#006666",
                                             color: "white",
                                             padding: "10px 20px",
-                                            cursor: isUploadingProfile ? "not-allowed" : "pointer",
+                                            cursor: isUploadingProfile || (!image && !cropperOpen) ? "not-allowed" : "pointer",
                                         }}
                                     >
-                                        {isUploadingProfile ? "Uploading..." : "Upload"}
+                                        {isUploadingProfile ? "Uploading..." : cropperOpen ? "Save" : "Upload"}
                                     </button>
                                 </div>
                             </div>
@@ -2023,8 +2339,8 @@ export default function Profile() {
                                                     <option value="CALAPACUAN">CALAPACUAN</option>
                                                     <option value="CALAPANDAYAN">CALAPANDAYAN</option>
                                                     <option value="CAWAG">CAWAG</option>
-                                                    <option value="NAUGSOL">NAUGSOL</option>
                                                     <option value="ILWAS">ILWAS</option>
+                                                    <option value="NAUGSOL">NAUGSOL</option>
                                                     <option value="MANGALIT">MANGALIT</option>
                                                     <option value="MATAIN">MATAIN</option>
                                                     <option value="NAGBANGON">NAGBANGON</option>
