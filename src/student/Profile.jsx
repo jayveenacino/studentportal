@@ -2018,14 +2018,12 @@ export default function Profile() {
                                                         ANINGWAY SACATIHAN
                                                     </option>
                                                     <option value="ASINAN-PROPER">ASINAN PROPER</option>
-                                                    <option value="ASINAN-PUBLACION">
-                                                        ASINAN PUBLACION
-                                                    </option>
-                                                    <option value="BARACA-CAMACHILE">
-                                                        BARACA CAMACHILE
-                                                    </option>
+                                                    <option value="ASINAN-PUBLACION">ASINAN PUBLACION</option>
+                                                    <option value="BARACA-CAMACHILE">BARACA CAMACHILE</option>
                                                     <option value="CALAPACUAN">CALAPACUAN</option>
                                                     <option value="CALAPANDAYAN">CALAPANDAYAN</option>
+                                                    <option value="CAWAG">CAWAG</option>
+                                                    <option value="NAUGSOL">NAUGSOL</option>
                                                     <option value="ILWAS">ILWAS</option>
                                                     <option value="MANGALIT">MANGALIT</option>
                                                     <option value="MATAIN">MATAIN</option>
