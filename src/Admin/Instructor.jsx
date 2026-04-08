@@ -23,6 +23,30 @@ export default function Instructor() {
     });
     const [previewUrl, setPreviewUrl] = useState(null);
     const fileInputRef = useRef(null);
+    const [departments, setDepartments] = useState([]);
+
+    const fetchDepartments = async () => {
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/departments");
+            setDepartments(res.data.filter(d => d.status === "Active"));
+        } catch (err) {
+            console.error("Failed to fetch departments:", err);
+        }
+    };
+    useEffect(() => {
+        const fetchData = async () => {
+            setLoadingInstructors(true);
+            try {
+                await fetchInstructors();
+                await fetchDepartments();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingInstructors(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const perPage = 5;
 
@@ -282,7 +306,7 @@ export default function Instructor() {
                                             style={{
                                                 width: "50px",
                                                 height: "50px",
-                                                borderRadius: "50%",
+                                                borderRadius: "10%",
                                                 objectFit: "cover"
                                             }}
                                         />
@@ -303,9 +327,9 @@ export default function Instructor() {
                                 <td>{i.name}</td>
                                 <td>{i.department}</td>
                                 <td>
-                                    <Eye 
-                                        size={20} 
-                                        color="#0a3d18" 
+                                    <Eye
+                                        size={20}
+                                        color="#0a3d18"
                                         style={{ cursor: "pointer" }}
                                         onClick={() => handleView(i)}
                                     />
@@ -368,15 +392,20 @@ export default function Instructor() {
                                         onChange={e => setNewInstructor({ ...newInstructor, name: e.target.value })}
                                         className="adminupload-title-input"
                                     />
-                                    
-                                    <input
-                                        type="text"
-                                        placeholder="Enter Department"
+
+                                    <select
                                         value={newInstructor.department}
                                         onChange={e => setNewInstructor({ ...newInstructor, department: e.target.value })}
                                         className="adminupload-title-input"
-                                    />
-                                    
+                                    >
+                                        <option value="" disabled>Select Department</option>
+                                        {departments.map(dept => (
+                                            <option key={dept._id} value={dept.name}>
+                                                {dept.name}
+                                            </option>
+                                        ))}
+                                    </select>
+
                                     <select
                                         value={newInstructor.status}
                                         onChange={e => setNewInstructor({ ...newInstructor, status: e.target.value })}
@@ -467,7 +496,7 @@ export default function Instructor() {
                             <div style={{ textAlign: "left", padding: "0 20px" }}>
                                 <p><strong>Name:</strong> {viewInstructor.name}</p>
                                 <p><strong>Department:</strong> {viewInstructor.department}</p>
-                                <p><strong>Status:</strong> 
+                                <p><strong>Status:</strong>
                                     <span className={viewInstructor.status === "Active" ? "status-active" : "status-inactive"}>
                                         {viewInstructor.status}
                                     </span>
