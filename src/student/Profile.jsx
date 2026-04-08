@@ -1,4 +1,4 @@
-import React, { useState, useEffect, use } from "react";
+import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import useAdmin from "../Admin/useAdmin";
 import axios from "axios";
@@ -14,12 +14,14 @@ export default function Profile() {
 
     const [isTransferee, setIsTransferee] = useState(false);
 
-    useEffect(() => {
-        axios
-            .get(import.meta.env.VITE_API_URL + "/api/courses")
-            .then((res) => setCourses(res.data))
-            .catch((err) => console.error("Course fetch error:", err));
-    }, []);
+    const [isSavingProfile, setIsSavingProfile] = useState(false);
+    const [isSavingEducation, setIsSavingEducation] = useState(false);
+    const [isSavingFamily, setIsSavingFamily] = useState(false);
+    const [isUploadingProfile, setIsUploadingProfile] = useState(false);
+    const [isUploadingId, setIsUploadingId] = useState(false);
+    const [isUploadingBirthCert, setIsUploadingBirthCert] = useState(false);
+    const [isUploadingGoodMoral, setIsUploadingGoodMoral] = useState(false);
+    const [isUploadingAcademic, setIsUploadingAcademic] = useState(false);
 
     useEffect(() => {
         axios
@@ -43,7 +45,6 @@ export default function Profile() {
         }
     };
 
-    //? LOCK SECTION
     const formSections = [
         "personal",
         "education",
@@ -56,7 +57,6 @@ export default function Profile() {
         return JSON.parse(localStorage.getItem("unlockedSections")) || ["personal"];
     });
 
-    //!DOCXS FUNCTION
     const [uploadModalOpen, setUploadModalOpen] = useState(false);
     const [birthCertModalOpen, setBirthCertModalOpen] = useState(false);
     const [goodMoralModalOpen, setGoodMoralModalOpen] = useState(false);
@@ -107,6 +107,7 @@ export default function Profile() {
     };
 
     const idHandleUpload = async () => {
+        if (isUploadingId) return;
         if (!idimage || !user?.email) {
             Swal.fire({
                 icon: "error",
@@ -117,6 +118,7 @@ export default function Profile() {
             return;
         }
 
+        setIsUploadingId(true);
         try {
             const res = await axios.post(import.meta.env.VITE_API_URL + "/upload-id-image", {
                 email: user.email,
@@ -145,10 +147,11 @@ export default function Profile() {
                 text: "Something went wrong. Please try again.",
                 confirmButtonColor: "#006666",
             });
+        } finally {
+            setIsUploadingId(false);
         }
     };
 
-    //!IMAGE
     const handleImageChange = (event) => {
         const file = event.target.files[0];
         if (!file) {
@@ -190,6 +193,7 @@ export default function Profile() {
     };
 
     const handleUpload = async () => {
+        if (isUploadingProfile) return;
         if (!image) {
             Swal.fire({
                 title: "Error!",
@@ -209,6 +213,8 @@ export default function Profile() {
             });
             return;
         }
+
+        setIsUploadingProfile(true);
         try {
             const response = await axios.post(import.meta.env.VITE_API_URL + "/upload", {
                 email: user.email,
@@ -217,7 +223,6 @@ export default function Profile() {
 
             const updatedUser = response.data.student;
 
-            // ✅ update state + localStorage
             setUser(updatedUser);
             localStorage.setItem("user", JSON.stringify(updatedUser));
 
@@ -237,12 +242,13 @@ export default function Profile() {
                 icon: "error",
                 confirmButtonText: "OK",
             });
+        } finally {
+            setIsUploadingProfile(false);
         }
-
     };
 
-    //! BIRTH CERT
     const birthCertHandleUpload = async () => {
+        if (isUploadingBirthCert) return;
         if (!birthCertImage || !user?.email) {
             Swal.fire({
                 icon: "error",
@@ -253,6 +259,7 @@ export default function Profile() {
             return;
         }
 
+        setIsUploadingBirthCert(true);
         try {
             const res = await axios.post(
                 import.meta.env.VITE_API_URL + "/upload-birthcert-image",
@@ -284,11 +291,13 @@ export default function Profile() {
                 text: "Birth Certificate upload failed. Please try again.",
                 confirmButtonColor: "#006666",
             });
+        } finally {
+            setIsUploadingBirthCert(false);
         }
     };
 
-    //! GOOD MORAL
     const goodMoralHandleUpload = async () => {
+        if (isUploadingGoodMoral) return;
         if (!goodMoralImage || !user?.email) {
             Swal.fire({
                 icon: "error",
@@ -299,6 +308,7 @@ export default function Profile() {
             return;
         }
 
+        setIsUploadingGoodMoral(true);
         try {
             const res = await axios.post(
                 import.meta.env.VITE_API_URL + "/upload-goodmoral-image",
@@ -330,11 +340,13 @@ export default function Profile() {
                 text: "Good Moral upload failed. Please try again.",
                 confirmButtonColor: "#006666",
             });
+        } finally {
+            setIsUploadingGoodMoral(false);
         }
     };
 
-    //! ACADEMIC RECORDS
     const academicHandleUpload = async () => {
+        if (isUploadingAcademic) return;
         if (!academicImage || !user?.email) {
             Swal.fire({
                 icon: "error",
@@ -345,6 +357,7 @@ export default function Profile() {
             return;
         }
 
+        setIsUploadingAcademic(true);
         try {
             const res = await axios.post(
                 import.meta.env.VITE_API_URL + "/upload-academic-image",
@@ -376,6 +389,8 @@ export default function Profile() {
                 text: "Academic Records upload failed. Please try again.",
                 confirmButtonColor: "#006666",
             });
+        } finally {
+            setIsUploadingAcademic(false);
         }
     };
 
@@ -413,34 +428,13 @@ export default function Profile() {
         }
     };
 
-
     useEffect(() => {
         const savedUser = localStorage.getItem("user");
         if (savedUser) {
-            setUser(JSON.parse(savedUser));
+            const parsedUser = JSON.parse(savedUser);
+            setUser(parsedUser);
         }
-
-        const fetchUser = async () => {
-            const email = localStorage.getItem("userEmail");
-            if (!email) return;
-
-            try {
-                const res = await axios.get(import.meta.env.VITE_API_URL + "/getuser", {
-                    params: { email },
-                });
-
-                if (res.data && res.data.student) {
-                    setUser(res.data.student);
-                    localStorage.setItem("user", JSON.stringify(res.data.student));
-                }
-            } catch (err) {
-                console.error("Error fetching user:", err);
-            }
-        };
-
-        fetchUser();
     }, []);
-
 
     const handleDisabilityChange = (e) => {
         const value = e.target.value;
@@ -493,32 +487,48 @@ export default function Profile() {
             });
     };
 
-    {
-        /!PERSONAL/;
-    }
     const [isDisabled, setIsDisabled] = useState(true);
     const [fillSection, setFillSection] = useState("personal");
-    const [phone, setPhone] = useState(user?.phone || "");
-    const [middlename, setMiddlename] = useState(user?.middlename || "");
-    const [extension, setExtension] = useState(user?.extension || "");
-    const [birthplace, setBirthplace] = useState(user?.birthplace || "");
-    const [civil, setCivil] = useState(user?.civil || "");
-    const [sex, setSex] = useState(user?.sex || "");
-    const [orientation, setOrientation] = useState(user?.orientation || "");
-    const [gender, setGender] = useState(user?.gender || "");
-    const [citizenship, setCitizenship] = useState(user?.citizenship || "");
-    const [religion, setReligion] = useState(user?.religion || "");
-    const [region, setRegion] = useState(user?.region || "");
-    const [province, setProvince] = useState(user?.province || "");
-    const [city, setCity] = useState(user?.city || "");
-    const [barangay, setBarangay] = useState(user?.barangay || "");
-    const [disability, setDisability] = useState(user?.disability || "");
-    const [disabilityCategory, setDisabilityCategory] = useState(
-        user?.disabilityCategory || ""
-    );
-    const [disabilityDetails, setDisabilityDetails] = useState(
-        user?.disabilityDetails || ""
-    );
+
+    const [phone, setPhone] = useState("");
+    const [middlename, setMiddlename] = useState("");
+    const [extension, setExtension] = useState("");
+    const [birthplace, setBirthplace] = useState("");
+    const [civil, setCivil] = useState("");
+    const [sex, setSex] = useState("");
+    const [orientation, setOrientation] = useState("");
+    const [gender, setGender] = useState("");
+    const [citizenship, setCitizenship] = useState("");
+    const [religion, setReligion] = useState("");
+    const [region, setRegion] = useState("");
+    const [province, setProvince] = useState("");
+    const [city, setCity] = useState("");
+    const [barangay, setBarangay] = useState("");
+    const [disability, setDisability] = useState("");
+    const [disabilityCategory, setDisabilityCategory] = useState("");
+    const [disabilityDetails, setDisabilityDetails] = useState("");
+
+    useEffect(() => {
+        if (user) {
+            setPhone(user.phone || "");
+            setMiddlename(user.middlename || "");
+            setExtension(user.extension || "");
+            setBirthplace(user.birthplace || "");
+            setCivil(user.civil || "");
+            setSex(user.sex || "");
+            setOrientation(user.orientation || "");
+            setGender(user.gender || "");
+            setCitizenship(user.citizenship || "");
+            setReligion(user.religion || "");
+            setRegion(user.region || "");
+            setProvince(user.province || "");
+            setCity(user.city || "");
+            setBarangay(user.barangay || "");
+            setDisability(user.disability || "");
+            setDisabilityCategory(user.disabilityCategory || "");
+            setDisabilityDetails(user.disabilityDetails || "");
+        }
+    }, [user]);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -530,30 +540,32 @@ export default function Profile() {
                 );
                 const profileData = response.data;
 
-                setPhone(profileData.phone || "");
-                setMiddlename(profileData.middlename || "");
-                setExtension(profileData.extension || "");
-                setBirthplace(profileData.birthplace || "");
-                setCivil(profileData.civil || "");
-                setSex(profileData.sex || "");
-                setOrientation(profileData.orientation || "");
-                setGender(profileData.gender || "");
-                setCitizenship(profileData.citizenship || "");
-                setReligion(profileData.religion || "");
-                setRegion(profileData.region || "");
-                setProvince(profileData.province || "");
-                setCity(profileData.city || "");
-                setBarangay(profileData.barangay || "");
-                setDisability(profileData.disability || "");
-                setDisabilityCategory(profileData.disabilityCategory || "");
-                setDisabilityDetails(profileData.disabilityDetails || "");
+                setPhone(profileData.phone || user?.phone || "");
+                setMiddlename(profileData.middlename || user?.middlename || "");
+                setExtension(profileData.extension || user?.extension || "");
+                setBirthplace(profileData.birthplace || user?.birthplace || "");
+                setCivil(profileData.civil || user?.civil || "");
+                setSex(profileData.sex || user?.sex || "");
+                setOrientation(profileData.orientation || user?.orientation || "");
+                setGender(profileData.gender || user?.gender || "");
+                setCitizenship(profileData.citizenship || user?.citizenship || "");
+                setReligion(profileData.religion || user?.religion || "");
+                setRegion(profileData.region || user?.region || "");
+                setProvince(profileData.province || user?.province || "");
+                setCity(profileData.city || user?.city || "");
+                setBarangay(profileData.barangay || user?.barangay || "");
+                setDisability(profileData.disability || user?.disability || "");
+                setDisabilityCategory(profileData.disabilityCategory || user?.disabilityCategory || "");
+                setDisabilityDetails(profileData.disabilityDetails || user?.disabilityDetails || "");
             } catch (error) {
                 console.error("Error fetching user profile:", error);
             }
         };
 
-        fetchUserProfile();
-    }, [user.email]);
+        if (user?.email) {
+            fetchUserProfile();
+        }
+    }, [user?.email]);
 
     const [formErrors, setFormErrors] = useState({
         birthplace: false,
@@ -582,6 +594,7 @@ export default function Profile() {
 
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
+        if (isSavingProfile) return;
         const isValid = validateForm();
 
         if (!isValid) {
@@ -609,23 +622,24 @@ export default function Profile() {
             return;
         }
 
-        const updatedFields = {};
-        if (phone) updatedFields.phone = phone;
-        if (middlename) updatedFields.middlename = middlename;
-        if (extension) updatedFields.extension = extension;
-        if (birthplace) updatedFields.birthplace = birthplace;
-        if (civil) updatedFields.civil = civil;
-        if (sex) updatedFields.sex = sex;
-        if (citizenship) updatedFields.citizenship = citizenship;
-        if (religion) updatedFields.religion = religion;
-        if (region) updatedFields.region = region;
-        if (province) updatedFields.province = province;
-        if (city) updatedFields.city = city;
-        if (barangay) updatedFields.barangay = barangay;
-        if (disability) updatedFields.disability = disability;
-        if (disabilityCategory)
-            updatedFields.disabilityCategory = disabilityCategory;
-        updatedFields.disabilityDetails = disabilityDetails || "";
+        setIsSavingProfile(true);
+        const updatedFields = {
+            phone,
+            middlename,
+            extension,
+            birthplace,
+            civil,
+            sex,
+            citizenship,
+            religion,
+            region,
+            province,
+            city,
+            barangay,
+            disability,
+            disabilityCategory,
+            disabilityDetails: disabilityDetails || ""
+        };
 
         try {
             const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
@@ -633,38 +647,65 @@ export default function Profile() {
                 ...updatedFields,
             });
 
+            const updatedUser = { ...user, ...updatedFields };
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
             console.log("Response:", response.data);
 
             setFillsection("education");
         } catch (error) {
             console.error("Error while updating profile:", error);
+        } finally {
+            setIsSavingProfile(false);
         }
     };
 
-    {
-        /!EDUCATION/;
-    }
-    const [selectedSecCourse, setSelectedSecCourse] = useState(
-        user?.selectedSecCourse
-    );
-    const [selectedCourse, setSelectedCourse] = useState(user?.selectedCourse);
-    const [initialDept, setInitialDept] = useState(user?.initialDept);
-    const [elementary, setElementary] = useState(user?.elementary || "");
-    const [elemYear, setElemYear] = useState(user?.elemYear || "");
-    const [highschool, setHighschool] = useState(user?.highschool || "");
-    const [highYear, setHighYear] = useState(user?.highYear || "");
-    const [schoolType, setSchoolType] = useState(user?.schoolType || "");
-    const [strand, setStrand] = useState(user?.strand || "");
-    const [lrn, setLrn] = useState(user?.lrn || "");
-    const [honor, setHonor] = useState(user?.honor || "");
-    const [college, setCollege] = useState(user?.college || "");
-    const [technical, setTechnical] = useState(user?.technical || "");
-    const [certificate, setCertificate] = useState(user?.certificate || "");
-    const [course, setCourse] = useState(user?.course || "");
-    const [year, setYear] = useState(user?.year || "");
-    const [program, setProgram] = useState(user?.program || "");
-    const [yearCom, setYearCom] = useState(user?.yearCom || "");
-    const [achivements, setAchivments] = useState(user?.achivements || "");
+    const [selectedSecCourse, setSelectedSecCourse] = useState("");
+    const [selectedCourse, setSelectedCourse] = useState("");
+    const [initialDept, setInitialDept] = useState("");
+    const [initialSecDept, setInitialSecDept] = useState("");
+    const [elementary, setElementary] = useState("");
+    const [elemYear, setElemYear] = useState("");
+    const [highschool, setHighschool] = useState("");
+    const [highYear, setHighYear] = useState("");
+    const [schoolType, setSchoolType] = useState("");
+    const [strand, setStrand] = useState("");
+    const [lrn, setLrn] = useState("");
+    const [honor, setHonor] = useState("");
+    const [college, setCollege] = useState("");
+    const [technical, setTechnical] = useState("");
+    const [certificate, setCertificate] = useState("");
+    const [course, setCourse] = useState("");
+    const [year, setYear] = useState("");
+    const [program, setProgram] = useState("");
+    const [yearCom, setYearCom] = useState("");
+    const [achivements, setAchivments] = useState("");
+
+    useEffect(() => {
+        if (user) {
+            setSelectedSecCourse(user.selectedSecCourse || "");
+            setSelectedCourse(user.selectedCourse || "");
+            setInitialDept(user.initialDept || "");
+            setInitialSecDept(user.initialSecDept || "");
+            setElementary(user.elementary || "");
+            setElemYear(user.elemYear || "");
+            setHighschool(user.highschool || "");
+            setHighYear(user.highYear || "");
+            setSchoolType(user.schoolType || "");
+            setStrand(user.strand || "");
+            setLrn(user.lrn || "");
+            setHonor(user.honor || "");
+            setCollege(user.college || "");
+            setTechnical(user.technical || "");
+            setCertificate(user.certificate || "");
+            setCourse(user.course || "");
+            setYear(user.year || "");
+            setProgram(user.program || "");
+            setYearCom(user.yearCom || "");
+            setAchivments(user.achivements || "");
+        }
+    }, [user]);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -676,29 +717,34 @@ export default function Profile() {
                 );
                 const profileData = response.data;
 
-                setSelectedSecCourse(profileData.selectedSecCourse || "");
-                setSelectedCourse(profileData.selectedCourse || "");
-                setElementary(profileData.elementary || "");
-                setElemYear(profileData.elemYear || "");
-                setElemYear(profileData.highYear || "");
-                setHighYear(profileData.highschool || "");
-                setSchoolType(profileData.schoolType || "");
-                setStrand(profileData.strand || "");
-                setLrn(profileData.lrn || "");
-                setHonor(profileData.honor || "");
-                setCollege(profileData.college || "");
-                setCourse(profileData.course || "");
-                setYear(profileData.year || "");
-                setProgram(profileData.program || "");
-                setTechnical(profileData.technical || "");
-                setCertificate(profileData.certificate || "");
-                setYearCom(profileData.yearCom || "");
-                setAchivments(profileData.achivements || "");
+                setSelectedSecCourse(profileData.selectedSecCourse || user?.selectedSecCourse || "");
+                setSelectedCourse(profileData.selectedCourse || user?.selectedCourse || "");
+                setInitialDept(profileData.initialDept || user?.initialDept || "");
+                setElementary(profileData.elementary || user?.elementary || "");
+                setElemYear(profileData.elemYear || user?.elemYear || "");
+                setHighYear(profileData.highYear || user?.highYear || "");
+                setHighschool(profileData.highschool || user?.highschool || "");
+                setSchoolType(profileData.schoolType || user?.schoolType || "");
+                setStrand(profileData.strand || user?.strand || "");
+                setLrn(profileData.lrn || user?.lrn || "");
+                setHonor(profileData.honor || user?.honor || "");
+                setCollege(profileData.college || user?.college || "");
+                setCourse(profileData.course || user?.course || "");
+                setYear(profileData.year || user?.year || "");
+                setProgram(profileData.program || user?.program || "");
+                setTechnical(profileData.technical || user?.technical || "");
+                setCertificate(profileData.certificate || user?.certificate || "");
+                setYearCom(profileData.yearCom || user?.yearCom || "");
+                setAchivments(profileData.achivements || user?.achivements || "");
             } catch (error) {
                 console.error("Error fetching user Profile", error);
             }
         };
-    }, [user.email]);
+
+        if (user?.email) {
+            fetchUserProfile();
+        }
+    }, [user?.email]);
 
     const [educErrors, setEducErrors] = useState({
         selectedSecCourse: false,
@@ -729,11 +775,12 @@ export default function Profile() {
 
     const handleUpdateEduct = async (e) => {
         e.preventDefault();
+        if (isSavingEducation) return;
         const isValid = validateEducForm();
 
         if (!isValid) {
-            const missingFields = Object.keys(formErrors).filter(
-                (field) => formErrors[field]
+            const missingFields = Object.keys(educErrors).filter(
+                (field) => educErrors[field]
             );
             Swal.fire({
                 title: "Please fill up the following fields:",
@@ -770,26 +817,28 @@ export default function Profile() {
             return;
         }
 
-        const updatedFields = {};
-        if (selectedCourse) updatedFields.selectedCourse = selectedCourse;
-        if (selectedSecCourse) updatedFields.selectedSecCourse = selectedSecCourse;
-        if (initialDept) updatedFields.initialDept = initialDept;
-        if (elementary) updatedFields.elementary = elementary;
-        if (elemYear) updatedFields.elemYear = elemYear;
-        if (highschool) updatedFields.highschool = highschool;
-        if (highYear) updatedFields.highYear = highYear;
-        if (schoolType) updatedFields.schoolType = schoolType;
-        if (strand) updatedFields.strand = strand;
-        if (lrn) updatedFields.lrn = lrn;
-        if (honor) updatedFields.honor = honor;
-        if (college) updatedFields.college = college;
-        if (course) updatedFields.course = course;
-        if (year) updatedFields.year = year;
-        if (technical) updatedFields.technical = technical;
-        if (program) updatedFields.program = program;
-        if (yearCom) updatedFields.yearCom = yearCom;
-        if (certificate) updatedFields.certificate = certificate;
-        if (achivements) updatedFields.achivements = achivements;
+        setIsSavingEducation(true);
+        const updatedFields = {
+            selectedCourse,
+            selectedSecCourse,
+            initialDept,
+            elementary,
+            elemYear,
+            highschool,
+            highYear,
+            schoolType,
+            strand,
+            lrn,
+            honor,
+            college,
+            course,
+            year,
+            technical,
+            program,
+            yearCom,
+            certificate,
+            achivements
+        };
 
         try {
             const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
@@ -797,33 +846,53 @@ export default function Profile() {
                 ...updatedFields,
             });
 
+            const updatedUser = { ...user, ...updatedFields };
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
             console.log("Response:", response.data);
 
             setFillsection("family");
         } catch (error) {
             console.error("Error while updating profile:", error);
+        } finally {
+            setIsSavingEducation(false);
         }
     };
 
-    {
-        /!FAMILY/;
-    }
-    const [fatName, setFatName] = useState(user?.fatName || "");
-    const [fatMidName, setFatMidName] = useState(user?.fatMidName || "");
-    const [fatLastName, setFatLastName] = useState(user?.fatLastName || "");
-    const [fatExt, setFatExt] = useState(user?.fatExt || "");
-    const [motName, setMotName] = useState(user?.motName || "");
-    const [motMidName, setMotMidName] = useState(user?.motMidName || "");
-    const [motLastName, setMotLastName] = useState(user?.motLastName || "");
-    const [broNum, setBroNum] = useState(user?.broNum || "");
-    const [sisNum, setSisNum] = useState(user?.sisNum || "");
-    const [guarName, setGuarName] = useState(user?.guarName || "");
-    const [guarRelationship, setGuarRelationship] = useState(
-        user?.guarRelationship || ""
-    );
-    const [guarAddress, setGuarAddress] = useState(user?.guarAddress || "");
-    const [guarEmail, setGuarEmail] = useState(user?.guarEmail || "");
-    const [guarTel, setGuarTel] = useState(user?.guarTel || "");
+    const [fatName, setFatName] = useState("");
+    const [fatMidName, setFatMidName] = useState("");
+    const [fatLastName, setFatLastName] = useState("");
+    const [fatExt, setFatExt] = useState("");
+    const [motName, setMotName] = useState("");
+    const [motMidName, setMotMidName] = useState("");
+    const [motLastName, setMotLastName] = useState("");
+    const [broNum, setBroNum] = useState("");
+    const [sisNum, setSisNum] = useState("");
+    const [guarName, setGuarName] = useState("");
+    const [guarRelationship, setGuarRelationship] = useState("");
+    const [guarAddress, setGuarAddress] = useState("");
+    const [guarEmail, setGuarEmail] = useState("");
+    const [guarTel, setGuarTel] = useState("");
+
+    useEffect(() => {
+        if (user) {
+            setFatName(user.fatName || "");
+            setFatMidName(user.fatMidName || "");
+            setFatLastName(user.fatLastName || "");
+            setFatExt(user.fatExt || "");
+            setMotName(user.motName || "");
+            setMotMidName(user.motMidName || "");
+            setMotLastName(user.motLastName || "");
+            setBroNum(user.broNum || "");
+            setSisNum(user.sisNum || "");
+            setGuarName(user.guarName || "");
+            setGuarRelationship(user.guarRelationship || "");
+            setGuarAddress(user.guarAddress || "");
+            setGuarEmail(user.guarEmail || "");
+            setGuarTel(user.guarTel || "");
+        }
+    }, [user]);
 
     useEffect(() => {
         const fetchUserProfile = async () => {
@@ -835,25 +904,29 @@ export default function Profile() {
                 );
                 const profileData = response.data;
 
-                setFatName(profileData.fatName || "");
-                setFatMidName(profileData.fatMidName || "");
-                setFatLastName(profileData.fatLastName || "");
-                setFatExt(profileData.fatExt || "");
-                setMotName(profileData.motName || "");
-                setMotMidName(profileData.motMidName || "");
-                setMotLastName(profileData.motLastName || "");
-                setBroNum(profileData.broNum || "");
-                setSisNum(profileData.sisNum || "");
-                setGuarName(profileData.guarName || "");
-                setGuarRelationship(profileData.guarRelationship || "");
-                setGuarAddress(profileData.guarAddress || "");
-                setGuarEmail(profileData.guarEmail || "");
-                setGuarTel(profileData.guarTel || "");
+                setFatName(profileData.fatName || user?.fatName || "");
+                setFatMidName(profileData.fatMidName || user?.fatMidName || "");
+                setFatLastName(profileData.fatLastName || user?.fatLastName || "");
+                setFatExt(profileData.fatExt || user?.fatExt || "");
+                setMotName(profileData.motName || user?.motName || "");
+                setMotMidName(profileData.motMidName || user?.motMidName || "");
+                setMotLastName(profileData.motLastName || user?.motLastName || "");
+                setBroNum(profileData.broNum || user?.broNum || "");
+                setSisNum(profileData.sisNum || user?.sisNum || "");
+                setGuarName(profileData.guarName || user?.guarName || "");
+                setGuarRelationship(profileData.guarRelationship || user?.guarRelationship || "");
+                setGuarAddress(profileData.guarAddress || user?.guarAddress || "");
+                setGuarEmail(profileData.guarEmail || user?.guarEmail || "");
+                setGuarTel(profileData.guarTel || user?.guarTel || "");
             } catch (error) {
                 console.error("Error fetching user Profile", error);
             }
         };
-    }, [user.email]);
+
+        if (user?.email) {
+            fetchUserProfile();
+        }
+    }, [user?.email]);
 
     const [familyErrors, setFamilyErrors] = useState({
         fatName: false,
@@ -891,11 +964,12 @@ export default function Profile() {
 
     const handleUpdateFamily = async (e) => {
         e.preventDefault();
+        if (isSavingFamily) return;
         const isValid = validateFamilyForm();
 
         if (!isValid) {
-            const missingFields = Object.keys(formErrors).filter(
-                (field) => formErrors[field]
+            const missingFields = Object.keys(familyErrors).filter(
+                (field) => familyErrors[field]
             );
             Swal.fire({
                 title: "Please fill up the following fields:",
@@ -916,21 +990,24 @@ export default function Profile() {
             });
             return;
         }
-        const updatedFields = {};
-        if (fatName) updatedFields.fatName = fatName;
-        if (fatMidName) updatedFields.fatMidName = fatMidName;
-        if (fatLastName) updatedFields.fatLastName = fatLastName;
-        if (motName) updatedFields.motName = motName;
-        if (motMidName) updatedFields.motMidName = motMidName;
-        if (motLastName) updatedFields.motLastName = motLastName;
-        if (guarName) updatedFields.guarName = guarName;
-        if (guarRelationship) updatedFields.guarRelationship = guarRelationship;
-        if (guarAddress) updatedFields.guarAddress = guarAddress;
-        updatedFields.guarEmail = guarEmail || "";
-        if (guarTel) updatedFields.guarTel = guarTel;
-        if (broNum) updatedFields.broNum = broNum;
-        if (sisNum) updatedFields.sisNum = sisNum;
-        if (fatExt) updatedFields.fatExt = fatExt;
+
+        setIsSavingFamily(true);
+        const updatedFields = {
+            fatName,
+            fatMidName,
+            fatLastName,
+            motName,
+            motMidName,
+            motLastName,
+            guarName,
+            guarRelationship,
+            guarAddress,
+            guarEmail: guarEmail || "",
+            guarTel,
+            broNum,
+            sisNum,
+            fatExt
+        };
 
         try {
             const response = await axios.put(import.meta.env.VITE_API_URL + "/update-profile", {
@@ -938,15 +1015,19 @@ export default function Profile() {
                 ...updatedFields,
             });
 
+            const updatedUser = { ...user, ...updatedFields };
+            setUser(updatedUser);
+            localStorage.setItem("user", JSON.stringify(updatedUser));
+
             console.log("Response:", response.data);
 
             setFillsection("uploads");
         } catch (error) {
             console.error("Error while updating profile:", error);
+        } finally {
+            setIsSavingFamily(false);
         }
     };
-
-
 
     const handleFinalize = () => {
         if (!selectedCourse) {
@@ -967,7 +1048,7 @@ export default function Profile() {
             return;
         }
 
-        if (!user.image) {
+        if (!user?.image) {
             Swal.fire({
                 icon: "error",
                 title: "Missing Profile Image",
@@ -1006,7 +1087,7 @@ export default function Profile() {
                     <div className="profile-image">
                         <img
                             onClick={() => setProfilepfp(true)}
-                            src={user.image || "/img/prof.jpg"}
+                            src={user?.image || "/img/prof.jpg"}
                             alt="Profile"
                         />
                         <p className="change-text" style={{ fontSize: "10px" }}>
@@ -1070,15 +1151,16 @@ export default function Profile() {
                                     </button>
                                     <button
                                         onClick={handleUpload}
+                                        disabled={isUploadingProfile}
                                         style={{
                                             border: "1px solid #006666",
-                                            background: "#006666",
+                                            background: isUploadingProfile ? "#ccc" : "#006666",
                                             color: "white",
                                             padding: "10px 20px",
-                                            cursor: "pointer",
+                                            cursor: isUploadingProfile ? "not-allowed" : "pointer",
                                         }}
                                     >
-                                        Upload
+                                        {isUploadingProfile ? "Uploading..." : "Upload"}
                                     </button>
                                 </div>
                             </div>
@@ -1101,7 +1183,7 @@ export default function Profile() {
                                     {" "}
                                     {user?.lastname || ""}, {user?.firstname || ""},{" "}
                                     {user?.middlename || ""} {user?.extension || ""}{" "}
-                                    {course.initialDept || ""}
+                                    {initialDept || ""}
                                 </td>
                             </tr>
                             <tr>
@@ -1177,7 +1259,6 @@ export default function Profile() {
                     )}
                 </div>
 
-                {/* Personal Information Section */}
                 <div
                     className={`datafill ${fillsection === "personal" ? "active" : ""}`}
                     onClick={() => setFillsection("personal")}
@@ -1280,8 +1361,24 @@ export default function Profile() {
                                                     <input
                                                         type="text"
                                                         className="persofom-input"
-                                                        value={user?.phone || extension || ""}
-                                                        onChange={(e) => setPhone(e.target.value)}
+                                                        value={phone}
+                                                        onChange={(e) => {
+                                                            let value = e.target.value.replace(/\D/g, "");
+                                                            if (value.startsWith("0")) {
+                                                                value = value.substring(1);
+                                                            }
+                                                            if (value.length > 10) {
+                                                                value = value.substring(0, 10);
+                                                            }
+                                                            if (value.length >= 6) {
+                                                                value = value.replace(/(\d{3})(\d{3})(\d{4})/, "$1-$2-$3");
+                                                            } else if (value.length >= 3) {
+                                                                value = value.replace(/(\d{3})(\d{0,3})/, "$1-$2");
+                                                            }
+                                                            setPhone(value);
+                                                        }}
+                                                        placeholder="909-205-3912"
+                                                        maxLength={12}
                                                     />
                                                 </div>
                                             </div>
@@ -1300,7 +1397,6 @@ export default function Profile() {
                                                     flexWrap: "wrap",
                                                 }}
                                             >
-                                                {/* First Name */}
                                                 <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>First Name*</label>
                                                     <div className="persofom-input-container">
@@ -1311,7 +1407,6 @@ export default function Profile() {
                                                     </div>
                                                 </div>
 
-                                                {/* Middle Name */}
                                                 <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>Middle Name</label>
                                                     <input
@@ -1322,7 +1417,6 @@ export default function Profile() {
                                                     />
                                                 </div>
 
-                                                {/* Last Name */}
                                                 <div className="persofom-group name" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : "1 1 5%" }}>
                                                     <label>Last Name*</label>
                                                     <div className="persofom-input-container">
@@ -1333,12 +1427,11 @@ export default function Profile() {
                                                     </div>
                                                 </div>
 
-                                                {/* Extension Name */}
                                                 <div className="persofom-group ext" style={{ flex: window.innerWidth <= 768 ? "1 1 100%" : ".20px" }}>
                                                     <label>Ext Name</label>
                                                     <select
                                                         className="persofom-input"
-                                                        value={extension || user?.extension || ""}
+                                                        value={extension || ""}
                                                         onChange={(e) => {
                                                             const selectedValue = e.target.value;
                                                             setExtension(selectedValue);
@@ -1430,7 +1523,7 @@ export default function Profile() {
                                             <select
                                                 className={`persofom-input ${formErrors.civil ? "error" : ""
                                                     }`}
-                                                value={civil || user?.civil || ""}
+                                                value={civil || ""}
                                                 onChange={(e) => setCivil(e.target.value)}
                                             >
                                                 <option value="" disabled hidden>
@@ -1455,7 +1548,7 @@ export default function Profile() {
                                             <select
                                                 className={`persofom-input ${formErrors.sex ? "error" : ""
                                                     }`}
-                                                value={sex || user?.sex || ""}
+                                                value={sex || ""}
                                                 onChange={(e) => setSex(e.target.value)}
                                             >
                                                 <option value="" disabled hidden>
@@ -1478,7 +1571,7 @@ export default function Profile() {
                                             <select
                                                 className={`persofom-input ${formErrors.citizenship ? "error" : ""
                                                     }`}
-                                                value={citizenship || user?.citizenship || ""}
+                                                value={citizenship || ""}
                                                 onChange={(e) => setCitizenship(e.target.value)}
                                             >
                                                 <option value="" disabled hidden>
@@ -1520,7 +1613,6 @@ export default function Profile() {
                                             </h2>
                                         </div>
 
-                                        {/* Region */}
                                         <div
                                             className="persofom-group ext"
                                             style={{
@@ -1543,7 +1635,6 @@ export default function Profile() {
                                             </select>
                                         </div>
 
-                                        {/* Province */}
                                         <div
                                             className="persofom-group ext"
                                             style={{
@@ -1603,7 +1694,6 @@ export default function Profile() {
                                                 </select>
                                             </div>
                                         )}
-                                        {/* Barangay */}
                                         {city === "Botolan" && (
                                             <div
                                                 className="persofom-group ext"
@@ -1877,7 +1967,10 @@ export default function Profile() {
                                                     <option value="BANUANBAYO">
                                                         BANUANBAYO
                                                     </option>
-                                                    <option value="CADMANGRESERVA">CANDMANG-RESERVE</option>
+                                                    <option value="CADMANGRESERVA">CANDMANG-RESERVE
+
+
+                                                    </option>
                                                     <option value="CAMIING">CAMIING</option>
                                                     <option value="CASABAAN">CASABAAN</option>
                                                     <option value="DELCARMEN">DEL CARMEN</option>
@@ -1911,6 +2004,7 @@ export default function Profile() {
                                             >
                                                 <label>Barangay *</label>
                                                 <select
+
                                                     name="barangay"
                                                     className={`persofom-input ${formErrors.barangay ? "error" : ""
                                                         }`}
@@ -1979,7 +2073,6 @@ export default function Profile() {
                                                     </option>
                                                     <option value="EASTTAPINAC">EAST TAPINAC</option>
                                                     <option value="GORDONHEIGHTS">GORDON HEIGHTS</option>
-                                                    <option value="KALAKLAN">KALAKLAN</option>
                                                     <option value="KALAKLAN">KALAKLAN</option>
                                                     <option value="MABAYUAN">MABAYUAN</option>
                                                     <option value="NEWCABALAN">
@@ -2126,7 +2219,6 @@ export default function Profile() {
                                                         Select One
                                                     </option>
                                                     <option value="AGLAO">AGLAO</option>
-                                                    <option value="BUHAWEN">BUHAWEN</option>
                                                     <option value="BUHAWEN">BUHAWEN</option>
                                                     <option value="BURGOS">BURGOS</option>
                                                     <option value="CENTRAL">CENTRAL</option>
@@ -2296,7 +2388,7 @@ export default function Profile() {
                                                     marginTop: "6px",
                                                 }}
                                                 disabled={isDisabled}
-                                                value={disabilityCategory || user?.disabilityCategory || ""}
+                                                value={disabilityCategory || ""}
                                                 onChange={(e) => setDisabilityCategory(e.target.value)}
                                             >
                                                 <option value="" disabled hidden>
@@ -2356,8 +2448,8 @@ export default function Profile() {
                                         width: window.innerWidth <= 768 ? "60%" : "100%",
                                     }}
                                 >
-                                    <button type="submit" onClick={handleUpdateProfile}>
-                                        <i className="fa-solid fa-download"></i> Save and Proceed
+                                    <button type="submit" onClick={handleUpdateProfile} disabled={isSavingProfile} style={{ opacity: isSavingProfile ? 0.7 : 1, cursor: isSavingProfile ? "not-allowed" : "pointer" }}>
+                                        <i className="fa-solid fa-download"></i> {isSavingProfile ? "Saving..." : "Save and Proceed"}
                                     </button>
                                 </div>
 
@@ -2365,7 +2457,7 @@ export default function Profile() {
                         </>
                     )}
                 </div>
-                {/* Education Information Section */}
+
                 <div
                     className={`datafill ${fillsection === "education" ? "active" : ""} ${!unlockedSections.includes("education") ? "disabled" : ""
                         }`}
@@ -2436,7 +2528,7 @@ export default function Profile() {
                                                 <label>First Choice *</label>
                                                 <select
                                                     className="persofom-input"
-                                                    value={selectedCourse || user?.selectedCourse || ""}
+                                                    value={selectedCourse || ""}
                                                     onChange={(e) => {
                                                         const selectedCourseTitle = e.target.value;
                                                         setSelectedCourse(selectedCourseTitle);
@@ -2449,7 +2541,7 @@ export default function Profile() {
                                                     }}
                                                 >
                                                     <option value="" disabled>
-                                                        Select One
+                                                        {courses.length === 0 ? "Loading Courses please wait..." : "Select One"}
                                                     </option>
                                                     {courses.map((course) => (
                                                         <option key={course._id} value={course.title}>
@@ -2468,7 +2560,7 @@ export default function Profile() {
                                                 <label>Second Choice *</label>
                                                 <select
                                                     className="persofom-input"
-                                                    value={selectedSecCourse || user?.selectedSecCourse || ""}
+                                                    value={selectedSecCourse || ""}
                                                     onChange={(e) => {
                                                         const selectedSecCourseTitle = e.target.value;
                                                         setSelectedSecCourse(selectedSecCourseTitle);
@@ -2481,7 +2573,7 @@ export default function Profile() {
                                                     }}
                                                 >
                                                     <option value="" disabled>
-                                                        Select One
+                                                        {courses.length === 0 ? "Loading Courses please wait..." : "Select One"}
                                                     </option>
                                                     {courses.map((course) => (
                                                         <option key={course._id} value={course.title}>
@@ -2615,10 +2707,10 @@ export default function Profile() {
                                             <label>School type of SHS/HS *</label>
                                             <select
                                                 className={`persofom-input ${educErrors.schoolType ? "error" : ""}`}
-                                                value={schoolType || user?.schoolType || ""}
+                                                value={schoolType || ""}
                                                 onChange={(e) => setSchoolType(e.target.value)}
                                             >
-                                                <option value="" disabled selected>
+                                                <option value="" disabled>
                                                     Select One
                                                 </option>
                                                 <option value="public">Public School</option>
@@ -2637,10 +2729,10 @@ export default function Profile() {
                                             <label>SHS Strand *</label>
                                             <select
                                                 className={`persofom-input ${educErrors.strand ? "error" : ""}`}
-                                                value={strand || user?.strand || ""}
+                                                value={strand || ""}
                                                 onChange={(e) => setStrand(e.target.value)}
                                             >
-                                                <option value="" disabled selected>
+                                                <option value="" disabled>
                                                     Select One
                                                 </option>
                                                 <option value="ABM">Accountancy, Business, and Management (ABM)</option>
@@ -2929,7 +3021,7 @@ export default function Profile() {
                                                     <div className="persofom-group ext" style={{ width: "90%" }}>
                                                         <select
                                                             className={`persofom-input ${educErrors.achivements ? "error" : ""}`}
-                                                            value={achivements || user?.achivements || ""}
+                                                            value={achivements || ""}
                                                             onChange={(e) => setAchivments(e.target.value)}
                                                         >
                                                             <option value="" disabled>
@@ -2955,8 +3047,8 @@ export default function Profile() {
                                             width: window.innerWidth <= 768 ? "75%" : "100%",
                                         }}
                                     >
-                                        <button type="submit" onClick={handleUpdateEduct}>
-                                            <i className="fa-solid fa-download"></i> Save and Proceed
+                                        <button type="submit" onClick={handleUpdateEduct} disabled={isSavingEducation} style={{ opacity: isSavingEducation ? 0.7 : 1, cursor: isSavingEducation ? "not-allowed" : "pointer" }}>
+                                            <i className="fa-solid fa-download"></i> {isSavingEducation ? "Saving..." : "Save and Proceed"}
                                         </button>
                                     </div>
                                 </div>
@@ -2965,7 +3057,6 @@ export default function Profile() {
                     )}
                 </div>
 
-                {/* Family Information Section */}
                 <div
                     className={`datafill ${fillsection === "family" ? "active" : ""} ${!unlockedSections.includes("family") ? "disabled" : ""
                         }`}
@@ -3087,7 +3178,7 @@ export default function Profile() {
                                                 <label>Ext Name</label>
                                                 <select
                                                     className="persofom-input"
-                                                    value={fatExt || fatExt?.fatExt || ""}
+                                                    value={fatExt || ""}
                                                     onChange={(e) => {
                                                         const selectedValue = e.target.value;
                                                         setFatExt(selectedValue);
@@ -3346,8 +3437,8 @@ export default function Profile() {
                                             width: window.innerWidth <= 768 ? "75%" : "100%",
                                         }}
                                     >
-                                        <button type="submit" onClick={handleUpdateFamily}>
-                                            <i className="fa-solid fa-download"></i> Save and Proceed
+                                        <button type="submit" onClick={handleUpdateFamily} disabled={isSavingFamily} style={{ opacity: isSavingFamily ? 0.7 : 1, cursor: isSavingFamily ? "not-allowed" : "pointer" }}>
+                                            <i className="fa-solid fa-download"></i> {isSavingFamily ? "Saving..." : "Save and Proceed"}
                                         </button>
                                     </div>
                                 </div>
@@ -3356,17 +3447,16 @@ export default function Profile() {
                     )}
                 </div>
 
-                {/* Upload Docx Information Section */}
                 <div
                     className={`datafill ${fillsection === "uploads" ? "active" : ""} ${!unlockedSections.includes("uploads") ? "disabled" : ""
                         }`}
                     onClick={() => goToSection("uploads")}
                 >
                     <div
-                        className={`fillhead ${fillsection === "upload" ? "active" : ""}`}
+                        className={`fillhead ${fillsection === "uploads" ? "active" : ""}`}
                     >
                         <span className="step-icon">
-                            {fillsection === "upload" ? (
+                            {fillsection === "uploads" ? (
                                 <i className="fa-solid fa-pen"></i>
                             ) : (
                                 "5"
@@ -3507,15 +3597,16 @@ export default function Profile() {
                                                             </button>
                                                             <button
                                                                 onClick={idHandleUpload}
+                                                                disabled={isUploadingId}
                                                                 style={{
                                                                     border: "1px solid #006666",
-                                                                    background: "#006666",
+                                                                    background: isUploadingId ? "#ccc" : "#006666",
                                                                     color: "white",
                                                                     padding: "10px 20px",
-                                                                    cursor: "pointer",
+                                                                    cursor: isUploadingId ? "not-allowed" : "pointer",
                                                                 }}
                                                             >
-                                                                Submit
+                                                                {isUploadingId ? "Uploading..." : "Submit"}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -3595,15 +3686,16 @@ export default function Profile() {
                                                             </button>
                                                             <button
                                                                 onClick={birthCertHandleUpload}
+                                                                disabled={isUploadingBirthCert}
                                                                 style={{
                                                                     border: "1px solid #006666",
-                                                                    background: "#006666",
+                                                                    background: isUploadingBirthCert ? "#ccc" : "#006666",
                                                                     color: "white",
                                                                     padding: "10px 20px",
-                                                                    cursor: "pointer",
+                                                                    cursor: isUploadingBirthCert ? "not-allowed" : "pointer",
                                                                 }}
                                                             >
-                                                                Submit
+                                                                {isUploadingBirthCert ? "Uploading..." : "Submit"}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -3671,14 +3763,16 @@ export default function Profile() {
                                                             </button>
                                                             <button
                                                                 onClick={goodMoralHandleUpload}
+                                                                disabled={isUploadingGoodMoral}
                                                                 style={{
                                                                     border: "1px solid #006666",
-                                                                    background: "#006666",
+                                                                    background: isUploadingGoodMoral ? "#ccc" : "#006666",
                                                                     color: "white",
                                                                     padding: "10px 20px",
+                                                                    cursor: isUploadingGoodMoral ? "not-allowed" : "pointer",
                                                                 }}
                                                             >
-                                                                Submit
+                                                                {isUploadingGoodMoral ? "Uploading..." : "Submit"}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -3769,14 +3863,16 @@ export default function Profile() {
                                                             </button>
                                                             <button
                                                                 onClick={academicHandleUpload}
+                                                                disabled={isUploadingAcademic}
                                                                 style={{
                                                                     border: "1px solid #006666",
-                                                                    background: "#006666",
+                                                                    background: isUploadingAcademic ? "#ccc" : "#006666",
                                                                     color: "white",
                                                                     padding: "10px 20px",
+                                                                    cursor: isUploadingAcademic ? "not-allowed" : "pointer",
                                                                 }}
                                                             >
-                                                                Submit
+                                                                {isUploadingAcademic ? "Uploading..." : "Submit"}
                                                             </button>
                                                         </div>
                                                     </div>
@@ -3794,7 +3890,6 @@ export default function Profile() {
                     )}
                 </div>
 
-                {/* Finalised Information Section */}
                 <div
                     className={`datafill ${fillsection === "confirmation" ? "active" : ""
                         }`}

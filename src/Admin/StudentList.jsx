@@ -3,6 +3,7 @@ import axios from 'axios';
 import './Admincss/studentlist.css';
 import "./Admincss/studenttwo.css";
 import Swal from 'sweetalert2';
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function StudentList() {
     const [students, setStudents] = useState([]);
@@ -17,7 +18,7 @@ export default function StudentList() {
     const [loadingUserData, setLoadingUserData] = useState(true);
     const [activeTab, setActiveTab] = useState("info");
     const [previewImage, setPreviewImage] = useState(null);
-
+    const [isSaving, setIsSaving] = useState(false);
 
     useEffect(() => {
         const fetchStudents = async () => {
@@ -94,6 +95,20 @@ export default function StudentList() {
                 console.error(err);
                 Swal.fire('Error!', 'Failed to delete student.', 'error');
             }
+        }
+    };
+
+    const handleSaveChanges = async () => {
+        setIsSaving(true);
+        try {
+            const res = await axios.put(`${import.meta.env.VITE_API_URL}/api/acceptedstudents/${selectedStudent._id}`, editedStudent);
+            setStudents(prev => prev.map(s => s._id === selectedStudent._id ? res.data : s));
+            setShowEditModal(false);
+            Swal.fire({ icon: 'success', title: 'Success', text: 'Student updated!' });
+        } catch (err) {
+            Swal.fire({ icon: 'error', title: 'Error', text: 'Update failed!' });
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -302,7 +317,7 @@ export default function StudentList() {
                         </tr>
                     </thead>
                     <tbody>
-                        {current.length === 0 ? (
+                        {current.length === 0 && !loadingUserData ? (
                             <tr><td colSpan="6">No students found</td></tr>
                         ) : (
                             current.map((s, i) => (
@@ -326,8 +341,12 @@ export default function StudentList() {
                                             setSelectedStudent(s);
                                             setEditedStudent(s);
                                             setShowEditModal(true);
-                                        }}>Edit</button>
-                                        <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
+                                        }}>
+                                            <Pencil size={16} />
+                                        </button>
+                                        <button className="action-btn delete" onClick={() => handleDelete(s._id)}>
+                                            <Trash2 size={16} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -415,16 +434,11 @@ export default function StudentList() {
                                 <button
                                     type="button"
                                     className="action-btn confirm"
-                                    onClick={() => {
-                                        axios.put(`${import.meta.env.VITE_API_URL}/api/acceptedstudents/${selectedStudent._id}`, editedStudent)
-                                            .then(res => {
-                                                setStudents(prev => prev.map(s => s._id === selectedStudent._id ? res.data : s));
-                                                setShowEditModal(false);
-                                                Swal.fire({ icon: 'success', title: 'Success', text: 'Student updated!' });
-                                            })
-                                            .catch(err => Swal.fire({ icon: 'error', title: 'Error', text: 'Update failed!' }));
-                                    }}
-                                >Save Changes</button>
+                                    onClick={handleSaveChanges}
+                                    disabled={isSaving}
+                                >
+                                    {isSaving ? "Saving..." : "Save Changes"}
+                                </button>
                             </div>
                         </form>
                     </div>

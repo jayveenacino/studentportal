@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Pencil, Trash2 } from "lucide-react";
 import "./Admincss/subjects.css";
 
 const Subjects = () => {
@@ -10,6 +11,8 @@ const Subjects = () => {
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [loadingSubjects, setLoadingSubjects] = useState(true);
     const [newSubject, setNewSubject] = useState({
         code: "",
         name: "",
@@ -25,8 +28,18 @@ const Subjects = () => {
     const perPage = 5;
 
     useEffect(() => {
-        fetchSubjects();
-        fetchCourses();
+        const fetchData = async () => {
+            setLoadingSubjects(true);
+            try {
+                await fetchSubjects();
+                await fetchCourses();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingSubjects(false);
+            }
+        };
+        fetchData();
     }, []);
 
     const fetchSubjects = async () => {
@@ -60,41 +73,43 @@ const Subjects = () => {
     const paginate = (pageNumber) => setCurrentPage(pageNumber);
 
     const handleSubmit = async () => {
-    if (!newSubject.code || !newSubject.name || !newSubject.department) {
-        return Swal.fire("Missing Fields", "Code, Name, and Department are required.", "warning");
-    }
-
-    try {
-        const url = `${import.meta.env.VITE_API_URL}/api/subjects`;
-
-        const submitData = {
-            code: newSubject.code,
-            name: newSubject.name,
-            department: newSubject.department,
-            units: Number(newSubject.units) || 3,
-            semester: newSubject.semester || "1st Sem",
-            yearLevel: newSubject.yearLevel || "1st Year",
-            price: newSubject.price === "" ? 0 : Number(newSubject.price),
-            prerequisite: newSubject.prerequisite === "" ? null : newSubject.prerequisite
-        };
-
-        console.log("FINAL SEND:", submitData);
-
-        if (editMode && editId) {
-            await axios.put(`${url}/${editId}`, submitData);
-            Swal.fire("Updated", "Subject updated successfully.", "success");
-        } else {
-            await axios.post(url, submitData);
-            Swal.fire("Added", "Subject added successfully.", "success");
+        if (!newSubject.code || !newSubject.name || !newSubject.department) {
+            return Swal.fire("Missing Fields", "Code, Name, and Department are required.", "warning");
         }
 
-        fetchSubjects();
-        resetForm();
-    } catch (err) {
-        console.error(err);
-        Swal.fire("Error", err.response?.data?.error || "Something went wrong.", "error");
-    }
-};
+        setIsSaving(true);
+
+        try {
+            const url = `${import.meta.env.VITE_API_URL}/api/subjects`;
+
+            const submitData = {
+                code: newSubject.code,
+                name: newSubject.name,
+                department: newSubject.department,
+                units: Number(newSubject.units) || 3,
+                semester: newSubject.semester || "1st Sem",
+                yearLevel: newSubject.yearLevel || "1st Year",
+                price: newSubject.price === "" ? 0 : Number(newSubject.price),
+                prerequisite: newSubject.prerequisite === "" ? null : newSubject.prerequisite
+            };
+
+            if (editMode && editId) {
+                await axios.put(`${url}/${editId}`, submitData);
+                Swal.fire("Updated", "Subject updated successfully.", "success");
+            } else {
+                await axios.post(url, submitData);
+                Swal.fire("Added", "Subject added successfully.", "success");
+            }
+
+            fetchSubjects();
+            resetForm();
+        } catch (err) {
+            console.error(err);
+            Swal.fire("Error", err.response?.data?.error || "Something went wrong.", "error");
+        } finally {
+            setIsSaving(false);
+        }
+    };
 
     const handleEdit = (subject) => {
         setNewSubject({
@@ -139,12 +154,36 @@ const Subjects = () => {
         setEditMode(false);
         setEditId(null);
         setShowModal(false);
+        setIsSaving(false);
     };
 
     const availablePrerequisites = subjects.filter(s => editMode ? s._id !== editId : true);
 
     return (
-        <div className="subjects-container">
+        <div className="subjects-container" style={{ position: "relative" }}>
+            {loadingSubjects && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Subjects...
+                    </p>
+                </div>
+            )}
+
             <div className="subjects-header">
                 <h1>Subjects</h1>
                 <p>Manage the list of academic subjects here.</p>
@@ -196,12 +235,16 @@ const Subjects = () => {
                                 <td>{s.price !== undefined && s.price !== null ? `₱${s.price}` : "-"}</td>
                                 <td>{s.prerequisite || "None"}</td>
                                 <td style={{ textAlign: "right", paddingRight: "20px" }}>
-                                    <button className="action-btn edit" onClick={() => handleEdit(s)}>Edit</button>
-                                    <button className="action-btn delete" onClick={() => handleDelete(s._id)}>Delete</button>
+                                    <button className="action-btn edit" onClick={() => handleEdit(s)}>
+                                        <Pencil size={16} />
+                                    </button>
+                                    <button className="action-btn delete" onClick={() => handleDelete(s._id)}>
+                                        <Trash2 size={16} />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
-                        {currentItems.length === 0 && (
+                        {currentItems.length === 0 && !loadingSubjects && (
                             <tr>
                                 <td colSpan="10" style={{ textAlign: "center", padding: "20px" }}>No subjects found.</td>
                             </tr>
@@ -316,8 +359,10 @@ const Subjects = () => {
                             </div>
                         </div>
                         <div className="modal-buttons">
-                            <button onClick={handleSubmit}>Save</button>
-                            <button onClick={resetForm}>Cancel</button>
+                            <button onClick={handleSubmit} disabled={isSaving}>
+                                {isSaving ? "Saving..." : "Save"}
+                            </button>
+                            <button onClick={resetForm} disabled={isSaving}>Cancel</button>
                         </div>
                     </div>
                 </div>

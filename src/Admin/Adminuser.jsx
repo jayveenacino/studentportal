@@ -2,10 +2,13 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Admincss/user.css";
 import Swal from "sweetalert2";
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function Adminuser() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [loadingUsers, setLoadingUsers] = useState(true);
+    const [isSaving, setIsSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [formData, setFormData] = useState({
         username: "",
@@ -15,7 +18,17 @@ export default function Adminuser() {
     });
 
     useEffect(() => {
-        fetchUsers();
+        const fetchData = async () => {
+            setLoadingUsers(true);
+            try {
+                await fetchUsers();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingUsers(false);
+            }
+        };
+        fetchData();
     }, []);
 
     const fetchUsers = async () => {
@@ -33,7 +46,7 @@ export default function Adminuser() {
     };
 
     const handleAddUser = async () => {
-        setLoading(true);
+        setIsSaving(true);
         try {
             const res = await axios.post(import.meta.env.VITE_API_URL + "/api/adminusers", formData);
             Swal.fire("Success", res.data.message, "success");
@@ -43,7 +56,7 @@ export default function Adminuser() {
         } catch (err) {
             Swal.fire("Error", "Failed to add admin user", "error");
         } finally {
-            setLoading(false);
+            setIsSaving(false);
         }
     };
 
@@ -90,7 +103,30 @@ export default function Adminuser() {
     };
 
     return (
-        <div className="adminuser-container">
+        <div className="adminuser-container" style={{ position: "relative" }}>
+            {loadingUsers && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Admin Users...
+                    </p>
+                </div>
+            )}
+
             <div className="adminuser-header">
                 <h1>Admin User Management</h1>
                 <p>Manage administrator accounts for the system.</p>
@@ -132,13 +168,13 @@ export default function Adminuser() {
                                             className="adminuser-action-btn edit"
                                             onClick={() => handleEditUser(user)}
                                         >
-                                            Edit
+                                            <Pencil size={16} />
                                         </button>
                                         <button
                                             className="adminuser-action-btn delete"
                                             onClick={() => handleDeleteUser(user._id)}
                                         >
-                                            Delete
+                                            <Trash2 size={16} />
                                         </button>
                                     </td>
                                 </tr>
@@ -191,10 +227,10 @@ export default function Adminuser() {
                         </select>
 
                         <div className="adminuser-modal-buttons">
-                            <button onClick={handleAddUser} disabled={loading}>
-                                {loading ? "Saving..." : "Save"}
+                            <button onClick={handleAddUser} disabled={isSaving}>
+                                {isSaving ? "Saving..." : "Save"}
                             </button>
-                            <button onClick={() => setShowModal(false)}>Cancel</button>
+                            <button onClick={() => setShowModal(false)} disabled={isSaving}>Cancel</button>
                         </div>
                     </div>
                 </div>

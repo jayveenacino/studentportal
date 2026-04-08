@@ -30,7 +30,7 @@ export default function Preregister() {
     };
 
     useEffect(() => {
-        document.title = "Kolehiyo Ng Subic - Student Admission";
+        document.title = "Kolehiyo Ng Subic | Student Admission";
     }, []);
 
 

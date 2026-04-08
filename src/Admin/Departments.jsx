@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Admincss/departments.css";
 import Swal from 'sweetalert2';
-
+import { Pencil, Trash2 } from "lucide-react";
 
 export default function Departments() {
     const [departments, setDepartments] = useState([]);
@@ -11,18 +11,33 @@ export default function Departments() {
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [loadingDepartments, setLoadingDepartments] = useState(true);
     const [newDept, setNewDept] = useState({ name: "", head: "", status: "Active" });
 
     const perPage = 5;
 
     useEffect(() => {
-        fetchDepartments();
+        const fetchData = async () => {
+            setLoadingDepartments(true);
+            try {
+                await fetchDepartments();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingDepartments(false);
+            }
+        };
+        fetchData();
     }, []);
 
-    const fetchDepartments = () => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/departments")
-            .then(res => setDepartments(res.data))
-            .catch(err => console.error("Failed to fetch departments:", err));
+    const fetchDepartments = async () => {
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/departments");
+            setDepartments(res.data);
+        } catch (err) {
+            console.error("Failed to fetch departments:", err);
+        }
     };
 
     const filtered = departments.filter(
@@ -43,6 +58,8 @@ export default function Departments() {
             });
         }
 
+        setIsSaving(true);
+
         try {
             if (editMode) {
                 const res = await axios.put(
@@ -50,7 +67,6 @@ export default function Departments() {
                     newDept
                 );
 
-                // update UI instantly
                 setDepartments(prev =>
                     prev.map(d => d._id === editId ? res.data : d)
                 );
@@ -70,7 +86,6 @@ export default function Departments() {
                 });
             }
 
-            // reset modal
             setNewDept({ name: "", head: "", status: "Active" });
             setEditMode(false);
             setEditId(null);
@@ -83,9 +98,10 @@ export default function Departments() {
                 title: 'Failed',
                 text: 'Could not save the department.'
             });
+        } finally {
+            setIsSaving(false);
         }
     };
-
 
     const handleEdit = dept => {
         setNewDept({
@@ -97,7 +113,6 @@ export default function Departments() {
         setEditMode(true);
         setShowModal(true);
     };
-
 
     const handleDelete = async (id) => {
         const result = await Swal.fire({
@@ -116,7 +131,6 @@ export default function Departments() {
         try {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/departments/${id}`);
 
-            // update UI immediately
             setDepartments(prev => prev.filter(d => d._id !== id));
 
             Swal.fire({
@@ -134,9 +148,39 @@ export default function Departments() {
         }
     };
 
+    const resetForm = () => {
+        setShowModal(false);
+        setEditMode(false);
+        setEditId(null);
+        setNewDept({ name: "", head: "", status: "Active" });
+        setIsSaving(false);
+    };
 
     return (
-        <div className="departments-container">
+        <div className="departments-container" style={{ position: "relative" }}>
+            {loadingDepartments && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Departments...
+                    </p>
+                </div>
+            )}
+
             <div className="departments-header">
                 <h1>Departments</h1>
                 <p>Manage the different departments in your school or organization.</p>
@@ -185,12 +229,16 @@ export default function Departments() {
                                     </span>
                                 </td>
                                 <td style={{ textAlign: "right" }}>
-                                    <button className="action-btn edit" onClick={() => handleEdit(d)}>Edit</button>
-                                    <button className="action-btn delete" onClick={() => handleDelete(d._id)}>Delete</button>
+                                    <button className="action-btn edit" onClick={() => handleEdit(d)}>
+                                        <Pencil size={16} />
+                                    </button>
+                                    <button className="action-btn delete" onClick={() => handleDelete(d._id)}>
+                                        <Trash2 size={16} />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
-                        {current.length === 0 && (
+                        {current.length === 0 && !loadingDepartments && (
                             <tr>
                                 <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>No departments found.</td>
                             </tr>
@@ -237,12 +285,10 @@ export default function Departments() {
                             <option value="Inactive">Inactive</option>
                         </select>
                         <div className="modal-buttons">
-                            <button onClick={handleSubmit}>Save</button>
-                            <button onClick={() => {
-                                setShowModal(false);
-                                setEditMode(false);
-                                setNewDept({ name: "", head: "", status: "Active" });
-                            }}>Cancel</button>
+                            <button onClick={handleSubmit} disabled={isSaving}>
+                                {isSaving ? "Saving..." : "Save"}
+                            </button>
+                            <button onClick={resetForm} disabled={isSaving}>Cancel</button>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Pencil, Trash2 } from "lucide-react";
 import "./Admincss/courses.css";
 
 export default function Courses() {
@@ -11,25 +12,43 @@ export default function Courses() {
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
+    const [isSaving, setIsSaving] = useState(false);
+    const [loadingCourses, setLoadingCourses] = useState(true);
     const [newCourse, setNewCourse] = useState({ title: "", status: "Active", department: "", initialDept: "" });
 
     const perPage = 5;
 
     useEffect(() => {
-        fetchCourses();
-        fetchDepartments();
+        const fetchData = async () => {
+            setLoadingCourses(true);
+            try {
+                await fetchCourses();
+                await fetchDepartments();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingCourses(false);
+            }
+        };
+        fetchData();
     }, []);
 
-    const fetchCourses = () => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/courses")
-            .then(res => setCourses(res.data))
-            .catch(err => console.error("Fetch error:", err));
+    const fetchCourses = async () => {
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/courses");
+            setCourses(res.data);
+        } catch (err) {
+            console.error("Fetch error:", err);
+        }
     };
 
-    const fetchDepartments = () => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/departments")
-            .then(res => setDepartments(res.data))
-            .catch(err => console.error("Department fetch error:", err));
+    const fetchDepartments = async () => {
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/departments");
+            setDepartments(res.data);
+        } catch (err) {
+            console.error("Department fetch error:", err);
+        }
     };
 
     const filtered = courses.filter(c => {
@@ -50,6 +69,8 @@ export default function Courses() {
             return Swal.fire("Missing Fields", "Please fill in all fields.", "warning");
         }
 
+        setIsSaving(true);
+
         try {
             if (editMode) {
                 await axios.put(`${import.meta.env.VITE_API_URL}/api/courses/${editId}`, newCourse);
@@ -65,6 +86,8 @@ export default function Courses() {
         } catch (err) {
             console.error("Error saving course:", err);
             Swal.fire("Error", "Something went wrong.", "error");
+        } finally {
+            setIsSaving(false);
         }
     };
 
@@ -107,10 +130,34 @@ export default function Courses() {
         setEditMode(false);
         setEditId(null);
         setShowModal(false);
+        setIsSaving(false);
     };
 
     return (
-        <div className="courses-container">
+        <div className="courses-container" style={{ position: "relative" }}>
+            {loadingCourses && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Courses...
+                    </p>
+                </div>
+            )}
+
             <div className="courses-header">
                 <h1>Courses</h1>
                 <p>Manage all courses offered on the platform.</p>
@@ -158,12 +205,16 @@ export default function Courses() {
                                     </span>
                                 </td>
                                 <td style={{ textAlign: "right" }}>
-                                    <button className="action-btn edit" onClick={() => handleEdit(c)}>Edit</button>
-                                    <button className="action-btn delete" onClick={() => handleDelete(c._id)}>Delete</button>
+                                    <button className="action-btn edit" onClick={() => handleEdit(c)}>
+                                        <Pencil size={16} />
+                                    </button>
+                                    <button className="action-btn delete" onClick={() => handleDelete(c._id)}>
+                                        <Trash2 size={16} />
+                                    </button>
                                 </td>
                             </tr>
                         ))}
-                        {current.length === 0 && (
+                        {current.length === 0 && !loadingCourses && (
                             <tr>
                                 <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>No courses found.</td>
                             </tr>
@@ -223,8 +274,10 @@ export default function Courses() {
                         </select>
 
                         <div className="modal-buttons">
-                            <button onClick={handleSubmit}>Save</button>
-                            <button onClick={resetForm}>Cancel</button>
+                            <button onClick={handleSubmit} disabled={isSaving}>
+                                {isSaving ? "Saving..." : "Save"}
+                            </button>
+                            <button onClick={resetForm} disabled={isSaving}>Cancel</button>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { Pencil, Trash2 } from "lucide-react";
 import "./Admincss/classrooms.css";
 
 export default function Classrooms() {
@@ -11,6 +12,8 @@ export default function Classrooms() {
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [search, setSearch] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+    const [loadingClassrooms, setLoadingClassrooms] = useState(true);
 
     const perPage = 5;
 
@@ -30,26 +33,38 @@ export default function Classrooms() {
     const start = (currentPage - 1) * perPage;
     const current = filtered.slice(start, start + perPage);
 
-    /* ================= FETCH ================= */
-
     const fetchClassrooms = async () => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/classrooms")
-            .then(res => setClassrooms(res.data))
-            .catch(err => console.error("Fetch error:", err));
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/classrooms");
+            setClassrooms(res.data);
+        } catch (err) {
+            console.error("Fetch error:", err);
+        }
     };
-    const fetchSubjects = () => {
-        axios.get(import.meta.env.VITE_API_URL + "/api/subjects")
-            .then(res => setSubjects(res.data))
-            .catch(err => console.error("Subject fetch error:", err));
+
+    const fetchSubjects = async () => {
+        try {
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/subjects");
+            setSubjects(res.data);
+        } catch (err) {
+            console.error("Subject fetch error:", err);
+        }
     };
 
     useEffect(() => {
-        fetchClassrooms();
-        fetchSubjects();
+        const fetchData = async () => {
+            setLoadingClassrooms(true);
+            try {
+                await fetchClassrooms();
+                await fetchSubjects();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingClassrooms(false);
+            }
+        };
+        fetchData();
     }, []);
-
-
-    /* ================= SUBMIT ================= */
 
     const handleSubmit = async () => {
         if (!newClassroom.room || !newClassroom.subject) {
@@ -59,6 +74,8 @@ export default function Classrooms() {
                 "warning"
             );
         }
+
+        setIsSaving(true);
 
         try {
             if (editMode && editId) {
@@ -84,16 +101,17 @@ export default function Classrooms() {
                 err.response?.data?.error || err.message,
                 "error"
             );
+        } finally {
+            setIsSaving(false);
         }
     };
-
-    /* ================= HELPERS ================= */
 
     const resetForm = () => {
         setNewClassroom({ room: "", subject: "", day: "", time: "" });
         setEditMode(false);
         setEditId(null);
         setShowModal(false);
+        setIsSaving(false);
     };
 
     const handleEdit = (classroom) => {
@@ -129,10 +147,31 @@ export default function Classrooms() {
         }
     };
 
-    /* ================= UI ================= */
-
     return (
-        <div className="classrooms-container">
+        <div className="classrooms-container" style={{ position: "relative" }}>
+            {loadingClassrooms && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Classrooms...
+                    </p>
+                </div>
+            )}
+
             <div className="classrooms-header">
                 <h1>Classroom</h1>
                 <p>This is where you can manage classrooms.</p>
@@ -171,7 +210,7 @@ export default function Classrooms() {
                         </tr>
                     </thead>
                     <tbody>
-                        {current.length === 0 ? (
+                        {current.length === 0 && !loadingClassrooms ? (
                             <tr>
                                 <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
                                     No classrooms found.
@@ -186,8 +225,12 @@ export default function Classrooms() {
                                     <td>{c.day}</td>
                                     <td>{c.time}</td>
                                     <td style={{ textAlign: "center" }}>
-                                        <button className="action-btn edit" onClick={() => handleEdit(c)}>Edit</button>
-                                        <button className="action-btn delete" onClick={() => handleDelete(c._id)}>Delete</button>
+                                        <button className="action-btn edit" onClick={() => handleEdit(c)}>
+                                            <Pencil size={16} />
+                                        </button>
+                                        <button className="action-btn delete" onClick={() => handleDelete(c._id)}>
+                                            <Trash2 size={16} />
+                                        </button>
                                     </td>
                                 </tr>
                             ))
@@ -209,7 +252,6 @@ export default function Classrooms() {
                     ))}
                 </div>
             )}
-
 
             {showModal && (
                 <div className="modal">
@@ -246,8 +288,6 @@ export default function Classrooms() {
                         </select>
 
                         <select
-                            type="text"
-                            placeholder="Day"
                             value={newClassroom.day}
                             onChange={(e) =>
                                 setNewClassroom({
@@ -276,8 +316,10 @@ export default function Classrooms() {
                         />
 
                         <div className="modal-buttons">
-                            <button onClick={handleSubmit}>Save</button>
-                            <button onClick={resetForm}>Cancel</button>
+                            <button onClick={handleSubmit} disabled={isSaving}>
+                                {isSaving ? "Saving..." : "Save"}
+                            </button>
+                            <button onClick={resetForm} disabled={isSaving}>Cancel</button>
                         </div>
                     </div>
                 </div>
