@@ -41,6 +41,12 @@ export default function Profile() {
     const imageRef = useRef(null);
     const [imageSize, setImageSize] = useState({ width: 0, height: 0 });
 
+    const [zoom, setZoom] = useState(1);
+    const [initialDistance, setInitialDistance] = useState(null);
+    const [initialZoom, setInitialZoom] = useState(1);
+    const [initialCrop, setInitialCrop] = useState({ x: 0, y: 0 });
+    const [initialTouches, setInitialTouches] = useState(null);
+
     useEffect(() => {
         axios
             .get(import.meta.env.VITE_API_URL + "/api/courses")
@@ -237,6 +243,7 @@ export default function Profile() {
         reader.onloadend = () => {
             setCropImage(reader.result);
             setCropperOpen(true);
+            setZoom(1);
             setCropState({
                 x: 50,
                 y: 50,
@@ -252,10 +259,27 @@ export default function Profile() {
         reader.readAsDataURL(file);
     };
 
+    const getDistance = (touches) => {
+        const dx = touches[0].clientX - touches[1].clientX;
+        const dy = touches[0].clientY - touches[1].clientY;
+        return Math.sqrt(dx * dx + dy * dy);
+    };
+
+    const getCenter = (touches) => {
+        const x = (touches[0].clientX + touches[1].clientX) / 2;
+        const y = (touches[0].clientY + touches[1].clientY) / 2;
+        return { x, y };
+    };
+
+    const handleWheel = (e) => {
+        e.preventDefault();
+        const delta = e.deltaY > 0 ? -0.1 : 0.1;
+        setZoom(prev => Math.max(0.5, Math.min(3, prev + delta)));
+    };
+
     const handleMouseDown = (e, handle) => {
         e.preventDefault();
         e.stopPropagation();
-        const rect = cropContainerRef.current.getBoundingClientRect();
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const clientY = e.clientY || (e.touches && e.touches[0].clientY);
 
@@ -272,9 +296,21 @@ export default function Profile() {
             setCropState(prev => ({
                 ...prev,
                 isDragging: true,
-                startX: clientX - prev.x,
-                startY: clientY - prev.y
+                startX: clientX - prev.x * zoom,
+                startY: clientY - prev.y * zoom
             }));
+        }
+    };
+
+    const handleTouchStart = (e) => {
+        if (e.touches.length === 2) {
+            e.preventDefault();
+            setInitialDistance(getDistance(e.touches));
+            setInitialZoom(zoom);
+            setInitialTouches(getCenter(e.touches));
+            setInitialCrop({ x: cropState.x, y: cropState.y });
+        } else if (e.touches.length === 1) {
+            handleMouseDown(e, null);
         }
     };
 
@@ -283,36 +319,33 @@ export default function Profile() {
 
         const clientX = e.clientX || (e.touches && e.touches[0].clientX);
         const clientY = e.clientY || (e.touches && e.touches[0].clientY);
-        const containerRect = cropContainerRef.current.getBoundingClientRect();
-        const imgWidth = imageSize.width;
-        const imgHeight = imageSize.height;
 
         if (cropState.isDragging) {
-            let newX = clientX - cropState.startX;
-            let newY = clientY - cropState.startY;
+            let newX = (clientX - cropState.startX) / zoom;
+            let newY = (clientY - cropState.startY) / zoom;
 
-            newX = Math.max(0, Math.min(newX, imgWidth - cropState.size));
-            newY = Math.max(0, Math.min(newY, imgHeight - cropState.size));
+            newX = Math.max(0, Math.min(newX, imageSize.width - cropState.size));
+            newY = Math.max(0, Math.min(newY, imageSize.height - cropState.size));
 
             setCropState(prev => ({ ...prev, x: newX, y: newY }));
         } else if (cropState.isResizing) {
-            const deltaX = clientX - cropState.startX;
-            const deltaY = clientY - cropState.startY;
+            const deltaX = (clientX - cropState.startX) / zoom;
+            const deltaY = (clientY - cropState.startY) / zoom;
             let newCrop = { ...cropState.startCrop };
             const minSize = 50;
 
             switch (cropState.resizeHandle) {
                 case 'se':
-                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, deltaY), imgWidth - cropState.startCrop.x, imgHeight - cropState.startCrop.y));
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, deltaY), imageSize.width - cropState.startCrop.x, imageSize.height - cropState.startCrop.y));
                     break;
                 case 'sw':
-                    const newSizeSW = Math.max(minSize, Math.min(cropState.startCrop.size - Math.max(deltaX, deltaY), cropState.startCrop.x + cropState.startCrop.size - minSize, cropState.startCrop.y + cropState.startCrop.size - minSize, imgHeight - cropState.startCrop.y));
+                    const newSizeSW = Math.max(minSize, Math.min(cropState.startCrop.size - Math.max(deltaX, deltaY), cropState.startCrop.x + cropState.startCrop.size - minSize, cropState.startCrop.y + cropState.startCrop.size - minSize, imageSize.height - cropState.startCrop.y));
                     newCrop.x = Math.max(0, Math.min(cropState.startCrop.x + (cropState.startCrop.size - newSizeSW), cropState.startCrop.x + cropState.startCrop.size - minSize));
-                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y, imgHeight - newSizeSW));
+                    newCrop.y = Math.max(0, Math.min(cropState.startCrop.y, imageSize.height - newSizeSW));
                     newCrop.size = newSizeSW;
                     break;
                 case 'ne':
-                    const newSizeNE = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, -deltaY), imgWidth - cropState.startCrop.x, cropState.startCrop.y + cropState.startCrop.size - minSize));
+                    const newSizeNE = Math.max(minSize, Math.min(cropState.startCrop.size + Math.max(deltaX, -deltaY), imageSize.width - cropState.startCrop.x, cropState.startCrop.y + cropState.startCrop.size - minSize));
                     newCrop.y = Math.max(0, Math.min(cropState.startCrop.y + (cropState.startCrop.size - newSizeNE), cropState.startCrop.y + cropState.startCrop.size - minSize));
                     newCrop.size = newSizeNE;
                     break;
@@ -328,10 +361,10 @@ export default function Profile() {
                     newCrop.size = newSizeN;
                     break;
                 case 's':
-                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaY, imgHeight - cropState.startCrop.y));
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaY, imageSize.height - cropState.startCrop.y));
                     break;
                 case 'e':
-                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaX, imgWidth - cropState.startCrop.x));
+                    newCrop.size = Math.max(minSize, Math.min(cropState.startCrop.size + deltaX, imageSize.width - cropState.startCrop.x));
                     break;
                 case 'w':
                     const newSizeW = Math.max(minSize, Math.min(cropState.startCrop.size - deltaX, cropState.startCrop.x + cropState.startCrop.size - minSize));
@@ -340,6 +373,28 @@ export default function Profile() {
                     break;
             }
             setCropState(prev => ({ ...prev, ...newCrop }));
+        }
+    };
+
+    const handleTouchMove = (e) => {
+        if (e.touches.length === 2 && initialDistance) {
+            e.preventDefault();
+            const currentDistance = getDistance(e.touches);
+            const scale = currentDistance / initialDistance;
+            const newZoom = Math.max(0.5, Math.min(3, initialZoom * scale));
+            setZoom(newZoom);
+
+            const currentCenter = getCenter(e.touches);
+            const deltaX = (currentCenter.x - initialTouches.x) / newZoom;
+            const deltaY = (currentCenter.y - initialTouches.y) / newZoom;
+
+            setCropState(prev => ({
+                ...prev,
+                x: Math.max(0, Math.min(initialCrop.x + deltaX, imageSize.width - prev.size)),
+                y: Math.max(0, Math.min(initialCrop.y + deltaY, imageSize.height - prev.size))
+            }));
+        } else if (e.touches.length === 1) {
+            handleMouseMove(e);
         }
     };
 
@@ -352,20 +407,26 @@ export default function Profile() {
         }));
     };
 
+    const handleTouchEnd = () => {
+        setInitialDistance(null);
+        setInitialTouches(null);
+        handleMouseUp();
+    };
+
     useEffect(() => {
         if (cropState.isDragging || cropState.isResizing) {
             window.addEventListener('mousemove', handleMouseMove);
             window.addEventListener('mouseup', handleMouseUp);
-            window.addEventListener('touchmove', handleMouseMove);
-            window.addEventListener('touchend', handleMouseUp);
+            window.addEventListener('touchmove', handleTouchMove, { passive: false });
+            window.addEventListener('touchend', handleTouchEnd);
             return () => {
                 window.removeEventListener('mousemove', handleMouseMove);
                 window.removeEventListener('mouseup', handleMouseUp);
-                window.removeEventListener('touchmove', handleMouseMove);
-                window.removeEventListener('touchend', handleMouseUp);
+                window.removeEventListener('touchmove', handleTouchMove);
+                window.removeEventListener('touchend', handleTouchEnd);
             };
         }
-    }, [cropState.isDragging, cropState.isResizing]);
+    }, [cropState.isDragging, cropState.isResizing, zoom, initialDistance, initialTouches, initialCrop]);
 
     const handleCrop = async () => {
         try {
@@ -382,6 +443,7 @@ export default function Profile() {
             const croppedImg = await getCroppedImg(cropImage, pixelCrop);
             setImage(croppedImg);
             setCropperOpen(false);
+            setZoom(1);
         } catch (e) {
             console.error(e);
         }
@@ -1296,14 +1358,18 @@ export default function Profile() {
         if (!cropperOpen || !cropImage) return null;
 
         return (
-            <div style={{
-                width: "300px",
-                height: "300px",
-                position: "relative",
-                background: "#f0f0f0",
-                overflow: "hidden",
-                margin: "10px 0"
-            }}>
+            <div
+                style={{
+                    width: "300px",
+                    height: "300px",
+                    position: "relative",
+                    background: "#f0f0f0",
+                    overflow: "hidden",
+                    margin: "10px 0",
+                    touchAction: "none"
+                }}
+                onWheel={handleWheel}
+            >
                 <img
                     ref={imageRef}
                     src={cropImage}
@@ -1312,10 +1378,14 @@ export default function Profile() {
                         position: "absolute",
                         left: "50%",
                         top: "50%",
-                        transform: "translate(-50%, -50%)",
+                        transform: `translate(-50%, -50%) scale(${zoom})`,
                         maxWidth: "300px",
                         maxHeight: "300px",
-                        display: "block"
+                        display: "block",
+                        userSelect: "none",
+                        WebkitUserSelect: "none",
+                        pointerEvents: "none",
+                        transition: cropState.isDragging || cropState.isResizing ? "none" : "transform 0.1s ease-out"
                     }}
                     onLoad={handleImageLoad}
                     draggable={false}
@@ -1341,18 +1411,19 @@ export default function Profile() {
                             border: "1px solid #292929",
                             background: "rgba(0, 102, 102, 0.1)",
                             cursor: cropState.isDragging ? "grabbing" : "grab",
-                            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)"
+                            boxShadow: "0 0 0 9999px rgba(0, 0, 0, 0.5)",
+                            transition: cropState.isDragging || cropState.isResizing ? "none" : "all 0.1s ease-out"
                         }}
                         onMouseDown={(e) => handleMouseDown(e, null)}
-                        onTouchStart={(e) => handleMouseDown(e, null)}
+                        onTouchStart={handleTouchStart}
                     >
                         {['nw', 'n', 'ne', 'w', 'e', 'sw', 's', 'se'].map((handle) => (
                             <div
                                 key={handle}
                                 style={{
                                     position: "absolute",
-                                    width:  "8px",
-                                    height:  "8px",
+                                    width: "10px",
+                                    height: "10px",
                                     background: "#3a3939",
                                     border: "1px solid white",
                                     cursor: handle.includes('n') && handle.includes('w') ? 'nw-resize' :
@@ -1361,8 +1432,9 @@ export default function Profile() {
                                                 handle.includes('s') && handle.includes('e') ? 'se-resize' :
                                                     handle === 'n' || handle === 's' ? 'ns-resize' :
                                                         'ew-resize',
-                                    top: handle.includes('n') ? '-7px' : handle.includes('s') ? 'calc(100% - 5px)' : 'calc(50% - 6px)',
-                                    left: handle.includes('w') ? '-7px' : handle.includes('e') ? 'calc(100% - 5px)' : 'calc(50% - 6px)'
+                                    top: handle.includes('n') ? '-5px' : handle.includes('s') ? 'calc(100% - 5px)' : 'calc(50% - 5px)',
+                                    left: handle.includes('w') ? '-5px' : handle.includes('e') ? 'calc(100% - 5px)' : 'calc(50% - 5px)',
+                                    zIndex: 10
                                 }}
                                 onMouseDown={(e) => handleMouseDown(e, handle)}
                                 onTouchStart={(e) => handleMouseDown(e, handle)}
@@ -1461,6 +1533,7 @@ export default function Profile() {
                                             setCropperOpen(false);
                                             setCropImage(null);
                                             setImage(null);
+                                            setZoom(1);
                                         }}
                                     >
                                         Cancel
