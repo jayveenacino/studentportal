@@ -27,15 +27,15 @@ router.post("/adminusers", async (req, res) => {
         // HASH the password
         userData.password = await bcrypt.hash(password, saltRounds);
         
-        // PLAIN TEXT PIN - only for ADMIN role
+        // HASH the PIN - only for ADMIN role
         if (role === "ADMIN" && pin) {
-            userData.pin = pin.toString();
+            userData.pin = await bcrypt.hash(pin, saltRounds);
         }
 
         const newAdmin = new Admin(userData);
         await newAdmin.save();
 
-        const { password: _, ...safeData } = newAdmin.toObject();
+        const { password: _, pin: __, ...safeData } = newAdmin.toObject();
         res.status(201).json({ message: "Admin created successfully", newAdmin: safeData });
     } catch (error) {
         console.error("Error creating admin:", error.message);
@@ -45,7 +45,7 @@ router.post("/adminusers", async (req, res) => {
 
 router.get("/adminusers", async (req, res) => {
     try {
-        const admins = await Admin.find().select("-password");
+        const admins = await Admin.find().select("-password -pin");
         res.status(200).json(admins);
     } catch (error) {
         console.error("Error fetching admins:", error.message);
@@ -74,9 +74,12 @@ router.put("/adminusers/:id", async (req, res) => {
             updateData.password = await bcrypt.hash(updateData.password, saltRounds);
         }
         
-        // PIN stays plain text
+        // Hash PIN if updating
+        if (updateData.pin) {
+            updateData.pin = await bcrypt.hash(updateData.pin, saltRounds);
+        }
         
-        const updated = await Admin.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password");
+        const updated = await Admin.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password -pin");
         res.status(200).json({ message: "Admin updated successfully", updated });
     } catch (error) {
         console.error("Error updating admin:", error.message);
@@ -103,7 +106,7 @@ router.post("/adminlogin", async (req, res) => {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
-        const { password: _, ...safeAdmin } = admin.toObject();
+        const { password: _, pin: __, ...safeAdmin } = admin.toObject();
 
         res.status(200).json({
             message: "Login successful",
@@ -129,8 +132,8 @@ router.post("/verify-pin", async (req, res) => {
             return res.status(400).json({ valid: false, message: "Admin PIN not set" });
         }
         
-        // PLAIN TEXT COMPARISON
-        const isValid = pin.toString() === adminUser.pin.toString();
+        // HASHED COMPARISON using bcrypt
+        const isValid = await bcrypt.compare(pin, adminUser.pin);
         
         if (!isValid) {
             return res.status(400).json({ valid: false, message: "Invalid PIN" });
