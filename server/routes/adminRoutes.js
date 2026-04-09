@@ -17,18 +17,19 @@ router.post("/adminusers", async (req, res) => {
         }
 
         const saltRounds = 10;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
         
         const userData = { 
             username, 
             email, 
-            password: hashedPassword,
             role 
         };
         
-        // Only ADMIN role gets PIN - PLAIN TEXT (NOT HASHED)
+        // HASH the password
+        userData.password = await bcrypt.hash(password, saltRounds);
+        
+        // PLAIN TEXT PIN - only for ADMIN role
         if (role === "ADMIN" && pin) {
-            userData.pin = pin; // NO bcrypt.hash() - plain text
+            userData.pin = pin.toString();
         }
 
         const newAdmin = new Admin(userData);
@@ -68,14 +69,12 @@ router.put("/adminusers/:id", async (req, res) => {
         const updateData = { ...req.body };
         const saltRounds = 10;
         
+        // Hash password if updating
         if (updateData.password) {
             updateData.password = await bcrypt.hash(updateData.password, saltRounds);
         }
         
-        // PIN stays plain text - no hashing here either
-        if (updateData.pin) {
-            // Keep as plain text
-        }
+        // PIN stays plain text
         
         const updated = await Admin.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password");
         res.status(200).json({ message: "Admin updated successfully", updated });
@@ -97,6 +96,7 @@ router.post("/adminlogin", async (req, res) => {
             return res.status(404).json({ message: "Admin not found" });
         }
 
+        // Compare hashed password
         const isPasswordValid = await bcrypt.compare(password, admin.password);
         
         if (!isPasswordValid) {
@@ -123,15 +123,14 @@ router.post("/verify-pin", async (req, res) => {
             return res.status(400).json({ valid: false, message: "PIN is required" });
         }
         
-        // Find the ADMIN user to get their PIN
         const adminUser = await Admin.findOne({ role: "ADMIN" });
         
         if (!adminUser || !adminUser.pin) {
             return res.status(400).json({ valid: false, message: "Admin PIN not set" });
         }
         
-        // Compare plain text PINs directly (NO bcrypt.compare)
-        const isValid = pin === adminUser.pin;
+        // PLAIN TEXT COMPARISON
+        const isValid = pin.toString() === adminUser.pin.toString();
         
         if (!isValid) {
             return res.status(400).json({ valid: false, message: "Invalid PIN" });
