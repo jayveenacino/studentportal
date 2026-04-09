@@ -56,6 +56,12 @@ export default function Adminuser() {
         return allowedRoles.includes(currentAdmin.role);
     };
 
+    const canEditDelete = () => {
+        if (!currentAdmin) return false;
+        const allowedRoles = ["ADMIN", "Super Admin"];
+        return allowedRoles.includes(currentAdmin.role);
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -222,7 +228,9 @@ export default function Adminuser() {
                             <th>Email</th>
                             <th>Role</th>
                             <th>Date Created</th>
-                            <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
+                            {canEditDelete() && (
+                                <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
+                            )}
                         </tr>
                     </thead>
                     <tbody>
@@ -234,25 +242,27 @@ export default function Adminuser() {
                                     <td>{user.email}</td>
                                     <td>{user.role}</td>
                                     <td>{new Date(user.createdAt).toLocaleString()}</td>
-                                    <td style={{ textAlign: "right" }}>
-                                        <button
-                                            className="adminuser-action-btn edit"
-                                            onClick={() => handleEditUser(user)}
-                                        >
-                                            <Pencil size={16} />
-                                        </button>
-                                        <button
-                                            className="adminuser-action-btn delete"
-                                            onClick={() => handleDeleteUser(user._id)}
-                                        >
-                                            <Trash2 size={16} />
-                                        </button>
-                                    </td>
+                                    {canEditDelete() && (
+                                        <td style={{ textAlign: "right" }}>
+                                            <button
+                                                className="adminuser-action-btn edit"
+                                                onClick={() => handleEditUser(user)}
+                                            >
+                                                <Pencil size={16} />
+                                            </button>
+                                            <button
+                                                className="adminuser-action-btn delete"
+                                                onClick={() => handleDeleteUser(user._id)}
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        </td>
+                                    )}
                                 </tr>
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                <td colSpan={canEditDelete() ? 6 : 5} style={{ textAlign: "center", padding: "20px" }}>
                                     No admin users available.
                                 </td>
                             </tr>
