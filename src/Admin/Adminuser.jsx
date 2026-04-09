@@ -9,10 +9,12 @@ export default function Adminuser() {
     const [loading, setLoading] = useState(false);
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
+    const [isCreatingPin, setIsCreatingPin] = useState(false);
     const [showModal, setShowModal] = useState(false);
     const [showPinModal, setShowPinModal] = useState(false);
     const [pin, setPin] = useState("");
     const [pendingUser, setPendingUser] = useState(null);
+    const [currentAdmin, setCurrentAdmin] = useState(null);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -21,6 +23,11 @@ export default function Adminuser() {
     });
 
     useEffect(() => {
+        const storedAdmin = sessionStorage.getItem("Admin");
+        if (storedAdmin) {
+            setCurrentAdmin(JSON.parse(storedAdmin));
+        }
+        
         const fetchData = async () => {
             setLoadingUsers(true);
             try {
@@ -41,6 +48,12 @@ export default function Adminuser() {
         } catch (err) {
             console.error("Failed to fetch admin users:", err);
         }
+    };
+
+    const canAddUser = () => {
+        if (!currentAdmin) return false;
+        const allowedRoles = ["ADMIN", "Super Admin"];
+        return allowedRoles.includes(currentAdmin.role);
     };
 
     const handleInputChange = (e) => {
@@ -77,12 +90,20 @@ export default function Adminuser() {
             return;
         }
 
+        setIsCreatingPin(true);
+
         const userData = { ...pendingUser, pin };
-        await saveUser(userData);
         
-        setShowPinModal(false);
-        setPin("");
-        setPendingUser(null);
+        try {
+            await saveUser(userData);
+            setShowPinModal(false);
+            setPin("");
+            setPendingUser(null);
+        } catch (err) {
+            console.error("Error creating user with PIN:", err);
+        } finally {
+            setIsCreatingPin(false);
+        }
     };
 
     const saveUser = async (userData) => {
@@ -95,6 +116,7 @@ export default function Adminuser() {
             fetchUsers();
         } catch (err) {
             Swal.fire("Error", "Failed to add admin user", "error");
+            throw err;
         } finally {
             setIsSaving(false);
         }
@@ -143,6 +165,7 @@ export default function Adminuser() {
     };
 
     const closePinModal = () => {
+        if (isCreatingPin) return;
         setShowPinModal(false);
         setPin("");
         setPendingUser(null);
@@ -179,13 +202,15 @@ export default function Adminuser() {
             </div>
 
             <div className="adminuser-controls" style={{ justifyContent: "flex-end" }}>
-                <button
-                    className="adminuser-add-btn"
-                    onClick={() => setShowModal(true)}
-                    disabled={loading}
-                >
-                    Add User
-                </button>
+                {canAddUser() && (
+                    <button
+                        className="adminuser-add-btn"
+                        onClick={() => setShowModal(true)}
+                        disabled={loading}
+                    >
+                        Add User
+                    </button>
+                )}
             </div>
 
             <div className="adminuser-table-container">
@@ -282,60 +307,68 @@ export default function Adminuser() {
                 </div>
             )}
 
-           {showPinModal && (
-    <div className="adminuser-modal">
-        <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Create Admin PIN</h2>
-            <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
-                Create a 4-digit PIN for this Admin user
-            </p>
-            <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
-                <input
-                    type="password"
-                    placeholder="••••"
-                    value={pin}
-                    onChange={e => setPin(e.target.value)}
-                    maxLength={4}
-                    style={{
-                        textAlign: "center",
-                        fontSize: "24px",
-                        letterSpacing: "8px",
-                        padding: "15px",
-                        width: "150px",
-                        border: "2px solid #0a3d18",
-                        borderRadius: "8px",
-                        outline: "none",
-                        boxSizing: "border-box"
-                    }}
-                />
-            </div>
-            <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
-                <button 
-                    onClick={handlePinSave} 
-                    style={{ 
-                        backgroundColor: "#0a3d18",
-                        padding: "12px 24px",
-                        fontSize: "15px",
-                        fontWeight: "500"
-                    }}
-                >
-                    Create PIN
-                </button>
-                <button 
-                    onClick={closePinModal} 
-                    style={{ 
-                        backgroundColor: "#dc3545",
-                        padding: "12px 24px",
-                        fontSize: "15px",
-                        fontWeight: "500"
-                    }}
-                >
-                    Cancel
-                </button>
-            </div>
-        </div>
-    </div>
-)}
+            {showPinModal && (
+                <div className="adminuser-modal">
+                    <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Create Admin PIN</h2>
+                        <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
+                            Create a 4-digit PIN for this Admin user
+                        </p>
+                        <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
+                            <input
+                                type="password"
+                                placeholder="••••"
+                                value={pin}
+                                onChange={e => setPin(e.target.value)}
+                                maxLength={4}
+                                disabled={isCreatingPin}
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: "24px",
+                                    letterSpacing: "8px",
+                                    padding: "15px",
+                                    width: "150px",
+                                    border: "2px solid #0a3d18",
+                                    borderRadius: "8px",
+                                    outline: "none",
+                                    boxSizing: "border-box",
+                                    opacity: isCreatingPin ? 0.6 : 1
+                                }}
+                            />
+                        </div>
+                        <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
+                            <button 
+                                onClick={handlePinSave} 
+                                disabled={isCreatingPin}
+                                style={{ 
+                                    backgroundColor: "#0a3d18",
+                                    padding: "12px 24px",
+                                    fontSize: "15px",
+                                    fontWeight: "500",
+                                    opacity: isCreatingPin ? 0.6 : 1,
+                                    cursor: isCreatingPin ? "not-allowed" : "pointer"
+                                }}
+                            >
+                                {isCreatingPin ? "Creating..." : "Create PIN"}
+                            </button>
+                            <button 
+                                onClick={closePinModal} 
+                                disabled={isCreatingPin}
+                                style={{ 
+                                    backgroundColor: "#dc3545",
+                                    padding: "12px 24px",
+                                    fontSize: "15px",
+                                    fontWeight: "500",
+                                    opacity: isCreatingPin ? 0.6 : 1,
+                                    cursor: isCreatingPin ? "not-allowed" : "pointer"
+                                }}
+                            >
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 }

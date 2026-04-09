@@ -14,6 +14,8 @@ export default function Login() {
     const [showPinModal, setShowPinModal] = useState(false);
     const [pin, setPin] = useState("");
     const [pendingLogin, setPendingLogin] = useState(null);
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const [isVerifyingPin, setIsVerifyingPin] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -52,6 +54,8 @@ export default function Login() {
             return;
         }
 
+        setIsVerifyingPin(true);
+
         try {
             const res = await axios.post(import.meta.env.VITE_API_URL + "/api/verify-pin", {
                 userId: pendingLogin._id,
@@ -78,6 +82,8 @@ export default function Login() {
                 showConfirmButton: false,
                 timer: 2000,
             });
+        } finally {
+            setIsVerifyingPin(false);
         }
     };
 
@@ -110,6 +116,10 @@ export default function Login() {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        if (isLoggingIn) return;
+
+        setIsLoggingIn(true);
+
         if (
             emailOrUsername === import.meta.env.VITE_DEFAULT_ADMIN_EMAIL &&
             password === import.meta.env.VITE_DEFAULT_ADMIN_PASSWORD
@@ -141,6 +151,7 @@ export default function Login() {
                 timer: 2000,
             });
 
+            setIsLoggingIn(false);
             navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
             return;
         }
@@ -156,10 +167,12 @@ export default function Login() {
             if (rolesRequiringPin.includes(userData.role)) {
                 setPendingLogin(userData);
                 setShowPinModal(true);
+                setIsLoggingIn(false);
             } else {
-                completeLogin(userData);
+                await completeLogin(userData);
             }
         } catch (err) {
+            setIsLoggingIn(false);
             Swal.fire({
                 toast: true,
                 position: "top-end",
@@ -173,6 +186,7 @@ export default function Login() {
     };
 
     const closePinModal = () => {
+        if (isVerifyingPin) return;
         setShowPinModal(false);
         setPin("");
         setPendingLogin(null);
@@ -233,6 +247,7 @@ export default function Login() {
                                 placeholder="Email or Username"
                                 className="input"
                                 required
+                                disabled={isLoggingIn}
                             />
 
                             <div style={{ position: "relative", width: "100%" }}>
@@ -243,24 +258,36 @@ export default function Login() {
                                     required
                                     value={password}
                                     onChange={e => setPassword(e.target.value)}
+                                    disabled={isLoggingIn}
                                 />
                                 <i
                                     className={`fa-solid ${showPassword ? "fa-eye" : "fa-eye-slash"}`}
-                                    onClick={() => setShowPassword(!showPassword)}
+                                    onClick={() => !isLoggingIn && setShowPassword(!showPassword)}
                                     style={{
                                         position: "absolute",
                                         right: "10px",
                                         top: "35%",
                                         transform: "translateY(-50%)",
-                                        cursor: "pointer",
+                                        cursor: isLoggingIn ? "not-allowed" : "pointer",
                                         color: "#666",
-                                        fontSize: "16px"
+                                        fontSize: "16px",
+                                        opacity: isLoggingIn ? 0.5 : 1
                                     }}
                                 ></i>
                             </div>
 
                             <div className="button-group1">
-                                <button type='submit' className="login-button1">Login</button>
+                                <button 
+                                    type='submit' 
+                                    className="login-button1"
+                                    disabled={isLoggingIn}
+                                    style={{
+                                        opacity: isLoggingIn ? 0.7 : 1,
+                                        cursor: isLoggingIn ? "not-allowed" : "pointer"
+                                    }}
+                                >
+                                    {isLoggingIn ? "Logging in..." : "Login"}
+                                </button>
                             </div>
                         </form>
 
@@ -272,25 +299,61 @@ export default function Login() {
             </div>
 
             {showPinModal && (
-                <div className="pin-modal-overlay">
-                    <div className="pin-modal-content">
-                        <h2>Enter Admin PIN</h2>
-                        <p>Please enter your 4-digit PIN to continue</p>
-                        <div className="pin-input-container">
+                <div className="adminuser-modal" style={{ zIndex: 1000 }}>
+                    <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Enter Admin PIN</h2>
+                        <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
+                            Please enter your 4-digit PIN to continue
+                        </p>
+                        <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
                             <input
                                 type="password"
                                 placeholder="••••"
                                 value={pin}
                                 onChange={e => setPin(e.target.value)}
                                 maxLength={4}
-                                className="pin-input"
+                                disabled={isVerifyingPin}
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: "24px",
+                                    letterSpacing: "8px",
+                                    padding: "15px",
+                                    width: "150px",
+                                    border: "2px solid #0a3d18",
+                                    borderRadius: "8px",
+                                    outline: "none",
+                                    boxSizing: "border-box",
+                                    opacity: isVerifyingPin ? 0.6 : 1
+                                }}
                             />
                         </div>
-                        <div className="pin-modal-buttons">
-                            <button onClick={handlePinSubmit} className="pin-btn-verify">
-                                Verify
+                        <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
+                            <button 
+                                onClick={handlePinSubmit} 
+                                disabled={isVerifyingPin}
+                                style={{ 
+                                    backgroundColor: "#0a3d18",
+                                    padding: "12px 24px",
+                                    fontSize: "15px",
+                                    fontWeight: "500",
+                                    opacity: isVerifyingPin ? 0.6 : 1,
+                                    cursor: isVerifyingPin ? "not-allowed" : "pointer"
+                                }}
+                            >
+                                {isVerifyingPin ? "Verifying..." : "Verify"}
                             </button>
-                            <button onClick={closePinModal} className="pin-btn-cancel">
+                            <button 
+                                onClick={closePinModal} 
+                                disabled={isVerifyingPin}
+                                style={{ 
+                                    backgroundColor: "#dc3545",
+                                    padding: "12px 24px",
+                                    fontSize: "15px",
+                                    fontWeight: "500",
+                                    opacity: isVerifyingPin ? 0.6 : 1,
+                                    cursor: isVerifyingPin ? "not-allowed" : "pointer"
+                                }}
+                            >
                                 Cancel
                             </button>
                         </div>

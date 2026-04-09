@@ -204,14 +204,6 @@ export default function Schedule() {
                         setCurrentPage(1);
                     }}
                 />
-                <button className="schedule-add-btn" onClick={() => {
-                    setNewSchedule({ title: "", date: "", time: "", location: "", status: "Active" });
-                    setEditMode(false);
-                    setEditId(null);
-                    setShowModal(true);
-                }}>
-                    Add Schedule
-                </button>
             </div>
 
             <div className="schedule-table-container">
