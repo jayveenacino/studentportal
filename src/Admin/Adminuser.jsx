@@ -282,41 +282,60 @@ export default function Adminuser() {
                 </div>
             )}
 
-            {showPinModal && (
-                <div className="adminuser-modal">
-                    <div className="adminuser-modal-content" style={{ textAlign: "center" }}>
-                        <h2 style={{ marginBottom: "10px" }}>Create Admin PIN</h2>
-                        <p style={{ color: "#666", fontSize: "14px", marginBottom: "20px" }}>
-                            Create a 4-digit PIN for this Admin user
-                        </p>
-                        <input
-                            type="password"
-                            placeholder="••••"
-                            value={pin}
-                            onChange={e => setPin(e.target.value)}
-                            maxLength={4}
-                            style={{
-                                textAlign: "center",
-                                fontSize: "24px",
-                                letterSpacing: "8px",
-                                padding: "15px",
-                                width: "150px",
-                                border: "2px solid #0a3d18",
-                                borderRadius: "8px",
-                                marginBottom: "20px"
-                            }}
-                        />
-                        <div className="adminuser-modal-buttons" style={{ justifyContent: "center" }}>
-                            <button onClick={handlePinSave} style={{ backgroundColor: "#0a3d18" }}>
-                                Create PIN
-                            </button>
-                            <button onClick={closePinModal} style={{ backgroundColor: "#dc3545" }}>
-                                Cancel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
+           {showPinModal && (
+    <div className="adminuser-modal">
+        <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Create Admin PIN</h2>
+            <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
+                Create a 4-digit PIN for this Admin user
+            </p>
+            <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
+                <input
+                    type="password"
+                    placeholder="••••"
+                    value={pin}
+                    onChange={e => setPin(e.target.value)}
+                    maxLength={4}
+                    style={{
+                        textAlign: "center",
+                        fontSize: "24px",
+                        letterSpacing: "8px",
+                        padding: "15px",
+                        width: "150px",
+                        border: "2px solid #0a3d18",
+                        borderRadius: "8px",
+                        outline: "none",
+                        boxSizing: "border-box"
+                    }}
+                />
+            </div>
+            <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
+                <button 
+                    onClick={handlePinSave} 
+                    style={{ 
+                        backgroundColor: "#0a3d18",
+                        padding: "12px 24px",
+                        fontSize: "15px",
+                        fontWeight: "500"
+                    }}
+                >
+                    Create PIN
+                </button>
+                <button 
+                    onClick={closePinModal} 
+                    style={{ 
+                        backgroundColor: "#dc3545",
+                        padding: "12px 24px",
+                        fontSize: "15px",
+                        fontWeight: "500"
+                    }}
+                >
+                    Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+)}
         </div>
     );
 }

@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const bcrypt = require("bcrypt");
 const Admin = require("../models/AdminSchema");
 
 router.post("/adminusers", async (req, res) => {
@@ -16,10 +17,16 @@ router.post("/adminusers", async (req, res) => {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        const userData = { username, email, password, role };
+        const userData = { 
+            username, 
+            email, 
+            password, 
+            role 
+        };
         
         if (pin && ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"].includes(role)) {
-            userData.pin = pin;
+            const saltRounds = 10;
+            userData.pin = await bcrypt.hash(pin, saltRounds);
         }
 
         const newAdmin = new Admin(userData);
@@ -96,7 +103,11 @@ router.post("/verify-pin", async (req, res) => {
         const user = await Admin.findById(userId);
         if (!user) return res.status(404).json({ valid: false, message: "User not found" });
         
-        const valid = user.pin === pin;
+        if (!user.pin) {
+            return res.status(400).json({ valid: false, message: "PIN not set for this user" });
+        }
+        
+        const valid = await bcrypt.compare(pin, user.pin);
         res.json({ valid });
     } catch (error) {
         console.error("❌ Error verifying PIN:", error.message);
