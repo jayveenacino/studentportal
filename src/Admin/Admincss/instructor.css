@@ -240,3 +240,19 @@
     height: 100%;
     object-fit: cover;
 }
+
+.instructor-department-filter {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    background-color: white;
+    color: #333;
+    cursor: pointer;
+    min-width: 180px;
+}
+
+.instructor-department-filter:focus {
+    outline: none;
+    border-color: #0a3d18;
+}

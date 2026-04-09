@@ -153,7 +153,31 @@ export default function BackupRestore() {
             justifyContent: "center",
             alignItems: "center"
         }}>
-            <h1>Backup & Restore Under Investigation! 😒</h1>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" width="800" height="400">
+                {/* Background */}
+                <rect width="800" height="400" fill="#f8f9fa" rx="20"/>
+                
+                {/* Warning Triangle */}
+                <g transform="translate(400, 100)">
+                    <polygon points="0,-40 50,40 -50,40" fill="#ffc107" stroke="#e0a800" strokeWidth="3"/>
+                    <text x="0" y="25" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="35" fontWeight="bold" fill="#856404">!</text>
+                </g>
+                
+                {/* Main Text */}
+                <text x="400" y="220" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="48" fontWeight="bold" fill="#343a40">UNDER MAINTENANCE</text>
+                
+                {/* Subtext */}
+                <text x="400" y="270" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="20" fill="#6c757d">We're working to improve your experience</text>
+                <text x="400" y="300" textAnchor="middle" fontFamily="Arial, sans-serif" fontSize="16" fill="#adb5bd">Please check back later</text>
+                
+                {/* Decorative dots */}
+                <circle cx="250" cy="350" r="6" fill="#dee2e6"/>
+                <circle cx="280" cy="350" r="6" fill="#ced4da"/>
+                <circle cx="310" cy="350" r="6" fill="#adb5bd"/>
+                <circle cx="490" cy="350" r="6" fill="#adb5bd"/>
+                <circle cx="520" cy="350" r="6" fill="#ced4da"/>
+                <circle cx="550" cy="350" r="6" fill="#dee2e6"/>
+            </svg>
         </div>
     );
 }

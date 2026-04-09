@@ -4,7 +4,7 @@ const Admin = require("../models/AdminSchema");
 
 router.post("/adminusers", async (req, res) => {
     try {
-        const { username, email, password, role } = req.body;
+        const { username, email, password, role, pin } = req.body;
         console.log("Received:", req.body);
 
         if (!username || !email || !password) {
@@ -16,7 +16,13 @@ router.post("/adminusers", async (req, res) => {
             return res.status(400).json({ message: "Email already exists" });
         }
 
-        const newAdmin = new Admin({ username, email, password, role });
+        const userData = { username, email, password, role };
+        
+        if (pin && ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"].includes(role)) {
+            userData.pin = pin;
+        }
+
+        const newAdmin = new Admin(userData);
         await newAdmin.save();
 
         res.status(201).json({ message: "Admin created successfully", newAdmin });
@@ -83,5 +89,19 @@ router.post("/adminlogin", async (req, res) => {
     }
 });
 
+router.post("/verify-pin", async (req, res) => {
+    try {
+        const { userId, pin } = req.body;
+        
+        const user = await Admin.findById(userId);
+        if (!user) return res.status(404).json({ valid: false, message: "User not found" });
+        
+        const valid = user.pin === pin;
+        res.json({ valid });
+    } catch (error) {
+        console.error("❌ Error verifying PIN:", error.message);
+        res.status(500).json({ valid: false, message: "Server error" });
+    }
+});
 
 module.exports = router;

@@ -219,11 +219,9 @@ export default function Schedule() {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Room</th>
-                            <th>Subject</th>
-                            <th>Time</th>
                             <th>Instructor</th>
-                            <th>Status</th>
+                            <th>Department</th>
+                            <th>Details</th>
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
                     </thead>

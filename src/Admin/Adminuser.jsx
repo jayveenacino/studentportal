@@ -10,6 +10,9 @@ export default function Adminuser() {
     const [loadingUsers, setLoadingUsers] = useState(true);
     const [isSaving, setIsSaving] = useState(false);
     const [showModal, setShowModal] = useState(false);
+    const [showPinModal, setShowPinModal] = useState(false);
+    const [pin, setPin] = useState("");
+    const [pendingUser, setPendingUser] = useState(null);
     const [formData, setFormData] = useState({
         username: "",
         email: "",
@@ -46,9 +49,46 @@ export default function Adminuser() {
     };
 
     const handleAddUser = async () => {
+        if (!formData.username || !formData.email || !formData.password) {
+            Swal.fire({
+                icon: "warning",
+                title: "Missing Fields",
+                text: "Please fill out all fields."
+            });
+            return;
+        }
+
+        if (formData.role === "ADMIN") {
+            setPendingUser({ ...formData });
+            setShowPinModal(true);
+            return;
+        }
+
+        await saveUser(formData);
+    };
+
+    const handlePinSave = async () => {
+        if (!pin || pin.length !== 4) {
+            Swal.fire({
+                icon: "warning",
+                title: "Invalid PIN",
+                text: "Please enter a 4-digit PIN."
+            });
+            return;
+        }
+
+        const userData = { ...pendingUser, pin };
+        await saveUser(userData);
+        
+        setShowPinModal(false);
+        setPin("");
+        setPendingUser(null);
+    };
+
+    const saveUser = async (userData) => {
         setIsSaving(true);
         try {
-            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/adminusers", formData);
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/adminusers", userData);
             Swal.fire("Success", res.data.message, "success");
             setShowModal(false);
             setFormData({ username: "", email: "", password: "", role: "ADMIN" });
@@ -100,6 +140,12 @@ export default function Adminuser() {
                 Swal.fire("Error", "Failed to update user.", "error");
             }
         }
+    };
+
+    const closePinModal = () => {
+        setShowPinModal(false);
+        setPin("");
+        setPendingUser(null);
     };
 
     return (
@@ -231,6 +277,42 @@ export default function Adminuser() {
                                 {isSaving ? "Saving..." : "Save"}
                             </button>
                             <button onClick={() => setShowModal(false)} disabled={isSaving}>Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {showPinModal && (
+                <div className="adminuser-modal">
+                    <div className="adminuser-modal-content" style={{ textAlign: "center" }}>
+                        <h2 style={{ marginBottom: "10px" }}>Create Admin PIN</h2>
+                        <p style={{ color: "#666", fontSize: "14px", marginBottom: "20px" }}>
+                            Create a 4-digit PIN for this Admin user
+                        </p>
+                        <input
+                            type="password"
+                            placeholder="••••"
+                            value={pin}
+                            onChange={e => setPin(e.target.value)}
+                            maxLength={4}
+                            style={{
+                                textAlign: "center",
+                                fontSize: "24px",
+                                letterSpacing: "8px",
+                                padding: "15px",
+                                width: "150px",
+                                border: "2px solid #0a3d18",
+                                borderRadius: "8px",
+                                marginBottom: "20px"
+                            }}
+                        />
+                        <div className="adminuser-modal-buttons" style={{ justifyContent: "center" }}>
+                            <button onClick={handlePinSave} style={{ backgroundColor: "#0a3d18" }}>
+                                Create PIN
+                            </button>
+                            <button onClick={closePinModal} style={{ backgroundColor: "#dc3545" }}>
+                                Cancel
+                            </button>
                         </div>
                     </div>
                 </div>

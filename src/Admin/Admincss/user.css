@@ -173,6 +173,121 @@
         opacity: 0;
         transform: translateY(-10px);
     }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* PIN Modal Styles */
+.pin-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    backdrop-filter: blur(3px);
+}
+
+.pin-modal-content {
+    background: white;
+    padding: 30px 35px;
+    border-radius: 12px;
+    width: 350px;
+    max-width: 90%;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+    text-align: center;
+    animation: fadeIn 0.2s ease-in-out;
+}
+
+.pin-modal-content h2 {
+    margin: 0 0 10px 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: #0a3d18;
+}
+
+.pin-modal-content p {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.pin-input-container {
+    margin-bottom: 25px;
+}
+
+.pin-input {
+    width: 150px;
+    padding: 15px;
+    font-size: 24px;
+    letter-spacing: 8px;
+    text-align: center;
+    border: 2px solid #0a3d18;
+    border-radius: 8px;
+    outline: none;
+    transition: border-color 0.2s ease;
+}
+
+.pin-input:focus {
+    border-color: #097129;
+    box-shadow: 0 0 0 3px rgba(10, 61, 24, 0.1);
+}
+
+.pin-modal-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.pin-btn-verify {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #0a3d18;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.pin-btn-verify:hover {
+    background-color: #097129;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(10, 61, 24, 0.3);
+}
+
+.pin-btn-cancel {
+    padding: 12px 24px;
+    font-size: 15px;
+    font-weight: 500;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #dc3545;
+    color: white;
+    transition: all 0.2s ease;
+}
+
+.pin-btn-cancel:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+
     to {
         opacity: 1;
         transform: translateY(0);

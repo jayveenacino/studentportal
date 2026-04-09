@@ -7,6 +7,7 @@ import { Pencil, Trash2, Image, Eye } from "lucide-react";
 export default function Instructor() {
     const [instructors, setInstructors] = useState([]);
     const [search, setSearch] = useState("");
+    const [selectedDepartment, setSelectedDepartment] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [showViewModal, setShowViewModal] = useState(false);
@@ -75,8 +76,9 @@ export default function Instructor() {
 
     const filtered = instructors.filter(
         i =>
-            i.name.toLowerCase().includes(search.toLowerCase()) ||
-            i.department.toLowerCase().includes(search.toLowerCase())
+            (selectedDepartment === "" || i.department === selectedDepartment) &&
+            (i.name.toLowerCase().includes(search.toLowerCase()) ||
+                i.department.toLowerCase().includes(search.toLowerCase()))
     );
     const pageCount = Math.ceil(filtered.length / perPage);
     const start = (currentPage - 1) * perPage;
@@ -260,7 +262,7 @@ export default function Instructor() {
                 <p>Manage faculty members and teaching staff.</p>
             </div>
 
-            <div className="instructor-controls">
+            <div className="instructor-controls" style={{ justifyContent: "space-between" }}>
                 <input
                     className="instructor-search"
                     placeholder="Search instructors…"
@@ -270,15 +272,32 @@ export default function Instructor() {
                         setCurrentPage(1);
                     }}
                 />
-                <button className="instructor-add-btn" onClick={() => {
-                    setNewInstructor({ name: "", department: "", status: "Active", profileImage: "" });
-                    setPreviewUrl(null);
-                    setEditMode(false);
-                    setEditId(null);
-                    setShowModal(true);
-                }}>
-                    Add Instructor
-                </button>
+                <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
+                    <select
+                        className="instructor-department-filter"
+                        value={selectedDepartment}
+                        onChange={e => {
+                            setSelectedDepartment(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                    >
+                        <option value="">All Departments</option>
+                        {departments.map(dept => (
+                            <option key={dept._id} value={dept.name}>
+                                {dept.name}
+                            </option>
+                        ))}
+                    </select>
+                    <button className="instructor-add-btn" onClick={() => {
+                        setNewInstructor({ name: "", department: "", status: "Active", profileImage: "" });
+                        setPreviewUrl(null);
+                        setEditMode(false);
+                        setEditId(null);
+                        setShowModal(true);
+                    }}>
+                        Add Instructor
+                    </button>
+                </div>
             </div>
 
             <div className="instructor-table-container">

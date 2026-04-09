@@ -11,18 +11,21 @@ export default function Login() {
     const [emailOrUsername, setEmailOrUsername] = useState("");
     const [password, setPassword] = useState("");
     const [isMobile, setIsMobile] = useState(false);
+    const [showPinModal, setShowPinModal] = useState(false);
+    const [pin, setPin] = useState("");
+    const [pendingLogin, setPendingLogin] = useState(null);
     const navigate = useNavigate();
 
     useEffect(() => {
         const checkMobile = () => {
             const userAgent = navigator.userAgent || navigator.vendor || window.opera;
             const mobileRegex = /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini|mobile|tablet/i;
-            
+
             if (mobileRegex.test(userAgent.toLowerCase()) || window.innerWidth < 768) {
                 setIsMobile(true);
             }
         };
-        
+
         checkMobile();
         window.addEventListener('resize', checkMobile);
         return () => window.removeEventListener('resize', checkMobile);
@@ -35,12 +38,81 @@ export default function Login() {
         }
     }, [navigate]);
 
+    const rolesRequiringPin = ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"];
+
+    const handlePinSubmit = async () => {
+        if (!pin || pin.length < 4) {
+            Swal.fire({
+                icon: "error",
+                title: "Invalid PIN",
+                text: "Please enter a valid 4-digit PIN",
+                showConfirmButton: false,
+                timer: 2000,
+            });
+            return;
+        }
+
+        try {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/verify-pin", {
+                userId: pendingLogin._id,
+                pin: pin
+            });
+
+            if (res.data.valid) {
+                completeLogin(pendingLogin);
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Invalid PIN",
+                    text: "The PIN you entered is incorrect",
+                    showConfirmButton: false,
+                    timer: 2000,
+                });
+                setPin("");
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: "error",
+                title: "Error",
+                text: "Failed to verify PIN",
+                showConfirmButton: false,
+                timer: 2000,
+            });
+        }
+    };
+
+    const completeLogin = async (userData) => {
+        setAdmin(userData);
+        sessionStorage.setItem("Admin", JSON.stringify(userData));
+
+        await Swal.fire({
+            toast: true,
+            position: "top-end",
+            icon: "success",
+            title: "Login Successful",
+            text: `Welcome back, ${userData.username}!`,
+            showConfirmButton: false,
+            timer: 1500,
+        });
+
+        await Swal.fire({
+            title: "Loading Dashboard...",
+            html: "<b>Please wait</b>",
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            didOpen: () => Swal.showLoading(),
+            timer: 2000,
+        });
+
+        navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
+    };
+
     const handleSubmit = async (e) => {
         e.preventDefault();
 
         if (
-            emailOrUsername === "kolehiyongsubic.ph@gmail.com" &&
-            password === "kolehiyongsubiccsd2002"
+            emailOrUsername === import.meta.env.VITE_DEFAULT_ADMIN_EMAIL &&
+            password === import.meta.env.VITE_DEFAULT_ADMIN_PASSWORD
         ) {
             const defaultAdmin = {
                 email: "knsadmincsd@gmail.com",
@@ -79,29 +151,14 @@ export default function Login() {
                 password,
             });
 
-            setAdmin(res.data.admin);
-            sessionStorage.setItem("Admin", JSON.stringify(res.data.admin));
+            const userData = res.data.admin;
 
-            await Swal.fire({
-                toast: true,
-                position: "top-end",
-                icon: "success",
-                title: "Login Successful",
-                text: `Welcome back, ${res.data.admin.username}!`,
-                showConfirmButton: false,
-                timer: 1500,
-            });
-
-            await Swal.fire({
-                title: "Loading Dashboard...",
-                html: "<b>Please wait</b>",
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                didOpen: () => Swal.showLoading(),
-                timer: 2000,
-            });
-
-            navigate("/auth/secure-access/admin-portal/admindashboard", { replace: true });
+            if (rolesRequiringPin.includes(userData.role)) {
+                setPendingLogin(userData);
+                setShowPinModal(true);
+            } else {
+                completeLogin(userData);
+            }
         } catch (err) {
             Swal.fire({
                 toast: true,
@@ -113,6 +170,12 @@ export default function Login() {
                 timer: 2500,
             });
         }
+    };
+
+    const closePinModal = () => {
+        setShowPinModal(false);
+        setPin("");
+        setPendingLogin(null);
     };
 
     if (isMobile) {
@@ -207,6 +270,33 @@ export default function Login() {
                     </div>
                 </div>
             </div>
+
+            {showPinModal && (
+                <div className="pin-modal-overlay">
+                    <div className="pin-modal-content">
+                        <h2>Enter Admin PIN</h2>
+                        <p>Please enter your 4-digit PIN to continue</p>
+                        <div className="pin-input-container">
+                            <input
+                                type="password"
+                                placeholder="••••"
+                                value={pin}
+                                onChange={e => setPin(e.target.value)}
+                                maxLength={4}
+                                className="pin-input"
+                            />
+                        </div>
+                        <div className="pin-modal-buttons">
+                            <button onClick={handlePinSubmit} className="pin-btn-verify">
+                                Verify
+                            </button>
+                            <button onClick={closePinModal} className="pin-btn-cancel">
+                                Cancel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
 
             <div style={{
                 textAlign: "center",

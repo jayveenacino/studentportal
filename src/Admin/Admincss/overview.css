@@ -1,10 +1,20 @@
+/* Admincss/overview.css */
+
 .overview-container {
-    padding: 100px 32px;
+    padding: 100px 32px 32px 32px;
     background-color: #f8f9fa;
     font-family: "Segoe UI", sans-serif;
     min-height: 100vh;
     box-sizing: border-box;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 32px;
     overflow-y: auto;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
 }
 
 .overview-header {
@@ -125,51 +135,8 @@
     background-color: #097129;
 }
 
-.updates-card {
-    background: white;
-    padding: 20px;
-    border-radius: 8px;
-    border: 1px solid #ddd;
-}
-
-.updates-card h3 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #0a3d18;
-}
-
-.updates-list {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-
-.updates-list li {
-    display: flex;
-    align-items: flex-start;
-    gap: 6px;
-    padding: 6px 0;
-    border-bottom: 1px solid #eee;
-    color: #555;
-}
-
-.updates-list li:last-child {
-    border-bottom: none;
-}
-
-.updates-list span {
-    color: #0a3d18;
-    font-weight: bold;
-    margin-top: 4px;
-}
-
-.updates-container {
-    padding: 10px 32px;
-    background-color: #f8f9fa;
-    font-family: "Segoe UI", sans-serif;
-    height: 100%;
-    box-sizing: border-box;
-    overflow-y: auto;
+.updates-container-inner {
+    flex-grow: 1;
 }
 
 .updates-header h1 {
@@ -192,6 +159,8 @@
     border-collapse: collapse;
     background-color: white;
     border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
 }
 
 .updates-table th,
@@ -204,4 +173,182 @@
 .updates-table th {
     background-color: #0a3d18;
     color: white;
+}
+
+.updates-table tr:last-child td {
+    border-bottom: none;
+}
+
+.right-sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+}
+
+.calendar-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.calendar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: #0a3d18;
+}
+
+.calendar-nav {
+    display: flex;
+    gap: 10px;
+    font-weight: bold;
+    color: #555;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    color: #555;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.calendar-dates {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    gap: 4px;
+}
+
+.calendar-dates span {
+    padding: 8px 0;
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.calendar-dates span.empty {
+    visibility: hidden;
+}
+
+.events-card {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #ddd;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.events-card h3 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    font-size: 1.2rem;
+    color: #0a3d18;
+}
+
+.events-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.events-list li {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+    align-items: flex-start;
+}
+
+.event-line {
+    width: 2px;
+    background-color: #0a3d18;
+    height: 100%;
+    margin-top: 4px;
+}
+
+.event-content p {
+    margin: 0;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.event-content .event-time {
+    color: #777;
+    font-size: 0.85rem;
+    margin-top: 2px;
+}
+
+.calendar-dates span {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.9rem;
+    color: #333;
+    margin: auto;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-dates span:hover:not(.empty):not(.today-dot) {
+    background-color: #e8f5ec;
+    color: #0a3d18;
+}
+
+.calendar-dates span.empty {
+    visibility: hidden;
+}
+
+.calendar-dates span.today-dot {
+    font-weight: 600;
+    color: #0a3d18;
+}
+
+.calendar-dates span.today-dot::after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    right: 2px;
+    width: 7px;
+    height: 7px;
+    background-color: #ffd000;
+    border-radius: 50%;
+}
+
+.calendar-nav button {
+    width: 32px;
+    height: 32px;
+    border: 1px solid #ddd;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #555;
+    transition: all 0.2s ease;
+}
+
+.calendar-nav button:hover:not(:disabled) {
+    background-color: #0a3d18;
+    color: white;
+    border-color: #0a3d18;
+}
+
+.calendar-nav button:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
 }

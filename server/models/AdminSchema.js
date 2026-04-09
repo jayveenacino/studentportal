@@ -21,8 +21,12 @@ const AdminSchema = new mongoose.Schema(
         },
         role: {
             type: String,
-            enum: ["ADMIN", "REGISTRAR"],
+            enum: ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR", "Super Admin"],
             default: "ADMIN",
+        },
+        pin: {
+            type: String,
+            default: null,
         },
     },
     { timestamps: true }
