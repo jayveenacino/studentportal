@@ -7,6 +7,8 @@ router.post("/adminusers", async (req, res) => {
     try {
         const { username, email, password, role, pin } = req.body;
         console.log("Received:", req.body);
+        console.log("PIN received:", pin);
+        console.log("Role received:", role);
 
         if (!username || !email || !password) {
             return res.status(400).json({ message: "All fields are required" });
@@ -24,10 +26,19 @@ router.post("/adminusers", async (req, res) => {
             role 
         };
         
-        if (pin && ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"].includes(role)) {
+        // Check if role requires PIN
+        const rolesRequiringPin = ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"];
+        console.log("Role requires PIN?", rolesRequiringPin.includes(role));
+        console.log("PIN provided?", !!pin);
+        
+        if (pin && rolesRequiringPin.includes(role)) {
+            console.log("Hashing PIN...");
             const saltRounds = 10;
             userData.pin = await bcrypt.hash(pin, saltRounds);
+            console.log("Hashed PIN:", userData.pin);
         }
+
+        console.log("Final userData:", userData);
 
         const newAdmin = new Admin(userData);
         await newAdmin.save();
