@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Department = require('../models/Department');
 
-// GET all departments
 router.get('/', async (req, res) => {
     try {
         const departments = await Department.find().sort({ createdAt: -1 });
@@ -12,7 +11,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// GET a single department by ID
 router.get('/:id', async (req, res) => {
     try {
         const department = await Department.findById(req.params.id);
@@ -23,13 +21,12 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// CREATE a new department
 router.post('/', async (req, res) => {
-    const { name, head, status } = req.body;
+    const { name, head, username, status } = req.body;
     if (!name || !head) return res.status(400).json({ message: 'Name and Head are required' });
 
     try {
-        const newDepartment = new Department({ name, head, status });
+        const newDepartment = new Department({ name, head, username, status });
         const savedDept = await newDepartment.save();
         res.status(201).json(savedDept);
     } catch (err) {
@@ -37,14 +34,13 @@ router.post('/', async (req, res) => {
     }
 });
 
-// UPDATE a department
 router.put('/:id', async (req, res) => {
-    const { name, head, status } = req.body;
+    const { name, head, username, status } = req.body;
 
     try {
         const updatedDept = await Department.findByIdAndUpdate(
             req.params.id,
-            { name, head, status },
+            { name, head, username, status },
             { new: true, runValidators: true }
         );
         if (!updatedDept) return res.status(404).json({ message: 'Department not found' });
@@ -54,7 +50,6 @@ router.put('/:id', async (req, res) => {
     }
 });
 
-// DELETE a department
 router.delete('/:id', async (req, res) => {
     try {
         const deletedDept = await Department.findByIdAndDelete(req.params.id);

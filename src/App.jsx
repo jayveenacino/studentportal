@@ -20,6 +20,7 @@ import { AdminContextProvider } from './Admin/useAdmin';
 import Student from './student/Student';
 import StudentMain from './StudentPortalMain/StudentMain';
 import PresidentOffice from './HomePage/PresidentOffice';
+import DeanLogin from './DeansPortal/DeanLogin';
 import NotFound from './pages/NotFound';
 
 const router = createBrowserRouter(
@@ -41,6 +42,7 @@ const router = createBrowserRouter(
 			<Route path="/student" element={<Student />} />
 			<Route path="/studentmain" element={<StudentMain />} />
 			<Route path="/home/collegepresident" element={<PresidentOffice />} />
+			<Route path="/dean-login" element={<DeanLogin />} />
 			<Route
 				path="/preregister"
 				element={

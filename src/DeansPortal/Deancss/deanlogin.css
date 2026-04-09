@@ -1,0 +1,204 @@
+.dl-full-screen-wrapper {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    height: 100dvh;
+    overflow: hidden;
+    position: fixed;
+    top: 0;
+    left: 0;
+    touch-action: none;
+}
+
+.dl-main-layout {
+    display: flex;
+    width: 100%;
+    height: 100%;
+}
+
+.dl-form-side {
+    flex: 0 0 50%;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f5f5f5;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.dl-login-card {
+    background-color: #ffffff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.dl-content-holder {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.dl-main-logo {
+    width: 70px;
+    height: auto;
+    margin-bottom: 15px;
+}
+
+.dl-heading {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 1px;
+    color: #05380c;
+}
+
+.dl-subtext {
+    font-size: 13px;
+    color: #05380c;
+    margin-bottom: 25px;
+}
+
+.dl-input-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+}
+
+.dl-input-group {
+    border: 1px solid #05380c;
+    border-radius: 8px;
+    padding: 0 12px 5px 12px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
+.dl-legend {
+    font-size: 12px;
+    font-weight: 600;
+    color: #05380c;
+    padding: 0 5px;
+    margin-left: -2px;
+    text-align: left;
+}
+
+.dl-input-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    overflow: hidden;
+}
+
+.dl-inner-input {
+    flex: 0 1 auto;
+    min-width: 0; 
+    width: 100%;
+    border: none;
+    background: transparent;
+    padding: 10px 0;
+    font-size: 16px;
+    outline: none;
+    color: #333;
+}
+
+.dl-username-input {
+    width: auto;
+    flex: 0 1 auto;
+    max-width: 50%; 
+}
+
+.dl-email-suffix {
+    color: #888;
+    font-size: 13px;
+    user-select: none;
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding-left: 4px; 
+    pointer-events: none;
+}
+
+.dl-login-btn {
+    width: 100%;
+    padding: 14px;
+    background-color: #05380c;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.dl-bottom-nav {
+    margin-top: 25px;
+    width: 100%;
+}
+
+.dl-privacy-text {
+    font-size: 10px;
+    line-height: 1.4;
+    color: #999;
+    margin: 0;
+}
+
+.dl-image-side {
+    flex: 0 0 50%;
+    width: 50%;
+    background-image: url('/img/deanbg.png');
+    background-size: cover;
+    background-position: center;
+}
+
+@media (max-width: 768px) {
+    .dl-image-side {
+        display: none;
+    }
+    
+    .dl-form-side {
+        flex: 0 0 100%;
+        width: 100%;
+        background-color: #ffffff;
+    }
+
+    .dl-login-card {
+        max-width: 90%;
+        box-shadow: none;
+        padding: 20px 10px;
+    }
+
+    .dl-input-group {
+        padding: 0 10px 5px 10px; 
+    }
+
+    .dl-email-suffix {
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .dl-email-suffix {
+        font-size: 10px;
+    }
+
+    .dl-inner-input {
+        font-size: 14px;
+    }
+
+    .dl-username-input {
+        max-width: 40%;
+    }
+}

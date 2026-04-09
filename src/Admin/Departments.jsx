@@ -13,7 +13,7 @@ export default function Departments() {
     const [editId, setEditId] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [loadingDepartments, setLoadingDepartments] = useState(true);
-    const [newDept, setNewDept] = useState({ name: "", head: "", status: "Active" });
+    const [newDept, setNewDept] = useState({ name: "", head: "", username: "", status: "Active" });
 
     const perPage = 5;
 
@@ -43,7 +43,8 @@ export default function Departments() {
     const filtered = departments.filter(
         d =>
             d.name.toLowerCase().includes(search.toLowerCase()) ||
-            d.head.toLowerCase().includes(search.toLowerCase())
+            d.head.toLowerCase().includes(search.toLowerCase()) ||
+            (d.username && d.username.toLowerCase().includes(search.toLowerCase()))
     );
     const pageCount = Math.ceil(filtered.length / perPage);
     const start = (currentPage - 1) * perPage;
@@ -86,7 +87,7 @@ export default function Departments() {
                 });
             }
 
-            setNewDept({ name: "", head: "", status: "Active" });
+            setNewDept({ name: "", head: "", username: "", status: "Active" });
             setEditMode(false);
             setEditId(null);
             setShowModal(false);
@@ -107,6 +108,7 @@ export default function Departments() {
         setNewDept({
             name: dept.name,
             head: dept.head,
+            username: dept.username || "",
             status: dept.status
         });
         setEditId(dept._id);
@@ -152,7 +154,7 @@ export default function Departments() {
         setShowModal(false);
         setEditMode(false);
         setEditId(null);
-        setNewDept({ name: "", head: "", status: "Active" });
+        setNewDept({ name: "", head: "", username: "", status: "Active" });
         setIsSaving(false);
     };
 
@@ -197,7 +199,7 @@ export default function Departments() {
                     }}
                 />
                 <button className="departments-add-btn" onClick={() => {
-                    setNewDept({ name: "", head: "", status: "Active" });
+                    setNewDept({ name: "", head: "", username: "", status: "Active" });
                     setEditMode(false);
                     setEditId(null);
                     setShowModal(true);
@@ -213,6 +215,7 @@ export default function Departments() {
                             <th>#</th>
                             <th>Department</th>
                             <th>Chairperson</th>
+                            <th>Username</th>
                             <th>Status</th>
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
@@ -223,6 +226,7 @@ export default function Departments() {
                                 <td>{start + i + 1}</td>
                                 <td>{d.name}</td>
                                 <td>{d.head}</td>
+                                <td>{d.username || "-"}</td>
                                 <td>
                                     <span className={d.status === "Active" ? "status-active" : "status-inactive"}>
                                         {d.status}
@@ -240,7 +244,7 @@ export default function Departments() {
                         ))}
                         {current.length === 0 && !loadingDepartments && (
                             <tr>
-                                <td colSpan="5" style={{ textAlign: "center", padding: "20px" }}>No departments found.</td>
+                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>No departments found.</td>
                             </tr>
                         )}
                     </tbody>
@@ -276,6 +280,12 @@ export default function Departments() {
                             placeholder="Enter Dean"
                             value={newDept.head}
                             onChange={e => setNewDept({ ...newDept, head: e.target.value })}
+                        />
+                        <input
+                            type="text"
+                            placeholder="Username"
+                            value={newDept.username}
+                            onChange={e => setNewDept({ ...newDept, username: e.target.value })}
                         />
                         <select
                             value={newDept.status}

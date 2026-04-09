@@ -33,7 +33,7 @@ export default function Footer() {
                         <p>KNS Health Check</p>
                         <p>KNS Registrar</p>
                         <p>KNS Teachers Portal</p>
-                        <p>KNS Deans Portal</p>
+                        <Link style={{ textDecoration: 'none' }} to="/dean-login" target='_blank'><p>KNS Deans Portal</p></Link>
                     </div>
                 </div>
 
