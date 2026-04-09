@@ -6,12 +6,9 @@ const Admin = require("../models/AdminSchema");
 router.post("/adminusers", async (req, res) => {
     try {
         const { username, email, password, role, pin } = req.body;
-        console.log("Received:", req.body);
-        console.log("PIN received:", pin);
-        console.log("Role received:", role);
 
         if (!username || !email || !password) {
-            return res.status(400).json({ message: "All fields are required" });
+            return res.status(400).json({ message: "Username, email, and password are required" });
         }
 
         const existing = await Admin.findOne({ email });
@@ -19,43 +16,38 @@ router.post("/adminusers", async (req, res) => {
             return res.status(400).json({ message: "Email already exists" });
         }
 
+        const saltRounds = 10;
+        const hashedPassword = await bcrypt.hash(password, saltRounds);
+        
         const userData = { 
             username, 
             email, 
-            password, 
+            password: hashedPassword,
             role 
         };
         
-        // Check if role requires PIN
-        const rolesRequiringPin = ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"];
-        console.log("Role requires PIN?", rolesRequiringPin.includes(role));
-        console.log("PIN provided?", !!pin);
-        
-        if (pin && rolesRequiringPin.includes(role)) {
-            console.log("Hashing PIN...");
-            const saltRounds = 10;
-            userData.pin = await bcrypt.hash(pin, saltRounds);
-            console.log("Hashed PIN:", userData.pin);
+        // Only ADMIN role gets PIN - PLAIN TEXT (NOT HASHED)
+        if (role === "ADMIN" && pin) {
+            userData.pin = pin; // NO bcrypt.hash() - plain text
         }
-
-        console.log("Final userData:", userData);
 
         const newAdmin = new Admin(userData);
         await newAdmin.save();
 
-        res.status(201).json({ message: "Admin created successfully", newAdmin });
+        const { password: _, ...safeData } = newAdmin.toObject();
+        res.status(201).json({ message: "Admin created successfully", newAdmin: safeData });
     } catch (error) {
-        console.error("❌ Error creating admin:", error.message);
+        console.error("Error creating admin:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
 router.get("/adminusers", async (req, res) => {
     try {
-        const admins = await Admin.find();
+        const admins = await Admin.find().select("-password");
         res.status(200).json(admins);
     } catch (error) {
-        console.error("❌ Error fetching admins:", error.message);
+        console.error("Error fetching admins:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
@@ -66,17 +58,29 @@ router.delete("/adminusers/:id", async (req, res) => {
         if (!deleted) return res.status(404).json({ message: "Admin not found" });
         res.status(200).json({ message: "Admin deleted successfully" });
     } catch (error) {
-        console.error("❌ Error deleting admin:", error.message);
+        console.error("Error deleting admin:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
 router.put("/adminusers/:id", async (req, res) => {
     try {
-        const updated = await Admin.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updateData = { ...req.body };
+        const saltRounds = 10;
+        
+        if (updateData.password) {
+            updateData.password = await bcrypt.hash(updateData.password, saltRounds);
+        }
+        
+        // PIN stays plain text - no hashing here either
+        if (updateData.pin) {
+            // Keep as plain text
+        }
+        
+        const updated = await Admin.findByIdAndUpdate(req.params.id, updateData, { new: true }).select("-password");
         res.status(200).json({ message: "Admin updated successfully", updated });
     } catch (error) {
-        console.error("❌ Error updating admin:", error.message);
+        console.error("Error updating admin:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
@@ -93,35 +97,49 @@ router.post("/adminlogin", async (req, res) => {
             return res.status(404).json({ message: "Admin not found" });
         }
 
-        if (admin.password !== password) {
+        const isPasswordValid = await bcrypt.compare(password, admin.password);
+        
+        if (!isPasswordValid) {
             return res.status(400).json({ message: "Incorrect password" });
         }
 
+        const { password: _, ...safeAdmin } = admin.toObject();
+
         res.status(200).json({
             message: "Login successful",
-            admin
+            admin: safeAdmin
         });
     } catch (error) {
-        console.error("❌ Error logging in admin:", error.message);
+        console.error("Error logging in admin:", error.message);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
 router.post("/verify-pin", async (req, res) => {
     try {
-        const { userId, pin } = req.body;
+        const { pin } = req.body;
         
-        const user = await Admin.findById(userId);
-        if (!user) return res.status(404).json({ valid: false, message: "User not found" });
-        
-        if (!user.pin) {
-            return res.status(400).json({ valid: false, message: "PIN not set for this user" });
+        if (!pin) {
+            return res.status(400).json({ valid: false, message: "PIN is required" });
         }
         
-        const valid = await bcrypt.compare(pin, user.pin);
-        res.json({ valid });
+        // Find the ADMIN user to get their PIN
+        const adminUser = await Admin.findOne({ role: "ADMIN" });
+        
+        if (!adminUser || !adminUser.pin) {
+            return res.status(400).json({ valid: false, message: "Admin PIN not set" });
+        }
+        
+        // Compare plain text PINs directly (NO bcrypt.compare)
+        const isValid = pin === adminUser.pin;
+        
+        if (!isValid) {
+            return res.status(400).json({ valid: false, message: "Invalid PIN" });
+        }
+        
+        res.json({ valid: true });
     } catch (error) {
-        console.error("❌ Error verifying PIN:", error.message);
+        console.error("Error verifying PIN:", error.message);
         res.status(500).json({ valid: false, message: "Server error" });
     }
 });

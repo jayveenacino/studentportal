@@ -115,7 +115,7 @@ export default function Adminuser() {
             setFormData({ username: "", email: "", password: "", role: "ADMIN" });
             fetchUsers();
         } catch (err) {
-            Swal.fire("Error", "Failed to add admin user", "error");
+            Swal.fire("Error", err.response?.data?.message || "Failed to add admin user", "error");
             throw err;
         } finally {
             setIsSaving(false);
@@ -291,10 +291,10 @@ export default function Adminuser() {
                             value={formData.role}
                             onChange={handleInputChange}
                         >
-                            <option value="ADMIN">ADMIN</option>
-                            <option value="REGISTRAR">REGISTRAR</option>
-                            <option value="ENCODER">ENCODER</option>
-                            <option value="EVALUATOR">EVALUATOR</option>
+                            <option value="ADMIN">ADMIN (Requires PIN)</option>
+                            <option value="REGISTRAR">REGISTRAR (Uses Admin PIN)</option>
+                            <option value="ENCODER">ENCODER (Uses Admin PIN)</option>
+                            <option value="EVALUATOR">EVALUATOR (Uses Admin PIN)</option>
                         </select>
 
                         <div className="adminuser-modal-buttons">
@@ -312,14 +312,20 @@ export default function Adminuser() {
                     <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Create Admin PIN</h2>
                         <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
-                            Create a 4-digit PIN for this Admin user
+                            Create a 4-digit PIN for {pendingUser?.username}
+                        </p>
+                        <p style={{ color: "#999", fontSize: "12px", marginBottom: "25px", width: "100%" }}>
+                            This PIN will be used by ADMIN, REGISTRAR, ENCODER, and EVALUATOR
                         </p>
                         <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
                             <input
                                 type="password"
                                 placeholder="••••"
                                 value={pin}
-                                onChange={e => setPin(e.target.value)}
+                                onChange={e => {
+                                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                    setPin(value);
+                                }}
                                 maxLength={4}
                                 disabled={isCreatingPin}
                                 style={{
@@ -339,14 +345,14 @@ export default function Adminuser() {
                         <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
                             <button 
                                 onClick={handlePinSave} 
-                                disabled={isCreatingPin}
+                                disabled={isCreatingPin || pin.length !== 4}
                                 style={{ 
                                     backgroundColor: "#0a3d18",
                                     padding: "12px 24px",
                                     fontSize: "15px",
                                     fontWeight: "500",
-                                    opacity: isCreatingPin ? 0.6 : 1,
-                                    cursor: isCreatingPin ? "not-allowed" : "pointer"
+                                    opacity: isCreatingPin || pin.length !== 4 ? 0.6 : 1,
+                                    cursor: isCreatingPin || pin.length !== 4 ? "not-allowed" : "pointer"
                                 }}
                             >
                                 {isCreatingPin ? "Creating..." : "Create PIN"}

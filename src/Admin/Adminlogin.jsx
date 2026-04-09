@@ -58,7 +58,6 @@ export default function Login() {
 
         try {
             const res = await axios.post(import.meta.env.VITE_API_URL + "/api/verify-pin", {
-                userId: pendingLogin._id,
                 pin: pin
             });
 
@@ -78,10 +77,11 @@ export default function Login() {
             Swal.fire({
                 icon: "error",
                 title: "Error",
-                text: "Failed to verify PIN",
+                text: err.response?.data?.message || "Failed to verify PIN",
                 showConfirmButton: false,
                 timer: 2000,
             });
+            setPin("");
         } finally {
             setIsVerifyingPin(false);
         }
@@ -303,7 +303,7 @@ export default function Login() {
                     <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Enter Admin PIN</h2>
                         <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
-                            Please enter your 4-digit PIN to continue
+                            Please enter the 4-digit Admin PIN to continue
                         </p>
                         <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
                             <input
