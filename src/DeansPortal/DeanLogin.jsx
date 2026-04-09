@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import Swal from 'sweetalert2';
 import "./Deancss/deanlogin.css";
 
 export default function DeanLogin() {
     const [showPassword, setShowPassword] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [isLoggingIn, setIsLoggingIn] = useState(false);
+    const navigate = useNavigate();
 
     const handleHoldStart = (e) => {
         if (e.cancelable) e.preventDefault();
@@ -15,7 +22,74 @@ export default function DeanLogin() {
 
     useEffect(() => {
         document.title = "Kolehiyo Ng Subic - Deans Portal Login";
-    }, []);
+        
+        const storedDean = sessionStorage.getItem("Dean");
+        if (storedDean) {
+            navigate("/deans-portal/dashboard", { replace: true });
+        }
+    }, [navigate]);
+
+    const handleLogin = async (e) => {
+        e.preventDefault();
+
+        if (!username || !password) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Missing Fields',
+                text: 'Please enter both username and password.',
+                showConfirmButton: false,
+                timer: 2000
+            });
+            return;
+        }
+
+        setIsLoggingIn(true);
+
+        try {
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/dean-login", {
+                username: username + "@kolehiyongsubic.edu.ph",
+                password: password
+            });
+
+            const deanData = res.data.department;
+
+            if (deanData.status !== "Active") {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Account Inactive',
+                    text: 'Your account is currently inactive. Please contact the administrator.',
+                    showConfirmButton: false,
+                    timer: 2500
+                });
+                setIsLoggingIn(false);
+                return;
+            }
+
+            sessionStorage.setItem("Dean", JSON.stringify(deanData));
+
+            await Swal.fire({
+                toast: true,
+                position: "top-end",
+                icon: "success",
+                title: "Login Successful",
+                text: `Welcome, ${deanData.head}!`,
+                showConfirmButton: false,
+                timer: 1500
+            });
+
+            navigate("/deans-portal/dashboard", { replace: true });
+
+        } catch (err) {
+            setIsLoggingIn(false);
+            Swal.fire({
+                icon: 'error',
+                title: 'Login Failed',
+                text: err.response?.data?.message || 'Invalid username or password.',
+                showConfirmButton: false,
+                timer: 2500
+            });
+        }
+    };
 
     return (
         <div className="dl-full-screen-wrapper">
@@ -34,7 +108,7 @@ export default function DeanLogin() {
                             <h1 className="dl-heading">KOLEHIYO NG SUBIC</h1>
                             <p className="dl-subtext">Deans Portal v1.0.0</p>
 
-                            <form className="dl-input-form" onSubmit={(e) => e.preventDefault()}>
+                            <form className="dl-input-form" onSubmit={handleLogin}>
                                 <fieldset className="dl-input-group">
                                     <legend className="dl-legend">Username*</legend>
                                     <div className="dl-input-wrapper">
@@ -42,7 +116,10 @@ export default function DeanLogin() {
                                             type="text"
                                             placeholder="Enter ID"
                                             className="dl-inner-input"
+                                            value={username}
+                                            onChange={e => setUsername(e.target.value)}
                                             required
+                                            disabled={isLoggingIn}
                                         />
                                         <div className="dl-input-appendix">
                                             <span className="dl-email-suffix">@kolehiyongsubic.edu.ph</span>
@@ -57,7 +134,10 @@ export default function DeanLogin() {
                                             type={showPassword ? "text" : "password"}
                                             placeholder="Password"
                                             className="dl-inner-input"
+                                            value={password}
+                                            onChange={e => setPassword(e.target.value)}
                                             required
+                                            disabled={isLoggingIn}
                                         />
                                         <div
                                             className="dl-input-appendix dl-pointer dl-no-select"
@@ -73,8 +153,16 @@ export default function DeanLogin() {
                                     </div>
                                 </fieldset>
 
-                                <button type="submit" className="dl-login-btn">
-                                    Login
+                                <button 
+                                    type="submit" 
+                                    className="dl-login-btn"
+                                    disabled={isLoggingIn}
+                                    style={{
+                                        opacity: isLoggingIn ? 0.7 : 1,
+                                        cursor: isLoggingIn ? "not-allowed" : "pointer"
+                                    }}
+                                >
+                                    {isLoggingIn ? "Logging in..." : "Login"}
                                 </button>
                             </form>
 

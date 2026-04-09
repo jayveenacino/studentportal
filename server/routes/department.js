@@ -80,4 +80,38 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+router.post('/dean-login', async (req, res) => {
+    const { username, password } = req.body;
+
+    try {
+        const department = await Department.findOne({ username });
+
+        if (!department) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        if (!department.password) {
+            return res.status(401).json({ message: 'No password set for this account' });
+        }
+
+        const isMatch = await bcrypt.compare(password, department.password);
+
+        if (!isMatch) {
+            return res.status(401).json({ message: 'Invalid username or password' });
+        }
+
+        const deptResponse = {
+            _id: department._id,
+            name: department.name,
+            head: department.head,
+            username: department.username,
+            status: department.status
+        };
+
+        res.json({ message: 'Login successful', department: deptResponse });
+    } catch (err) {
+        res.status(500).json({ message: 'Login failed', error: err.message });
+    }
+});
+
 module.exports = router;
