@@ -14,6 +14,7 @@ export default function Departments() {
     const [isSaving, setIsSaving] = useState(false);
     const [loadingDepartments, setLoadingDepartments] = useState(true);
     const [newDept, setNewDept] = useState({ name: "", head: "", username: "", password: "", status: "Active" });
+    const [showPassword, setShowPassword] = useState(false);
 
     const perPage = 5;
 
@@ -91,6 +92,7 @@ export default function Departments() {
             setEditMode(false);
             setEditId(null);
             setShowModal(false);
+            setShowPassword(false);
 
         } catch (err) {
             console.error("Save error:", err);
@@ -115,6 +117,7 @@ export default function Departments() {
         setEditId(dept._id);
         setEditMode(true);
         setShowModal(true);
+        setShowPassword(false);
     };
 
     const handleDelete = async (id) => {
@@ -157,6 +160,7 @@ export default function Departments() {
         setEditId(null);
         setNewDept({ name: "", head: "", username: "", password: "", status: "Active" });
         setIsSaving(false);
+        setShowPassword(false);
     };
 
     return (
@@ -204,6 +208,7 @@ export default function Departments() {
                     setEditMode(false);
                     setEditId(null);
                     setShowModal(true);
+                    setShowPassword(false);
                 }}>
                     Add Department
                 </button>
@@ -288,12 +293,25 @@ export default function Departments() {
                             value={newDept.username}
                             onChange={e => setNewDept({ ...newDept, username: e.target.value.replace(/\s/g, '') })}
                         />
-                        <input
-                            type="password"
-                            placeholder="Password"
-                            value={newDept.password}
-                            onChange={e => setNewDept({ ...newDept, password: e.target.value })}
-                        />
+                        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
+                                value={newDept.password}
+                                onChange={e => setNewDept({ ...newDept, password: e.target.value })}
+                                style={{ width: "100%", paddingRight: "35px" }}
+                            />
+                            <i 
+                                className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: "absolute",
+                                    right: "10px",
+                                    cursor: "pointer",
+                                    color: "#666"
+                                }}
+                            />
+                        </div>
                         <select
                             value={newDept.status}
                             onChange={e => setNewDept({ ...newDept, status: e.target.value })}

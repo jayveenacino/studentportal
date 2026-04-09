@@ -21,6 +21,8 @@ export default function Adminuser() {
         password: "",
         role: "ADMIN",
     });
+    const [showPassword, setShowPassword] = useState(false);
+    const [showPin, setShowPin] = useState(false);
 
     useEffect(() => {
         const storedAdmin = sessionStorage.getItem("Admin");
@@ -62,6 +64,10 @@ export default function Adminuser() {
         return allowedRoles.includes(currentAdmin.role);
     };
 
+    const adminExists = () => {
+        return users.some(user => user.role === "ADMIN");
+    };
+
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData({ ...formData, [name]: value });
@@ -77,6 +83,15 @@ export default function Adminuser() {
             return;
         }
 
+        if (formData.role === "ADMIN" && adminExists()) {
+            Swal.fire({
+                icon: "error",
+                title: "Admin Already Exists",
+                text: "Only one ADMIN account is allowed."
+            });
+            return;
+        }
+
         if (formData.role === "ADMIN") {
             setPendingUser({ ...formData });
             setShowPinModal(true);
@@ -87,11 +102,11 @@ export default function Adminuser() {
     };
 
     const handlePinSave = async () => {
-        if (!pin || pin.length !== 4) {
+        if (!pin || pin.length !== 6) {
             Swal.fire({
                 icon: "warning",
                 title: "Invalid PIN",
-                text: "Please enter a 4-digit PIN."
+                text: "Please enter a 6-digit PIN."
             });
             return;
         }
@@ -105,6 +120,7 @@ export default function Adminuser() {
             setShowPinModal(false);
             setPin("");
             setPendingUser(null);
+            setShowPin(false);
         } catch (err) {
             console.error("Error creating user with PIN:", err);
         } finally {
@@ -119,6 +135,7 @@ export default function Adminuser() {
             Swal.fire("Success", res.data.message, "success");
             setShowModal(false);
             setFormData({ username: "", email: "", password: "", role: "ADMIN" });
+            setShowPassword(false);
             fetchUsers();
         } catch (err) {
             Swal.fire("Error", err.response?.data?.message || "Failed to add admin user", "error");
@@ -175,6 +192,7 @@ export default function Adminuser() {
         setShowPinModal(false);
         setPin("");
         setPendingUser(null);
+        setShowPin(false);
     };
 
     return (
@@ -289,13 +307,26 @@ export default function Adminuser() {
                             value={formData.email}
                             onChange={handleInputChange}
                         />
-                        <input
-                            type="password"
-                            name="password"
-                            placeholder="Password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                        />
+                        <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                name="password"
+                                placeholder="Password"
+                                value={formData.password}
+                                onChange={handleInputChange}
+                                style={{ width: "100%", paddingRight: "35px" }}
+                            />
+                            <i 
+                                className={showPassword ? "fas fa-eye-slash" : "fas fa-eye"}
+                                onClick={() => setShowPassword(!showPassword)}
+                                style={{
+                                    position: "absolute",
+                                    right: "10px",
+                                    cursor: "pointer",
+                                    color: "#666"
+                                }}
+                            />
+                        </div>
                         <select
                             name="role"
                             value={formData.role}
@@ -322,28 +353,29 @@ export default function Adminuser() {
                     <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Create Admin PIN</h2>
                         <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
-                            Create a 4-digit PIN for {pendingUser?.username}
+                            Create a 6-digit PIN for {pendingUser?.username}
                         </p>
                         <p style={{ color: "#999", fontSize: "12px", marginBottom: "25px", width: "100%" }}>
                             This PIN will be used by ADMIN, REGISTRAR, ENCODER, and EVALUATOR
                         </p>
-                        <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
+                        <div style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
                             <input
-                                type="password"
-                                placeholder="••••"
+                                type={showPin ? "text" : "password"}
+                                placeholder="••••••"
                                 value={pin}
                                 onChange={e => {
-                                    const value = e.target.value.replace(/\D/g, '').slice(0, 4);
+                                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
                                     setPin(value);
                                 }}
-                                maxLength={4}
+                                maxLength={6}
                                 disabled={isCreatingPin}
                                 style={{
                                     textAlign: "center",
                                     fontSize: "24px",
                                     letterSpacing: "8px",
                                     padding: "15px",
-                                    width: "150px",
+                                    paddingRight: "45px",
+                                    width: "180px",
                                     border: "2px solid #0a3d18",
                                     borderRadius: "8px",
                                     outline: "none",
@@ -351,18 +383,31 @@ export default function Adminuser() {
                                     opacity: isCreatingPin ? 0.6 : 1
                                 }}
                             />
+                            <i 
+                                className={showPin ? "fas fa-eye-slash" : "fas fa-eye"}
+                                onClick={() => setShowPin(!showPin)}
+                                style={{
+                                    position: "absolute",
+                                    right: "calc(50% - 70px)",
+                                    top: "50%",
+                                    transform: "translateY(-50%)",
+                                    cursor: "pointer",
+                                    color: "#666",
+                                    fontSize: "18px"
+                                }}
+                            />
                         </div>
                         <div className="adminuser-modal-buttons" style={{ justifyContent: "center", width: "100%" }}>
                             <button 
                                 onClick={handlePinSave} 
-                                disabled={isCreatingPin || pin.length !== 4}
+                                disabled={isCreatingPin || pin.length !== 6}
                                 style={{ 
                                     backgroundColor: "#0a3d18",
                                     padding: "12px 24px",
                                     fontSize: "15px",
                                     fontWeight: "500",
-                                    opacity: isCreatingPin || pin.length !== 4 ? 0.6 : 1,
-                                    cursor: isCreatingPin || pin.length !== 4 ? "not-allowed" : "pointer"
+                                    opacity: isCreatingPin || pin.length !== 6 ? 0.6 : 1,
+                                    cursor: isCreatingPin || pin.length !== 6 ? "not-allowed" : "pointer"
                                 }}
                             >
                                 {isCreatingPin ? "Creating..." : "Create PIN"}

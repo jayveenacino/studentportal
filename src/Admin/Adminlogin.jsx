@@ -16,6 +16,7 @@ export default function Login() {
     const [pendingLogin, setPendingLogin] = useState(null);
     const [isLoggingIn, setIsLoggingIn] = useState(false);
     const [isVerifyingPin, setIsVerifyingPin] = useState(false);
+    const [showPin, setShowPin] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -43,11 +44,11 @@ export default function Login() {
     const rolesRequiringPin = ["ADMIN", "REGISTRAR", "ENCODER", "EVALUATOR"];
 
     const handlePinSubmit = async () => {
-        if (!pin || pin.length < 4) {
+        if (!pin || pin.length !== 6) {
             Swal.fire({
                 icon: "error",
                 title: "Invalid PIN",
-                text: "Please enter a valid 4-digit PIN",
+                text: "Please enter a valid 6-digit PIN",
                 showConfirmButton: false,
                 timer: 2000,
             });
@@ -190,6 +191,7 @@ export default function Login() {
         setShowPinModal(false);
         setPin("");
         setPendingLogin(null);
+        setShowPin(false);
     };
 
     if (isMobile) {
@@ -303,26 +305,44 @@ export default function Login() {
                     <div className="adminuser-modal-content" style={{ textAlign: "center", maxWidth: "350px", display: "flex", flexDirection: "column", alignItems: "center" }}>
                         <h2 style={{ marginBottom: "10px", color: "#0a3d18", width: "100%" }}>Enter Admin PIN</h2>
                         <p style={{ color: "#666", fontSize: "14px", marginBottom: "25px", width: "100%" }}>
-                            Please enter the 4-digit Admin PIN to continue
+                            Please enter the 6-digit Admin PIN to continue
                         </p>
-                        <div style={{ width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
+                        <div style={{ position: "relative", width: "100%", display: "flex", justifyContent: "center", marginBottom: "25px" }}>
                             <input
-                                type="password"
-                                placeholder="••••"
+                                type={showPin ? "text" : "password"}
+                                placeholder="••••••"
                                 value={pin}
-                                onChange={e => setPin(e.target.value)}
-                                maxLength={4}
+                                onChange={e => {
+                                    const value = e.target.value.replace(/\D/g, '').slice(0, 6);
+                                    setPin(value);
+                                }}
+                                maxLength={6}
                                 disabled={isVerifyingPin}
                                 style={{
                                     textAlign: "center",
                                     fontSize: "24px",
                                     letterSpacing: "8px",
                                     padding: "15px",
-                                    width: "150px",
+                                    paddingRight: "45px",
+                                    width: "180px",
                                     border: "2px solid #0a3d18",
                                     borderRadius: "8px",
                                     outline: "none",
                                     boxSizing: "border-box",
+                                    opacity: isVerifyingPin ? 0.6 : 1
+                                }}
+                            />
+                            <i
+                                className={showPin ? "fas fa-eye-slash" : "fas fa-eye"}
+                                onClick={() => !isVerifyingPin && setShowPin(!showPin)}
+                                style={{
+                                    position: "absolute",
+                                    right: "calc(50% - 70px)",
+                                    top: "50%",
+                                    transform: "translateY(-50%)",
+                                    cursor: isVerifyingPin ? "not-allowed" : "pointer",
+                                    color: "#666",
+                                    fontSize: "18px",
                                     opacity: isVerifyingPin ? 0.6 : 1
                                 }}
                             />

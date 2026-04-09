@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcrypt');
 const Department = require('../models/Department');
+
+const SALT_ROUNDS = 10;
 
 router.get('/', async (req, res) => {
     try {
@@ -26,7 +29,18 @@ router.post('/', async (req, res) => {
     if (!name || !head) return res.status(400).json({ message: 'Name and Head are required' });
 
     try {
-        const newDepartment = new Department({ name, head, username, password, status });
+        let hashedPassword = '';
+        if (password && password.trim() !== '') {
+            hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
+        }
+
+        const newDepartment = new Department({ 
+            name, 
+            head, 
+            username, 
+            password: hashedPassword, 
+            status 
+        });
         const savedDept = await newDepartment.save();
         res.status(201).json(savedDept);
     } catch (err) {
@@ -38,9 +52,15 @@ router.put('/:id', async (req, res) => {
     const { name, head, username, password, status } = req.body;
 
     try {
+        const updateData = { name, head, username, status };
+        
+        if (password && password.trim() !== '') {
+            updateData.password = await bcrypt.hash(password, SALT_ROUNDS);
+        }
+
         const updatedDept = await Department.findByIdAndUpdate(
             req.params.id,
-            { name, head, username, password, status },
+            updateData,
             { new: true, runValidators: true }
         );
         if (!updatedDept) return res.status(404).json({ message: 'Department not found' });
