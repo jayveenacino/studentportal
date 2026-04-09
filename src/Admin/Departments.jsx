@@ -13,7 +13,7 @@ export default function Departments() {
     const [editId, setEditId] = useState(null);
     const [isSaving, setIsSaving] = useState(false);
     const [loadingDepartments, setLoadingDepartments] = useState(true);
-    const [newDept, setNewDept] = useState({ name: "", head: "", username: "", status: "Active" });
+    const [newDept, setNewDept] = useState({ name: "", head: "", username: "", password: "", status: "Active" });
 
     const perPage = 5;
 
@@ -87,7 +87,7 @@ export default function Departments() {
                 });
             }
 
-            setNewDept({ name: "", head: "", username: "", status: "Active" });
+            setNewDept({ name: "", head: "", username: "", password: "", status: "Active" });
             setEditMode(false);
             setEditId(null);
             setShowModal(false);
@@ -109,6 +109,7 @@ export default function Departments() {
             name: dept.name,
             head: dept.head,
             username: dept.username || "",
+            password: dept.password || "",
             status: dept.status
         });
         setEditId(dept._id);
@@ -154,7 +155,7 @@ export default function Departments() {
         setShowModal(false);
         setEditMode(false);
         setEditId(null);
-        setNewDept({ name: "", head: "", username: "", status: "Active" });
+        setNewDept({ name: "", head: "", username: "", password: "", status: "Active" });
         setIsSaving(false);
     };
 
@@ -199,7 +200,7 @@ export default function Departments() {
                     }}
                 />
                 <button className="departments-add-btn" onClick={() => {
-                    setNewDept({ name: "", head: "", username: "", status: "Active" });
+                    setNewDept({ name: "", head: "", username: "", password: "", status: "Active" });
                     setEditMode(false);
                     setEditId(null);
                     setShowModal(true);
@@ -285,7 +286,13 @@ export default function Departments() {
                             type="text"
                             placeholder="Username"
                             value={newDept.username}
-                            onChange={e => setNewDept({ ...newDept, username: e.target.value })}
+                            onChange={e => setNewDept({ ...newDept, username: e.target.value.replace(/\s/g, '') })}
+                        />
+                        <input
+                            type="password"
+                            placeholder="Password"
+                            value={newDept.password}
+                            onChange={e => setNewDept({ ...newDept, password: e.target.value })}
                         />
                         <select
                             value={newDept.status}

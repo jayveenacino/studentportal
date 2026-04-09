@@ -22,11 +22,11 @@ router.get('/:id', async (req, res) => {
 });
 
 router.post('/', async (req, res) => {
-    const { name, head, username, status } = req.body;
+    const { name, head, username, password, status } = req.body;
     if (!name || !head) return res.status(400).json({ message: 'Name and Head are required' });
 
     try {
-        const newDepartment = new Department({ name, head, username, status });
+        const newDepartment = new Department({ name, head, username, password, status });
         const savedDept = await newDepartment.save();
         res.status(201).json(savedDept);
     } catch (err) {
@@ -35,12 +35,12 @@ router.post('/', async (req, res) => {
 });
 
 router.put('/:id', async (req, res) => {
-    const { name, head, username, status } = req.body;
+    const { name, head, username, password, status } = req.body;
 
     try {
         const updatedDept = await Department.findByIdAndUpdate(
             req.params.id,
-            { name, head, username, status },
+            { name, head, username, password, status },
             { new: true, runValidators: true }
         );
         if (!updatedDept) return res.status(404).json({ message: 'Department not found' });
