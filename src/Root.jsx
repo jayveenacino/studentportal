@@ -25,7 +25,8 @@ export default function Root() {
         "/signup/notice",
         "/signup/create/notice",
         "/pages/NotFound",
-        "/dean-login"
+        "/dean-login",
+        "/deans-portal/dashboard"
     ]
 
     const shouldShowLayout = !hiddenPaths.includes(location.pathname)

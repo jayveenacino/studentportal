@@ -46,8 +46,8 @@ export default function DeanLogin() {
         setIsLoggingIn(true);
 
         try {
-            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/dean-login", {
-                username: username + "@kolehiyongsubic.edu.ph",
+            const res = await axios.post(import.meta.env.VITE_API_URL + "/api/departments/dean-login", {
+                username: username ,
                 password: password
             });
 

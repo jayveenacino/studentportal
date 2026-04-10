@@ -297,6 +297,7 @@ const Subjects = () => {
                                     onChange={(e) => setNewSubject({ ...newSubject, department: e.target.value })}
                                 >
                                     <option value="" disabled>Select Course</option>
+                                    <option value="General">General (All Courses)</option>
                                     {courses.map((c) => (
                                         <option key={c._id} value={c.initialDept}>{c.initialDept}</option>
                                     ))}

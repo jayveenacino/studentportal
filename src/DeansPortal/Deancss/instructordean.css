@@ -1,0 +1,399 @@
+.dean-instructor-container {
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    background: #ffffff;
+    min-height: 100%;
+    display: flex;
+    flex-direction: column;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px;
+}
+
+.dean-instructor-header {
+    margin-bottom: 20px;
+}
+
+.dean-instructor-header h1 {
+    color: #1a3a1a;
+    font-size: 28px;
+    font-weight: 700;
+    margin: 0 0 6px 0;
+}
+
+.dean-instructor-header p {
+    color: #6c757d;
+    font-size: 14px;
+    margin: 0;
+}
+
+.dean-instructor-controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.dean-instructor-search {
+    flex: 1;
+    max-width: 300px;
+    padding: 10px 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+}
+
+.dean-instructor-search:focus {
+    border-color: #1a3a1a;
+}
+
+.dean-instructor-add-btn {
+    background: #1a3a1a;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.dean-instructor-add-btn:hover {
+    background: #2d5a3d;
+}
+
+.dean-instructor-table-container {
+    flex: 1;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: 100%;
+}
+
+.dean-instructor-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.dean-instructor-table thead {
+    background: #1a3a1a;
+    color: white;
+}
+
+.dean-instructor-table th {
+    padding: 15px 10px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dean-instructor-table th:nth-child(1) { width: 8%; }
+.dean-instructor-table th:nth-child(2) { width: 12%; }
+.dean-instructor-table th:nth-child(3) { width: 25%; }
+.dean-instructor-table th:nth-child(4) { width: 20%; }
+.dean-instructor-table th:nth-child(5) { width: 15%; }
+.dean-instructor-table th:nth-child(6) { width: 20%; }
+
+.dean-instructor-table td {
+    padding: 15px 10px;
+    border-bottom: 1px solid #dee2e6;
+    font-size: 14px;
+    color: #333;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+.dean-instructor-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.dean-instructor-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.dean-instructor-status-active {
+    color: #28a745;
+    font-weight: 500;
+}
+
+.dean-instructor-status-inactive {
+    color: #dc3545;
+    font-weight: 500;
+}
+
+.dean-instructor-action-btn {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 5px;
+    transition: background 0.2s;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.dean-instructor-action-view {
+    background: #17a2b8;
+}
+
+.dean-instructor-action-view:hover {
+    background: #138496;
+}
+
+.dean-instructor-action-edit {
+    background: #28a745;
+}
+
+.dean-instructor-action-edit:hover {
+    background: #218838;
+}
+
+.dean-instructor-action-delete {
+    background: #dc3545;
+    margin-right: 0;
+}
+
+.dean-instructor-action-delete:hover {
+    background: #c82333;
+}
+
+.dean-instructor-pagination-controls {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 20px;
+}
+
+.dean-instructor-pagination-btn {
+    padding: 8px 14px;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #333;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 14px;
+}
+
+.dean-instructor-pagination-btn:hover {
+    background: #f8f9fa;
+    border-color: #1a3a1a;
+}
+
+.dean-instructor-pagination-active {
+    background: #1a3a1a;
+    color: white;
+    border-color: #1a3a1a;
+}
+
+.dean-instructor-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #1a3a1a;
+    border-radius: 50%;
+    animation: dean-instructor-spin 1s linear infinite;
+}
+
+@keyframes dean-instructor-spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.dean-instructor-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.dean-instructor-modal-content {
+    background: white;
+    border-radius: 12px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.dean-instructor-modal-view {
+    max-width: 400px;
+}
+
+.dean-instructor-modal-header {
+    padding: 20px;
+    border-bottom: 1px solid #dee2e6;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dean-instructor-modal-header h2 {
+    margin: 0;
+    color: #1a3a1a;
+    font-size: 20px;
+}
+
+.dean-instructor-modal-close {
+    font-size: 28px;
+    color: #888;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.dean-instructor-modal-close:hover {
+    color: #333;
+}
+
+.dean-instructor-modal-body {
+    padding: 20px;
+}
+
+.dean-instructor-modal-form-row {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.dean-instructor-modal-form-fields {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.dean-instructor-modal-input {
+    padding: 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    font-size: 14px;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.dean-instructor-modal-input:focus {
+    border-color: #1a3a1a;
+}
+
+.dean-instructor-modal-input:disabled {
+    background: #e9ecef;
+    cursor: not-allowed;
+}
+
+.dean-instructor-modal-image-upload {
+    width: 150px;
+    height: 150px;
+    border: 2px dashed #dee2e6;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    flex-shrink: 0;
+}
+
+.dean-instructor-modal-image-upload:hover {
+    border-color: #1a3a1a;
+}
+
+.dean-instructor-modal-footer {
+    padding: 20px;
+    border-top: 1px solid #dee2e6;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.dean-instructor-modal-btn-primary {
+    background: #1a3a1a;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dean-instructor-modal-btn-primary:hover {
+    background: #2d5a3d;
+}
+
+.dean-instructor-modal-btn-secondary {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.dean-instructor-modal-btn-secondary:hover {
+    background: #5a6268;
+}
+
+.dean-instructor-view-details {
+    text-align: left;
+    padding: 0 20px;
+}
+
+.dean-instructor-view-details p {
+    margin: 10px 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.dean-instructor-view-details strong {
+    color: #1a3a1a;
+}
+
+@media (max-width: 768px) {
+    .dean-instructor-container {
+        padding: 15px;
+    }
+    .dean-instructor-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .dean-instructor-search {
+        max-width: 100%;
+    }
+    .dean-instructor-table th,
+    .dean-instructor-table td {
+        padding: 12px 8px;
+        font-size: 13px;
+    }
+    .dean-instructor-modal-form-row {
+        flex-direction: column;
+    }
+    .dean-instructor-modal-image-upload {
+        width: 100%;
+        height: 200px;
+    }
+}

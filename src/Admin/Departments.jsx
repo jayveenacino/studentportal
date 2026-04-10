@@ -291,7 +291,7 @@ export default function Departments() {
                             type="text"
                             placeholder="Username"
                             value={newDept.username}
-                            onChange={e => setNewDept({ ...newDept, username: e.target.value.replace(/\s/g, '') })}
+                            onChange={e => setNewDept({ ...newDept, username: e.target.value.replace(/\s/g, '').toLowerCase() })}
                         />
                         <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                             <input
