@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import "./Deancss/deanschedule.css"
-import { Plus, Pencil, Trash2, Clock, Calendar, MapPin, Users } from "lucide-react"
+import { Plus, Pencil, Trash2, Clock, Calendar, MapPin, Users, Search } from "lucide-react"
 import Swal from 'sweetalert2'
 
 export default function DeanSchedule() {
     const [instructors, setInstructors] = useState([])
+    const [subjects, setSubjects] = useState([])
     const [schedules, setSchedules] = useState([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
@@ -14,12 +15,12 @@ export default function DeanSchedule() {
     const [editMode, setEditMode] = useState(false)
     const [editId, setEditId] = useState(null)
     const [isSaving, setIsSaving] = useState(false)
+    const [subjectSearchQuery, setSubjectSearchQuery] = useState("")
+    const [filteredSubjects, setFilteredSubjects] = useState([])
+    const [showSubjectDropdown, setShowSubjectDropdown] = useState(false)
 
     const deanData = JSON.parse(sessionStorage.getItem("Dean") || "{}")
     const deanDepartment = deanData?.name || ""
-    
-    console.log("Dean Department:", deanDepartment)
-    console.log("Dean Data:", deanData)
 
     const [formData, setFormData] = useState({
         instructorId: "",
@@ -28,53 +29,63 @@ export default function DeanSchedule() {
         subjectName: "",
         set: "",
         time: "",
+        customTime: "",
         date: "MWF",
         room: "",
         deptCode: ""
     })
 
     const perPage = 5
-    const dateOptions = ["MWF", "TTH", "MW", "FS", "S"]
+    const dateOptions = ["Monday-Wednesday-Friday", "Monday-Thursday", "Wednesday", "Tuesday-Thursday","Tuesday-Friday", "Saturday"]
+    const timeOptions = ["8:00 AM - 9:00 AM", "9:00 AM - 10:00 AM", "10:00 AM - 11:00 AM", "11:00 AM - 12:00 PM", "1:00 PM - 2:00 PM", "2:00 PM - 3:00 PM", "3:00 PM - 4:00 PM", "4:00 PM - 5:00 PM", "5:00 PM - 6:00 PM", "6:00 PM - 7:00 PM", "7:00 PM - 8:00 PM", "8:00 PM - 9:00 PM"]
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [deanDepartment])
 
     const fetchData = async () => {
         setLoading(true)
         try {
-            const [instructorsRes, schedulesRes] = await Promise.all([
-                axios.get(`${import.meta.env.VITE_API_URL}/api/instructors`),
-                axios.get(`${import.meta.env.VITE_API_URL}/api/schedules`)
-            ])
+            const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/instructors`)
+            const filteredByDept = res.data.filter(i => i.department === deanDepartment)
+            setInstructors(filteredByDept)
+            console.log("Instructors loaded:", filteredByDept.length)
 
-            console.log("All instructors from API:", instructorsRes.data)
-            console.log("Dean Department for filtering:", deanDepartment)
-            
-            const filteredInstructors = instructorsRes.data.filter(i => {
-                const match = i.department === deanDepartment
-                console.log(`Checking instructor ${i.name}: dept=${i.department}, match=${match}`)
-                return match
-            })
-            
-            console.log("Filtered instructors:", filteredInstructors)
-            
+            const subjectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/subjects`)
+            console.log("Subjects API response:", subjectsRes.data)
+            console.log("Subjects count:", subjectsRes.data?.length || 0)
+            setSubjects(subjectsRes.data || [])
+
+            const schedulesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules`)
             const filteredSchedules = schedulesRes.data.filter(s => s.department === deanDepartment)
-
-            setInstructors(filteredInstructors)
             setSchedules(filteredSchedules)
+            console.log("Schedules loaded:", filteredSchedules.length)
         } catch (err) {
             console.error("Failed to fetch data:", err)
+            console.error("Error details:", err.response?.data || err.message)
         } finally {
             setLoading(false)
         }
     }
 
+
+    useEffect(() => {
+        if (subjectSearchQuery.trim() === "") {
+            setFilteredSubjects([])
+        } else {
+            const filtered = subjects.filter(s =>
+                s.code.toLowerCase().includes(subjectSearchQuery.toLowerCase()) ||
+                s.name.toLowerCase().includes(subjectSearchQuery.toLowerCase())
+            ).slice(0, 5)
+            setFilteredSubjects(filtered)
+        }
+    }, [subjectSearchQuery, subjects])
+
     const filtered = schedules.filter(s =>
-        s.subjectCode?.toLowerCase().includes(search.toLowerCase()) ||
-        s.subjectName?.toLowerCase().includes(search.toLowerCase()) ||
-        s.instructorName?.toLowerCase().includes(search.toLowerCase()) ||
-        s.room?.toLowerCase().includes(search.toLowerCase())
+        s.subjectCode.toLowerCase().includes(search.toLowerCase()) ||
+        s.subjectName.toLowerCase().includes(search.toLowerCase()) ||
+        s.instructorName.toLowerCase().includes(search.toLowerCase()) ||
+        s.room.toLowerCase().includes(search.toLowerCase())
     )
 
     const pageCount = Math.ceil(filtered.length / perPage)
@@ -87,6 +98,27 @@ export default function DeanSchedule() {
             ...formData,
             instructorId: e.target.value,
             instructorName: selected ? selected.name : ""
+        })
+    }
+
+    const handleSubjectSelect = (subject) => {
+        setFormData({
+            ...formData,
+            subjectCode: subject.code,
+            subjectName: subject.name
+        })
+        setSubjectSearchQuery(subject.code)
+        setShowSubjectDropdown(false)
+    }
+
+    const handleSubjectCodeChange = (e) => {
+        const value = e.target.value
+        setSubjectSearchQuery(value)
+        setShowSubjectDropdown(true)
+        setFormData({
+            ...formData,
+            subjectCode: value,
+            subjectName: value === "" ? "" : formData.subjectName
         })
     }
 
@@ -126,16 +158,17 @@ export default function DeanSchedule() {
 
     const handleEdit = (schedule) => {
         setFormData({
-            instructorId: schedule.instructorId || "",
-            instructorName: schedule.instructorName || "",
-            subjectCode: schedule.subjectCode || "",
-            subjectName: schedule.subjectName || "",
+            instructorId: schedule.instructorId,
+            instructorName: schedule.instructorName,
+            subjectCode: schedule.subjectCode,
+            subjectName: schedule.subjectName,
             set: schedule.set || "",
-            time: schedule.time || "",
-            date: schedule.date || "MWF",
-            room: schedule.room || "",
-            deptCode: schedule.deptCode || ""
+            time: schedule.time,
+            date: schedule.date,
+            room: schedule.room,
+            deptCode: schedule.deptCode
         })
+        setSubjectSearchQuery(schedule.subjectCode)
         setEditId(schedule._id)
         setEditMode(true)
         setShowModal(true)
@@ -169,6 +202,9 @@ export default function DeanSchedule() {
         setShowModal(false)
         setEditMode(false)
         setEditId(null)
+        setSubjectSearchQuery("")
+        setShowSubjectDropdown(false)
+        setFilteredSubjects([])
         setFormData({
             instructorId: "",
             instructorName: "",
@@ -176,24 +212,22 @@ export default function DeanSchedule() {
             subjectName: "",
             set: "",
             time: "",
+            customTime: "",
             date: "MWF",
             room: "",
             deptCode: ""
         })
     }
 
-    const openCreateModal = () => {
-        if (instructors.length === 0) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'No Instructors',
-                text: `No instructors found in ${deanDepartment || 'your'} department.`
-            })
-            return
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (!e.target.closest('.subject-search-container')) {
+                setShowSubjectDropdown(false)
+            }
         }
-        resetForm()
-        setShowModal(true)
-    }
+        document.addEventListener('mousedown', handleClickOutside)
+        return () => document.removeEventListener('mousedown', handleClickOutside)
+    }, [])
 
     return (
         <div className="deansched-container" style={{ position: "relative" }}>
@@ -233,7 +267,7 @@ export default function DeanSchedule() {
                         setCurrentPage(1)
                     }}
                 />
-                <button className="deansched-add-btn" onClick={openCreateModal}>
+                <button className="deansched-add-btn" onClick={() => setShowModal(true)}>
                     Create Schedule
                 </button>
             </div>
@@ -250,7 +284,6 @@ export default function DeanSchedule() {
                             <th style={{ width: "12%" }}>Time</th>
                             <th style={{ width: "10%" }}>Date</th>
                             <th style={{ width: "10%" }}>Room</th>
-                            <th style={{ width: "10%" }}>Dept Code</th>
                             <th style={{ width: "100px" }}>Actions</th>
                         </tr>
                     </thead>
@@ -258,14 +291,13 @@ export default function DeanSchedule() {
                         {current.map((s, idx) => (
                             <tr key={s._id}>
                                 <td>{start + idx + 1}</td>
-                                <td><Users size={14} style={{ marginRight: "5px", verticalAlign: "middle" }} />{s.instructorName || "Unknown"}</td>
+                                <td><Users size={14} style={{ marginRight: "5px", verticalAlign: "middle" }} />{s.instructorName}</td>
                                 <td><span className="deansched-code">{s.subjectCode}</span></td>
                                 <td>{s.subjectName}</td>
                                 <td>{s.set || "-"}</td>
                                 <td><Clock size={14} style={{ marginRight: "5px", verticalAlign: "middle" }} />{s.time}</td>
                                 <td><Calendar size={14} style={{ marginRight: "5px", verticalAlign: "middle" }} />{s.date}</td>
                                 <td><MapPin size={14} style={{ marginRight: "5px", verticalAlign: "middle" }} />{s.room}</td>
-                                <td><span className="deansched-deptcode">{s.deptCode}</span></td>
                                 <td>
                                     <button className="deansched-action-btn deansched-edit" onClick={() => handleEdit(s)}>
                                         <Pencil size={16} />
@@ -278,7 +310,7 @@ export default function DeanSchedule() {
                         ))}
                         {current.length === 0 && !loading && (
                             <tr>
-                                <td colSpan="10" style={{ textAlign: "center", padding: "20px" }}>
+                                <td colSpan="9" style={{ textAlign: "center", padding: "20px" }}>
                                     {search ? "No schedules found matching your search." : "No schedules created yet."}
                                 </td>
                             </tr>
@@ -306,7 +338,6 @@ export default function DeanSchedule() {
                     <div className="deansched-modal-content" onClick={e => e.stopPropagation()}>
                         <div className="deansched-modal-header">
                             <h2>{editMode ? "Edit Schedule" : "Create Schedule"}</h2>
-                            <span className="deansched-modal-close" onClick={resetForm}>&times;</span>
                         </div>
 
                         <div className="deansched-modal-body">
@@ -317,39 +348,108 @@ export default function DeanSchedule() {
                                     value={formData.instructorId}
                                     onChange={handleInstructorChange}
                                 >
-                                    <option value="">-- Select Instructor --</option>
-                                    {instructors.length === 0 ? (
-                                        <option value="" disabled>No instructors available</option>
-                                    ) : (
-                                        instructors.map(i => (
-                                            <option key={i._id} value={i._id}>{i.name}</option>
-                                        ))
-                                    )}
+                                    <option value="" disabled>Select Instructor</option>
+                                    {instructors.map(i => (
+                                        <option key={i._id} value={i._id}>{i.name}</option>
+                                    ))}
                                 </select>
-                                <small style={{ color: '#666', display: 'block', marginTop: '5px' }}>
-                                    Available instructors: {instructors.length} | Department: {deanDepartment || 'Not set'}
-                                </small>
                             </div>
 
                             <div className="deansched-form-row">
-                                <div className="deansched-form-group">
+                                <div className="deansched-form-group subject-search-container" style={{ position: 'relative' }}>
                                     <label>Subject Code <span className="deansched-required">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="deansched-input"
-                                        placeholder="e.g., CS101"
-                                        value={formData.subjectCode}
-                                        onChange={e => setFormData({ ...formData, subjectCode: e.target.value.toUpperCase() })}
-                                    />
+                                    <div style={{ position: 'relative' }}>
+                                        <Search size={16} style={{
+                                            position: 'absolute',
+                                            left: '12px',
+                                            top: '50%',
+                                            transform: 'translateY(-50%)',
+                                            color: '#666',
+                                            pointerEvents: 'none'
+                                        }} />
+                                        <input
+                                            type="text"
+                                            className="deansched-input"
+                                            placeholder="Search subject code..."
+                                            value={subjectSearchQuery}
+                                            onChange={handleSubjectCodeChange}
+                                            onFocus={() => subjectSearchQuery && setShowSubjectDropdown(true)}
+                                            style={{ paddingLeft: '40px' }}
+                                        />
+                                    </div>
+
+                                    {showSubjectDropdown && filteredSubjects.length > 0 && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: 0,
+                                            right: 0,
+                                            background: 'white',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '8px',
+                                            marginTop: '4px',
+                                            maxHeight: '200px',
+                                            overflowY: 'auto',
+                                            zIndex: 1000,
+                                            boxShadow: '0 4px 12px rgba(0,0,0,0.15)'
+                                        }}>
+                                            {filteredSubjects.map((subject) => (
+                                                <div
+                                                    key={subject._id}
+                                                    onClick={() => handleSubjectSelect(subject)}
+                                                    style={{
+                                                        padding: '12px 16px',
+                                                        cursor: 'pointer',
+                                                        borderBottom: '1px solid #f0f0f0',
+                                                        transition: 'background 0.2s'
+                                                    }}
+                                                    onMouseEnter={(e) => e.target.style.background = '#f5f5f5'}
+                                                    onMouseLeave={(e) => e.target.style.background = 'white'}
+                                                >
+                                                    <div style={{ fontWeight: '600', color: '#1a3a1a' }}>
+                                                        {subject.code}
+                                                    </div>
+                                                    <div style={{ fontSize: '13px', color: '#666', marginTop: '2px' }}>
+                                                        {subject.name}
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {showSubjectDropdown && subjectSearchQuery && filteredSubjects.length === 0 && (
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '100%',
+                                            left: 0,
+                                            right: 0,
+                                            background: 'white',
+                                            border: '1px solid #ddd',
+                                            borderRadius: '8px',
+                                            marginTop: '4px',
+                                            padding: '12px 16px',
+                                            color: '#666',
+                                            fontSize: '14px',
+                                            zIndex: 1000
+                                        }}>
+                                            No subjects found
+                                        </div>
+                                    )}
                                 </div>
+
                                 <div className="deansched-form-group">
                                     <label>Subject Name <span className="deansched-required">*</span></label>
                                     <input
                                         type="text"
                                         className="deansched-input"
-                                        placeholder="e.g., Programming 1"
+                                        placeholder="Auto-populated from subject code"
                                         value={formData.subjectName}
-                                        onChange={e => setFormData({ ...formData, subjectName: e.target.value })}
+                                        readOnly
+                                        style={{
+                                            backgroundColor: formData.subjectName ? '#f0f8f0' : '#f5f5f5',
+                                            cursor: 'default',
+                                            fontWeight: formData.subjectName ? '500' : 'normal'
+                                        }}
                                     />
                                 </div>
                             </div>
@@ -367,13 +467,45 @@ export default function DeanSchedule() {
                                 </div>
                                 <div className="deansched-form-group">
                                     <label>Time <span className="deansched-required">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="deansched-input"
-                                        placeholder="e.g., 8:00 AM - 10:00 AM"
-                                        value={formData.time}
-                                        onChange={e => setFormData({ ...formData, time: e.target.value })}
-                                    />
+                                    {formData.time === "custom" ? (
+                                        <div style={{ display: 'flex', gap: '8px' }}>
+                                            <input
+                                                type="text"
+                                                className="deansched-input"
+                                                placeholder="e.g., 1:00 PM - 3:00 PM"
+                                                value={formData.customTime}
+                                                onChange={e => setFormData({ ...formData, customTime: e.target.value })}
+                                                style={{ flex: 1 }}
+                                                autoFocus
+                                            />
+                                            <button
+                                                type="button"
+                                                className="deansched-btn-secondary"
+                                                onClick={() => setFormData({ ...formData, time: "", customTime: "" })}
+                                                style={{ padding: '8px 12px', fontSize: '12px' }}
+                                            >
+                                                Back to List
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        <select
+                                            className="deansched-select"
+                                            value={formData.time}
+                                            onChange={e => {
+                                                if (e.target.value === "custom") {
+                                                    setFormData({ ...formData, time: "custom", customTime: "" })
+                                                } else {
+                                                    setFormData({ ...formData, time: e.target.value })
+                                                }
+                                            }}
+                                        >
+                                            <option value="" disabled>Set Time</option>
+                                            {timeOptions.map(opt => (
+                                                <option key={opt} value={opt}>{opt}</option>
+                                            ))}
+                                            <option value="custom">Custom Time</option>
+                                        </select>
+                                    )}
                                 </div>
                             </div>
 
@@ -385,6 +517,7 @@ export default function DeanSchedule() {
                                         value={formData.date}
                                         onChange={e => setFormData({ ...formData, date: e.target.value })}
                                     >
+                                        <option value="" disabled>Set Date</option>
                                         {dateOptions.map(opt => (
                                             <option key={opt} value={opt}>{opt}</option>
                                         ))}
@@ -400,17 +533,6 @@ export default function DeanSchedule() {
                                         onChange={e => setFormData({ ...formData, room: e.target.value })}
                                     />
                                 </div>
-                            </div>
-
-                            <div className="deansched-form-group">
-                                <label>Dept Code <span className="deansched-required">*</span></label>
-                                <input
-                                    type="text"
-                                    className="deansched-input"
-                                    placeholder="e.g., CS1E"
-                                    value={formData.deptCode}
-                                    onChange={e => setFormData({ ...formData, deptCode: e.target.value.toUpperCase() })}
-                                />
                             </div>
                         </div>
 

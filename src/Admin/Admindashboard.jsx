@@ -17,6 +17,7 @@ import Subjects from "./subjects";
 import Schedule from "./Schedule";
 import Instructor from "./Instructor";
 import Report from "./Report";
+import Set from "./Set";
 
 function Dashboard() {
     const [sidebarVisible, setSidebarVisible] = useState(true);
@@ -220,6 +221,7 @@ function Dashboard() {
                             <li><a href="#" onClick={() => handleMenuClick("schedule")}><i className="fa-solid fa-graduation-cap"></i> Schedule</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("studentlist")}><i className="fa-solid fa-users"></i> Students</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("instructor")}><i className="fa-solid fa-users"></i> Instructor</a></li>
+                            <li><a href="#" onClick={() => handleMenuClick("sets")}><i className="fa-solid fa-check-circle"></i> Sets</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("setsemester")}><i className="fa-solid fa-gear"></i> Set Semester</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("classrooms")}><i className="fa-solid fa-credit-card"></i> Classroom Utilization</a></li>
                             <li><a href="#" onClick={() => handleMenuClick("report")}><i className="fa-solid fa-file"></i> Report</a></li>
@@ -235,6 +237,7 @@ function Dashboard() {
                         {activeSection === "enrollees" && <Enrollees />}
                         {activeSection === "departments" && <Departments />}
                         {activeSection === "courses" && <Courses />}
+                        {activeSection === "sets" && <Set />}
                         {activeSection === "setsemester" && <Semester />}
                         {activeSection === "studentlist" && <StudentList />}
                         {activeSection === "user" && <Adminuser />}
