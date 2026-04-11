@@ -2,117 +2,199 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Admincss/sets.css";
 import Swal from 'sweetalert2';
-import { ChevronLeft, ChevronDown, Plus, X, MoreVertical, Trash2 } from "lucide-react";
+import { ChevronLeft, ChevronDown, Plus, X, MoreVertical, Calendar, Settings, Trash2 } from "lucide-react";
 
 export default function Set() {
     const [departments, setDepartments] = useState([]);
     const [sets, setSets] = useState([]);
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
-    const [loadingData, setLoadingData] = useState(true);
+    const [loadingSets, setLoadingSets] = useState(true);
     const [expandedId, setExpandedId] = useState(null);
+    const [expandedYear, setExpandedYear] = useState(null);
+    const [activeMenuId, setActiveMenuId] = useState(null);
 
-    const [showModal, setShowModal] = useState(false);
-    const [activeDept, setActiveDept] = useState(null);
-    const [yearLevel, setYearLevel] = useState("1st Year");
-    const [modalSets, setModalSets] = useState([]);
-    const [openMenuIdx, setOpenMenuIdx] = useState(null);
+    const [showCapModal, setShowCapModal] = useState(false);
+    const [selectedSet, setSelectedSet] = useState(null);
+    const [newCapacity, setNewCapacity] = useState(20);
+
+    // Loading states for actions
+    const [isSaving, setIsSaving] = useState(false);
+    const [isAddingSet, setIsAddingSet] = useState(false);
 
     const perPage = 5;
 
-    const getDefaultSets = (deptName, year) => {
-        let count = 4;
-        if (year === "1st Year") count = 6;
-        if (year === "3rd Year") count = 4;
-        if (year === "4th Year") count = 2;
-
-        if (deptName?.includes("Engineering")) count += 2;
-        if (deptName?.includes("Nursing")) count = 5;
-
-        const newSets = [];
-        for (let i = 0; i < count; i++) {
-            newSets.push({ letter: String.fromCharCode(65 + i), capacity: 20 });
-        }
-        return newSets;
-    };
-
     useEffect(() => {
+        const fetchData = async () => {
+            setLoadingSets(true);
+            try {
+                await fetchSets();
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoadingSets(false);
+            }
+        };
         fetchData();
     }, []);
 
-    useEffect(() => {
-        if (showModal && activeDept) {
-            setModalSets(getDefaultSets(activeDept.name, yearLevel));
-        }
-    }, [showModal, activeDept]);
-
-    const fetchData = async () => {
-        setLoadingData(true);
+    const fetchSets = async () => {
         try {
             const deptRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/departments`).catch(() => ({ data: [] }));
             const setsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/sets`).catch(() => ({ data: [] }));
             setDepartments(deptRes.data);
             setSets(setsRes.data);
         } catch (err) {
-            console.error("General Error:", err);
-        } finally {
-            setLoadingData(false);
+            console.error("Failed to fetch sets:", err);
         }
     };
 
-    const toggleRow = (id) => {
-        setExpandedId(expandedId === id ? null : id);
-    };
+    const handleAddSet = async (deptName, year) => {
+        if (isAddingSet) return;
 
-    const handleAddMoreSet = () => {
-        const lastLetter = modalSets.length > 0 ? modalSets[modalSets.length - 1].letter : "@";
+        setIsAddingSet(true);
+
+        const yearSets = sets.filter(s => s.department === deptName && s.year === year);
+        const sortedSets = [...yearSets].sort((a, b) => a.letter.localeCompare(b.letter));
+        const lastLetter = sortedSets.length > 0 ? sortedSets[sortedSets.length - 1].letter : "@";
         const nextLetter = String.fromCharCode(lastLetter.charCodeAt(0) + 1);
-        if (nextLetter <= "Z") {
-            setModalSets([...modalSets, { letter: nextLetter, capacity: 20 }]);
+
+        if (nextLetter > "Z") {
+            setIsAddingSet(false);
+            Swal.fire("Limit Reached", "Cannot add more sets.", "warning");
+            return;
         }
-    };
 
-    const removeSet = (index) => {
-        const updated = modalSets.filter((_, i) => i !== index);
-        const remapped = updated.map((s, i) => ({
-            ...s,
-            letter: String.fromCharCode(65 + i)
-        }));
-        setModalSets(remapped);
-        setOpenMenuIdx(null);
-    };
+        const deptObj = departments.find(d => d.name === deptName);
 
-    const handleSave = async () => {
         try {
             const payload = {
-                departmentId: activeDept._id,
-                departmentName: activeDept.name,
-                yearLevel,
-                sets: modalSets
+                departmentId: deptObj._id,
+                departmentName: deptName,
+                yearLevel: year,
+                sets: [...yearSets.map(s => ({ letter: s.letter, capacity: s.capacity })), { letter: nextLetter, capacity: 20 }]
             };
             await axios.post(`${import.meta.env.VITE_API_URL}/api/sets/bulk`, payload);
-            Swal.fire("Success", "Sets created successfully", "success");
-            setShowModal(false);
-            fetchData();
+            await fetchSets();
+            Swal.fire("Success", `Set ${nextLetter} added to ${year}`, "success");
         } catch (err) {
-            Swal.fire("Error", "Could not save sets", "error");
+            Swal.fire("Error", "Failed to add set", "error");
+        } finally {
+            setIsAddingSet(false);
         }
     };
 
-    const filtered = departments.filter(d =>
-        d.name?.toLowerCase().includes(search.toLowerCase())
-    );
+    const handleUpdateCapacity = async () => {
+        if (isSaving) return;
 
-    const pageCount = Math.ceil(filtered.length / perPage);
-    const start = (currentPage - 1) * perPage;
-    const current = filtered.slice(start, start + perPage);
+        setIsSaving(true);
+
+        try {
+            const yearSets = sets.filter(s => s.department === selectedSet.department && s.year === selectedSet.year);
+            const updatedSets = yearSets.map(s =>
+                s._id === selectedSet._id ? { ...s, capacity: newCapacity } : s
+            );
+
+            const deptObj = departments.find(d => d.name === selectedSet.department);
+
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/sets/bulk`, {
+                departmentId: deptObj._id,
+                departmentName: selectedSet.department,
+                yearLevel: selectedSet.year,
+                sets: updatedSets.map(s => ({ letter: s.letter, capacity: s.capacity }))
+            });
+
+            setShowCapModal(false);
+            await fetchSets();
+            Swal.fire("Updated", "Capacity changed successfully", "success");
+        } catch (err) {
+            Swal.fire("Error", "Update failed", "error");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const handleDeleteSet = async (setToDelete) => {
+        if (isSaving) return;
+
+        const yearSets = sets.filter(s => s.department === setToDelete.department && s.year === setToDelete.year);
+        const sortedSets = [...yearSets].sort((a, b) => a.letter.localeCompare(b.letter));
+
+        const isLastSet = sortedSets[sortedSets.length - 1]._id === setToDelete._id;
+
+        if (!isLastSet) {
+            Swal.fire("Cannot Delete", "Only the last set can be deleted.", "error");
+            return;
+        }
+
+        const confirm = await Swal.fire({
+            title: "Delete Set?",
+            text: `Are you sure you want to delete Set ${setToDelete.letter}?`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#dc2626",
+            cancelButtonColor: "#0a3d18",
+            confirmButtonText: "Delete",
+            cancelButtonText: "Cancel"
+        });
+
+        if (!confirm.isConfirmed) return;
+
+        setIsSaving(true);
+
+        try {
+            const remainingSets = sortedSets.filter(s => s._id !== setToDelete._id);
+            const deptObj = departments.find(d => d.name === setToDelete.department);
+
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/sets/bulk`, {
+                departmentId: deptObj._id,
+                departmentName: setToDelete.department,
+                yearLevel: setToDelete.year,
+                sets: remainingSets.map(s => ({ letter: s.letter, capacity: s.capacity }))
+            });
+
+            await fetchSets();
+            setActiveMenuId(null);
+            Swal.fire("Deleted", `Set ${setToDelete.letter} has been deleted.`, "success");
+        } catch (err) {
+            Swal.fire("Error", "Failed to delete set", "error");
+        } finally {
+            setIsSaving(false);
+        }
+    };
+
+    const isSetDeletable = (setItem) => {
+        const yearSets = sets.filter(s => s.department === setItem.department && s.year === setItem.year);
+        const sortedSets = [...yearSets].sort((a, b) => a.letter.localeCompare(b.letter));
+        return sortedSets[sortedSets.length - 1]._id === setItem._id;
+    };
+
+    const filtered = departments.filter(d => d.name?.toLowerCase().includes(search.toLowerCase()));
+    const current = filtered.slice((currentPage - 1) * perPage, (currentPage - 1) * perPage + perPage);
 
     return (
-        <div className="set-container" style={{ position: "relative" }} onClick={() => setOpenMenuIdx(null)}>
-            {loadingData && (
-                <div style={{ position: "absolute", top: 0, left: 0, width: "100%", height: "100%", background: "rgba(255,255,255,0.75)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 2000, flexDirection: "column" }}>
-                    <div className="set-spinner" />
-                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>Loading...</p>
+        <div className="set-container" onClick={() => setActiveMenuId(null)} style={{ position: "relative" }}>
+            {/* Full Page Loading Overlay - Same UI as Departments */}
+            {loadingSets && (
+                <div
+                    style={{
+                        position: "absolute",
+                        top: 0,
+                        left: 0,
+                        width: "100%",
+                        height: "100%",
+                        background: "rgba(255,255,255,0.75)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        zIndex: 50,
+                        flexDirection: "column",
+                    }}
+                >
+                    <div className="spinner" />
+                    <p style={{ marginTop: 15, fontWeight: "bold", color: "#006666" }}>
+                        Loading Sets...
+                    </p>
                 </div>
             )}
 
@@ -122,12 +204,7 @@ export default function Set() {
             </div>
 
             <div className="set-controls">
-                <input
-                    className="set-search"
-                    placeholder="Search departments..."
-                    value={search}
-                    onChange={e => { setSearch(e.target.value); setCurrentPage(1); }}
-                />
+                <input className="set-search" placeholder="Search departments..." value={search} onChange={e => setSearch(e.target.value)} />
             </div>
 
             <div className="set-table-container">
@@ -136,173 +213,165 @@ export default function Set() {
                         <tr>
                             <th>#</th>
                             <th>Department Name</th>
-                            <th style={{ textAlign: "right", paddingRight: "25px" }}>Action</th>
+                            <th style={{ textAlign: "right" }}>Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {current.length > 0 ? current.map((dept, i) => (
+                        {current.map((dept, i) => (
                             <React.Fragment key={dept._id}>
-                                <tr onClick={() => toggleRow(dept._id)} style={{ cursor: "pointer" }}>
-                                    <td>{start + i + 1}</td>
+                                <tr onClick={() => setExpandedId(expandedId === dept._id ? null : dept._id)} style={{ cursor: "pointer" }}>
+                                    <td>{(currentPage - 1) * perPage + i + 1}</td>
                                     <td>{dept.name}</td>
-                                    <td style={{ textAlign: "right", paddingRight: "20px" }}>
+                                    <td style={{ textAlign: "right" }}>
                                         {expandedId === dept._id ? <ChevronDown size={18} /> : <ChevronLeft size={18} />}
                                     </td>
                                 </tr>
 
                                 {expandedId === dept._id && (
                                     <tr>
-                                        <td colSpan="3" style={{ background: "#fdfdfd", padding: "15px" }}>
-                                            <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-end", width: "100%" }}>
-                                                <div style={{ textAlign: "right", borderRight: "4px solid #006666", paddingRight: "15px", minWidth: "250px" }}>
-                                                    {sets.filter(s => s.department === dept.name).length > 0 ? (
-                                                        sets.filter(s => s.department === dept.name)
-                                                            .sort((a, b) => a.name.localeCompare(b.name))
-                                                            .map(s => (
-                                                            <div key={s._id} style={{ padding: "6px 0", borderBottom: "1px solid #eee" }}>
-                                                                <span style={{ fontWeight: "600", color: "#333" }}>{s.name}</span>
-                                                                <span style={{ fontSize: "0.8rem", color: "#666", marginLeft: "10px" }}>({s.year})</span>
-                                                            </div>
-                                                        ))
-                                                    ) : <p style={{ fontSize: '0.8rem', color: '#999' }}>No sets added yet.</p>}
+                                        <td colSpan="3" className="expanded-row-content">
+                                            <div className="horizontal-year-container">
+                                                {["1st Year", "2nd Year", "3rd Year", "4th Year"].map(year => {
+                                                    const yearSets = sets.filter(s => s.department === dept.name && s.year === year);
+                                                    const isYearExpanded = expandedYear === `${dept._id}-${year}`;
 
-                                                    <button
-                                                        className="set-add-btn"
-                                                        style={{ marginTop: "15px", fontSize: "0.8rem", padding: "8px 14px" }}
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            setActiveDept(dept);
-                                                            setShowModal(true);
-                                                        }}
-                                                    >
-                                                        <Plus size={14} style={{ marginRight: "5px" }} />
-                                                        Configure Sets
-                                                    </button>
-                                                </div>
+                                                    return (
+                                                        <div key={year} className="year-group">
+                                                            <div className="year-header-row" onClick={() => setExpandedYear(isYearExpanded ? null : `${dept._id}-${year}`)}>
+                                                                <div className="year-title">
+                                                                    <Calendar size={14} color="#0a3d18" />
+                                                                    <span>{year}</span>
+                                                                    <small>({yearSets.length} Sets)</small>
+                                                                </div>
+                                                                <div style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                                                                    {isYearExpanded && (
+                                                                        <button
+                                                                            className="add-set-corner-btn"
+                                                                            onClick={(e) => { e.stopPropagation(); handleAddSet(dept.name, year); }}
+                                                                            disabled={isAddingSet}
+                                                                        >
+                                                                            {isAddingSet ? (
+                                                                                <>
+                                                                                    <div className="btn-spinner" style={{ width: 14, height: 14, border: '2px solid #ffffff', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}></div>
+                                                                                    Adding...
+                                                                                </>
+                                                                            ) : (
+                                                                                <>
+                                                                                    <Plus size={14} /> Add Set
+                                                                                </>
+                                                                            )}
+                                                                        </button>
+                                                                    )}
+                                                                    {isYearExpanded ? <ChevronDown size={14} /> : <ChevronLeft size={14} />}
+                                                                </div>
+                                                            </div>
+
+                                                            {isYearExpanded && (
+                                                                <div className="horizontal-sets-wrapper">
+                                                                    {yearSets.sort((a, b) => a.letter.localeCompare(b.letter)).map((s) => (
+                                                                        <div key={s._id} className="set-card-horizontal">
+                                                                            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                                                                <span className="set-letter">{s.letter}</span>
+                                                                                <span className="set-cap">{s.capacity} Max</span>
+                                                                            </div>
+
+                                                                            <MoreVertical
+                                                                                size={14}
+                                                                                className="three-dot-btn"
+                                                                                onClick={(e) => {
+                                                                                    e.stopPropagation();
+                                                                                    setActiveMenuId(activeMenuId === s._id ? null : s._id);
+                                                                                }}
+                                                                            />
+
+                                                                            {activeMenuId === s._id && (
+                                                                                <div className="dropdown-menu">
+                                                                                    <button
+                                                                                        onClick={() => {
+                                                                                            setSelectedSet(s);
+                                                                                            setNewCapacity(s.capacity);
+                                                                                            setShowCapModal(true);
+                                                                                        }}
+                                                                                        disabled={isSaving}
+                                                                                    >
+                                                                                        <Settings size={14} /> Change Capacity
+                                                                                    </button>
+                                                                                    <button
+                                                                                        className="delete-btn"
+                                                                                        onClick={() => handleDeleteSet(s)}
+                                                                                        disabled={!isSetDeletable(s) || isSaving}
+                                                                                    >
+                                                                                        <Trash2 size={14} /> Delete This Set
+                                                                                    </button>
+                                                                                </div>
+                                                                            )}
+                                                                        </div>
+                                                                    ))}
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    );
+                                                })}
                                             </div>
                                         </td>
                                     </tr>
                                 )}
                             </React.Fragment>
-                        )) : (
-                            <tr>
-                                <td colSpan="3" style={{ textAlign: "center", padding: "20px" }}>No Departments Found</td>
-                            </tr>
-                        )}
+                        ))}
                     </tbody>
                 </table>
             </div>
 
-            {showModal && (
-                <div style={{ position: 'fixed', top: 0, left: 0, width: '100%', height: '100%', backgroundColor: 'rgba(0,0,0,0.5)', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000 }}>
-                    <div style={{ background: 'white', padding: '25px', borderRadius: '12px', width: '450px', maxWidth: '90%', maxHeight: '85vh', overflowY: 'auto', boxShadow: '0 10px 25px rgba(0,0,0,0.2)' }} onClick={e => e.stopPropagation()}>
-
-                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', borderBottom: '2px solid #f0f0f0', paddingBottom: '10px' }}>
-                            <div>
-                                <h2 style={{ color: '#0a3d18', fontSize: '1.2rem', margin: 0 }}>Configure Sections</h2>
-                                <p style={{ margin: 0, fontSize: '0.75rem', color: '#666' }}>{activeDept?.name}</p>
-                            </div>
-                            <X style={{ cursor: 'pointer', color: '#666' }} onClick={() => setShowModal(false)} />
+            {showCapModal && (
+                <div className="modal-overlay">
+                    <div className="modal-content" onClick={e => e.stopPropagation()}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '15px' }}>
+                            <h3 style={{ margin: 0 }}>Set {selectedSet?.letter} Capacity</h3>
+                            <X style={{ cursor: 'pointer' }} onClick={() => !isSaving && setShowCapModal(false)} />
                         </div>
-
-                        <div style={{ marginBottom: '20px' }}>
-                            <label style={{ fontSize: '0.8rem', fontWeight: 'bold', color: '#444', display: 'block', marginBottom: '8px' }}>Target Year Level</label>
-                            <select
-                                value={yearLevel}
-                                onChange={(e) => setYearLevel(e.target.value)}
-                                style={{ width: '100%', padding: '10px', borderRadius: '6px', border: '1px solid #ccc', backgroundColor: '#fff', fontSize: '0.9rem' }}
-                            >
-                                <option>1st Year</option>
-                                <option>2nd Year</option>
-                                <option>3rd Year</option>
-                                <option>4th Year</option>
-                            </select>
-                        </div>
-
-                        <div style={{ background: '#f9f9f9', padding: '15px', borderRadius: '8px', border: '1px solid #eee' }}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px', paddingBottom: '5px', borderBottom: '1px solid #ddd' }}>
-                                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#888', textTransform: 'uppercase' }}>Section</span>
-                                <span style={{ fontSize: '0.7rem', fontWeight: 'bold', color: '#888', textTransform: 'uppercase', marginRight: '40px' }}>Max Students</span>
-                            </div>
-
-                            {modalSets.map((s, idx) => (
-                                <div key={idx} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px', position: 'relative' }}>
-                                    <span style={{ fontWeight: 'bold', color: '#333', fontSize: '0.95rem' }}>Set {s.letter}</span>
-
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                                        <select
-                                            value={s.capacity}
-                                            onChange={(e) => {
-                                                const updated = [...modalSets];
-                                                updated[idx].capacity = parseInt(e.target.value);
-                                                setModalSets(updated);
-                                            }}
-                                            style={{ padding: '5px 8px', borderRadius: '4px', border: '1px solid #bbb', fontSize: '0.85rem' }}
-                                        >
-                                            {[20, 30, 35, 40, 45, 50, 60].map(cap => (
-                                                <option key={cap} value={cap}>{cap} Limit</option>
-                                            ))}
-                                        </select>
-
-                                        <div style={{ position: 'relative' }}>
-                                            <MoreVertical 
-                                                size={18} 
-                                                style={{ cursor: 'pointer', color: '#888' }} 
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    setOpenMenuIdx(openMenuIdx === idx ? null : idx);
-                                                }}
-                                            />
-                                            {openMenuIdx === idx && (
-                                                <div style={{ position: 'absolute', right: 0, top: '25px', background: 'white', border: '1px solid #ddd', borderRadius: '4px', boxShadow: '0 2px 10px rgba(0,0,0,0.1)', zIndex: 10 }}>
-                                                    <button 
-                                                        onClick={() => removeSet(idx)}
-                                                        style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '8px 12px', border: 'none', background: 'none', color: '#d9534f', cursor: 'pointer', whiteSpace: 'nowrap', fontSize: '0.8rem' }}
-                                                    >
-                                                        <Trash2 size={14} /> Remove Set
-                                                    </button>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-
-                        <div style={{ marginTop: '15px' }}>
-                            <button
-                                onClick={handleAddMoreSet}
-                                style={{ display: 'flex', alignItems: 'center', background: 'none', border: 'none', color: '#0a3d18', cursor: 'pointer', fontWeight: 'bold', fontSize: '0.8rem', padding: '5px 0' }}
-                            >
-                                <Plus size={16} style={{ marginRight: "4px" }} /> 
-                                Add Set {String.fromCharCode((modalSets[modalSets.length - 1]?.letter.charCodeAt(0) || 64) + 1)}
-                            </button>
-                        </div>
-
-                        <button
-                            className="set-add-btn"
-                            style={{ width: '100%', marginTop: '25px', padding: '12px', fontSize: '0.9rem', justifyContent: 'center' }}
-                            onClick={handleSave}
+                        <p style={{ fontSize: '13px', color: '#666' }}>Select new maximum students for this set.</p>
+                        <select
+                            style={{ width: '100%', padding: '10px', borderRadius: '6px', marginBottom: '20px' }}
+                            value={newCapacity}
+                            onChange={e => setNewCapacity(parseInt(e.target.value))}
+                            disabled={isSaving}
                         >
-                            SAVE CONFIGURATION
+                            {[20, 30, 40, 50, 60].map(c => <option key={c} value={c}>{c} Students Max</option>)}
+                        </select>
+                        <button
+                            className="save-btn-final"
+                            style={{ width: '100%' }}
+                            onClick={handleUpdateCapacity}
+                            disabled={isSaving}
+                        >
+                            {isSaving ? (
+                                <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                                    <div className="btn-spinner-white" style={{ width: 16, height: 16, border: '2px solid #ffffff', borderTop: '2px solid transparent', borderRadius: '50%', animation: 'spin 0.8s linear infinite' }}></div>
+                                    Updating...
+                                </span>
+                            ) : (
+                                "UPDATE CAPACITY"
+                            )}
                         </button>
                     </div>
                 </div>
             )}
 
-            {pageCount > 1 && (
-                <div className="set-pagination-controls">
-                    {Array.from({ length: pageCount }, (_, idx) => (
-                        <button
-                            key={idx}
-                            className={`set-pagination-btn ${currentPage === idx + 1 ? "active" : ""}`}
-                            onClick={() => setCurrentPage(idx + 1)}
-                        >
-                            {idx + 1}
-                        </button>
-                    ))}
-                </div>
-            )}
+            {/* CSS for spinner animation */}
+            <style>{`
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                .spinner {
+                    width: 40px;
+                    height: 40px;
+                    border: 4px solid #f3f3f3;
+                    border-top: 4px solid #006666;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                }
+            `}</style>
         </div>
     );
 }

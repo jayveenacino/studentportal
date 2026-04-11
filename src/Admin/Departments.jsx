@@ -30,7 +30,7 @@ export default function Departments() {
             }
         };
         fetchData();
-    }, []);
+    }, [])
 
     const fetchDepartments = async () => {
         try {

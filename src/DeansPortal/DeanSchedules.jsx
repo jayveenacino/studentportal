@@ -8,6 +8,7 @@ export default function DeanSchedule() {
     const [instructors, setInstructors] = useState([])
     const [subjects, setSubjects] = useState([])
     const [schedules, setSchedules] = useState([])
+    const [sets, setSets] = useState([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
@@ -36,7 +37,7 @@ export default function DeanSchedule() {
     })
 
     const perPage = 5
-    const dateOptions = ["Monday-Wednesday-Friday", "Monday-Thursday", "Wednesday", "Tuesday-Thursday","Tuesday-Friday", "Saturday"]
+    const dateOptions = ["Monday-Wednesday-Friday", "Monday-Thursday", "Wednesday", "Tuesday-Thursday", "Tuesday-Friday", "Saturday"]
     const timeOptions = ["8:00 AM - 9:00 AM", "9:00 AM - 10:00 AM", "10:00 AM - 11:00 AM", "11:00 AM - 12:00 PM", "1:00 PM - 2:00 PM", "2:00 PM - 3:00 PM", "3:00 PM - 4:00 PM", "4:00 PM - 5:00 PM", "5:00 PM - 6:00 PM", "6:00 PM - 7:00 PM", "7:00 PM - 8:00 PM", "8:00 PM - 9:00 PM"]
 
     useEffect(() => {
@@ -47,27 +48,25 @@ export default function DeanSchedule() {
         setLoading(true)
         try {
             const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/instructors`)
+            const setsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/sets`)
             const filteredByDept = res.data.filter(i => i.department === deanDepartment)
             setInstructors(filteredByDept)
-            console.log("Instructors loaded:", filteredByDept.length)
+            
+            const filteredSets = setsRes.data.filter(s => s.department === deanDepartment)
+            setSets(filteredSets)
 
             const subjectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/subjects`)
-            console.log("Subjects API response:", subjectsRes.data)
-            console.log("Subjects count:", subjectsRes.data?.length || 0)
             setSubjects(subjectsRes.data || [])
 
             const schedulesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules`)
             const filteredSchedules = schedulesRes.data.filter(s => s.department === deanDepartment)
             setSchedules(filteredSchedules)
-            console.log("Schedules loaded:", filteredSchedules.length)
         } catch (err) {
             console.error("Failed to fetch data:", err)
-            console.error("Error details:", err.response?.data || err.message)
         } finally {
             setLoading(false)
         }
     }
-
 
     useEffect(() => {
         if (subjectSearchQuery.trim() === "") {
@@ -456,14 +455,17 @@ export default function DeanSchedule() {
 
                             <div className="deansched-form-row">
                                 <div className="deansched-form-group">
-                                    <label>Set</label>
-                                    <input
-                                        type="text"
-                                        className="deansched-input"
-                                        placeholder="e.g., A, B, 1"
+                                    <label>Set <span className="deansched-required">*</span></label>
+                                    <select
+                                        className="deansched-select"
                                         value={formData.set}
                                         onChange={e => setFormData({ ...formData, set: e.target.value })}
-                                    />
+                                    >
+                                        <option value="" disabled>Select Set</option>
+                                        {sets.map(s => (
+                                            <option key={s._id} value={s.name}>{s.name}</option>
+                                        ))}
+                                    </select>
                                 </div>
                                 <div className="deansched-form-group">
                                     <label>Time <span className="deansched-required">*</span></label>
