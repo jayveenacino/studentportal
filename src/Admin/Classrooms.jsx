@@ -6,12 +6,13 @@ import "./Admincss/classrooms.css";
 
 export default function Classrooms() {
     const [classrooms, setClassrooms] = useState([]);
-    const [subjects, setSubjects] = useState([]);
+    const [departments, setDepartments] = useState([]);
     const [currentPage, setCurrentPage] = useState(1);
     const [showModal, setShowModal] = useState(false);
     const [editMode, setEditMode] = useState(false);
     const [editId, setEditId] = useState(null);
     const [search, setSearch] = useState('');
+    const [deptFilter, setDeptFilter] = useState('');
     const [isSaving, setIsSaving] = useState(false);
     const [loadingClassrooms, setLoadingClassrooms] = useState(true);
 
@@ -19,15 +20,15 @@ export default function Classrooms() {
 
     const [newClassroom, setNewClassroom] = useState({
         room: "",
-        subject: "",
-        day: "",
-        time: ""
+        department: ""
     });
 
     const filtered = classrooms.filter(
-        c =>
-            c.room.toLowerCase().includes(search.toLowerCase()) ||
-            c.subject.toLowerCase().includes(search.toLowerCase())
+        c => {
+            const matchesSearch = c.room.toLowerCase().includes(search.toLowerCase());
+            const matchesDept = deptFilter === '' || c.department === deptFilter;
+            return matchesSearch && matchesDept;
+        }
     );
     const pageCount = Math.ceil(filtered.length / perPage);
     const start = (currentPage - 1) * perPage;
@@ -42,12 +43,12 @@ export default function Classrooms() {
         }
     };
 
-    const fetchSubjects = async () => {
+    const fetchDepartments = async () => {
         try {
-            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/subjects");
-            setSubjects(res.data);
+            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/departments");
+            setDepartments(res.data);
         } catch (err) {
-            console.error("Subject fetch error:", err);
+            console.error("Department fetch error:", err);
         }
     };
 
@@ -56,7 +57,7 @@ export default function Classrooms() {
             setLoadingClassrooms(true);
             try {
                 await fetchClassrooms();
-                await fetchSubjects();
+                await fetchDepartments();
             } catch (err) {
                 console.error(err);
             } finally {
@@ -67,10 +68,10 @@ export default function Classrooms() {
     }, []);
 
     const handleSubmit = async () => {
-        if (!newClassroom.room || !newClassroom.subject) {
+        if (!newClassroom.room || !newClassroom.department) {
             return Swal.fire(
                 "Missing Fields",
-                "Room and Subject are required.",
+                "Room and Department are required.",
                 "warning"
             );
         }
@@ -107,7 +108,7 @@ export default function Classrooms() {
     };
 
     const resetForm = () => {
-        setNewClassroom({ room: "", subject: "", day: "", time: "" });
+        setNewClassroom({ room: "", department: "" });
         setEditMode(false);
         setEditId(null);
         setShowModal(false);
@@ -117,9 +118,7 @@ export default function Classrooms() {
     const handleEdit = (classroom) => {
         setNewClassroom({
             room: classroom.room,
-            subject: classroom.subject,
-            day: classroom.day,
-            time: classroom.time
+            department: classroom.department
         });
         setEditId(classroom._id);
         setEditMode(true);
@@ -180,11 +179,26 @@ export default function Classrooms() {
             <div className="classrooms-controls">
                 <input
                     type="text"
-                    placeholder="Search room, subject, day..."
+                    placeholder="Search room..."
                     value={search}
                     onChange={(e) => setSearch(e.target.value)}
                     className="classrooms-search"
                 />
+
+                <select
+                    value={deptFilter}
+                    onChange={(e) => {
+                        setDeptFilter(e.target.value);
+                        setCurrentPage(1);
+                    }}
+                    className="classrooms-filter"
+                >
+                    <option value="">All Departments</option>
+                    <option value="General">General</option>
+                    {departments.map(dept => (
+                        <option key={dept._id} value={dept.name}>{dept.name}</option>
+                    ))}
+                </select>
 
                 <button
                     className="classrooms-add-btn"
@@ -203,27 +217,23 @@ export default function Classrooms() {
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Room</th>
-                            <th scope="col">Subject</th>
-                            <th scope="col">Day</th>
-                            <th scope="col">Timer</th>
+                            <th scope="col">Department</th>
                             <th scope="col" style={{ textAlign: "center", paddingRight: "10px" }}>Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         {current.length === 0 && !loadingClassrooms ? (
                             <tr>
-                                <td colSpan="6" style={{ textAlign: "center", padding: "20px" }}>
+                                <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
                                     No classrooms found.
                                 </td>
                             </tr>
                         ) : (
                             current.map((c, index) => (
                                 <tr key={c._id}>
-                                    <td>{index + 1}</td>
+                                    <td>{start + index + 1}</td>
                                     <td>{c.room}</td>
-                                    <td>{c.subject}</td>
-                                    <td>{c.day}</td>
-                                    <td>{c.time}</td>
+                                    <td>{c.department}</td>
                                     <td style={{ textAlign: "center" }}>
                                         <button className="action-btn edit" onClick={() => handleEdit(c)}>
                                             <Pencil size={16} />
@@ -273,47 +283,20 @@ export default function Classrooms() {
                         />
 
                         <select
-                            value={newClassroom.subject}
+                            value={newClassroom.department}
                             onChange={(e) =>
                                 setNewClassroom({
                                     ...newClassroom,
-                                    subject: e.target.value
+                                    department: e.target.value
                                 })
                             }
                         >
-                            <option value="" disabled>Select Subject</option>
-                            {subjects.map(sub => (
-                                <option key={sub._id} value={sub.name}>{sub.name}</option>
+                            <option value="" disabled>Select Department</option>
+                            <option value="General">General</option>
+                            {departments.map(dept => (
+                                <option key={dept._id} value={dept.name}>{dept.name}</option>
                             ))}
                         </select>
-
-                        <select
-                            value={newClassroom.day}
-                            onChange={(e) =>
-                                setNewClassroom({
-                                    ...newClassroom,
-                                    day: e.target.value
-                                })
-                            }
-                        >
-                            <option value="">Select Day</option>
-                            <option value="Monday & Thurday">Monday-Thursday</option>
-                            <option value="Tuesday & Friday">Tuesday-Friday</option>
-                            <option value="Wednesday">Wednesday</option>
-                            <option value="Saturday">Saturday</option>
-                        </select>
-
-                        <input
-                            type="text"
-                            placeholder="Time"
-                            value={newClassroom.time}
-                            onChange={(e) =>
-                                setNewClassroom({
-                                    ...newClassroom,
-                                    time: e.target.value
-                                })
-                            }
-                        />
 
                         <div className="modal-buttons">
                             <button onClick={handleSubmit} disabled={isSaving}>

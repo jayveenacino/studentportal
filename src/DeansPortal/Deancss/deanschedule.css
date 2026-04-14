@@ -395,3 +395,11 @@
         gap: 0;
     }
 }
+
+.deansched-table tbody tr {
+    transition: background 0.2s;
+}
+
+.deansched-table tbody tr:hover {
+    background: #f8f9fa;
+}

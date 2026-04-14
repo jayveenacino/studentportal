@@ -2,7 +2,6 @@ const express = require('express');
 const router = express.Router();
 const Classrooms = require('../models/Classrooms'); 
 
-// GET all classrooms
 router.get("/", async (req, res) => {
     try {
         const classrooms = await Classrooms.find().sort({ createdAt: -1 });
@@ -11,7 +10,7 @@ router.get("/", async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
-// CREATE a new classroom
+
 router.post("/", async (req, res) => {
     try {
         const newClassroom = new Classrooms(req.body);
@@ -22,7 +21,6 @@ router.post("/", async (req, res) => {
     }
 });
 
-// UPDATE a classroom
 router.put("/:id", async (req, res) => {
     try {
         const updatedClassroom = await Classrooms.findByIdAndUpdate(
@@ -37,7 +35,6 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-// DELETE a classroom
 router.delete("/:id", async (req, res) => {
     try {
         const deleted = await Classrooms.findByIdAndDelete(req.params.id);
@@ -48,5 +45,14 @@ router.delete("/:id", async (req, res) => {
     }
 });
 
+// Add this temporary route to clear old data
+router.post("/clear-old", async (req, res) => {
+    try {
+        await Classrooms.deleteMany({});
+        res.json({ message: "All classrooms cleared" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 module.exports = router;
