@@ -14,7 +14,7 @@
         const deanData = JSON.parse(sessionStorage.getItem("Dean") || "{}")
         const deanDepartment = deanData?.name || ""
 
-        const perPage = 5
+        const perPage = 10
 
         useEffect(() => {
             const fetchInstructors = async () => {
@@ -173,10 +173,10 @@
                                     <img
                                         src={viewInstructor.profileImage}
                                         alt={viewInstructor.name}
-                                        style={{ width: "120px", height: "120px", borderRadius: "50%", objectFit: "cover", marginBottom: "20px" }}
+                                        style={{ width: "120px", height: "120px", borderRadius: "10%", objectFit: "cover", marginBottom: "20px" }}
                                     />
                                 ) : (
-                                    <div style={{ width: "120px", height: "120px", borderRadius: "50%", background: "#ddd", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
+                                    <div style={{ width: "120px", height: "120px", borderRadius: "10%", background: "#ddd", display: "flex", alignItems: "center", justifyContent: "center", margin: "0 auto 20px" }}>
                                         <span style={{ color: "#888" }}>No Image</span>
                                     </div>
                                 )}
