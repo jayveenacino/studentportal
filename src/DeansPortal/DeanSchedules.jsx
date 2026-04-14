@@ -199,7 +199,15 @@ export default function DeanSchedule() {
             resetForm()
         } catch (err) {
             console.error("Save error:", err)
-            Swal.fire({ icon: 'error', title: 'Failed', text: 'Could not save schedule.' })
+            if (err.response?.status === 409) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Schedule Conflict',
+                    text: err.response.data.error || 'This schedule conflicts with an existing one.'
+                })
+            } else {
+                Swal.fire({ icon: 'error', title: 'Failed', text: 'Could not save schedule.' })
+            }
         } finally {
             setIsSaving(false)
         }

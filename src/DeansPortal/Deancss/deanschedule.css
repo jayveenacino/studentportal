@@ -185,11 +185,6 @@
     font-size: 14px;
 }
 
-.deansched-pagination-btn:hover {
-    background: #f8f9fa;
-    border-color: #1a3a1a;
-}
-
 .deansched-pagination-active {
     background: #1a3a1a;
     color: white;
@@ -402,4 +397,33 @@
 
 .deansched-table tbody tr:hover {
     background: #f8f9fa;
+}
+
+.deansched-table tbody tr td table tbody tr:hover {
+    background: transparent !important;
+}
+
+.deansched-table tbody tr td table thead tr {
+    background: white !important;
+}
+
+.deansched-table tbody tr td table thead tr:hover {
+    background: white !important;
+}
+
+.deansched-table tbody tr td table thead th {
+    background: white !important;
+    color: #1a3a1a !important;
+}
+
+.deansched-table tbody tr td table thead th:hover {
+    background: white !important;
+}
+
+.deansched-table>tbody>tr:hover {
+    background: #f8f9fa;
+}
+
+.deansched-table>tbody>tr>td table tbody tr:hover {
+    background: transparent !important;
 }
