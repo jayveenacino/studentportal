@@ -1,10 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const AcceptedStudent = require("../models/AcceptedStudent");
-const StudentModel = require("../models/Student"); // Import the pre-registration model
 const bcrypt = require("bcryptjs");
 
-// GET all accepted students
 router.get("/api/acceptedstudents", async (req, res) => {
     try {
         const students = await AcceptedStudent.find();
@@ -15,77 +13,6 @@ router.get("/api/acceptedstudents", async (req, res) => {
     }
 });
 
-// ✅ THIS IS THE MISSING ROUTE - Accept pre-registered student (called by Enrollees.jsx)
-router.put("/api/students/:id/accept", async (req, res) => {
-    try {
-        // Find the pre-registered student
-        const student = await StudentModel.findById(req.params.id);
-        if (!student) {
-            return res.status(404).json({ error: "Student not found in pre-registration" });
-        }
-
-        // Check if student has selected a course
-        if (!student.selectedCourse && !student.initialDept) {
-            return res.status(400).json({ message: "Student has not chosen a course" });
-        }
-
-        // Generate student number and portal password
-        const studentNumber = `2025${Math.floor(100000 + Math.random() * 900000)}`;
-        const plainPassword = Math.random().toString(36).slice(-8);
-        const hashedPassword = await bcrypt.hash(plainPassword, 10);
-
-        // Create new accepted student record
-        const acceptedStudentData = {
-            ...student.toObject(),
-            _id: undefined, // Let MongoDB generate new ID
-            studentNumber: studentNumber,
-            portalPassword: hashedPassword,
-            enrollmentStatus: "Officially Enrolled",
-            dateEnlisted: new Date(),
-            dateEnrolled: new Date(),
-            academicYear: req.body.academicYear || "2025/2026",
-            semester: req.body.semester || "1st Sem",
-            acceptedAt: new Date()
-        };
-
-        // Remove _id to avoid duplicate key error
-        delete acceptedStudentData._id;
-
-        const acceptedStudent = new AcceptedStudent(acceptedStudentData);
-        await acceptedStudent.save();
-
-        // Delete from pre-registration
-        await StudentModel.findByIdAndDelete(req.params.id);
-
-        res.json({ 
-            message: "Student accepted and enrolled successfully", 
-            student: acceptedStudent,
-            credentials: {
-                studentNumber: studentNumber,
-                plainPassword: plainPassword // Send this for email purposes
-            }
-        });
-
-    } catch (err) {
-        console.error("Error accepting student:", err);
-        res.status(500).json({ error: "Server error", message: err.message });
-    }
-});
-
-// ✅ ALSO NEEDED: Decline/Delete pre-registered student
-router.delete("/api/students/:id/decline", async (req, res) => {
-    try {
-        const student = await StudentModel.findByIdAndDelete(req.params.id);
-        if (!student) return res.status(404).json({ message: "Student not found" });
-        
-        res.json({ message: "Student declined and removed from pre-registration" });
-    } catch (err) {
-        console.error("Error declining student:", err);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
-// PUT - Update already accepted student enrollment status
 router.put("/api/acceptedstudents/:id/accept", async (req, res) => {
     try {
         const student = await AcceptedStudent.findById(req.params.id);
@@ -109,29 +36,17 @@ router.put("/api/acceptedstudents/:id/accept", async (req, res) => {
     }
 });
 
-// DELETE accepted student
-router.delete("/api/acceptedstudents/:id", async (req, res) => {
-    try {
-        const student = await AcceptedStudent.findByIdAndDelete(req.params.id);
-        if (!student) return res.status(404).json({ message: "Student not found" });
-        res.json({ message: "Student deleted successfully" });
-    } catch (err) {
-        res.status(500).json({ message: "Server error", error: err.message });
-    }
-});
-
-// Login for accepted students
 router.post("/api/acceptedstudents/login", async (req, res) => {
     try {
         const { studentNumber, portalPassword } = req.body;
         const student = await AcceptedStudent.findOne({ studentNumber });
 
         if (!student) return res.status(401).json({ message: "Student not found" });
-        
         const isMatch = await bcrypt.compare(portalPassword, student.portalPassword);
         if (!isMatch) {
             return res.status(401).json({ message: "Incorrect password" });
         }
+
 
         return res.json({ student });
     } catch (err) {
@@ -140,7 +55,6 @@ router.post("/api/acceptedstudents/login", async (req, res) => {
     }
 });
 
-// Change password
 router.put("/api/acceptedstudents/:id/change-password", async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
