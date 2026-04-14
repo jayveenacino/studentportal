@@ -22,7 +22,7 @@ const subjectRoutes = require("./routes/subjects");
 const instructorRoutes = require('./routes/instructors');
 const setRoutes = require('./routes/setRoutes');
 const morgan = require("morgan");
-
+const bcrypt = require("bcryptjs");
 
 require('dotenv').config({ quiet: true });
 
@@ -32,7 +32,6 @@ app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(morgan('tiny'))
 app.use("/", studentByDomainRoute);
-// app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 app.use(acceptedStudentsRoutes);
 app.use("/api", adminRoutes);
@@ -88,7 +87,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -104,7 +102,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
     const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
@@ -117,10 +114,7 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
-        // Normalize phone input for comparison (just digits)
         const inputPhone = phone.replace(/\D/g, '').slice(-10);
-
-        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
             registerNum: registerNum.trim(),
             email: email.trim().toLowerCase(),
@@ -131,7 +125,6 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
-        // Save password and update phone in proper format
         student.password = password;
         student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
@@ -148,29 +141,25 @@ app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
 
-        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
-        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,              // save new profile image (base64 or URL)
-                    profileImage: "✔️", // mark as uploaded
+                    image,
+                    profileImage: "✔️",
                 },
             },
-            { new: true, runValidators: true } // return updated & validate schema
+            { new: true, runValidators: true }
         );
 
-        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
-        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -217,7 +206,6 @@ app.post('/upload-id-image', async (req, res) => {
     }
 });
 
-// Upload Birth Certificate
 app.post('/upload-birth-cert', async (req, res) => {
     const { email, birthCertImage } = req.body;
 
@@ -248,7 +236,6 @@ app.post('/upload-birth-cert', async (req, res) => {
     }
 });
 
-// Upload Academic Records
 app.post('/upload-academic', async (req, res) => {
     const { email, academicImage } = req.body;
 
@@ -315,14 +302,13 @@ app.get('/get-upload-status/:email', async (req, res) => {
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
     try {
-        const student = await Student.findOne({ email }); // fresh from DB
+        const student = await StudentModel.findOne({ email });
         if (!student) return res.status(404).json({ message: "User not found" });
         res.json({ student });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
@@ -520,6 +506,67 @@ app.get('/api/students/:id', async (req, res) => {
     }
 });
 
+app.put('/api/students/:id/accept', async (req, res) => {
+    try {
+        const student = await StudentModel.findById(req.params.id);
+        if (!student) {
+            return res.status(404).json({ error: "Student not found in pre-registration" });
+        }
+
+        if (!student.selectedCourse && !student.initialDept) {
+            return res.status(400).json({ message: "Student has not chosen a course" });
+        }
+
+        const studentNumber = `2025${Math.floor(100000 + Math.random() * 900000)}`;
+        const plainPassword = Math.random().toString(36).slice(-8);
+        const hashedPassword = await bcrypt.hash(plainPassword, 10);
+
+        const studentData = student.toObject();
+        delete studentData._id;
+
+        const acceptedStudent = new AcceptedStudent({
+            ...studentData,
+            studentNumber: studentNumber,
+            portalPassword: hashedPassword,
+            enrollmentStatus: "Officially Enrolled",
+            dateEnlisted: new Date(),
+            dateEnrolled: new Date(),
+            academicYear: req.body.academicYear || "2025/2026",
+            semester: req.body.semester || "1st Sem",
+            acceptedAt: new Date()
+        });
+
+        await acceptedStudent.save();
+        await StudentModel.findByIdAndDelete(req.params.id);
+
+        res.json({ 
+            message: "Student accepted and enrolled successfully", 
+            student: acceptedStudent,
+            credentials: {
+                studentNumber: studentNumber,
+                plainPassword: plainPassword
+            }
+        });
+
+    } catch (err) {
+        res.status(500).json({ 
+            error: "Server error", 
+            message: err.message 
+        });
+    }
+});
+
+app.delete('/api/students/:id/decline', async (req, res) => {
+    try {
+        const student = await StudentModel.findByIdAndDelete(req.params.id);
+        if (!student) return res.status(404).json({ message: "Student not found" });
+        
+        res.json({ message: "Student declined and removed from pre-registration" });
+    } catch (err) {
+        res.status(500).json({ error: "Server error", message: err.message });
+    }
+});
+
 app.get('/settings', async (req, res) => {
     try {
         const settings = await Settings.findOne();
@@ -652,7 +699,7 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB")
     app.listen(2025, '0.0.0.0', () => {
-        console.log("Server’s awake and ready to roll!");
+        console.log("Server's awake and ready to roll!");
     });
 }).catch((err) => {
     console.error("Error connecting to MongoDB:", err);
