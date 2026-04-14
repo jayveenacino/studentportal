@@ -13,7 +13,7 @@ export default function Enrollees() {
     const [isLoading, setIsLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalLoading, setIsModalLoading] = useState(false);
+    const [isModalLoading, setIsModalLoading] = useState(false); // New state for modal trigger
     const [enlargedImage, setEnlargedImage] = useState(null);
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState("All");
@@ -185,7 +185,7 @@ export default function Enrollees() {
     };
 
     const openModal = async (studentId) => {
-        setIsModalLoading(true);
+        setIsModalLoading(true); // Start small loader
         try {
             const res = await axios.get(`${API}/api/students/${studentId}`);
             setSelectedStudent(res.data);
@@ -194,7 +194,7 @@ export default function Enrollees() {
             console.error("Failed to fetch student details:", error);
             Swal.fire("Error", "Could not fetch student documents.", "error");
         } finally {
-            setIsModalLoading(false);
+            setIsModalLoading(false); // Stop small loader
         }
     };
 
@@ -279,6 +279,7 @@ export default function Enrollees() {
 
     return (
         <div className="enrollees-container" style={{ position: 'relative' }}>
+            {/* Global Loader */}
             {loadingUserData && (
                 <div
                     style={{
@@ -302,6 +303,7 @@ export default function Enrollees() {
                 </div>
             )}
 
+            {/* Small Modal Fetching Loader */}
             {isModalLoading && (
                 <div style={{
                     position: "fixed",
@@ -419,6 +421,7 @@ export default function Enrollees() {
                 )}
             </div>
 
+            {/* Rest of the Modals (Chat, Student Details, Enlarged Image) remain same */}
             {openChat && chatStudent && (
                 <div className="admin-chat-wrapper" onClick={() => setOpenChat(false)}>
                     <div className="admin-chat-modal" onClick={(e) => e.stopPropagation()}>
