@@ -651,10 +651,12 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
     }
 });
 
+const PORT = 2025
+
 mongoose.connect(process.env.MONGODB_URI).then(() => {
     console.log("Connected to MongoDB")
-    app.listen(2025, '0.0.0.0', () => {
-        console.log("Server’s awake and ready to roll!");
+    app.listen(PORT, '0.0.0.0', () => {
+        console.log(`Server’s awake and ready to roll on port! ${PORT}`);
     });
 }).catch((err) => {
     console.error("Error connecting to MongoDB:", err);
