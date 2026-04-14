@@ -30,4 +30,13 @@ router.post('/bulk', async (req, res) => {
     }
 });
 
+router.delete('/', async (req, res) => {
+    try {
+        await Set.deleteMany({});
+        res.json({ message: "All sets deleted successfully" });
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 module.exports = router;

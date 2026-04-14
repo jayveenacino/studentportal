@@ -42,12 +42,6 @@ export default function Footer() {
                     <div className="enuique-social-icons">
                         <button className="enuique-social-btn"> Facebook</button>
                         <button className="enuique-social-btn"> Email</button>
-                        <button className="enuique-social-btn"> YouTube</button>
-                    </div>
-
-                    <hr />
-                    <div className="enuique-footer-logo">
-                        <img src="/img/knshdlogo.png" alt="KNS LOGO" />
                     </div>
                 </div>
             </div>

@@ -71,3 +71,17 @@
     background-color: #0a3d18;
     color: white;
 }
+
+.classrooms-filter {
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    outline: none;
+    background: white;
+    cursor: pointer;
+}
+
+.classrooms-filter:focus {
+    border-color: #006666;
+}

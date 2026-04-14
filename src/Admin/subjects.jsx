@@ -25,7 +25,7 @@ const Subjects = () => {
     });
 
     const [currentPage, setCurrentPage] = useState(1);
-    const perPage = 5;
+    const perPage = 10;
 
     useEffect(() => {
         const fetchData = async () => {
