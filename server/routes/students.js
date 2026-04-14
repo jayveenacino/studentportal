@@ -186,27 +186,20 @@ router.put('/api/students/:id/accept', async (req, res) => {
         const acceptedStudent = new AcceptedStudent({
             preregisterPassword: student.password,
             initialDept: student.initialDept,
+
             firstname: student.firstname,
             middlename: student.middlename,
             lastname: student.lastname,
             email: student.email || student.gmail || student.personalEmail,
+
             studentNumber,
             domainEmail,
             portalPassword: hashedPassword,
+
             yearLevel: "1ST YEAR",
             status: "REGULAR",
-            acceptedAt: new Date(),
 
-            // Add these missing fields from original student
-            image: student.image || null,
-            idimage: student.idimage || null,
-            birthCertImage: student.birthCertImage || null,
-            goodMoralImage: student.goodMoralImage || null,
-            academicImage: student.academicImage || null,
-            strand: student.strand || null,
-            selectedCourse: student.selectedCourse || null,
-            selectedSecCourse: student.selectedSecCourse || null,
-            registerNum: student.registerNum || null
+            acceptedAt: new Date()
         });
 
         await acceptedStudent.save();
