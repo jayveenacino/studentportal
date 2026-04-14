@@ -125,7 +125,7 @@ export default function Enrollees() {
         });
 
         try {
-            await axios.put(`${API}/api/acceptedstudents/${id}/accept`)
+            await axios.put(`${API}/api/students/${id}/accept`);
 
             Swal.fire({
                 icon: 'success',

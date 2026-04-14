@@ -84,28 +84,4 @@ router.put("/api/acceptedstudents/:id/change-password", async (req, res) => {
     }
 });
 
-app.put('/api/students/:id/accept', async (req, res) => {
-    try {
-        const student = await StudentModel.findById(req.params.id);
-        if (!student) return res.status(404).json({ error: "Student not found" });
-
-        const acceptedStudent = new AcceptedStudent({
-            ...student.toObject(),
-            dateEnlisted: new Date(),
-            academicYear: req.body.academicYear || "2025/2026",
-            semester: req.body.semester || "1st Sem",
-            enrollmentStatus: "Officially Enrolled",
-            dateEnrolled: new Date()
-        });
-
-        await acceptedStudent.save();
-        await StudentModel.findByIdAndDelete(req.params.id);
-
-        res.json({ message: "Student accepted and enrolled", student: acceptedStudent });
-    } catch (err) {
-        console.error("Error accepting student:", err);
-        res.status(500).json({ error: "Server error" });
-    }
-});
-
 module.exports = router;

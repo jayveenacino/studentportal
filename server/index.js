@@ -21,7 +21,6 @@ const chatRoutes = require("./routes/chatRoutes");
 const subjectRoutes = require("./routes/subjects");
 const instructorRoutes = require('./routes/instructors');
 const setRoutes = require('./routes/setRoutes');
-const scheduleRoutes = require('./routes/schedules');
 const morgan = require("morgan");
 
 
@@ -45,7 +44,6 @@ app.use("/api/chats", chatRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use('/api/instructors', instructorRoutes);
 app.use('/api/sets', setRoutes);
-app.use('/api/schedules', scheduleRoutes);
 
 app.post('/register', async (req, res) => {
     try {
