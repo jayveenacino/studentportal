@@ -18,7 +18,6 @@
     "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "chart.js": "^4.5.0",
-    "compression": "^1.8.1",
     "cors": "^2.8.5",
     "cropperjs": "^2.0.0",
     "docx": "^9.6.1",

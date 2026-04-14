@@ -1,7 +1,6 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
-const compression = require("compression");
 const StudentModel = require("./models/Student");
 const AdminData = require('./models/admin/admindata');
 const CourseModel = require('./models/Course');
@@ -25,64 +24,16 @@ const setRoutes = require('./routes/setRoutes');
 const scheduleRoutes = require('./routes/schedules');
 const morgan = require("morgan");
 
+
 require('dotenv').config({ quiet: true });
 
-let cachedDb = null;
-let isConnecting = false;
-
-async function connectToDatabase() {
-  if (cachedDb && mongoose.connection.readyState === 1) {
-    return cachedDb;
-  }
-  
-  if (isConnecting) {
-    while (isConnecting) {
-      await new Promise(resolve => setTimeout(resolve, 100));
-    }
-    return cachedDb;
-  }
-  
-  isConnecting = true;
-  
-  try {
-    const conn = await mongoose.connect(process.env.MONGODB_URI, {
-      maxPoolSize: 10,
-      serverSelectionTimeoutMS: 5000,
-      socketTimeoutMS: 45000,
-      bufferCommands: false,
-    });
-    
-    cachedDb = conn;
-    return conn;
-  } finally {
-    isConnecting = false;
-  }
-}
-
 const app = express();
-
-app.use(cors({
-  origin: process.env.ALLOWED_ORIGIN || '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  maxAge: 86400
-}));
-
-app.use(compression());
+app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
-app.use(morgan('tiny'));
-
-app.use(async (req, res, next) => {
-  try {
-    await connectToDatabase();
-    next();
-  } catch (err) {
-    res.status(500).json({ message: "Database connection failed" });
-  }
-});
-
+app.use(morgan('tiny'))
 app.use("/", studentByDomainRoute);
+// app.use("/api/backups", backupRoutes);
 app.use(studentRoutes);
 app.use(acceptedStudentsRoutes);
 app.use("/api", adminRoutes);
@@ -95,11 +46,6 @@ app.use("/api/subjects", subjectRoutes);
 app.use('/api/instructors', instructorRoutes);
 app.use('/api/sets', setRoutes);
 app.use('/api/schedules', scheduleRoutes);
-
-const cacheResponse = (seconds) => (req, res, next) => {
-  res.set('Cache-Control', `public, max-age=${seconds}`);
-  next();
-};
 
 app.post('/register', async (req, res) => {
     try {
@@ -139,10 +85,12 @@ app.post('/register', async (req, res) => {
         res.status(201).json({ message: "Pre-registration successful", student });
 
     } catch (err) {
+        console.error("REGISTER ERROR:", err);
         res.status(500).json({ message: "Error creating account", error: err.message });
     }
 });
 
+// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -158,6 +106,7 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
     const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
@@ -170,8 +119,10 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
+        // Normalize phone input for comparison (just digits)
         const inputPhone = phone.replace(/\D/g, '').slice(-10);
 
+        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
             registerNum: registerNum.trim(),
             email: email.trim().toLowerCase(),
@@ -182,6 +133,7 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
+        // Save password and update phone in proper format
         student.password = password;
         student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
@@ -189,6 +141,7 @@ app.post('/reset-password', async (req, res) => {
 
         res.status(200).json({ message: "Password updated successfully", phone: student.phone });
     } catch (error) {
+        console.error("Reset password error:", error);
         res.status(500).json({ message: "Server error while resetting password", error: error.message });
     }
 });
@@ -197,25 +150,29 @@ app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
 
+        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
+        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,
-                    profileImage: "✔️",
+                    image,              // save new profile image (base64 or URL)
+                    profileImage: "✔️", // mark as uploaded
                 },
             },
-            { new: true, runValidators: true }
+            { new: true, runValidators: true } // return updated & validate schema
         );
 
+        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
+        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -223,6 +180,7 @@ app.post("/upload", async (req, res) => {
         });
 
     } catch (error) {
+        console.error("Upload error:", error);
         return res.status(500).json({
             success: false,
             message: "Server error while uploading image.",
@@ -256,10 +214,12 @@ app.post('/upload-id-image', async (req, res) => {
 
         res.status(200).json({ message: "ID image uploaded successfully!", student });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
+// Upload Birth Certificate
 app.post('/upload-birth-cert', async (req, res) => {
     const { email, birthCertImage } = req.body;
 
@@ -285,10 +245,12 @@ app.post('/upload-birth-cert', async (req, res) => {
 
         res.status(200).json({ message: "Birth certificate uploaded successfully!", student });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
 
+// Upload Academic Records
 app.post('/upload-academic', async (req, res) => {
     const { email, academicImage } = req.body;
 
@@ -314,6 +276,7 @@ app.post('/upload-academic', async (req, res) => {
 
         res.status(200).json({ message: "Academic records uploaded successfully!", student });
     } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Server error", error: error.message });
     }
 });
@@ -340,6 +303,7 @@ app.get('/get-upload-status/:email', async (req, res) => {
             profileImage: student.profileImage === '✔️'
         });
     } catch (error) {
+        console.error("Error in /get-upload-status:", error);
         res.status(500).json({
             validId: false,
             birthCert: false,
@@ -353,13 +317,14 @@ app.get('/get-upload-status/:email', async (req, res) => {
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
     try {
-        const student = await StudentModel.findOne({ email });
+        const student = await Student.findOne({ email }); // fresh from DB
         if (!student) return res.status(404).json({ message: "User not found" });
         res.json({ student });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });
+
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
@@ -380,12 +345,15 @@ app.post('/change-password', async (req, res) => {
 
         res.status(200).json({ success: true, message: "Password updated successfully" });
     } catch (error) {
+        console.error('Error changing password:', error);
         res.status(500).json({ message: "Error changing password", error: error.message });
     }
 });
 
 app.post('/api/updateUserDetails', async (req, res) => {
     const { email, disabilityDetails, disabilityCategory } = req.body;
+
+    console.log("Update Request Body:", req.body);
 
     try {
         const updatedUser = await StudentModel.findOneAndUpdate(
@@ -400,6 +368,7 @@ app.post('/api/updateUserDetails', async (req, res) => {
 
         res.status(200).json({ message: "User details updated successfully", updatedUser });
     } catch (err) {
+        console.error('Error updating user details:', err);
         res.status(500).send('Internal Server Error');
     }
 });
@@ -415,6 +384,8 @@ app.put("/update-profile", async (req, res) => {
     } = req.body;
 
     try {
+        console.log("Request Body:", req.body);
+
         const updatedUser = await StudentModel.findOneAndUpdate(
             { email: email },
             {
@@ -473,6 +444,7 @@ app.put("/update-profile", async (req, res) => {
             { new: true }
         );
         if (!updatedUser) {
+            console.error("User not found for email:", email);
             return res.status(404).json({ error: "User not found" });
         }
         res.json({
@@ -481,13 +453,15 @@ app.put("/update-profile", async (req, res) => {
             updatedUser: updatedUser
         });
     } catch (err) {
+        console.error("Error during update:", err.message);
+        console.error("Error stack:", err.stack);
         res.status(500).json({ error: err.message });
     }
 });
 
 app.use('/api/departments', departmentRoutes);
 
-app.get("/api/courses", cacheResponse(300), async (req, res) => {
+app.get("/api/courses", async (req, res) => {
     try {
         const courses = await CourseModel.find().sort({ createdAt: -1 });
         res.json(courses);
@@ -543,11 +517,12 @@ app.get('/api/students/:id', async (req, res) => {
         }
         res.status(200).json(student);
     } catch (err) {
+        console.error('Error fetching student details:', err);
         res.status(500).json({ message: 'Error fetching student details', error: err.message });
     }
 });
 
-app.get('/settings', cacheResponse(60), async (req, res) => {
+app.get('/settings', async (req, res) => {
     try {
         const settings = await Settings.findOne();
         if (!settings) {
@@ -671,11 +646,16 @@ app.get("/api/enrollment-status/:email", async (req, res) => {
 
         res.json(history);
     } catch (err) {
+        console.error("Error fetching enrollment status:", err);
         res.status(500).json({ message: "Server error", error: err.message });
     }
 });
 
-const PORT = process.env.PORT || 2025;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+mongoose.connect(process.env.MONGODB_URI).then(() => {
+    console.log("Connected to MongoDB")
+    app.listen(2025, '0.0.0.0', () => {
+        console.log("Server’s awake and ready to roll!");
+    });
+}).catch((err) => {
+    console.error("Error connecting to MongoDB:", err);
+})
