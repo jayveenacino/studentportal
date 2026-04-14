@@ -429,3 +429,137 @@
     box-shadow: 0 2px 8px rgba(10, 61, 24, 0.25);
 }
 
+.timer-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.timer-modal-content {
+    background: white;
+    width: 400px;
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+.timer-line-container {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+}
+
+.timer-progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, #0a3d18, #0d5c28);
+    transition: width 1s linear;
+}
+
+.timer-message {
+    padding: 40px 30px;
+    text-align: center;
+    font-size: 16px;
+    color: #1e293b;
+    line-height: 1.6;
+}
+
+.timer-ok-btn {
+    width: 120px;
+    margin: 0 auto 30px auto;
+    display: block;
+    padding: 12px 24px;
+    background: #0a3d18;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.timer-ok-btn:hover {
+    background: #0d5c28;
+    transform: translateY(-1px);
+}
+
+.confirm-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1001;
+}
+
+.confirm-modal-content {
+    background: white;
+    width: 350px;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+}
+
+.confirm-message {
+    text-align: center;
+    font-size: 16px;
+    color: #1e293b;
+    margin-bottom: 25px;
+}
+
+.confirm-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+}
+
+.confirm-no-btn {
+    padding: 10px 30px;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.confirm-no-btn:hover {
+    background: #f8f9fa;
+    border-color: #0a3d18;
+    color: #0a3d18;
+}
+
+.confirm-yes-btn {
+    padding: 10px 30px;
+    background: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.confirm-yes-btn:hover:not(:disabled) {
+    background: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.confirm-yes-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}

@@ -18,7 +18,11 @@ export default function Set() {
     const [selectedSet, setSelectedSet] = useState(null);
     const [newCapacity, setNewCapacity] = useState(20);
 
-    // Loading states for actions
+    const [showTimerModal, setShowTimerModal] = useState(false);
+    const [showConfirmModal, setShowConfirmModal] = useState(false);
+    const [timerCount, setTimerCount] = useState(5);
+    const [isResetting, setIsResetting] = useState(false);
+
     const [isSaving, setIsSaving] = useState(false);
     const [isAddingSet, setIsAddingSet] = useState(false);
 
@@ -38,6 +42,24 @@ export default function Set() {
         fetchData();
     }, []);
 
+    useEffect(() => {
+        let interval;
+        if (showTimerModal && timerCount > 0) {
+            interval = setInterval(() => {
+                setTimerCount(prev => {
+                    if (prev <= 1) {
+                        clearInterval(interval);
+                        setShowTimerModal(false);
+                        setShowConfirmModal(true);
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        }
+        return () => clearInterval(interval);
+    }, [showTimerModal, timerCount]);
+
     const fetchSets = async () => {
         try {
             const deptRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/departments`).catch(() => ({ data: [] }));
@@ -49,24 +71,50 @@ export default function Set() {
         }
     };
 
+    const handleResetAllSets = async () => {
+        if (isResetting) return;
+        setIsResetting(true);
+        try {
+            await axios.delete(`${import.meta.env.VITE_API_URL}/api/sets`);
+            await fetchSets();
+            setShowConfirmModal(false);
+            Swal.fire("Reset Complete", "All sets have been deleted.", "success");
+        } catch (err) {
+            Swal.fire("Error", "Failed to reset sets", "error");
+        } finally {
+            setIsResetting(false);
+            setTimerCount(5);
+        }
+    };
+
+    const openTimerModal = () => {
+        setTimerCount(5);
+        setShowTimerModal(true);
+    };
+
+    const closeTimerModal = () => {
+        setShowTimerModal(false);
+        setShowConfirmModal(true);
+    };
+
+    const closeConfirmModal = () => {
+        setShowConfirmModal(false);
+        setTimerCount(5);
+    };
+
     const handleAddSet = async (deptName, year) => {
         if (isAddingSet) return;
-
         setIsAddingSet(true);
-
         const yearSets = sets.filter(s => s.department === deptName && s.year === year);
         const sortedSets = [...yearSets].sort((a, b) => a.letter.localeCompare(b.letter));
         const lastLetter = sortedSets.length > 0 ? sortedSets[sortedSets.length - 1].letter : "@";
         const nextLetter = String.fromCharCode(lastLetter.charCodeAt(0) + 1);
-
         if (nextLetter > "Z") {
             setIsAddingSet(false);
             Swal.fire("Limit Reached", "Cannot add more sets.", "warning");
             return;
         }
-
         const deptObj = departments.find(d => d.name === deptName);
-
         try {
             const payload = {
                 departmentId: deptObj._id,
@@ -86,24 +134,19 @@ export default function Set() {
 
     const handleUpdateCapacity = async () => {
         if (isSaving) return;
-
         setIsSaving(true);
-
         try {
             const yearSets = sets.filter(s => s.department === selectedSet.department && s.year === selectedSet.year);
             const updatedSets = yearSets.map(s =>
                 s._id === selectedSet._id ? { ...s, capacity: newCapacity } : s
             );
-
             const deptObj = departments.find(d => d.name === selectedSet.department);
-
             await axios.post(`${import.meta.env.VITE_API_URL}/api/sets/bulk`, {
                 departmentId: deptObj._id,
                 departmentName: selectedSet.department,
                 yearLevel: selectedSet.year,
                 sets: updatedSets.map(s => ({ letter: s.letter, capacity: s.capacity }))
             });
-
             setShowCapModal(false);
             await fetchSets();
             Swal.fire("Updated", "Capacity changed successfully", "success");
@@ -116,17 +159,13 @@ export default function Set() {
 
     const handleDeleteSet = async (setToDelete) => {
         if (isSaving) return;
-
         const yearSets = sets.filter(s => s.department === setToDelete.department && s.year === setToDelete.year);
         const sortedSets = [...yearSets].sort((a, b) => a.letter.localeCompare(b.letter));
-
         const isLastSet = sortedSets[sortedSets.length - 1]._id === setToDelete._id;
-
         if (!isLastSet) {
             Swal.fire("Cannot Delete", "Only the last set can be deleted.", "error");
             return;
         }
-
         const confirm = await Swal.fire({
             title: "Delete Set?",
             text: `Are you sure you want to delete Set ${setToDelete.letter}?`,
@@ -137,22 +176,17 @@ export default function Set() {
             confirmButtonText: "Delete",
             cancelButtonText: "Cancel"
         });
-
         if (!confirm.isConfirmed) return;
-
         setIsSaving(true);
-
         try {
             const remainingSets = sortedSets.filter(s => s._id !== setToDelete._id);
             const deptObj = departments.find(d => d.name === setToDelete.department);
-
             await axios.post(`${import.meta.env.VITE_API_URL}/api/sets/bulk`, {
                 departmentId: deptObj._id,
                 departmentName: setToDelete.department,
                 yearLevel: setToDelete.year,
                 sets: remainingSets.map(s => ({ letter: s.letter, capacity: s.capacity }))
             });
-
             await fetchSets();
             setActiveMenuId(null);
             Swal.fire("Deleted", `Set ${setToDelete.letter} has been deleted.`, "success");
@@ -174,7 +208,6 @@ export default function Set() {
 
     return (
         <div className="set-container" onClick={() => setActiveMenuId(null)} style={{ position: "relative" }}>
-            {/* Full Page Loading Overlay - Same UI as Departments */}
             {loadingSets && (
                 <div
                     style={{
@@ -205,6 +238,9 @@ export default function Set() {
 
             <div className="set-controls">
                 <input className="set-search" placeholder="Search departments..." value={search} onChange={e => setSearch(e.target.value)} />
+                <button className="subjects-add-btn" onClick={openTimerModal}>
+                    Reset All Sets
+                </button>
             </div>
 
             <div className="set-table-container">
@@ -322,6 +358,47 @@ export default function Set() {
                 </table>
             </div>
 
+            {showTimerModal && (
+                <div className="timer-modal-overlay">
+                    <div className="timer-modal-content">
+                        <div className="timer-line-container">
+                            <div 
+                                className="timer-progress-bar" 
+                                style={{ width: `${(timerCount / 5) * 100}%` }}
+                            ></div>
+                        </div>
+                        <div className="timer-message">
+                            It is time to reset the set. All existing sets will be deleted and reset to zero.
+                        </div>
+                        <button className="timer-ok-btn" onClick={closeTimerModal}>
+                            OK
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {showConfirmModal && (
+                <div className="confirm-modal-overlay">
+                    <div className="confirm-modal-content">
+                        <div className="confirm-message">
+                            Are you sure you want to delete all sets?
+                        </div>
+                        <div className="confirm-buttons">
+                            <button className="confirm-no-btn" onClick={closeConfirmModal}>
+                                No
+                            </button>
+                            <button 
+                                className="confirm-yes-btn" 
+                                onClick={handleResetAllSets}
+                                disabled={isResetting}
+                            >
+                                {isResetting ? "Deleting..." : "Yes"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {showCapModal && (
                 <div className="modal-overlay">
                     <div className="modal-content" onClick={e => e.stopPropagation()}>
@@ -357,7 +434,6 @@ export default function Set() {
                 </div>
             )}
 
-            {/* CSS for spinner animation */}
             <style>{`
                 @keyframes spin {
                     0% { transform: rotate(0deg); }
