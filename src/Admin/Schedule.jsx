@@ -14,10 +14,10 @@ export default function Schedule() {
     const [isSaving, setIsSaving] = useState(false);
     const [loadingSchedules, setLoadingSchedules] = useState(true);
     const [newSchedule, setNewSchedule] = useState({ 
-        room: "", 
-        subjects: "", 
+        title: "", 
+        date: "", 
         time: "", 
-        instructor: "", 
+        location: "", 
         status: "Active" 
     });
 
@@ -46,11 +46,13 @@ export default function Schedule() {
         }
     };
 
-    const filtered = schedules.filter(
-        s =>
-            s.title.toLowerCase().includes(search.toLowerCase()) ||
-            s.location.toLowerCase().includes(search.toLowerCase())
-    );
+    const filtered = schedules.filter(s => {
+        const title = (s.title || "").toLowerCase();
+        const location = (s.location || "").toLowerCase();
+        const searchTerm = search.toLowerCase();
+        return title.includes(searchTerm) || location.includes(searchTerm);
+    });
+    
     const pageCount = Math.ceil(filtered.length / perPage);
     const start = (currentPage - 1) * perPage;
     const current = filtered.slice(start, start + perPage);
@@ -111,11 +113,11 @@ export default function Schedule() {
 
     const handleEdit = schedule => {
         setNewSchedule({
-            title: schedule.title,
-            date: schedule.date,
-            time: schedule.time,
-            location: schedule.location,
-            status: schedule.status
+            title: schedule.title || "",
+            date: schedule.date || "",
+            time: schedule.time || "",
+            location: schedule.location || "",
+            status: schedule.status || "Active"
         });
         setEditId(schedule._id);
         setEditMode(true);
@@ -211,9 +213,11 @@ export default function Schedule() {
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Instructor</th>
-                            <th>Department</th>
-                            <th>Details</th>
+                            <th>Title</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Location</th>
+                            <th>Status</th>
                             <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
                         </tr>
                     </thead>
@@ -221,13 +225,13 @@ export default function Schedule() {
                         {current.map((s, i) => (
                             <tr key={s._id}>
                                 <td>{start + i + 1}</td>
-                                <td>{s.title}</td>
-                                <td>{s.date}</td>
-                                <td>{s.time}</td>
-                                <td>{s.location}</td>
+                                <td>{s.title || "N/A"}</td>
+                                <td>{s.date || "N/A"}</td>
+                                <td>{s.time || "N/A"}</td>
+                                <td>{s.location || "N/A"}</td>
                                 <td>
                                     <span className={s.status === "Active" ? "status-active" : "status-inactive"}>
-                                        {s.status}
+                                        {s.status || "Unknown"}
                                     </span>
                                 </td>
                                 <td style={{ textAlign: "right" }}>
