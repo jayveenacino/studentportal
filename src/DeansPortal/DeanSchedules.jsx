@@ -9,6 +9,7 @@ export default function DeanSchedule() {
     const [subjects, setSubjects] = useState([])
     const [schedules, setSchedules] = useState([])
     const [sets, setSets] = useState([])
+    const [classrooms, setClassrooms] = useState([])
     const [loading, setLoading] = useState(true)
     const [search, setSearch] = useState("")
     const [currentPage, setCurrentPage] = useState(1)
@@ -56,24 +57,20 @@ export default function DeanSchedule() {
             const filteredSets = setsRes.data.filter(s => s.department === deanDepartment)
             setSets(filteredSets)
 
-            // Fetch courses for this department to get initialDept codes
             const coursesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/courses`)
             const deptCourses = coursesRes.data.filter(c => c.department === deanDepartment)
             const courseCodes = deptCourses.map(c => c.initialDept)
 
-            console.log("Department:", deanDepartment)
-            console.log("Course codes:", courseCodes)
-
             const subjectsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/subjects`)
-
-            // Filter subjects by General OR by course code (initialDept)
             const filteredSubjects = subjectsRes.data.filter(s => {
                 const isGeneral = s.department === "General"
                 const matchesCourseCode = courseCodes.includes(s.department)
                 return isGeneral || matchesCourseCode
             })
-
             setSubjects(filteredSubjects)
+
+            const classroomsRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/classrooms`)
+            setClassrooms(classroomsRes.data)
 
             const schedulesRes = await axios.get(`${import.meta.env.VITE_API_URL}/api/schedules`)
             const filteredSchedules = schedulesRes.data.filter(s => s.department === deanDepartment)
@@ -113,6 +110,14 @@ export default function DeanSchedule() {
         if (!targetYear) return []
 
         return sets.filter(s => s.year === targetYear)
+    }
+
+    const getFilteredRooms = () => {
+        return classrooms.filter(c => {
+            const isGeneral = c.department === "General"
+            const matchesDept = c.department === deanDepartment
+            return isGeneral || matchesDept
+        })
     }
 
     const getInstructorSchedules = (instructorId) => {
@@ -278,6 +283,7 @@ export default function DeanSchedule() {
     }, [])
 
     const availableSets = getFilteredSets()
+    const availableRooms = getFilteredRooms()
 
     return (
         <div className="deansched-container" style={{ position: "relative" }}>
@@ -661,13 +667,18 @@ export default function DeanSchedule() {
                                 </div>
                                 <div className="deansched-form-group">
                                     <label>Room <span className="deansched-required">*</span></label>
-                                    <input
-                                        type="text"
-                                        className="deansched-input"
-                                        placeholder="e.g., Room 101"
+                                    <select
+                                        className="deansched-select"
                                         value={formData.room}
                                         onChange={e => setFormData({ ...formData, room: e.target.value })}
-                                    />
+                                    >
+                                        <option value="" disabled>Select Room</option>
+                                        {availableRooms.map(c => (
+                                            <option key={c._id} value={c.room}>
+                                                {c.room} {c.department === "General" ? "(General)" : ""}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
                         </div>
