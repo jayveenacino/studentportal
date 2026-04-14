@@ -28,6 +28,26 @@ export default function Set() {
 
     const perPage = 5;
 
+    const getCurrentAdmin = () => {
+        const adminData = localStorage.getItem('adminUser') || sessionStorage.getItem('adminUser');
+        if (adminData) {
+            try {
+                const parsed = JSON.parse(adminData);
+                return parsed.name || parsed.username || parsed.email || 'Unknown Admin';
+            } catch {
+                return 'Unknown Admin';
+            }
+        }
+        return 'Unknown Admin';
+    };
+
+    const getCurrentDateTime = () => {
+        const now = new Date();
+        const date = now.toISOString().split('T')[0];
+        const time = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+        return { date, time: `${date} ${time}` };
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             setLoadingSets(true);
@@ -71,6 +91,23 @@ export default function Set() {
         }
     };
 
+    const logResetReport = async (status, details) => {
+        const { date, time } = getCurrentDateTime();
+        const adminName = getCurrentAdmin();
+        
+        try {
+            await axios.post(`${import.meta.env.VITE_API_URL}/api/reports`, {
+                title: `Set Reset ${status}`,
+                type: "System",
+                date: date,
+                description: `All sets have been reset to zero. ${details} Performed by: ${adminName} at ${time}`,
+                status: status === "Success" ? "Active" : "Inactive"
+            });
+        } catch (err) {
+            console.error("Failed to log report:", err);
+        }
+    };
+
     const handleResetAllSets = async () => {
         if (isResetting) return;
         setIsResetting(true);
@@ -78,8 +115,10 @@ export default function Set() {
             await axios.delete(`${import.meta.env.VITE_API_URL}/api/sets`);
             await fetchSets();
             setShowConfirmModal(false);
+            await logResetReport("Success", "Operation completed successfully.");
             Swal.fire("Reset Complete", "All sets have been deleted.", "success");
         } catch (err) {
+            await logResetReport("Failed", `Error: ${err.message || 'Unknown error'}`);
             Swal.fire("Error", "Failed to reset sets", "error");
         } finally {
             setIsResetting(false);

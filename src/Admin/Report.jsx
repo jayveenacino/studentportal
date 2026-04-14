@@ -204,14 +204,6 @@ export default function Report() {
                         setCurrentPage(1);
                     }}
                 />
-                <button className="report-add-btn" onClick={() => {
-                    setNewReport({ title: "", type: "", date: "", description: "", status: "Active" });
-                    setEditMode(false);
-                    setEditId(null);
-                    setShowModal(true);
-                }}>
-                    Add Report
-                </button>
             </div>
 
             <div className="report-table-container">
@@ -224,7 +216,7 @@ export default function Report() {
                             <th>Date</th>
                             <th>Description</th>
                             <th>Status</th>
-                            <th style={{ textAlign: "right", paddingRight: "55px" }}>Actions</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
