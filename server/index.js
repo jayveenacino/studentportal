@@ -33,7 +33,7 @@ app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(morgan('tiny'))
 app.use("/", studentByDomainRoute);
 app.use(studentRoutes);
-app.use(acceptedStudentsRoutes);
+app.use('/api', acceptedStudentsRoutes);
 app.use("/api", adminRoutes);
 app.use("/api/settings", semesterSettingsRoutes);
 app.use("/uploads", express.static("uploads"));
@@ -503,67 +503,6 @@ app.get('/api/students/:id', async (req, res) => {
     } catch (err) {
         console.error('Error fetching student details:', err);
         res.status(500).json({ message: 'Error fetching student details', error: err.message });
-    }
-});
-
-app.put('/api/students/:id/accept', async (req, res) => {
-    try {
-        const student = await StudentModel.findById(req.params.id);
-        if (!student) {
-            return res.status(404).json({ error: "Student not found in pre-registration" });
-        }
-
-        if (!student.selectedCourse && !student.initialDept) {
-            return res.status(400).json({ message: "Student has not chosen a course" });
-        }
-
-        const studentNumber = `2025${Math.floor(100000 + Math.random() * 900000)}`;
-        const plainPassword = Math.random().toString(36).slice(-8);
-        const hashedPassword = await bcrypt.hash(plainPassword, 10);
-
-        const studentData = student.toObject();
-        delete studentData._id;
-
-        const acceptedStudent = new AcceptedStudent({
-            ...studentData,
-            studentNumber: studentNumber,
-            portalPassword: hashedPassword,
-            enrollmentStatus: "Officially Enrolled",
-            dateEnlisted: new Date(),
-            dateEnrolled: new Date(),
-            academicYear: req.body.academicYear || "2025/2026",
-            semester: req.body.semester || "1st Sem",
-            acceptedAt: new Date()
-        });
-
-        await acceptedStudent.save();
-        await StudentModel.findByIdAndDelete(req.params.id);
-
-        res.json({ 
-            message: "Student accepted and enrolled successfully", 
-            student: acceptedStudent,
-            credentials: {
-                studentNumber: studentNumber,
-                plainPassword: plainPassword
-            }
-        });
-
-    } catch (err) {
-        res.status(500).json({ 
-            error: "Server error", 
-            message: err.message 
-        });
-    }
-});
-
-app.delete('/api/students/:id/decline', async (req, res) => {
-    try {
-        const student = await StudentModel.findByIdAndDelete(req.params.id);
-        if (!student) return res.status(404).json({ message: "Student not found" });
-        
-        res.json({ message: "Student declined and removed from pre-registration" });
-    } catch (err) {
-        res.status(500).json({ error: "Server error", message: err.message });
     }
 });
 

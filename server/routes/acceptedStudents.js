@@ -5,7 +5,7 @@ const AcceptedStudent = require("../models/AcceptedStudent");
 const StudentModel = require("../models/Student");
 const bcrypt = require("bcryptjs");
 
-router.get("/api/acceptedstudents", async (req, res) => {
+router.get("/acceptedstudents", async (req, res) => {
     try {
         const students = await AcceptedStudent.find();
         res.json(students);
@@ -14,7 +14,7 @@ router.get("/api/acceptedstudents", async (req, res) => {
     }
 });
 
-router.put("/api/students/:id/accept", async (req, res) => {
+router.put("/students/:id/accept", async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ error: "Invalid student ID format" });
@@ -69,7 +69,7 @@ router.put("/api/students/:id/accept", async (req, res) => {
     }
 });
 
-router.delete("/api/students/:id/decline", async (req, res) => {
+router.delete("/students/:id/decline", async (req, res) => {
     try {
         if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
             return res.status(400).json({ error: "Invalid student ID format" });
@@ -84,7 +84,7 @@ router.delete("/api/students/:id/decline", async (req, res) => {
     }
 });
 
-router.put("/api/acceptedstudents/:id/accept", async (req, res) => {
+router.put("/acceptedstudents/:id/accept", async (req, res) => {
     try {
         const student = await AcceptedStudent.findById(req.params.id);
         if (!student) return res.status(404).json({ error: "Student not found" });
@@ -106,7 +106,7 @@ router.put("/api/acceptedstudents/:id/accept", async (req, res) => {
     }
 });
 
-router.delete("/api/acceptedstudents/:id", async (req, res) => {
+router.delete("/acceptedstudents/:id", async (req, res) => {
     try {
         const student = await AcceptedStudent.findByIdAndDelete(req.params.id);
         if (!student) return res.status(404).json({ message: "Student not found" });
@@ -116,7 +116,7 @@ router.delete("/api/acceptedstudents/:id", async (req, res) => {
     }
 });
 
-router.post("/api/acceptedstudents/login", async (req, res) => {
+router.post("/acceptedstudents/login", async (req, res) => {
     try {
         const { studentNumber, portalPassword } = req.body;
         const student = await AcceptedStudent.findOne({ studentNumber });
@@ -134,7 +134,7 @@ router.post("/api/acceptedstudents/login", async (req, res) => {
     }
 });
 
-router.put("/api/acceptedstudents/:id/change-password", async (req, res) => {
+router.put("/acceptedstudents/:id/change-password", async (req, res) => {
     try {
         const { oldPassword, newPassword } = req.body;
 
