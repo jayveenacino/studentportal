@@ -15,7 +15,7 @@ const AcceptedStudentSchema = new mongoose.Schema({
     email: { type: String, required: true },
     studentNumber: { type: String, unique: true, required: true },
     domainEmail: { type: String, unique: true, required: true },
-    portalPassword: { type: String, required: true },
+    portalPassword: { type: String, required: true, select: false },
     yearLevel: { type: String, default: "1ST YEAR" },
     status: { type: String, default: "Accepted" },
     image: { type: String, required: true },
@@ -44,7 +44,7 @@ const AcceptedStudentSchema = new mongoose.Schema({
     dateEnlisted: { type: Date, default: Date.now },
     dateEnrolled: { type: Date },
 
-    enrollmentHistory: [
+    EnrollmentHistory: [
         {
             academicYear: { type: String },
             semester: { type: String },

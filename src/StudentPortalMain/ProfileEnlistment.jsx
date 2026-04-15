@@ -1,4 +1,4 @@
-import React, { useEffect, useState, } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./studentmain.css/ProfileEnlistment.css";
 import { Link } from "react-router-dom";
@@ -8,27 +8,33 @@ export default function ProfileEnlistment() {
     const [error, setError] = useState(null);
     const [activeSection, setActiveSection] = useState("dataStatement");
 
-    const loggedInAcceptedStudent = JSON.parse(
-        localStorage.getItem("acceptedStudent")
-    );
+    const loggedInAcceptedStudent = JSON.parse(localStorage.getItem("acceptedStudent"));
 
     const goToSection = (sectionName) => {
         setActiveSection(sectionName);
     };
 
-
-
     useEffect(() => {
-        if (!loggedInAcceptedStudent?.domainEmail) {
+        if (!loggedInAcceptedStudent) {
             setError("No logged-in accepted student found.");
+            return;
+        }
+
+        const identifier = loggedInAcceptedStudent.domainEmail || loggedInAcceptedStudent.studentNumber;
+
+        if (!identifier) {
+            setError("No identifier found for student.");
             return;
         }
 
         const fetchStudentData = async () => {
             try {
-                const res = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
-                );
+                let res;
+                if (loggedInAcceptedStudent.domainEmail) {
+                    res = await axios.get(`${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`);
+                } else {
+                    res = await axios.get(`${import.meta.env.VITE_API_URL}/student/by-number/${loggedInAcceptedStudent.studentNumber}`);
+                }
                 setStudentData(res.data);
             } catch (err) {
                 console.error("Error fetching student data:", err);
@@ -37,7 +43,7 @@ export default function ProfileEnlistment() {
         };
 
         fetchStudentData();
-    }, [loggedInAcceptedStudent]);
+    }, []);
 
     const toggleSection = (section) => {
         setActiveSection((prev) => (prev === section ? section : section));
@@ -133,7 +139,6 @@ export default function ProfileEnlistment() {
                             </div>
                         </div>
                     )}
-
                 </div>
 
                 <div className="studentpanelbar-item">
@@ -164,7 +169,6 @@ export default function ProfileEnlistment() {
                             </div>
                         </div>
                     )}
-
                 </div>
 
                 <div className="studentpanelbar-item">
