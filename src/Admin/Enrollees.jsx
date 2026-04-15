@@ -8,12 +8,29 @@ import * as XLSX from "xlsx";
 
 const API = import.meta.env.VITE_API_URL;
 
+const SkeletonRow = () => (
+    <tr>
+        <td><div className="skeleton-text" style={{width: "30px"}}></div></td>
+        <td><div className="skeleton-text" style={{width: "150px"}}></div></td>
+        <td><div className="skeleton-text" style={{width: "100px"}}></div></td>
+        <td><div className="skeleton-text" style={{width: "80px"}}></div></td>
+        <td><div className="skeleton-text" style={{width: "120px"}}></div></td>
+        <td>
+            <div style={{display: "flex", gap: "5px"}}>
+                <div className="skeleton-button" style={{width: "60px", height: "28px"}}></div>
+                <div className="skeleton-button" style={{width: "60px", height: "28px"}}></div>
+                <div className="skeleton-button" style={{width: "60px", height: "28px"}}></div>
+            </div>
+        </td>
+    </tr>
+);
+
 export default function Enrollees() {
     const [enrollees, setEnrollees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [selectedStudent, setSelectedStudent] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isModalLoading, setIsModalLoading] = useState(false); // New state for modal trigger
+    const [isModalLoading, setIsModalLoading] = useState(false);
     const [enlargedImage, setEnlargedImage] = useState(null);
     const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState("All");
@@ -185,7 +202,7 @@ export default function Enrollees() {
     };
 
     const openModal = async (studentId) => {
-        setIsModalLoading(true); // Start small loader
+        setIsModalLoading(true);
         try {
             const res = await axios.get(`${API}/api/students/${studentId}`);
             setSelectedStudent(res.data);
@@ -194,7 +211,7 @@ export default function Enrollees() {
             console.error("Failed to fetch student details:", error);
             Swal.fire("Error", "Could not fetch student documents.", "error");
         } finally {
-            setIsModalLoading(false); // Stop small loader
+            setIsModalLoading(false);
         }
     };
 
@@ -279,7 +296,26 @@ export default function Enrollees() {
 
     return (
         <div className="enrollees-container" style={{ position: 'relative' }}>
-            {/* Global Loader */}
+            <style>{`
+                .skeleton-text {
+                    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                    background-size: 200% 100%;
+                    animation: shimmer 1.5s infinite;
+                    height: 16px;
+                    border-radius: 4px;
+                }
+                .skeleton-button {
+                    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+                    background-size: 200% 100%;
+                    animation: shimmer 1.5s infinite;
+                    border-radius: 4px;
+                }
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+            `}</style>
+
             {loadingUserData && (
                 <div
                     style={{
@@ -303,7 +339,6 @@ export default function Enrollees() {
                 </div>
             )}
 
-            {/* Small Modal Fetching Loader */}
             {isModalLoading && (
                 <div style={{
                     position: "fixed",
@@ -377,27 +412,37 @@ export default function Enrollees() {
                         </tr>
                     </thead>
                     <tbody>
-                        {currentItems.map((enrollee, index) => (
-                            <tr key={enrollee.registerNum}>
-                                <td>{start + index + 1}</td>
-                                <td>{formatFullName(enrollee)}</td>
-                                <td>{enrollee.registerNum}</td>
-                                <td>
-                                    <span
-                                        style={{ textDecoration: 'underline', cursor: 'pointer', color: '#036600', fontWeight: 'bold' }}
-                                        onClick={() => openModal(enrollee._id)}
-                                    >
-                                        See Uploads
-                                    </span>
-                                </td>
-                                <td>{enrollee.initialDept || 'No courses selected'}</td>
-                                <td>
-                                    <button className="action-btn confirm" onClick={() => handleAccept(enrollee._id)}>Confirm</button>
-                                    <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>Delete</button>
-                                    <button className="action-btn chat" onClick={() => openStudentChat(enrollee)}>Chat</button>
-                                </td>
-                            </tr>
-                        ))}
+                        {loadingUserData ? (
+                            <>
+                                <SkeletonRow />
+                                <SkeletonRow />
+                                <SkeletonRow />
+                                <SkeletonRow />
+                                <SkeletonRow />
+                            </>
+                        ) : (
+                            currentItems.map((enrollee, index) => (
+                                <tr key={enrollee.registerNum}>
+                                    <td>{start + index + 1}</td>
+                                    <td>{formatFullName(enrollee)}</td>
+                                    <td>{enrollee.registerNum}</td>
+                                    <td>
+                                        <span
+                                            style={{ textDecoration: 'underline', cursor: 'pointer', color: '#036600', fontWeight: 'bold' }}
+                                            onClick={() => openModal(enrollee._id)}
+                                        >
+                                            See Uploads
+                                        </span>
+                                    </td>
+                                    <td>{enrollee.initialDept || 'No courses selected'}</td>
+                                    <td>
+                                        <button className="action-btn confirm" onClick={() => handleAccept(enrollee._id)}>Confirm</button>
+                                        <button className="action-btn delete" onClick={() => handleDecline(enrollee._id)}>Delete</button>
+                                        <button className="action-btn chat" onClick={() => openStudentChat(enrollee)}>Chat</button>
+                                    </td>
+                                </tr>
+                            ))
+                        )}
                         {!loadingUserData && currentItems.length === 0 && (
                             <tr>
                                 <td colSpan="6" style={{ textAlign: 'center', padding: "20px" }}>No enrollees found.</td>
@@ -421,7 +466,6 @@ export default function Enrollees() {
                 )}
             </div>
 
-            {/* Rest of the Modals (Chat, Student Details, Enlarged Image) remain same */}
             {openChat && chatStudent && (
                 <div className="admin-chat-wrapper" onClick={() => setOpenChat(false)}>
                     <div className="admin-chat-modal" onClick={(e) => e.stopPropagation()}>

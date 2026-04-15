@@ -265,13 +265,15 @@ router.put('/api/students/:id/accept', async (req, res) => {
     }
 });
 
-// ================= ENROLLEES FILTER =================
+// ================= ENROLLEES FILTER (FAST - excludes images) =================
 router.get("/api/enrollees", async (req, res) => {
     try {
         const enrollees = await Student.find({
             selectedCourse: { $exists: true, $ne: "" },
             isAccepted: { $ne: true }
-        });
+        })
+        .select('firstname lastname middlename registerNum initialDept selectedCourse _id') // Only text fields
+        .lean();
 
         res.json(enrollees);
     } catch (err) {
@@ -403,6 +405,23 @@ router.delete('/api/students/:id', async (req, res) => {
         res.json({ message: 'Student deleted successfully' });
     } catch (err) {
         console.error('Error deleting student:', err);
+        res.status(500).json({ error: err.message });
+    }
+});
+
+// ================= GET SINGLE STUDENT WITH IMAGES (for modal) =================
+router.get('/api/students/:id', async (req, res) => {
+    try {
+        const student = await Student.findById(req.params.id)
+            .select('firstname lastname middlename registerNum initialDept selectedCourse selectedSecCourse strand password image idimage birthCertImage goodMoralImage academicImage');
+        
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+
+        res.json(student);
+    } catch (err) {
+        console.error("Error fetching student:", err);
         res.status(500).json({ error: err.message });
     }
 });

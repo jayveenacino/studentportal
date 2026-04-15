@@ -4,6 +4,68 @@ import "./Admincss/instructor.css";
 import Swal from 'sweetalert2';
 import { Pencil, Trash2, Image, Eye } from "lucide-react";
 
+const API = import.meta.env.VITE_API_URL;
+
+const InstructorImage = ({ instructorId }) => {
+    const [image, setImage] = useState(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchImage = async () => {
+            try {
+                const res = await axios.get(`${API}/api/instructors/${instructorId}/image`);
+                setImage(res.data.profileImage);
+            } catch (err) {
+                console.error(err);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchImage();
+    }, [instructorId]);
+
+    if (loading) {
+        return (
+            <div style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "10%",
+                background: "linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)",
+                backgroundSize: "200% 100%",
+                animation: "shimmer 1.5s infinite",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+            }} />
+        );
+    }
+
+    return image ? (
+        <img
+            src={image}
+            alt="Instructor"
+            style={{
+                width: "50px",
+                height: "50px",
+                borderRadius: "10%",
+                objectFit: "cover"
+            }}
+        />
+    ) : (
+        <div style={{
+            width: "50px",
+            height: "50px",
+            borderRadius: "50%",
+            background: "#ddd",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center"
+        }}>
+            <span style={{ color: "#888", fontSize: "12px" }}>No Image</span>
+        </div>
+    );
+};
+
 export default function Instructor() {
     const [instructors, setInstructors] = useState([]);
     const [search, setSearch] = useState("");
@@ -28,12 +90,22 @@ export default function Instructor() {
 
     const fetchDepartments = async () => {
         try {
-            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/departments");
+            const res = await axios.get(`${API}/api/departments`);
             setDepartments(res.data.filter(d => d.status === "Active"));
         } catch (err) {
             console.error("Failed to fetch departments:", err);
         }
     };
+
+    const fetchInstructors = async () => {
+        try {
+            const res = await axios.get(`${API}/api/instructors`);
+            setInstructors(res.data);
+        } catch (err) {
+            console.error("Failed to fetch instructors:", err);
+        }
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             setLoadingInstructors(true);
@@ -50,29 +122,6 @@ export default function Instructor() {
     }, []);
 
     const perPage = 5;
-
-    useEffect(() => {
-        const fetchData = async () => {
-            setLoadingInstructors(true);
-            try {
-                await fetchInstructors();
-            } catch (err) {
-                console.error(err);
-            } finally {
-                setLoadingInstructors(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const fetchInstructors = async () => {
-        try {
-            const res = await axios.get(import.meta.env.VITE_API_URL + "/api/instructors");
-            setInstructors(res.data);
-        } catch (err) {
-            console.error("Failed to fetch instructors:", err);
-        }
-    };
 
     const filtered = instructors.filter(
         i =>
@@ -128,22 +177,15 @@ export default function Instructor() {
 
         try {
             if (editMode) {
-                const res = await axios.put(
-                    `${import.meta.env.VITE_API_URL}/api/instructors/${editId}`,
-                    newInstructor
-                );
-
-                setInstructors(prev =>
-                    prev.map(i => i._id === editId ? res.data : i)
-                );
-
+                const res = await axios.put(`${API}/api/instructors/${editId}`, newInstructor);
+                setInstructors(prev => prev.map(i => i._id === editId ? res.data : i));
                 Swal.fire({
                     icon: 'success',
                     title: 'Updated!',
                     text: 'Instructor updated successfully.'
                 });
             } else {
-                const res = await axios.post(`${import.meta.env.VITE_API_URL}/api/instructors`, newInstructor);
+                const res = await axios.post(`${API}/api/instructors`, newInstructor);
                 setInstructors([res.data, ...instructors]);
                 Swal.fire({
                     icon: 'success',
@@ -151,9 +193,7 @@ export default function Instructor() {
                     text: 'New instructor added.'
                 });
             }
-
             resetForm();
-
         } catch (err) {
             console.error("Save error:", err);
             Swal.fire({
@@ -166,22 +206,38 @@ export default function Instructor() {
         }
     };
 
-    const handleEdit = instructor => {
-        setNewInstructor({
-            name: instructor.name,
-            department: instructor.department,
-            status: instructor.status,
-            profileImage: instructor.profileImage || ""
-        });
-        setPreviewUrl(instructor.profileImage || null);
-        setEditId(instructor._id);
-        setEditMode(true);
-        setShowModal(true);
+    const handleEdit = async (instructor) => {
+        try {
+            const res = await axios.get(`${API}/api/instructors/${instructor._id}`);
+            const fullInstructor = res.data;
+            setNewInstructor({
+                name: fullInstructor.name,
+                department: fullInstructor.department,
+                status: fullInstructor.status,
+                profileImage: fullInstructor.profileImage || ""
+            });
+            setPreviewUrl(fullInstructor.profileImage || null);
+            setEditId(fullInstructor._id);
+            setEditMode(true);
+            setShowModal(true);
+        } catch (err) {
+            console.error("Failed to fetch instructor details:", err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Failed to load instructor details'
+            });
+        }
     };
 
-    const handleView = (instructor) => {
-        setViewInstructor(instructor);
-        setShowViewModal(true);
+    const handleView = async (instructor) => {
+        try {
+            const res = await axios.get(`${API}/api/instructors/${instructor._id}`);
+            setViewInstructor(res.data);
+            setShowViewModal(true);
+        } catch (err) {
+            console.error("Failed to fetch instructor details:", err);
+        }
     };
 
     const handleDelete = async (id) => {
@@ -199,10 +255,8 @@ export default function Instructor() {
         if (!result.isConfirmed) return;
 
         try {
-            await axios.delete(`${import.meta.env.VITE_API_URL}/api/instructors/${id}`);
-
+            await axios.delete(`${API}/api/instructors/${id}`);
             setInstructors(prev => prev.filter(i => i._id !== id));
-
             Swal.fire({
                 icon: 'success',
                 title: 'Deleted!',
@@ -234,6 +288,13 @@ export default function Instructor() {
 
     return (
         <div className="instructor-container" style={{ position: "relative" }}>
+            <style>{`
+                @keyframes shimmer {
+                    0% { background-position: -200% 0; }
+                    100% { background-position: 200% 0; }
+                }
+            `}</style>
+
             {loadingInstructors && (
                 <div
                     style={{
@@ -318,30 +379,7 @@ export default function Instructor() {
                             <tr key={i._id}>
                                 <td>{start + idx + 1}</td>
                                 <td>
-                                    {i.profileImage ? (
-                                        <img
-                                            src={i.profileImage}
-                                            alt={i.name}
-                                            style={{
-                                                width: "50px",
-                                                height: "50px",
-                                                borderRadius: "10%",
-                                                objectFit: "cover"
-                                            }}
-                                        />
-                                    ) : (
-                                        <div style={{
-                                            width: "50px",
-                                            height: "50px",
-                                            borderRadius: "50%",
-                                            background: "#ddd",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center"
-                                        }}>
-                                            <span style={{ color: "#888", fontSize: "12px" }}>No Image</span>
-                                        </div>
-                                    )}
+                                    <InstructorImage instructorId={i._id} />
                                 </td>
                                 <td>{i.name}</td>
                                 <td>{i.department}</td>
