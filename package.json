@@ -25,6 +25,8 @@
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
     "file-saver": "^2.0.5",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.7",
     "lucide": "^0.486.0",
     "lucide-react": "^0.483.0",
     "mongodb": "^6.18.0",

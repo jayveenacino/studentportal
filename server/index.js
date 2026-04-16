@@ -23,6 +23,8 @@ const instructorRoutes = require('./routes/instructors');
 const setRoutes = require('./routes/setRoutes');
 const scheduleRoutes = require('./routes/schedules');
 const morgan = require("morgan");
+const fs = require('fs');
+const path = require('path');
 
 require('dotenv').config({ quiet: true });
 
@@ -31,20 +33,6 @@ app.use(cors());
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ limit: '100mb', extended: true }));
 app.use(morgan('tiny'));
-
-
-app.get('/api/acceptedstudents/:id/enrolled-subjects', async (req, res) => {
-    try {
-        const student = await AcceptedStudent.findById(req.params.id).select('enrolledSubjects');
-        if (!student) {
-            return res.status(404).json({ message: 'Student not found' });
-        }
-        res.json(student.enrolledSubjects || []);
-    } catch (err) {
-        res.status(500).json({ error: err.message });
-    }
-});
-
 
 app.use("/", studentByDomainRoute);
 app.use(studentRoutes);
@@ -59,6 +47,86 @@ app.use("/api/subjects", subjectRoutes);
 app.use('/api/instructors', instructorRoutes);
 app.use('/api/sets', setRoutes);
 app.use('/api/schedules', scheduleRoutes);
+
+app.get('/api/acceptedstudents/by-domain/:domainEmail', async (req, res) => {
+    try {
+        const { domainEmail } = req.params;
+        const student = await AcceptedStudent.findOne({ domainEmail: domainEmail.toLowerCase().trim() });
+        if (!student) {
+            return res.status(404).json({ message: 'Accepted student not found' });
+        }
+        res.json(student);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/acceptedstudents/:id/enrolled-subjects', async (req, res) => {
+    try {
+        const student = await AcceptedStudent.findById(req.params.id).select('enrolledSubjects');
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        res.json(student.enrolledSubjects || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/cor/:studentId/:settingId', async (req, res) => {
+    try {
+        const { studentId, settingId } = req.params;
+        const { token } = req.query;
+        
+        const student = await AcceptedStudent.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        
+        const expectedPassword = `${student.lastname}${student.studentNumber.replace(/-/g, "")}`;
+        
+        if (token !== expectedPassword) {
+            return res.status(401).json({ message: 'Invalid password' });
+        }
+        
+        const pdfPath = path.join(__dirname, 'uploads', 'cor', `${student.studentNumber}_${settingId}.pdf`);
+        
+        if (!fs.existsSync(pdfPath)) {
+            return res.status(404).json({ message: 'PDF not found' });
+        }
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `inline; filename="${student.studentNumber}.pdf"`);
+        fs.createReadStream(pdfPath).pipe(res);
+        
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+app.get('/api/cor/download/:studentId/:settingId', async (req, res) => {
+    try {
+        const { studentId, settingId } = req.params;
+        
+        const student = await AcceptedStudent.findById(studentId);
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        
+        const pdfPath = path.join(__dirname, 'uploads', 'cor', `${student.studentNumber}_${settingId}.pdf`);
+        
+        if (!fs.existsSync(pdfPath)) {
+            return res.status(404).json({ message: 'PDF not found' });
+        }
+        
+        res.setHeader('Content-Type', 'application/pdf');
+        res.setHeader('Content-Disposition', `attachment; filename="COR_${student.studentNumber}.pdf"`);
+        fs.createReadStream(pdfPath).pipe(res);
+        
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
 
 app.post('/register', async (req, res) => {
     try {
@@ -103,7 +171,6 @@ app.post('/register', async (req, res) => {
     }
 });
 
-// ---------------------- LOGIN ----------------------
 app.post('/login', async (req, res) => {
     const { email, password } = req.body;
 
@@ -119,7 +186,6 @@ app.post('/login', async (req, res) => {
     }
 });
 
-// ---------------------- RESET PASSWORD ----------------------
 app.post('/reset-password', async (req, res) => {
     const { registerNum, email, phone, birthdate, password, confirmPassword } = req.body;
 
@@ -132,10 +198,8 @@ app.post('/reset-password', async (req, res) => {
     }
 
     try {
-        // Normalize phone input for comparison (just digits)
         const inputPhone = phone.replace(/\D/g, '').slice(-10);
 
-        // Find student by registerNum, email, and birthdate only
         const student = await StudentModel.findOne({
             registerNum: registerNum.trim(),
             email: email.trim().toLowerCase(),
@@ -146,7 +210,6 @@ app.post('/reset-password', async (req, res) => {
             return res.status(404).json({ message: "Student not found or information does not match" });
         }
 
-        // Save password and update phone in proper format
         student.password = password;
         student.phone = `${inputPhone.slice(0, 3)}-${inputPhone.slice(3, 6)}-${inputPhone.slice(6, 10)}`;
 
@@ -163,29 +226,25 @@ app.post("/upload", async (req, res) => {
     try {
         const { email, image } = req.body;
 
-        // Validate input
         if (!email || !image) {
             return res.status(400).json({ message: "Email and image are required." });
         }
 
-        // Update student and return updated doc
         const student = await StudentModel.findOneAndUpdate(
             { email },
             {
                 $set: {
-                    image,              // save new profile image (base64 or URL)
-                    profileImage: "✔️", // mark as uploaded
+                    image,
+                    profileImage: "✔️",
                 },
             },
-            { new: true, runValidators: true } // return updated & validate schema
+            { new: true, runValidators: true }
         );
 
-        // Handle not found
         if (!student) {
             return res.status(404).json({ message: "Student not found." });
         }
 
-        //  Success response
         return res.json({
             success: true,
             message: "Image uploaded successfully!",
@@ -232,7 +291,6 @@ app.post('/upload-id-image', async (req, res) => {
     }
 });
 
-// Upload Birth Certificate
 app.post('/upload-birth-cert', async (req, res) => {
     const { email, birthCertImage } = req.body;
 
@@ -263,7 +321,6 @@ app.post('/upload-birth-cert', async (req, res) => {
     }
 });
 
-// Upload Academic Records
 app.post('/upload-academic', async (req, res) => {
     const { email, academicImage } = req.body;
 
@@ -330,14 +387,13 @@ app.get('/get-upload-status/:email', async (req, res) => {
 app.get("/getuser", async (req, res) => {
     const { email } = req.query;
     try {
-        const student = await Student.findOne({ email }); // fresh from DB
+        const student = await Student.findOne({ email });
         if (!student) return res.status(404).json({ message: "User not found" });
         res.json({ student });
     } catch (err) {
         res.status(500).json({ message: "Server error" });
     }
 });
-
 
 app.post('/change-password', async (req, res) => {
     const { email, currentPassword, newPassword } = req.body;
