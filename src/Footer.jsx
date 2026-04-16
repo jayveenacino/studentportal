@@ -30,9 +30,7 @@ export default function Footer() {
                     <hr />
                     <div className="enuique-faculty-resources">
                         <h1>Faculty Resources</h1>
-                        <p>KNS Health Check</p>
-                        <p>KNS Registrar</p>
-                        <p>KNS Teachers Portal</p>
+                        <Link style={{ textDecoration: 'none' }} to="/instructor-login" target='_blank'><p>KNS Instrucor Portal</p></Link>
                         <Link style={{ textDecoration: 'none' }} to="/dean-login" target='_blank'><p>KNS Deans Portal</p></Link>
                     </div>
                 </div>

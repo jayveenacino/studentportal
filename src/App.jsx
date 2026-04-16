@@ -23,6 +23,7 @@ import PresidentOffice from './HomePage/PresidentOffice';
 import DeanLogin from './DeansPortal/DeanLogin';
 import DeanDashboard from './DeansPortal/DeanDashboard';
 import NotFound from './pages/NotFound';
+import InstructorLogin from './Instructors/InstructorLogin';
 
 const router = createBrowserRouter(
 	createRoutesFromElements(
@@ -45,6 +46,7 @@ const router = createBrowserRouter(
 			<Route path="/home/collegepresident" element={<PresidentOffice />} />
 			<Route path="/dean-login" element={<DeanLogin />} />
 			<Route path="/deans-portal/dashboard" element={<DeanDashboard />} />
+			<Route path="/instructors-login" element={<InstructorLogin />} />
 
 			<Route
 				path="/preregister"

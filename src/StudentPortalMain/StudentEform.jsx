@@ -1,50 +1,57 @@
 import React, { useState, useEffect } from "react";
+import useSWR from "swr";
 import axios from "axios";
 import "./studentmain.css/ProfileEnlistmentEform.css";
 import { FaFileAlt } from "react-icons/fa";
 
+const fetcher = (url) => axios.get(url).then((res) => res.data);
+
 export default function ProfileEformPage() {
     const [activeTab, setActiveTab] = useState("");
-    const [studentData, setStudentData] = useState(null);
-    const [settings, setSettings] = useState([]);
-    const [error, setError] = useState(null);
-
+    
     const loggedInAcceptedStudent = JSON.parse(localStorage.getItem("acceptedStudent"));
 
-    useEffect(() => {
-        if (!loggedInAcceptedStudent?.domainEmail) {
-            setError("No logged-in accepted student found.");
-            return;
+    const { data: studentData, error: studentError } = useSWR(
+        loggedInAcceptedStudent?.domainEmail 
+            ? `${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
+            : null,
+        fetcher,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            dedupingInterval: 60000,
+            shouldRetryOnError: false,
         }
+    );
 
-        const fetchStudentData = async () => {
-            try {
-                const studentRes = await axios.get(
-                    `${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
-                );
-                setStudentData(studentRes.data);
+    const { data: settingsData, error: settingsError } = useSWR(
+        `${import.meta.env.VITE_API_URL}/settings/`,
+        fetcher,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            dedupingInterval: 60000,
+            shouldRetryOnError: false,
+        }
+    );
 
-                const settingsRes = await axios.get(import.meta.env.VITE_API_URL + "/settings/");
-                const settingsArray = Array.isArray(settingsRes.data) ? settingsRes.data : [settingsRes.data];
-                setSettings(settingsArray);
+    useEffect(() => {
+        if (studentData && settingsData && !activeTab) {
+            const settingsArray = Array.isArray(settingsData) ? settingsData : [settingsData];
+            const deptSettings = settingsArray
+                .filter(s => s?.department?.toLowerCase() === studentData.department?.toLowerCase())
+                .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
 
-                const deptSettings = settingsArray
-                    .filter(s => s?.department?.toLowerCase() === studentRes.data.department?.toLowerCase())
-                    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-
-                if (deptSettings.length) {
-                    setActiveTab(deptSettings[0]._id);
-                }
-            } catch (err) {
-                console.error("Error fetching data:", err);
-                setError("Failed to fetch data.");
+            if (deptSettings.length) {
+                setActiveTab(deptSettings[0]._id);
             }
-        };
+        }
+    }, [studentData, settingsData, activeTab]);
 
-        fetchStudentData();
-    }, [loggedInAcceptedStudent]);
+    const error = studentError || settingsError;
+    const settings = Array.isArray(settingsData) ? settingsData : settingsData ? [settingsData] : [];
 
-    if (error) return <p className="eform-error">{error}</p>;
+    if (error) return <p className="eform-error">Failed to fetch data.</p>;
     if (!studentData || settings.length === 0) return <p className="eform-loading">Loading profile...</p>;
 
     const documentPassword = `${studentData.lastname}${studentData.studentNumber.replace(/-/g, "")}`;
@@ -55,7 +62,7 @@ export default function ProfileEformPage() {
 
     const tabs = deptSettings.map(s => {
         const startYear = s?.academicYear ? s.academicYear.split("/")[0] : new Date().getFullYear();
-        const endYear = startYear + 1;
+        const endYear = parseInt(startYear) + 1;
         const year = `${startYear}-${endYear}`;
         const semester = (s?.activeSemester || "").toString().trim() || "Unknown";
         return {

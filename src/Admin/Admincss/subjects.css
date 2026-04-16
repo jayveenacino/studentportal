@@ -22,6 +22,8 @@
 .subjects-controls {
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    gap: 10px;
     margin-bottom: 20px;
 }
 
@@ -30,6 +32,21 @@
     width: 250px;
     border: 1px solid #ccc;
     border-radius: 6px;
+}
+
+.subjects-filter {
+    padding: 8px 12px;
+    width: 200px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.subjects-filter:focus {
+    outline: none;
+    border-color: #0a3d18;
 }
 
 .subjects-add-btn {

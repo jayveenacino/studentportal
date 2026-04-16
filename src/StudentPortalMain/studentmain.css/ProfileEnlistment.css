@@ -21,8 +21,8 @@
 }
 
 .prolist-profile-image {
-    width: 160px;
-    height: 160px;
+    width: 150px;
+    height: 150px;
     border-radius: 10px;
     overflow: hidden;
     border: 2px solid #ccc;
@@ -247,7 +247,7 @@
 }
 
 .studentpanelbar-item button.active .prolist-circle-icon {
-    background: #218838;
+    background: #1e9e39;
 }
 
 .prolist-profile-grid-info {
@@ -282,52 +282,30 @@
     word-break: break-word;
 }
 
-.btn-container {
+.btn-container,
+.btn-container-save {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
 }
 
-.btn-container-save{
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 20px;
-}
-
-.btn-container button {
-    background-color: #297032;
-    color: #fff;
-    border: none;
-    width: 18%;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-weight: 500;
-}
-
-.studentpanelbar-content hr {
-    margin: 20px 0;
-    border: 0;
-    border-top: 0.5px  #ccc;
-}
-
+.btn-container button,
 .btn-container-save button {
     background-color: #297032;
     color: #fff;
     border: none;
-    width: 22%;
-    padding: 10px 20px;
-    margin-bottom: 20px;
+    padding: 10px 16px;
     border-radius: 5px;
     cursor: pointer;
     font-weight: 500;
+
+    width: auto;
+    min-width: 120px;
+    max-width: 200px;
 }
 
+.btn-container button:hover,
 .btn-container-save button:hover {
-    background-color: #439932;
-}
-
-.btn-container button:hover {
     background-color: #439932;
 }
 

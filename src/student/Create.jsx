@@ -183,66 +183,66 @@ export default function Create() {
 
 
     return (
-        <div className="signincontainer">
-            <div className="headersign">
+        <div className="create-signincontainer">
+            <div className="create-headersign">
                 <img src="/img/knshdlogo.png" alt="Logo" className="maiinlogo" />
-                <h1 className="college-name">KOLEHIYO NG SUBIC</h1>
-                <p className="admission-text">STUDENT ADMISSION</p>
+                <h1 className="create-college-name">KOLEHIYO NG SUBIC</h1>
+                <p className="create-admission-text">STUDENT ADMISSION</p>
             </div>
 
             <hr className="divider" />
 
-            <div className="main-content">
-                <div className="leftcontainer">
+            <div className="create-main-content">
+                <div className="create-leftcontainer">
                     <p style={{ fontSize: "12px" }}>
-                        <strong className="important">Important:</strong> Please Fill Out the Information Accurately
+                        <strong className="create-important">Important:</strong> Please Fill Out the Information Accurately
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Email Address</h3>
+                    <h3 className="create-section-title" style={{ fontSize: "13px" }}>Email Address</h3>
                     <p style={{ fontSize: "12px", marginTop: "10px" }}>
                         Enter a valid and existing email address. This will be our secondary means of communication and will be used as an alternate contact for scheduling and interview.
                     </p>
-                    <p className="note" style={{ fontSize: "13px" }}>
+                    <p className="create-note" style={{ fontSize: "13px" }}>
                         <em>Note: Please double-check your email to ensure it is correct</em>
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Account Credentials</h3>
+                    <h3 className="create-section-title" style={{ fontSize: "13px" }}>Account Credentials</h3>
                     <p style={{ fontSize: "12px" }}>
                         Make sure to remember your username and password. These credentials will be required to access your application, view updates, and schedule your interview.
                     </p>
-                    <p className="security-warning" style={{ fontSize: "12px" }}>
+                    <p className="create-security-warning" style={{ fontSize: "12px" }}>
                         <em>For your security, do not share your login information with others</em>
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Forgot Password Verification</h3>
+                    <h3 className="create-section-title" style={{ fontSize: "13px" }}>Forgot Password Verification</h3>
                     <p style={{ fontSize: "12px" }}>
                         If you forget your password, you will need to answer your verification questions. Provide accurate information to ensure easy account recovery.
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Document Upload</h3>
+                    <h3 className="create-section-title" style={{ fontSize: "13px" }}>Document Upload</h3>
                     <p style={{ fontSize: "12px" }}>
                         Upload only clear and valid documents as required. Make sure all files are complete and readable to avoid delays in your application.
                     </p>
 
-                    <h3 className="section-title" style={{ fontSize: "13px" }}>Multiple Accounts</h3>
+                    <h3 className="create-section-title" style={{ fontSize: "13px" }}>Multiple Accounts</h3>
                     <p style={{ fontSize: "12px" }}>
                         Do not create multiple accounts. Submitting more than one application may result in disapproval.
                     </p>
                 </div>
 
-                <div className="rightcontainer">
+                <div className="create-rightcontainer">
                     <h2>Create An Account</h2>
                     <hr />
                     {message && <p className="message">{message}</p>}
 
                     <form onSubmit={handleSubmit}>
-                        <div className="grid-container">
+                        <div className="create-grid-container">
                             <input
                                 type="text"
                                 name="firstname"
                                 autoComplete="given-name"
                                 placeholder="Firstname*"
-                                className="input-field short-width"
+                                className="create-input-field create-short-width"
                                 value={formData.firstname}
                                 onChange={handleChange}
                             />
@@ -251,7 +251,7 @@ export default function Create() {
                                 name="middlename"
                                 autoComplete="additional-name"
                                 placeholder="Middlename"
-                                className="input-field short-width"
+                                className="create-input-field create-short-width"
                                 value={formData.middlename}
                                 onChange={handleChange}
                             />
@@ -260,13 +260,13 @@ export default function Create() {
                                 name="lastname"
                                 autoComplete="family-name"
                                 placeholder="Lastname*"
-                                className="input-field short-width"
+                                className="create-input-field create-short-width"
                                 value={formData.lastname}
                                 onChange={handleChange}
                             />
                             <select
                                 name="extension"
-                                className="input-field short-width"
+                                className="create-input-field create-short-width"
                                 value={formData.extension}
                                 onChange={handleChange}
                             >
@@ -280,12 +280,12 @@ export default function Create() {
                             </select>
                         </div>
 
-                        <div className="grid-container">
+                        <div className="create-grid-container">
                             <input
                                 type="date"
                                 name="birthdate"
                                 autoComplete="bday"
-                                className="input-field"
+                                className="create-input-field"
                                 value={formData.birthdate}
                                 onChange={handleChange}
                             />
@@ -294,13 +294,13 @@ export default function Create() {
                                 name="phone"
                                 autoComplete="tel"
                                 placeholder="+63 XXX-XXX-XXXX"
-                                className="input-field"
+                                className="create-input-field"
                                 value={formData.phone}
                                 onChange={handleChange}
                             />
                             <select
                                 name="register"
-                                className="input-field"
+                                className="create-input-field"
                                 value={formData.register}
                                 onChange={handleChange}
                             >
@@ -311,32 +311,32 @@ export default function Create() {
                             </select>
                         </div>
 
-                        <div className="grid-container">
-                            <div className="input-row">
-                                <div className="input-wrapper">
+                        <div className="create-grid-container">
+                            <div className="create-input-row">
+                                <div className="create-input-wrapper">
                                     <input
                                         type="email"
                                         name="email"
                                         autoComplete="email"
                                         placeholder="Email Address*"
-                                        className="input-field"
+                                        className="create-input-field"
                                         value={formData.email}
                                         onChange={handleChange}
                                     />
                                 </div>
 
-                                <div className="input-wrapper">
+                                <div className="create-input-wrapper">
                                     <input
                                         type={showPasswords ? "text" : "password"}
                                         name="password"
                                         autoComplete="new-password"
                                         placeholder="Password*"
-                                        className="input-field"
+                                        className="create-input-field"
                                         value={formData.password}
                                         onChange={handleChange}
                                     />
                                     <i
-                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} create-toggle-eye`}
                                         onMouseDown={() => setShowPasswords(true)}
                                         onMouseUp={() => setShowPasswords(false)}
                                         onMouseLeave={() => setShowPasswords(false)}
@@ -346,18 +346,18 @@ export default function Create() {
                                     ></i>
                                 </div>
 
-                                <div className="input-wrapper">
+                                <div className="create-input-wrapper">
                                     <input
                                         type={showPasswords ? "text" : "password"}
                                         name="confirmPassword"
                                         autoComplete="new-password"
                                         placeholder="Confirm Password*"
-                                        className="input-field"
+                                        className="create-input-field"
                                         value={formData.confirmPassword}
                                         onChange={handleChange}
                                     />
                                     <i
-                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} toggle-eye`}
+                                        className={`fas ${showPasswords ? "fa-eye" : "fa-eye-slash"} create-toggle-eye`}
                                         onMouseDown={() => setShowPasswords(true)}
                                         onMouseUp={() => setShowPasswords(false)}
                                         onMouseLeave={() => setShowPasswords(false)}
@@ -371,20 +371,20 @@ export default function Create() {
 
 
                         <hr />
-                        <p className="privacy-text" style={{ textAlign: "center" }}>
-                            <input type="checkbox" required /> I have read the Kolehiyo Ng Subic General Privacy Notice at <Link to='notice' target='_blank' className="privacy-link">Kolehiyo Ng Subic Privacy Policy.</Link>
+                        <p className="create-privacy-text" style={{ textAlign: "center" }}>
+                            <input type="checkbox" required /> I have read the Kolehiyo Ng Subic General Privacy Notice at <Link to='notice' target='_blank' className="create-privacy-link">Kolehiyo Ng Subic Privacy Policy.</Link>
                         </p>
                         <hr />
 
-                        <div className="button-container">
+                        <div className="create-button-container">
                             <button
                                 type="submit"
-                                className={isFormValid() ? "enabled-btn" : "disabled-btn"}
+                                className={isFormValid() ? "create-enabled-btn" : "create-disabled-btn"}
                                 disabled={!isFormValid() || loading}
                             >
                                 {loading ? "Creating Account..." : "Continue with Sign Up"}
                             </button>
-                            <button type="button" className="back-btn" onClick={() => navigate(-1)}>Back</button>
+                            <button type="button" className="create-back-btn" onClick={() => navigate(-1)}>Back</button>
                         </div>
                     </form>
                 </div>

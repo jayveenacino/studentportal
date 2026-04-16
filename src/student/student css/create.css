@@ -1,36 +1,36 @@
-.signincontainer {
+.create-signincontainer {
   width: 90%;
   margin: auto;
   font-family: Arial, sans-serif;
 }
 
-.school-branding {
+.create-school-branding {
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
 }
 
-.school-branding p {
+.create-school-branding p {
   margin-top: 4px;
 }
 
-.school-logo {
+.create-school-logo {
   width: 100px;
   height: auto;
 }
 
-.school-name {
+.create-school-name {
   font-size: 15px;
   margin: 5px 0 0;
 }
 
-.school-address {
+.create-school-address {
   font-size: 10px;
   margin: 0;
 }
 
-.headersign {
+.create-headersign {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,40 +39,40 @@
   gap: 5px;
 }
 
-.logo {
+.create-logo {
   height: 90px;
 }
 
-.college-name {
+.create-college-name {
   font-size: 16px;
   font-weight: bold;
   margin: 0;
 }
 
-.admission-text {
+.create-admission-text {
   font-size: 12px;
   margin: 0;
 }
 
-.main-content {
+.create-main-content {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.leftcontainer {
+.create-leftcontainer {
   width: 45%;
   padding: 15 px;
   background: #ffffff;
   color: #333;
 }
 
-.important {
+.create-important {
   color: red;
   font-weight: bold;
 }
 
-.section-title {
+.create-section-title {
   color: #1e40af;
   font-weight: bold;
   margin-top: 25px;
@@ -80,22 +80,22 @@
 }
 
 
-.note {
+.create-note {
   font-style: italic;
   color: #555;
 }
 
-.security-warning {
+.create-security-warning {
   font-style: italic;
   color: #d97706;
 }
 
-.thank-you {
+.create-thank-you {
   margin-top: 16px;
   font-weight: bold;
 }
 
-.rightcontainer {
+.create-rightcontainer {
   height: 300px;
   background: #e6e5e5;
   padding: 20px;
@@ -107,67 +107,67 @@ h2 {
   font-size: 18px;
 }
 
-.grid-container {
+.create-grid-container {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 10px;
 }
 
-.grid-container1 {
+.create-grid-container1 {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
   margin-bottom: 10px;
 }
 
-.input-field {
+.create-input-field {
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.input-field1 {
+.create-input-field1 {
   flex: 1;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
-.privacy-text {
+.create-privacy-text {
   font-size: 12px;
   color: #555;
 }
 
-.privacy-link {
+.create-privacy-link {
   color: #0073e6;
   text-decoration: none;
   font-weight: bold;
 }
 
 
-.short-width {
+.create-short-width {
   width: 120px;
 }
 
-.short-width1 {
+.create-short-width1 {
   width: 120px;
 }
 
-.button-container {
+.create-button-container {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.button-container1 {
+.create-button-container1 {
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
 }
 
-.enabled-btn {
+.create-enabled-btn {
   background-color: blue;
   color: white;
   border: 2px solid blue;
@@ -176,11 +176,11 @@ h2 {
   border-radius: 5px;
 }
 
-.enabled-btn:hover {
+.create-enabled-btn:hover {
   background-color: darkblue;
 }
 
-.disabled-btn {
+.create-disabled-btn {
   background-color: grey;
   color: white;
   border: 2px solid grey;
@@ -189,7 +189,7 @@ h2 {
   border-radius: 5px;
 }
 
-.back-btn {
+.create-back-btn {
   background-color: white;
   color: black;
   border: 1px solid black;
@@ -198,11 +198,11 @@ h2 {
   border-radius: 5px;
 }
 
-.back-btn:hover {
+.create-back-btn:hover {
   background-color: lightgray;
 }
 
-.back-btn1 {
+.create-back-btn1 {
   background-color: white;
   color: black;
   border: 1px solid black;
@@ -211,11 +211,11 @@ h2 {
   border-radius: 5px;
 }
 
-.back-btn1:hover {
+.create-back-btn1:hover {
   background-color: lightgray;
 }
 
-.disabled-btn {
+.create-disabled-btn {
   background: #ccc;
   border: none;
   padding: 10px 20px;
@@ -223,7 +223,7 @@ h2 {
   border-radius: 5px;
 }
 
-.back-btn {
+.create-back-btn {
   background: #0073e6;
   border: none;
   padding: 10px 20px;
@@ -232,91 +232,91 @@ h2 {
   cursor: pointer;
 }
 
-.back-btn:hover {
+.create-back-btn:hover {
   background: #005bb5;
 }
 
-.signincontainer {
+.create-signincontainer {
   width: 90%;
   margin: auto;
   font-family: Arial, sans-serif;
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  .create-main-content {
     flex-direction: column;
     align-items: center;
   }
 
-  .leftcontainer,
-  .rightcontainer {
+  .create-leftcontainer,
+  .create-rightcontainer {
     width: 100%;
     padding: 15px;
   }
 
-  .rightcontainer {
+  .create-rightcontainer {
     height: auto;
   }
 
-  .button-container {
+  .create-button-container {
     flex-direction: column;
     gap: 10px;
     color: #005bb5;
   }
 
-  .back-btn,
-  .disabled-btn {
+  .create-back-btn,
+  .create-disabled-btn {
     width: 100%;
     text-align: center;
   }
 
-  .logo {
+  .create-logo {
     height: 70px;
   }
 
-  .college-name {
+  .create-college-name {
     font-size: 14px;
   }
 
-  .admission-text {
+  .create-admission-text {
     font-size: 10px;
   }
 }
 
-.custom-popup {
+.create-custom-popup {
   text-align: center;
 }
 
-.custom-title {
+.create-custom-title {
   font-size: 24px;
 }
 
-.custom-content {
+.create-custom-content {
   margin-bottom: 20px;
 }
 
-.custom-confirm-button,
-.custom-cancel-button {
+.create-custom-confirm-button,
+.create-custom-cancel-button {
   height: 50px;
   font-size: 16px;
   width: 150px;
   margin: 0 10px;
 }
 
-.custom-confirm-button {
+.create-custom-confirm-button {
   background-color: #d33;
 }
 
-.custom-cancel-button {
+.create-custom-cancel-button {
   background-color: #3085d6;
 }
 
-.password-wrapper {
+.create-password-wrapper {
   position: relative;
   flex: 1;
 }
 
-.password-wrapper .toggle-eye {
+.create-password-wrapper .create-toggle-eye {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -327,24 +327,24 @@ h2 {
   user-select: none;
 }
 
-.input-row {
+.create-input-row {
   display: flex;
   gap: 10px;
   width: 100%;
 }
 
-.input-row .input-wrapper {
+.create-input-row .create-input-wrapper {
   flex: 1;
   position: relative;
 }
 
-.input-row .input-wrapper .input-field {
+.create-input-row .create-input-wrapper .create-input-field {
   width: 100%;
   box-sizing: border-box;
   padding-right: 40px;
 }
 
-.input-row .input-wrapper .toggle-eye {
+.create-input-row .create-input-wrapper .create-toggle-eye {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -355,11 +355,11 @@ h2 {
 }
 
 @media (max-width: 768px) {
-  .input-row {
+  .create-input-row {
     flex-direction: column;
   }
 
-  .input-row .input-wrapper .input-field {
+  .create-input-row .create-input-wrapper .create-input-field {
     padding-right: 40px;
   }
 }
