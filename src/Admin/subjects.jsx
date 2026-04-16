@@ -73,21 +73,21 @@ const Subjects = () => {
     };
 
     const filtered = subjects.filter((s) => {
-        const matchesSearch = 
+        const matchesSearch =
             s.code?.toLowerCase().includes(search.toLowerCase()) ||
             s.name?.toLowerCase().includes(search.toLowerCase()) ||
             s.department?.toLowerCase().includes(search.toLowerCase());
-        
+
         if (!departmentFilter) return matchesSearch;
-        
+
         if (s.department === "General") return matchesSearch;
-        
+
         const selectedDept = departments.find(d => d._id === departmentFilter);
         if (!selectedDept) return matchesSearch;
-        
+
         const deptCourses = courses.filter(c => c.department === selectedDept.name);
         const courseInitials = deptCourses.map(c => c.initialDept);
-        
+
         return matchesSearch && (s.department === selectedDept.name || courseInitials.includes(s.department));
     });
 
@@ -225,22 +225,24 @@ const Subjects = () => {
                     }}
                     className="subjects-search"
                 />
-                <select
-                    value={departmentFilter}
-                    onChange={(e) => {
-                        setDepartmentFilter(e.target.value);
-                        setCurrentPage(1);
-                    }}
-                    className="subjects-filter"
-                >
-                    <option value="">All Departments</option>
-                    {departments.map((d) => (
-                        <option key={d._id} value={d._id}>{d.name}</option>
-                    ))}
-                </select>
-                <button className="subjects-add-btn" onClick={() => setShowModal(true)}>
-                    Add Subject
-                </button>
+                <div className="subjects-right-group">
+                    <select
+                        value={departmentFilter}
+                        onChange={(e) => {
+                            setDepartmentFilter(e.target.value);
+                            setCurrentPage(1);
+                        }}
+                        className="subjects-filter"
+                    >
+                        <option value="">All Departments</option>
+                        {departments.map((d) => (
+                            <option key={d._id} value={d._id}>{d.name}</option>
+                        ))}
+                    </select>
+                    <button className="subjects-add-btn" onClick={() => setShowModal(true)}>
+                        Add Subject
+                    </button>
+                </div>
             </div>
 
             <div className="subjects-table-container">

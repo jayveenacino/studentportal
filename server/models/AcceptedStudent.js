@@ -6,6 +6,19 @@ function getAcademicYear() {
     return `${year}/${year + 1}`;
 }
 
+const EnrolledSubjectSchema = new mongoose.Schema({
+    subjectId: { type: mongoose.Schema.Types.ObjectId, ref: 'subjects' },
+    code: { type: String },
+    name: { type: String },
+    department: { type: String },
+    units: { type: Number },
+    semester: { type: String },
+    yearLevel: { type: String },
+    price: { type: Number },
+    prerequisite: { type: String },
+    enrolledAt: { type: Date, default: Date.now }
+});
+
 const AcceptedStudentSchema = new mongoose.Schema({
     preregisterPassword: { type: String },
     initialDept: { type: String },
@@ -43,6 +56,8 @@ const AcceptedStudentSchema = new mongoose.Schema({
     },
     dateEnlisted: { type: Date, default: Date.now },
     dateEnrolled: { type: Date },
+
+    enrolledSubjects: [EnrolledSubjectSchema],
 
     enrollmentHistory: [
         {

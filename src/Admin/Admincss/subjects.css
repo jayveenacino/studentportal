@@ -34,6 +34,12 @@
     border-radius: 6px;
 }
 
+.subjects-right-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
 .subjects-filter {
     padding: 8px 12px;
     width: 200px;

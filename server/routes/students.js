@@ -2,6 +2,7 @@ const express = require('express');
 const Student = require('../models/Student');
 const nodemailer = require('nodemailer');
 const bcrypt = require('bcrypt');
+const Subject = require('../models/Subject');
 const router = express.Router();
 const AcceptedStudent = require('../models/AcceptedStudent');
 
@@ -156,7 +157,6 @@ router.put('/api/students/:id/accept', async (req, res) => {
             return res.status(400).json({ message: 'No valid email found for this student' });
         }
 
-        // ================= STUDENT NUMBER GENERATION =================
         const currentYear = new Date().getFullYear();
         const yearPrefix = currentYear.toString().slice(-2);
 
@@ -178,11 +178,18 @@ router.put('/api/students/:id/accept', async (req, res) => {
         const studentNumber = `${yearPrefix}-${formattedNumber}`;
         const domainEmail = `${yearPrefix}${formattedNumber}@knsians.edu.ph`;
 
-        // ================= PASSWORD =================
         const plainPassword = Math.random().toString(36).slice(-8);
         const hashedPassword = await bcrypt.hash(plainPassword, 10);
 
-        // ================= CREATE NEW ACCEPTED STUDENT =================
+        const enrolledSubjects = await Subject.find({
+            $or: [
+                { department: student.initialDept },
+                { department: "General" }
+            ],
+            yearLevel: "1st Year",
+            semester: "1st Sem"
+        }).select('_id code name department units semester yearLevel price prerequisite');
+
         const acceptedStudent = new AcceptedStudent({
             preregisterPassword: student.password,
             initialDept: student.initialDept,
@@ -196,8 +203,18 @@ router.put('/api/students/:id/accept', async (req, res) => {
             yearLevel: "1ST YEAR",
             status: "REGULAR",
             acceptedAt: new Date(),
-
-            // Add these missing fields from original student
+            enrolledSubjects: enrolledSubjects.map(s => ({
+                subjectId: s._id,
+                code: s.code,
+                name: s.name,
+                department: s.department,
+                units: s.units,
+                semester: s.semester,
+                yearLevel: s.yearLevel,
+                price: s.price,
+                prerequisite: s.prerequisite,
+                enrolledAt: new Date()
+            })),
             image: student.image || null,
             idimage: student.idimage || null,
             birthCertImage: student.birthCertImage || null,
@@ -217,7 +234,6 @@ router.put('/api/students/:id/accept', async (req, res) => {
         student.portalPassword = hashedPassword;
         await student.save();
 
-        // ================= SEND EMAIL =================
         const transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -241,7 +257,7 @@ router.put('/api/students/:id/accept', async (req, res) => {
                     <p><b>School Domain:</b> ${domainEmail}<br/>
                     <b>Temporary Password:</b> <span style="color: #007bff;">${plainPassword}</span>
                     </p>
-                    <p>Login here: <a href="http://localhost:3000" target="_blank"> https://kolehiyongsubic.vercel.app/login</a></p>
+                    <p>Login here: <a href="https://kolehiyongsubic.vercel.app/login" target="_blank">https://kolehiyongsubic.vercel.app/login</a></p>
                     <p style="font-size: 14px; color: #555;">
                         Keep learning and growing.<br/>
                         — Kolehiyo ng Subic Admissions Team
@@ -251,17 +267,29 @@ router.put('/api/students/:id/accept', async (req, res) => {
         };
 
         await transporter.sendMail(mailOptions);
-        console.log('Email sent successfully.');
 
         return res.json({
-            message: 'Student accepted. Added to AcceptedStudent DB with year level & status, preregister record kept, credentials sent via email.',
+            message: 'Student accepted and auto-enrolled to 1st Year 1st Sem subjects.',
             student: acceptedStudent,
             temporaryPassword: plainPassword,
+            enrolledSubjectsCount: enrolledSubjects.length
         });
 
     } catch (err) {
         console.error('Error in accept route:', err);
         return res.status(500).json({ error: err.message });
+    }
+});
+
+router.get('/api/acceptedstudents/:id/enrolled-subjects', async (req, res) => {
+    try {
+        const student = await AcceptedStudent.findById(req.params.id).select('enrolledSubjects');
+        if (!student) {
+            return res.status(404).json({ message: 'Student not found' });
+        }
+        res.json(student.enrolledSubjects || []);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
     }
 });
 

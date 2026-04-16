@@ -8,12 +8,27 @@ const fetcher = (url) => axios.get(url).then((res) => res.data);
 
 export default function ProfileEformPage() {
     const [activeTab, setActiveTab] = useState("");
-    
+
     const loggedInAcceptedStudent = JSON.parse(localStorage.getItem("acceptedStudent"));
 
     const { data: studentData, error: studentError } = useSWR(
         loggedInAcceptedStudent?.domainEmail 
             ? `${import.meta.env.VITE_API_URL}/student/by-domain/${loggedInAcceptedStudent.domainEmail}`
+            : null,
+        fetcher,
+        {
+            revalidateOnFocus: false,
+            revalidateOnReconnect: false,
+            dedupingInterval: 60000,
+            shouldRetryOnError: false,
+        }
+    );
+
+    const studentId = studentData?._id;
+
+    const { data: enrolledSubjects, error: subjectsError } = useSWR(
+        studentId
+            ? `${import.meta.env.VITE_API_URL}/api/acceptedstudents/${studentId}/enrolled-subjects`
             : null,
         fetcher,
         {
@@ -48,11 +63,11 @@ export default function ProfileEformPage() {
         }
     }, [studentData, settingsData, activeTab]);
 
-    const error = studentError || settingsError;
+    const error = studentError || subjectsError || settingsError;
     const settings = Array.isArray(settingsData) ? settingsData : settingsData ? [settingsData] : [];
 
     if (error) return <p className="eform-error">Failed to fetch data.</p>;
-    if (!studentData || settings.length === 0) return <p className="eform-loading">Loading profile...</p>;
+    if (!studentData) return <p className="eform-loading">Loading profile...</p>;
 
     const documentPassword = `${studentData.lastname}${studentData.studentNumber.replace(/-/g, "")}`;
 
@@ -73,8 +88,6 @@ export default function ProfileEformPage() {
     });
 
     const activeSetting = tabs.find(t => t.id === activeTab)?.setting;
-
-    if (!activeSetting) return <p className="eform-error">No active semester found for your department.</p>;
 
     return (
         <div className="eform-page">
@@ -104,10 +117,34 @@ export default function ProfileEformPage() {
             </div>
 
             <div className="eform-content">
-                <div className="eform-document">
-                    <img src="/public/img/knshdlogo.png" alt="Logo" />
-                    <h1>404</h1>
-                    <p>Page not found</p>
+                <div className="enrolled-subjects-section">
+                    <h3>Enrolled Subjects (1st Year - 1st Sem)</h3>
+                    {enrolledSubjects && enrolledSubjects.length > 0 ? (
+                        <table className="subjects-table">
+                            <thead>
+                                <tr>
+                                    <th>Code</th>
+                                    <th>Subject</th>
+                                    <th>Units</th>
+                                    <th>Department</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {enrolledSubjects.map((subject, index) => (
+                                    <tr key={subject.subjectId || subject.code || index}>
+                                        <td>{subject.code}</td>
+                                        <td>{subject.name}</td>
+                                        <td>{subject.units}</td>
+                                        <td>{subject.department}</td>
+                                        <td>₱{subject.price || 0}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No enrolled subjects found.</p>
+                    )}
                 </div>
             </div>
         </div>
